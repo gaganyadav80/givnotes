@@ -14,7 +14,7 @@ class _NotebooksState extends State<Notebooks> {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
-        appBar: myAppBar('NOTEBOOKS'),
+        appBar: MyAppBar('NOTEBOOKS'),
         body: ListView(
           children: <Widget>[
             ListTileTheme(

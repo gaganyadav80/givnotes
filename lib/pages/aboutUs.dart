@@ -15,7 +15,7 @@ class _AboutUsState extends State<AboutUs> {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
-        appBar: myAppBar(''),
+        appBar: MyAppBar(''),
         body: Column(
           children: <Widget>[
             // CustomAppBar(''),

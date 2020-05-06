@@ -2,32 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getflutter/getflutter.dart';
+import 'package:givnotes/pages/notes.dart';
 import 'package:givnotes/pages/profile.dart';
-import 'package:givnotes/pages/notebookPage.dart';
+
+import '../pages/home.dart';
 
 // ! Simple AppBar
-Widget myAppBar(String title) {
-  return GFAppBar(
-    bottom: PreferredSize(
-      child: Container(
-        color: Colors.green,
-        height: 3,
+class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+  final String title;
+  final bool isNote;
+
+  MyAppBar(this.title, [this.isNote]);
+
+  Widget leading(BuildContext context) {
+    if (isNote == true) {
+      return IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          // Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+          Navigator.pop(context);
+        },
+      );
+    } else {
+      return IconButton(
+        icon: Icon(Icons.menu),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+      );
+    }
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return GFAppBar(
+      leading: leading(context),
+      bottom: PreferredSize(
+        child: Container(
+          color: Colors.green,
+          height: 3,
+        ),
+        preferredSize: Size(10, 10),
       ),
-      preferredSize: Size(10, 10),
-    ),
-    elevation: 50,
-    searchBar: true,
-    centerTitle: true,
-    title: Text(
-      title, // title
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontFamily: 'SourceSansPro-Light',
-        letterSpacing: 3,
+      elevation: 50,
+      searchBar: true,
+      centerTitle: true,
+      title: Text(
+        title, // title
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20,
+          fontFamily: 'SourceSansPro-Light',
+          letterSpacing: 3,
+        ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 // ! This builds the bottomAppBar icons
@@ -49,13 +82,13 @@ class _BottomMenuState extends State<BottomMenu> {
           children: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.book,
+                Icons.library_books,
                 color: Colors.black,
               ),
-              tooltip: 'Notebooks',
+              tooltip: 'All Notes',
               iconSize: 30.0,
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Notebooks()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
               },
             ),
             Padding(
@@ -116,7 +149,10 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
         tooltip: 'Add new item',
         child: Icon(Icons.add),
         // TODO: Add entries for action button.
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => NotesView(NoteMode.Adding)));
+        },
       ),
     );
   }

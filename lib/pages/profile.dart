@@ -13,7 +13,7 @@ class MyProfile extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
-        appBar: myAppBar('MY PROFILE'),
+        appBar: MyAppBar('MY PROFILE'),
         body: Center(
           child: Column(
             children: <Widget>[
