@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givnotes/utils/noteInherited.dart';
 
 import 'pages/home.dart';
 import 'ui/splash.dart';
@@ -11,12 +12,14 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        primaryColor: Colors.black,
+    return NoteInherited(
+          child: MaterialApp(
+        theme: ThemeData(
+          primaryColor: Colors.black,
+        ),
+        themeMode: ThemeMode.system,
+        home: CheckLogIn(),
       ),
-      themeMode: ThemeMode.system,
-      home: CheckLogIn(),
     );
   }
 }

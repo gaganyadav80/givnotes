@@ -1,37 +1,54 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/pages/notes.dart';
+import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
+import 'package:givnotes/utils/notesDB.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
         appBar: MyAppBar('ALL NOTES'),
-        body: ListView.builder(
-          itemCount: 20,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => NotesView(NoteMode.Editing)));
-              },
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _NoteTitle(),
-                      Container(height: 4),
-                      _NoteText(),
-                    ],
-                  ),
-                ),
-              ),
-            );
+        body: FutureBuilder(
+          future: NotesDB.getNoteList(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final notes = snapshot.data;
+              return ListView.builder(
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotesEdit(NoteMode.Editing, notes[index])));
+                    },
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            _NoteTitle(notes[index]['title']),
+                            Container(height: 4),
+                            _NoteText(notes[index]['text']),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.black));
           },
         ),
         floatingActionButton: ActionBarMenu(),
@@ -43,10 +60,13 @@ class HomePage extends StatelessWidget {
 }
 
 class _NoteTitle extends StatelessWidget {
+  final String _title;
+  _NoteTitle(this._title);
+
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Some Title',
+      _title,
       style: TextStyle(
         fontSize: 25,
         fontWeight: FontWeight.bold,
@@ -56,11 +76,14 @@ class _NoteTitle extends StatelessWidget {
 }
 
 class _NoteText extends StatelessWidget {
+  final String _text;
+  _NoteText(this._text);
+
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Some Title',
-      style: TextStyle(color: Colors.grey[600]),
+      _text,
+      style: TextStyle(color: Colors.grey[800]),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );

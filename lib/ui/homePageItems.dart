@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/widgets.dart';
 import 'package:getflutter/getflutter.dart';
-import 'package:givnotes/pages/notes.dart';
+import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/pages/profile.dart';
 
 import '../pages/home.dart';
@@ -151,7 +151,7 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
         // TODO: Add entries for action button.
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => NotesView(NoteMode.Adding)));
+              context, MaterialPageRoute(builder: (context) => NotesEdit(NoteMode.Adding)));
         },
       ),
     );
