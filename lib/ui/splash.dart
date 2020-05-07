@@ -13,13 +13,14 @@ class SplashPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CircularProgressIndicator(
-                  backgroundColor: Colors.black,
+                  // backgroundColor: Colors.black,
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
                 ),
                 const SizedBox(height: 10.0),
                 Text(
-                  "Loading",
+                  "Loading ...",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black,
                     fontFamily: 'SourceSansPro - Light',
                     fontSize: 18.0,
                   ),
