@@ -38,7 +38,11 @@ class _HomePageState extends State<HomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             _NoteTitle(notes[index]['title']),
-                            Container(height: 4),
+                            Container(
+                              // TODO : height = 4, remove child
+                              height: 20,
+                              child: Text('${notes[index]['trash']}'),
+                            ),
                             _NoteText(notes[index]['text']),
                           ],
                         ),

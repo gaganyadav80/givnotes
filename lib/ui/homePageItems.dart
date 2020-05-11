@@ -47,6 +47,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
         ),
         preferredSize: Size(10, 10),
       ),
+      backgroundColor: Colors.black,
       elevation: 50,
       searchBar: true,
       centerTitle: true,

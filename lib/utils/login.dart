@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getflutter/getflutter.dart';
+import 'package:givnotes/main.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// TODO: pass the firebase user to display profile and table
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 FirebaseUser user;
@@ -178,6 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.all(10),
                   fullWidthButton: true,
                   onPressed: () {
+                    isSkipped = true;
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),

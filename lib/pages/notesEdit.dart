@@ -79,13 +79,13 @@ class _NotesEditState extends State<NotesEdit> {
                       if (widget?.noteMode == NoteMode.Adding) {
                         NotesDB.insertNote({
                           'title': title,
-                          'text' : text, 
+                          'text': text,
                         });
                       } else if (widget?.noteMode == NoteMode.Editing) {
                         NotesDB.updateNote({
-                          'id' : widget.note['id'],
-                          'title' : title,
-                          'text' : text,
+                          'id': widget.note['id'],
+                          'title': title,
+                          'text': text,
                         });
                       }
                       Navigator.pop(context);
@@ -100,10 +100,15 @@ class _NotesEditState extends State<NotesEdit> {
                   ),
                   widget.noteMode == NoteMode.Editing
                       ? _NoteButton('Delete', Colors.red, () async {
-                          await NotesDB.deleteNote(widget.note['id']);
+                          await NotesDB.trashNote({
+                            'id': widget.note['id'],
+                            'title': _titleController.text,
+                            'text': _textController.text,
+                            'trash': 1,
+                          });
                           Navigator.pop(context);
                         })
-                      : SizedBox(),
+                      : SizedBox.shrink(),
                 ],
               )
             ],

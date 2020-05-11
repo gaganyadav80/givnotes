@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
+import 'package:givnotes/pages/trash.dart';
 
 class DrawerItems extends StatefulWidget {
   @override
@@ -9,6 +10,43 @@ class DrawerItems extends StatefulWidget {
 }
 
 class _DrawerItemsState extends State<DrawerItems> {
+  static int _selectedIndex = 0;
+
+  List<IconData> _icons = [
+    Icons.library_books,
+    Icons.folder,
+    Icons.bookmark,
+    Icons.restore_from_trash,
+    Icons.settings,
+    Icons.person,
+  ];
+
+  Widget myListTileTheme(String title, int index, [Widget nextPage]) {
+    return ListTileTheme(
+      selectedColor: Colors.green,
+      child: ListTile(
+        selected: _selectedIndex == index ? true : false,
+        leading: Icon(
+          _icons[index],
+          size: 30,
+        ),
+        title: Text(title),
+        onTap: () {
+          setState(() {
+            _selectedIndex = index;
+          });
+          Navigator.pop(context);
+          if (nextPage != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => nextPage),
+            );
+          }
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -25,49 +63,14 @@ class _DrawerItemsState extends State<DrawerItems> {
             ),
             child: null,
           ),
-          MyListTileTheme('All Notes', Icon(Icons.library_books, size: 30), HomePage()),
-          MyListTileTheme('Notebooks', Icon(Icons.folder, size: 30), Notebooks()),
-          MyListTileTheme('Tags', Icon(Icons.bookmark, size: 30)),
-          MyListTileTheme('Trash', Icon(Icons.restore_from_trash, size: 30)),
-          MyListTileTheme('Configuration', Icon(Icons.settings, size: 30)),
-          MyListTileTheme('About Us', Icon(Icons.person, size: 30), AboutUs()),
+          // TODO : point the pages to remaining
+          myListTileTheme('All Notes', 0, HomePage()),
+          myListTileTheme('Notebooks', 1, Notebooks()),
+          myListTileTheme('Tags', 2),
+          myListTileTheme('Trash', 3, Trash()),
+          myListTileTheme('Configuration', 4),
+          myListTileTheme('About Us', 5, AboutUs()),
         ],
-      ),
-    );
-  }
-}
-
-class MyListTileTheme extends StatefulWidget {
-  final Icon _icon;
-  final String _title;
-  final Widget _nextPage;
-
-  MyListTileTheme(this._title, this._icon, [this._nextPage]);
-
-  @override
-  _MyListTileThemeState createState() => _MyListTileThemeState();
-}
-
-class _MyListTileThemeState extends State<MyListTileTheme> {
-  @override
-  Widget build(BuildContext context) {
-    return ListTileTheme(
-      style: ListTileStyle.list,
-      selectedColor: Colors.green,
-      child: ListTile(
-        // TODO: Check the selected state in drawer items
-//        selected: true,
-        leading: widget._icon,
-        title: Text(widget._title),
-        onTap: () {
-          Navigator.pop(context);
-          if (widget._nextPage != null) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => widget._nextPage),
-            );
-          }
-        },
       ),
     );
   }
