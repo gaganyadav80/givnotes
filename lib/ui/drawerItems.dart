@@ -4,14 +4,16 @@ import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
 import 'package:givnotes/pages/trash.dart';
 
+class TellIndex {
+  static int selectedIndex = 0;
+}
+
 class DrawerItems extends StatefulWidget {
   @override
   _DrawerItemsState createState() => _DrawerItemsState();
 }
 
 class _DrawerItemsState extends State<DrawerItems> {
-  static int _selectedIndex = 0;
-
   List<IconData> _icons = [
     Icons.library_books,
     Icons.folder,
@@ -25,7 +27,7 @@ class _DrawerItemsState extends State<DrawerItems> {
     return ListTileTheme(
       selectedColor: Colors.green,
       child: ListTile(
-        selected: _selectedIndex == index ? true : false,
+        selected: TellIndex.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
           size: 30,
@@ -33,7 +35,7 @@ class _DrawerItemsState extends State<DrawerItems> {
         title: Text(title),
         onTap: () {
           setState(() {
-            _selectedIndex = index;
+            TellIndex.selectedIndex = index;
           });
           Navigator.pop(context);
           if (nextPage != null) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/widgets.dart';
+// import 'package:flutter/painting.dart';
+// import 'package:flutter/widgets.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/pages/profile.dart';
 
-import '../pages/home.dart';
+import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/ui/drawerItems.dart';
 
 // ! Simple AppBar
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -89,6 +90,9 @@ class _BottomMenuState extends State<BottomMenu> {
               tooltip: 'All Notes',
               iconSize: 30.0,
               onPressed: () {
+                setState(() {
+                  TellIndex.selectedIndex = 0;
+                });
                 Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
               },
             ),
