@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:focus_widget/focus_widget.dart';
 import 'package:givnotes/utils/notesDB.dart';
 
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 
 enum NoteMode { Editing, Adding }
+final FocusNode _titleFocus = FocusNode(), _textFocus = FocusNode();
 
 class NotesEdit extends StatefulWidget {
   final NoteMode noteMode;
@@ -38,30 +40,49 @@ class _NotesEditState extends State<NotesEdit> {
         drawer: DrawerItems(),
         appBar: MyAppBar(widget.noteMode == NoteMode.Adding ? 'NEW NOTE' : 'EDIT NOTE', true),
         body: Container(
-          margin: EdgeInsets.only(left: 15, right: 15, top: 20),
+          margin: EdgeInsets.only(left: 15, right: 15, top: 10),
           child: Column(
             children: <Widget>[
               // ! Text Fields Start
-              TextField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  hintText: 'Untitled',
-                  hintStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
-                ),
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
+              FocusWidget(
+                focusNode: _titleFocus,
+                child: TextField(
+                  focusNode: _titleFocus,
+                  controller: _titleController,
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Untitled',
+                    hintStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
+                  ),
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontFamily: 'Montserrat',
+                  ),
                 ),
               ),
+              Divider(
+                thickness: 0.5,
+                color: Colors.black,
+              ),
               SizedBox(height: 20),
-              // TODO : Add Markdown support
-              TextField(
-                controller: _textController,
-                decoration: InputDecoration(
-                  hintText: 'Empty Note',
-                  hintStyle: TextStyle(fontSize: 18),
+              // TODO : Add Markdown support !! use zyfre
+              new Expanded(
+                flex: 1,
+                child: SingleChildScrollView(
+                  child: FocusWidget(
+                    showFocusArea: true,
+                    focusNode: _textFocus,
+                    child: TextField(
+                      focusNode: _textFocus,
+                      controller: _textController,
+                      decoration: InputDecoration.collapsed(
+                        hintText: 'Empty Note',
+                        hintStyle: TextStyle(fontSize: 20),
+                      ),
+                      maxLines: null,
+                      style: TextStyle(fontSize: 20),
+                    ),
+                  ),
                 ),
-                style: TextStyle(fontSize: 18),
               ),
               // ! Text Field Ends
 
