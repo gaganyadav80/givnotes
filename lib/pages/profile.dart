@@ -98,8 +98,9 @@ class MyProfile extends StatelessWidget {
                           signInWithGoogle().then((FirebaseUser currentUser) {
                             print('Sign in User Current : $currentUser');
                             isSkipped = false;
+                            // TODO : Route to nowhere, change it
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                              return HomePage();
+                              return NotesView();
                             }));
                           }).catchError((e) => print(e));
                         },

@@ -93,7 +93,7 @@ class _BottomMenuState extends State<BottomMenu> {
                 setState(() {
                   TellIndex.selectedIndex = 0;
                 });
-                Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NotesView()));
               },
             ),
             Padding(

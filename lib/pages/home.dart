@@ -4,20 +4,26 @@ import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/notesDB.dart';
 
-class HomePage extends StatefulWidget {
+// TODO: This is also used for trash so change name
+class NotesView extends StatefulWidget {
+  final bool isTrash;
+  NotesView([this.isTrash]);
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _NotesViewState createState() => _NotesViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _NotesViewState extends State<NotesView> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
-        appBar: MyAppBar('ALL NOTES'),
+        // !! isTrash
+        appBar: MyAppBar(widget.isTrash == false ? 'ALL NOTES' : 'TRASH'),
         body: FutureBuilder(
-          future: NotesDB.getNoteList(),
+          // !! isTrash
+          future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               final notes = snapshot.data;
@@ -26,10 +32,21 @@ class _HomePageState extends State<HomePage> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => NotesEdit(NoteMode.Editing, notes[index])));
+                      // !! isTrash
+                      widget.isTrash == false
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => NotesEdit(NoteMode.Editing, notes[index]),
+                              ),
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    NotesEdit(NoteMode.Editing, notes[index], true),
+                              ),
+                            );
                     },
                     child: Card(
                       child: Padding(
@@ -48,7 +65,8 @@ class _HomePageState extends State<HomePage> {
                 },
               );
             }
-            return Center(child: CircularProgressIndicator(backgroundColor: Colors.black));
+            // TODO: for in menu splash screen
+            return Center(child: CircularProgressIndicator(backgroundColor: Colors.white));
           },
         ),
         floatingActionButton: ActionBarMenu(),

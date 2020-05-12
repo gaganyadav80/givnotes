@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:givnotes/utils/notesDB.dart';
-
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 
@@ -11,8 +11,9 @@ final FocusNode _titleFocus = FocusNode(), _textFocus = FocusNode();
 class NotesEdit extends StatefulWidget {
   final NoteMode noteMode;
   final Map<String, dynamic> note;
+  final bool isTrash;
 
-  NotesEdit(this.noteMode, [this.note]);
+  NotesEdit(this.noteMode, [this.note, this.isTrash]);
 
   @override
   _NotesEditState createState() => _NotesEditState();
@@ -38,7 +39,10 @@ class _NotesEditState extends State<NotesEdit> {
     return SafeArea(
       child: Scaffold(
         drawer: DrawerItems(),
-        appBar: MyAppBar(widget.noteMode == NoteMode.Adding ? 'NEW NOTE' : 'EDIT NOTE', true),
+        // !! isTrash
+        appBar: widget.isTrash == false
+            ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'NEW NOTE' : 'EDIT NOTE', true)
+            : MyAppBar('DELETED NOTE', true),
         body: Container(
           margin: EdgeInsets.only(left: 15, right: 15, top: 10),
           child: Column(
@@ -90,28 +94,44 @@ class _NotesEditState extends State<NotesEdit> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  _NoteButton(
-                    'Save',
-                    Colors.green,
-                    () {
-                      final title = _titleController.text;
-                      final text = _textController.text;
+                  // !! isTrash
+                  widget.isTrash == false
+                      ? _NoteButton(
+                          'Save',
+                          Colors.green,
+                          () {
+                            final title = _titleController.text;
+                            final text = _textController.text;
 
-                      if (widget?.noteMode == NoteMode.Adding) {
-                        NotesDB.insertNote({
-                          'title': title,
-                          'text': text,
-                        });
-                      } else if (widget?.noteMode == NoteMode.Editing) {
-                        NotesDB.updateNote({
-                          'id': widget.note['id'],
-                          'title': title,
-                          'text': text,
-                        });
-                      }
-                      Navigator.pop(context);
-                    },
-                  ),
+                            if (widget?.noteMode == NoteMode.Adding) {
+                              NotesDB.insertNote({
+                                'title': title,
+                                'text': text,
+                              });
+                            } else if (widget?.noteMode == NoteMode.Editing) {
+                              NotesDB.updateNote({
+                                'id': widget.note['id'],
+                                'title': title,
+                                'text': text,
+                              });
+                            }
+                            Navigator.pop(context);
+                          },
+                        )
+                      : _NoteButton(
+                          'Restore',
+                          Colors.green,
+                          () async {
+                            await NotesDB.trashNote({
+                              'id': widget.note['id'],
+                              'title': _titleController.text,
+                              'text': _textController.text,
+                              'trash': 0,
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                  // TODO : remove this button, useless
                   _NoteButton(
                     'Discard',
                     Colors.grey,
@@ -119,8 +139,8 @@ class _NotesEditState extends State<NotesEdit> {
                       Navigator.pop(context);
                     },
                   ),
-                  widget.noteMode == NoteMode.Editing
-                      ? _NoteButton('Delete', Colors.red, () async {
+                  widget.noteMode == NoteMode.Editing && widget.isTrash == false
+                      ? _NoteButton('Trash', Colors.red, () async {
                           await NotesDB.trashNote({
                             'id': widget.note['id'],
                             'title': _titleController.text,
@@ -129,7 +149,14 @@ class _NotesEditState extends State<NotesEdit> {
                           });
                           Navigator.pop(context);
                         })
-                      : SizedBox.shrink(),
+                      : _NoteButton(
+                          'Delete',
+                          Colors.grey,
+                          () {
+                            print('Delete pressed');
+                            _confirmDeleteAlert(context, widget.note['id']);
+                          },
+                        ),
                 ],
               )
             ],
@@ -159,3 +186,77 @@ class _NoteButton extends StatelessWidget {
     );
   }
 }
+
+_confirmDeleteAlert(context, int _id) {
+  Alert(
+    context: context,
+    type: AlertType.info,
+    title: "Confirm Delete>",
+    desc: "Are you sure you permanently want to delete your note?",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "Cancle",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        color: Color.fromRGBO(0, 179, 134, 1.0),
+      ),
+      DialogButton(
+        child: Text(
+          "Delete",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () async {
+          await NotesDB.deleteNote(_id);
+          Navigator.pop(context);
+          Navigator.pop(context);
+        },
+        gradient: LinearGradient(
+            colors: [Color.fromRGBO(116, 116, 191, 1.0), Color.fromRGBO(52, 138, 199, 1.0)]),
+      )
+    ],
+  );
+}
+
+// TODO: check why this does not work
+// Widget confirmDelete(BuildContext context, int _id) {
+//   return Scaffold(
+//     body: GFFloatingWidget(
+//       child: GFAlert(
+//         title: 'Confirm Delete?',
+//         content: 'Are you sure you permanently want to delete your note?',
+//         type: GFAlertType.rounded,
+//         bottombar: Row(
+//           mainAxisAlignment: MainAxisAlignment.end,
+//           children: <Widget>[
+//             MaterialButton(
+//               color: Colors.red,
+//               child: Text(
+//                 'CANCLE',
+//                 style: TextStyle(color: Colors.white),
+//               ),
+//               onPressed: () {
+//                 Navigator.pop(context);
+//               },
+//             ),
+//             SizedBox(width: 10),
+//             MaterialButton(
+//               color: Colors.red,
+//               child: Text(
+//                 'DELETE',
+//                 style: TextStyle(color: Colors.white),
+//               ),
+//               onPressed: () async {
+//                 await NotesDB.deleteNote(_id);
+//                 Navigator.pop(context);
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//     ),
+//   );
+// }

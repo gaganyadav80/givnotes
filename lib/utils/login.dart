@@ -151,7 +151,7 @@ class _LoginPageState extends State<LoginPage> {
                     isSkipped = false;
                     print('Sign in User Current : $currentUser');
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return HomePage();
+                      return NotesView();
                     }));
                   }).catchError((e) => print(e));
                 },
@@ -190,7 +190,7 @@ class _LoginPageState extends State<LoginPage> {
                     isSkipped = true;
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => NotesView()),
                     );
                     print('isSkipped : $isSkipped');
                   },

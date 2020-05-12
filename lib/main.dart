@@ -27,11 +27,11 @@ class CheckLogIn extends StatelessWidget {
     return StreamBuilder(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (isSkipped == true) return HomePage();
+        if (isSkipped == true) return NotesView();
         if (snapshot.connectionState == ConnectionState.waiting) return SplashPage();
-        if (!snapshot.hasData || snapshot.data == null) return SplashPage();
+        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
-        return HomePage();
+        return NotesView();
       },
     );
   }

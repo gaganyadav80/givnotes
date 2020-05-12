@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
-import 'package:givnotes/pages/trash.dart';
 
 class TellIndex {
   static int selectedIndex = 0;
@@ -59,17 +58,17 @@ class _DrawerItemsState extends State<DrawerItems> {
           DrawerHeader(
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/logo/logoPhoenix1-inverted.jpg'),
+                image: AssetImage('assets/logo/logoOwlCute-inverted.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
             child: null,
           ),
           // TODO : point the pages to remaining
-          myListTileTheme('All Notes', 0, HomePage()),
+          myListTileTheme('All Notes', 0, NotesView()),
           myListTileTheme('Notebooks', 1, Notebooks()),
           myListTileTheme('Tags', 2),
-          myListTileTheme('Trash', 3, Trash()),
+          myListTileTheme('Trash', 3, NotesView(true)),
           myListTileTheme('Configuration', 4),
           myListTileTheme('About Us', 5, AboutUs()),
         ],

@@ -37,6 +37,7 @@ class SplashPage extends StatelessWidget {
               ),
               const SizedBox(height: 250.0),
               SpinKitChasingDots(
+                duration: Duration(seconds: 3),
                 color: Colors.deepOrangeAccent[400],
               ),
               const SizedBox(height: 280),
