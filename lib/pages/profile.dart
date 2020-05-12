@@ -1,13 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:givnotes/main.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 class MyProfile extends StatelessWidget {
-  final String name = 'Gagan';
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,27 +36,27 @@ class MyProfile extends StatelessWidget {
                   elevation: 8,
                   child: CircleAvatar(
                     radius: 80,
-                    backgroundImage: AssetImage('assets/images/developer.JPEG'),
+                    backgroundImage: NetworkImage(details['photoUrl']),
                   ),
                 ),
               ),
               SizedBox(height: 40),
               Text(
-                'Current User: ',
+                isSkipped == true ? 'Not Logged In' : details['displayName'],
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 25,
-                  fontFamily: 'SourceSansPro',
-                  letterSpacing: 2,
+                  fontFamily: 'Montserrat',
+                  letterSpacing: 0.5,
                 ),
               ),
               Text(
-                name,
+                isSkipped == true ? '' : details['email'],
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 25,
                   fontFamily: 'SourceSansPro',
-                  letterSpacing: 2,
+                  letterSpacing: 1,
                 ),
               ),
               SizedBox(height: 40),
@@ -68,30 +68,42 @@ class MyProfile extends StatelessWidget {
                   shape: BoxShape.rectangle,
                   borderRadius: BorderRadius.circular(50),
                 ),
-                child: GFButton(
-                  elevation: 10,
-                  buttonBoxShadow: true,
-                  color: Colors.white,
-                  icon: Icon(
-                    Icons.warning,
-                    color: Colors.black,
-                  ),
-                  text: ' Sign Out',
-                  textStyle: TextStyle(
-                    fontSize: 25,
-                    fontFamily: 'SourceSansPro',
-                    letterSpacing: 3,
-                    color: Colors.black,
-                  ),
-                  type: GFButtonType.solid,
-                  size: GFSize.LARGE,
-                  shape: GFButtonShape.standard,
-                  padding: EdgeInsets.all(10),
-                  fullWidthButton: true,
-                  onPressed: () {
-                    _signOutAlert(context);
-                  },
-                ),
+                child: isSkipped == false
+                    ? MaterialButton(
+                        color: Colors.white,
+                        elevation: 10,
+                        child: Text(
+                          'Sign Out',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Montserrat',
+                            color: Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          _signOutAlert(context);
+                        },
+                      )
+                    : MaterialButton(
+                        color: Colors.black,
+                        child: Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontFamily: 'Montserrat',
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                        onPressed: () {
+                          signInWithGoogle().then((FirebaseUser currentUser) {
+                            print('Sign in User Current : $currentUser');
+                            isSkipped = false;
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                              return HomePage();
+                            }));
+                          }).catchError((e) => print(e));
+                        },
+                      ),
               ),
             ],
           ),
@@ -113,11 +125,12 @@ _signOutAlert(context) {
       DialogButton(
         child: Text(
           "Confirm",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Montserrat'),
         ),
         onPressed: () {
           signOutGoogle();
           logOut();
+          isSkipped = true;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => LoginPage()),
@@ -128,7 +141,7 @@ _signOutAlert(context) {
       DialogButton(
         child: Text(
           "Cancle",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Montserrat'),
         ),
         onPressed: () => Navigator.pop(context),
         gradient: LinearGradient(
