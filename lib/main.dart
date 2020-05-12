@@ -7,6 +7,7 @@ import 'ui/splash.dart';
 import 'utils/login.dart';
 
 bool isSkipped = false;
+Color lightBlue = Color(0xff91dcf5), darkGrey = Color(0xff7D9098);
 
 void main() => runApp(MyApp());
 
@@ -14,9 +15,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // theme: ThemeData(
-      //   primaryColor: Colors.black,
-      // ),
       themeMode: ThemeMode.system,
       home: CheckLogIn(),
     );
@@ -29,9 +27,9 @@ class CheckLogIn extends StatelessWidget {
     return StreamBuilder(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if(isSkipped == true) return HomePage();
+        if (isSkipped == true) return HomePage();
         if (snapshot.connectionState == ConnectionState.waiting) return SplashPage();
-        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+        if (!snapshot.hasData || snapshot.data == null) return SplashPage();
 
         return HomePage();
       },

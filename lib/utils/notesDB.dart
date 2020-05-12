@@ -31,8 +31,8 @@ class NotesDB {
     }
     return await db.query(
       notesTable,
-      // where: 'trash = ?',
-      // whereArgs: [0],
+      where: 'trash = ?',
+      whereArgs: [0],
     );
   }
 

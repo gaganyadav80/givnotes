@@ -151,9 +151,8 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
       padding: const EdgeInsets.all(0.7),
       child: FloatingActionButton(
         backgroundColor: Colors.black,
-        tooltip: 'Add new item',
+        tooltip: 'Add new note',
         child: Icon(Icons.add),
-        // TODO: Add entries for action button.
         onPressed: () {
           Navigator.push(
               context, MaterialPageRoute(builder: (context) => NotesEdit(NoteMode.Adding)));
@@ -246,7 +245,6 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
 //                 color: Colors.white,
 //                 size: 30,
 //               ),
-//               // TODO: add menu list for entries like sort and delete notes
 //               onPressed: () => Scaffold.of(context).openDrawer(),
 //             ),
 //           ],

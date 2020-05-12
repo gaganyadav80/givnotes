@@ -134,7 +134,6 @@ class _TrashNotesEditState extends State<TrashNotesEdit> {
                 ),
               ),
               SizedBox(height: 20),
-              // TODO : Add Markdown support
               TextField(
                 controller: _textController,
                 decoration: InputDecoration(
@@ -167,7 +166,7 @@ class _TrashNotesEditState extends State<TrashNotesEdit> {
                     Colors.grey,
                     () {
                       // confirmDelete(context, widget.note['id']);
-                      _signOutAlert(context, widget.note['id']);
+                      _confirmDeleteAlert(context, widget.note['id']);
                     },
                   ),
                 ],
@@ -238,7 +237,7 @@ Widget confirmDelete(BuildContext context, int _id) {
   );
 }
 
-_signOutAlert(context, int _id) {
+_confirmDeleteAlert(context, int _id) {
   Alert(
     context: context,
     type: AlertType.info,
