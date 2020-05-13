@@ -6,6 +6,7 @@ import 'pages/home.dart';
 import 'ui/splash.dart';
 import 'utils/login.dart';
 
+// TODO: hide the status bar on login or everywhere
 bool isSkipped = false;
 Color lightBlue = Color(0xff91dcf5), darkGrey = Color(0xff7D9098);
 
