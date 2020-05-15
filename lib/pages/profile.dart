@@ -1,13 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/main.dart';
-import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class MyProfile extends StatelessWidget {
+class MyProfile extends StatefulWidget {
+  @override
+  _MyProfileState createState() => _MyProfileState();
+}
+
+class _MyProfileState extends State<MyProfile> {
+  @override
+  void initState() {
+    getSkip().then((bool skip) {
+      print('pre value: $skip and isSkipped: $isSkipped');
+      setState(() {
+        isSkipped = skip ?? false;
+        getUserDetails();
+      });
+      print('post value: $skip and isSkipped: $isSkipped');
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,13 +54,14 @@ class MyProfile extends StatelessWidget {
                   elevation: 8,
                   child: CircleAvatar(
                     radius: 80,
-                    backgroundImage: NetworkImage(details['photoUrl']),
+                    backgroundImage:
+                        isSkipped == true ? NetworkImage(blankUser) : NetworkImage(photoUrl),
                   ),
                 ),
               ),
               SizedBox(height: 40),
               Text(
-                isSkipped == true ? 'Not Logged In' : details['displayName'],
+                isSkipped == true ? 'Not Logged in' : displayName,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 25,
@@ -51,7 +70,7 @@ class MyProfile extends StatelessWidget {
                 ),
               ),
               Text(
-                isSkipped == true ? '' : details['email'],
+                isSkipped == true ? '' : email,
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 25,
@@ -96,12 +115,11 @@ class MyProfile extends StatelessWidget {
                         ),
                         onPressed: () {
                           signInWithGoogle().then((FirebaseUser currentUser) {
-                            print('Sign in User Current : $currentUser');
-                            isSkipped = false;
-                            // TODO : Route to nowhere, change it
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                              return NotesView();
-                            }));
+                            print('Sign in User Current : ${currentUser.displayName}');
+                            setUserDetails();
+                            setSkip(skip: false);
+                            Navigator.push(
+                                context, MaterialPageRoute(builder: (context) => MyProfile()));
                           }).catchError((e) => print(e));
                         },
                       ),
@@ -131,10 +149,10 @@ _signOutAlert(context) {
         onPressed: () {
           signOutGoogle();
           logOut();
-          isSkipped = true;
+          setSkip(skip: true);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
+            MaterialPageRoute(builder: (context) => MyProfile()),
           );
         },
         color: Color.fromRGBO(0, 179, 134, 1.0),

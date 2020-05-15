@@ -5,18 +5,30 @@ import 'package:givnotes/main.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
-Map<String, String> details = {
-  'displayName': '',
-  'photoUrl': '',
-  'phone': '',
-  'email': '',
-  'providerId': '',
-  'uid': '',
-};
+FirebaseUser currentUser;
+String blankUser = 'https://www.tinyurl.com/blankUser';
+String photoUrl = blankUser, displayName = 'Not Logged in', email = '';
+
+void setUserDetails() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  await prefs.setString('url', currentUser.photoUrl);
+  await prefs.setString('name', currentUser.displayName);
+  await prefs.setString('email', currentUser.email);
+}
+
+Future<void> getUserDetails() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+
+  photoUrl = prefs.getString('url');
+  displayName = prefs.getString('name');
+  email = prefs.getString('email');
+}
 
 Future<FirebaseUser> signInWithGoogle() async {
   final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
@@ -34,15 +46,11 @@ Future<FirebaseUser> signInWithGoogle() async {
   assert(!user.isAnonymous);
   assert(await user.getIdToken() != null);
 
-  final FirebaseUser currentUser = await _auth.currentUser();
+  currentUser = await _auth.currentUser();
   assert(user.uid == currentUser.uid);
 
-  details['displayName'] = currentUser.displayName;
-  details['photoUrl'] = currentUser.photoUrl;
-  details['phone'] = currentUser.phoneNumber;
-  details['email'] = currentUser.email;
-  details['providerId'] = currentUser.providerId;
-  details['uid'] = currentUser.uid;
+  // !! persistent the userdetails
+  setUserDetails();
 
   print('currentUser succeeded: ${currentUser.displayName}');
   return currentUser;
@@ -148,10 +156,10 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 onPressed: () {
                   signInWithGoogle().then((FirebaseUser currentUser) {
-                    isSkipped = false;
+                    setSkip(skip: false);
                     print('Sign in User Current : $currentUser');
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return NotesView();
+                      return NotesView(isTrash: false);
                     }));
                   }).catchError((e) => print(e));
                 },
@@ -187,12 +195,19 @@ class _LoginPageState extends State<LoginPage> {
                     fontFamily: 'Montserrat',
                   ),
                   onPressed: () {
-                    isSkipped = true;
+                    setSkip(skip: true);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NotesView()),
+                      MaterialPageRoute(builder: (context) => NotesView(isTrash: false)),
                     );
-                    print('isSkipped : $isSkipped');
+                    // TODO: Debug only, remove
+                    getSkip().then((value) {
+                      print('pre value : $value isSkipped : $isSkipped');
+                      setState(() {
+                        isSkipped = value;
+                      });
+                    });
+                    print('post isSkipped : $isSkipped');
                   },
                 ),
               ),
@@ -203,140 +218,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// Scaffold(
-//       body: Center(
-//         child: Column(
-//           children: <Widget>[
-//             Container(
-//               padding: EdgeInsets.symmetric(vertical: 13, horizontal: 15),
-//               height: 60,
-//               width: 370,
-//               decoration: BoxDecoration(
-//                   color: Colors.black,
-//                   shape: BoxShape.rectangle,
-//                   borderRadius: BorderRadius.circular(5)),
-//               margin: EdgeInsets.only(top: 30),
-//               child: Text(
-//                 'WELCOME TO GIV NOTES',
-//                 style: TextStyle(
-//                   fontFamily: 'SourceSansPro',
-//                   fontWeight: FontWeight.bold,
-//                   fontSize: 27,
-//                   letterSpacing: 3,
-//                   color: Colors.white,
-//                 ),
-//               ),
-//             ),
-//             Divider(
-//               color: Colors.black,
-//               thickness: 0.5,
-//               indent: 40,
-//               endIndent: 40,
-//             ),
-//             Container(
-//               margin: EdgeInsets.all(20),
-//               child: Text(
-//                 'Please Login with your Google account to sync.\nOr Skip',
-//                 style: TextStyle(
-//                   fontFamily: 'SourceSansPro',
-//                   fontSize: 20,
-//                   letterSpacing: 3,
-//                   color: Colors.black,
-//                 ),
-//               ),
-//             ),
-//             Container(
-//               color: Colors.black,
-//               margin: EdgeInsets.only(top: 20),
-//               height: 200,
-//               width: 200,
-//               child: Card(
-//                 elevation: 20,
-//                 child: Image(
-//                   image: AssetImage('assets/logo/icons/0001-1.jpg'),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(height: 50),
-//             // _signInButton(),
-//             Container(
-//               height: 60,
-//               width: 200,
-//               decoration: BoxDecoration(
-//                 color: Colors.black,
-//                 shape: BoxShape.rectangle,
-//                 borderRadius: BorderRadius.circular(50),
-//               ),
-//               child: GFButton(
-//                 elevation: 10,
-//                 buttonBoxShadow: true,
-//                 color: Colors.black,
-//                 text: '  Google',
-//                 icon: FaIcon(
-//                   FontAwesomeIcons.googlePlusG,
-//                   color: Colors.white,
-//                 ),
-//                 textStyle: TextStyle(
-//                   fontSize: 25,
-//                   fontFamily: 'SourceSansPro',
-//                   letterSpacing: 3,
-//                 ),
-//                 type: GFButtonType.solid,
-//                 size: GFSize.LARGE,
-//                 shape: GFButtonShape.standard,
-//                 padding: EdgeInsets.all(10),
-//                 fullWidthButton: true,
-//                 onPressed: () {
-//                   signInWithGoogle().then((FirebaseUser currentUser) {
-//                     isSkipped = false;
-//                     print('Sign in User Current : $currentUser');
-//                     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-//                       return HomePage();
-//                     }));
-//                   }).catchError((e) => print(e));
-//                 },
-//               ),
-//             ),
-//             Container(
-//               margin: EdgeInsets.only(top: 15),
-//               height: 60,
-//               width: 200,
-//               decoration: BoxDecoration(
-//                 color: Colors.black,
-//                 shape: BoxShape.rectangle,
-//                 borderRadius: BorderRadius.circular(50),
-//               ),
-//               child: GFButton(
-//                 elevation: 10,
-//                 buttonBoxShadow: true,
-//                 color: Colors.black,
-//                 text: '   Skip    ',
-//                 icon: FaIcon(
-//                   FontAwesomeIcons.solidArrowAltCircleRight,
-//                   color: Colors.white,
-//                 ),
-//                 textStyle: TextStyle(
-//                   fontSize: 25,
-//                   fontFamily: 'SourceSansPro',
-//                   letterSpacing: 3,
-//                 ),
-//                 type: GFButtonType.solid,
-//                 size: GFSize.LARGE,
-//                 shape: GFButtonShape.standard,
-//                 padding: EdgeInsets.all(10),
-//                 fullWidthButton: true,
-//                 onPressed: () {
-//                   isSkipped = true;
-//                   Navigator.push(
-//                     context,
-//                     MaterialPageRoute(builder: (context) => HomePage()),
-//                   );
-//                   print('isSkipped : $isSkipped');
-//                 },
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
