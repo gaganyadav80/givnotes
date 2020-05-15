@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/ui/drawerItems.dart';
@@ -13,7 +14,7 @@ class NotesEdit extends StatefulWidget {
   final Map<String, dynamic> note;
   final bool isTrash;
 
-  NotesEdit(this.noteMode, [this.note, this.isTrash]);
+  NotesEdit(this.noteMode, [this.isTrash, this.note]);
 
   @override
   _NotesEditState createState() => _NotesEditState();
@@ -69,11 +70,10 @@ class _NotesEditState extends State<NotesEdit> {
               ),
               SizedBox(height: 20),
               // TODO : Add Markdown support !! use zyfre
-              new Expanded(
+              Expanded(
                 flex: 1,
                 child: SingleChildScrollView(
                   child: FocusWidget(
-                    showFocusArea: true,
                     focusNode: _textFocus,
                     child: TextField(
                       focusNode: _textFocus,
@@ -108,14 +108,20 @@ class _NotesEditState extends State<NotesEdit> {
                                 'title': title,
                                 'text': text,
                               });
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => NotesView(isTrash: false)),
+                              );
                             } else if (widget?.noteMode == NoteMode.Editing) {
                               NotesDB.updateNote({
                                 'id': widget.note['id'],
                                 'title': title,
                                 'text': text,
                               });
+
+                              Navigator.pop(context);
                             }
-                            Navigator.pop(context);
                           },
                         )
                       : _NoteButton(
@@ -139,24 +145,26 @@ class _NotesEditState extends State<NotesEdit> {
                       Navigator.pop(context);
                     },
                   ),
-                  widget.noteMode == NoteMode.Editing && widget.isTrash == false
-                      ? _NoteButton('Trash', Colors.red, () async {
-                          await NotesDB.trashNote({
-                            'id': widget.note['id'],
-                            'title': _titleController.text,
-                            'text': _textController.text,
-                            'trash': 1,
-                          });
-                          Navigator.pop(context);
-                        })
-                      : _NoteButton(
-                          'Delete',
-                          Colors.grey,
-                          () {
-                            print('Delete pressed');
-                            _confirmDeleteAlert(context, widget.note['id']);
-                          },
-                        ),
+                  // TODO: correct this for adding new note
+                  if (widget.noteMode == NoteMode.Editing && widget.isTrash == false)
+                    _NoteButton('Trash', Colors.orange, () async {
+                      await NotesDB.trashNote({
+                        'id': widget.note['id'],
+                        'title': _titleController.text,
+                        'text': _textController.text,
+                        'trash': 1,
+                      });
+                      Navigator.pop(context);
+                    }),
+                  if (widget.noteMode == NoteMode.Editing && widget.isTrash == true)
+                    _NoteButton(
+                      'Delete',
+                      Colors.red,
+                      () {
+                        print('Delete pressed');
+                        _confirmDeleteAlert(context, widget.note['id']);
+                      },
+                    ),
                 ],
               )
             ],
@@ -209,6 +217,7 @@ _confirmDeleteAlert(context, int _id) {
           "Delete",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
+        // TODO: check if this updates the list
         onPressed: () async {
           await NotesDB.deleteNote(_id);
           Navigator.pop(context);
@@ -218,7 +227,7 @@ _confirmDeleteAlert(context, int _id) {
             colors: [Color.fromRGBO(116, 116, 191, 1.0), Color.fromRGBO(52, 138, 199, 1.0)]),
       )
     ],
-  );
+  ).show();
 }
 
 // TODO: check why this does not work

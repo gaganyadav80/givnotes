@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/notesDB.dart';
 
-// TODO: This is also used for trash so change name
 class NotesView extends StatefulWidget {
   final bool isTrash;
-  NotesView([this.isTrash]);
+  NotesView({this.isTrash});
 
   @override
   _NotesViewState createState() => _NotesViewState();
 }
 
 class _NotesViewState extends State<NotesView> {
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -37,16 +39,15 @@ class _NotesViewState extends State<NotesView> {
                           ? Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => NotesEdit(NoteMode.Editing, notes[index]),
-                              ),
-                            )
+                                builder: (context) =>
+                                    NotesEdit(NoteMode.Editing, false, notes[index]),
+                              )).then((value) => setState(() => count++))
                           : Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    NotesEdit(NoteMode.Editing, notes[index], true),
-                              ),
-                            );
+                                    NotesEdit(NoteMode.Editing, true, notes[index]),
+                              )).then((value) => setState(() => count++));
                     },
                     child: Card(
                       child: Padding(
@@ -66,7 +67,10 @@ class _NotesViewState extends State<NotesView> {
               );
             }
             // TODO: for in menu splash screen
-            return Center(child: CircularProgressIndicator(backgroundColor: Colors.white));
+            // return Center(child: CircularProgressIndicator(backgroundColor: Colors.white));
+            return SpinKitChasingDots(
+              color: Colors.deepOrangeAccent[400],
+            );
           },
         ),
         floatingActionButton: ActionBarMenu(),

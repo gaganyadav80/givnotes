@@ -65,10 +65,10 @@ class _DrawerItemsState extends State<DrawerItems> {
             child: null,
           ),
           // TODO : point the pages to remaining
-          myListTileTheme('All Notes', 0, NotesView()),
+          myListTileTheme('All Notes', 0, NotesView(isTrash: false)),
           myListTileTheme('Notebooks', 1, Notebooks()),
           myListTileTheme('Tags', 2),
-          myListTileTheme('Trash', 3, NotesView(true)),
+          myListTileTheme('Trash', 3, NotesView(isTrash: true)),
           myListTileTheme('Configuration', 4),
           myListTileTheme('About Us', 5, AboutUs()),
         ],

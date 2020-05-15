@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/pages/profile.dart';
-
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 
@@ -20,7 +19,6 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       return IconButton(
         icon: Icon(Icons.arrow_back),
         onPressed: () {
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
           Navigator.pop(context);
         },
       );
@@ -93,7 +91,8 @@ class _BottomMenuState extends State<BottomMenu> {
                 setState(() {
                   TellIndex.selectedIndex = 0;
                 });
-                Navigator.push(context, MaterialPageRoute(builder: (context) => NotesView()));
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => NotesView(isTrash: false)));
               },
             ),
             Padding(
@@ -155,7 +154,9 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
         child: Icon(Icons.add),
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => NotesEdit(NoteMode.Adding)));
+            context,
+            MaterialPageRoute(builder: (context) => NotesEdit(NoteMode.Adding, false)),
+          );
         },
       ),
     );
