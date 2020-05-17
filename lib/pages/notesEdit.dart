@@ -5,6 +5,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
+import 'package:route_transitions/route_transitions.dart' as rt;
 
 enum NoteMode { Editing, Adding }
 final FocusNode _titleFocus = FocusNode(), _textFocus = FocusNode();
@@ -56,11 +57,14 @@ class _NotesEditState extends State<NotesEdit> {
                   controller: _titleController,
                   decoration: InputDecoration.collapsed(
                     hintText: 'Untitled',
-                    hintStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.normal),
+                    hintStyle: TextStyle(
+                      fontSize: 25,
+                    ),
                   ),
                   style: TextStyle(
                     fontSize: 25,
                     fontFamily: 'Montserrat',
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -111,7 +115,10 @@ class _NotesEditState extends State<NotesEdit> {
 
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => NotesView(isTrash: false)),
+                                rt.PageRouteTransition(
+                                  builder: (context) => NotesView(isTrash: false),
+                                  animationType: rt.AnimationType.slide_right,
+                                ),
                               );
                             } else if (widget?.noteMode == NoteMode.Editing) {
                               NotesDB.updateNote({
@@ -229,43 +236,3 @@ _confirmDeleteAlert(context, int _id) {
     ],
   ).show();
 }
-
-// TODO: check why this does not work
-// Widget confirmDelete(BuildContext context, int _id) {
-//   return Scaffold(
-//     body: GFFloatingWidget(
-//       child: GFAlert(
-//         title: 'Confirm Delete?',
-//         content: 'Are you sure you permanently want to delete your note?',
-//         type: GFAlertType.rounded,
-//         bottombar: Row(
-//           mainAxisAlignment: MainAxisAlignment.end,
-//           children: <Widget>[
-//             MaterialButton(
-//               color: Colors.red,
-//               child: Text(
-//                 'CANCLE',
-//                 style: TextStyle(color: Colors.white),
-//               ),
-//               onPressed: () {
-//                 Navigator.pop(context);
-//               },
-//             ),
-//             SizedBox(width: 10),
-//             MaterialButton(
-//               color: Colors.red,
-//               child: Text(
-//                 'DELETE',
-//                 style: TextStyle(color: Colors.white),
-//               ),
-//               onPressed: () async {
-//                 await NotesDB.deleteNote(_id);
-//                 Navigator.pop(context);
-//               },
-//             ),
-//           ],
-//         ),
-//       ),
-//     ),
-//   );
-// }

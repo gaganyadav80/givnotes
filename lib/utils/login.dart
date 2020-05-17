@@ -3,15 +3,18 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/main.dart';
 import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:route_transitions/route_transitions.dart' as rt;
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 FirebaseUser currentUser;
-String blankUser = 'https://www.tinyurl.com/blankUser';
+String blankUser = 'assets/images/bank_User.png';
 String photoUrl = blankUser, displayName = 'Not Logged in', email = '';
 
 void setUserDetails() async {
@@ -123,48 +126,8 @@ class _LoginPageState extends State<LoginPage> {
                 fontSize: 16,
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 50, bottom: 200),
-              height: 65,
-              child: GFButton(
-                elevation: 4,
-                fullWidthButton: true,
-                // color: Color(0xff91dcf5),
-                color: lightBlue,
-                borderShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FaIcon(
-                      FontAwesomeIcons.google,
-                      color: Colors.white,
-                      size: 21,
-                    ),
-                    SizedBox(width: 20),
-                    Text(
-                      'Sign in',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontFamily: 'Montserrat',
-                        fontSize: 22,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                onPressed: () {
-                  signInWithGoogle().then((FirebaseUser currentUser) {
-                    setSkip(skip: false);
-                    print('Sign in User Current : $currentUser');
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                      return NotesView(isTrash: false);
-                    }));
-                  }).catchError((e) => print(e));
-                },
-              ),
-            ),
+            // !! SignInButton
+            signInButton(context, onProfile: false, isSignOut: false),
             Center(
               child: Text(
                 "Don't feel like syncing?",
@@ -198,16 +161,20 @@ class _LoginPageState extends State<LoginPage> {
                     setSkip(skip: true);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => NotesView(isTrash: false)),
+                      rt.PageRouteTransition(
+                        builder: (context) => NotesView(isTrash: false),
+                        animationType: rt.AnimationType.slide_left,
+                        curves: Curves.bounceOut,
+                      ),
                     );
                     // TODO: Debug only, remove
-                    getSkip().then((value) {
-                      print('pre value : $value isSkipped : $isSkipped');
-                      setState(() {
-                        isSkipped = value;
-                      });
-                    });
-                    print('post isSkipped : $isSkipped');
+                    // getSkip().then((value) {
+                    //   print('pre value : $value isSkipped : $isSkipped');
+                    //   setState(() {
+                    //     isSkipped = value;
+                    //   });
+                    // });
+                    // print('post isSkipped : $isSkipped');
                   },
                 ),
               ),
@@ -217,4 +184,113 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
+  EdgeInsets marginCheck() {
+    if (onProfile == false)
+      return EdgeInsets.only(top: 50, bottom: 230);
+    else
+      return EdgeInsets.zero;
+  }
+
+  return Container(
+    margin: marginCheck(),
+    height: 65,
+    child: GFButton(
+      elevation: 4,
+      fullWidthButton: true,
+      // color: Color(0xff91dcf5),
+      color: lightBlue,
+      borderShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(13),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          FaIcon(
+            FontAwesomeIcons.google,
+            color: Colors.white,
+            size: 21,
+          ),
+          SizedBox(width: 20),
+          Text(
+            isSignOut == false ? 'Sign in' : 'Sign out',
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: 'Montserrat',
+              fontSize: 22,
+              letterSpacing: 1,
+            ),
+          ),
+        ],
+      ),
+      onPressed: isSignOut == false
+          ? () {
+              signInWithGoogle().then((FirebaseUser currentUser) {
+                setSkip(skip: false);
+                if (onProfile == true) setUserDetails();
+                print('Sign in User Current : ${currentUser.displayName}');
+
+                onProfile == true
+                    ? Navigator.push(
+                        context,
+                        rt.PageRouteTransition(
+                          builder: (context) => MyProfile(),
+                          animationType: rt.AnimationType.fade,
+                        ),
+                      )
+                    : Navigator.push(
+                        context,
+                        rt.PageRouteTransition(
+                          builder: (context) => NotesView(isTrash: false),
+                          animationType: rt.AnimationType.fade,
+                        ),
+                      );
+              }).catchError((e) => print(e));
+            }
+          : () {
+              _signOutAlert(context);
+            },
+    ),
+  );
+}
+
+_signOutAlert(context) {
+  Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "SIGN OUT",
+    desc: "Please confirm your sign out",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "Confirm",
+          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Montserrat'),
+        ),
+        onPressed: () {
+          signOutGoogle();
+          logOut();
+          setSkip(skip: true);
+          Navigator.push(
+            context,
+            rt.PageRouteTransition(
+              builder: (context) => LoginPage(),
+              animationType: rt.AnimationType.slide_down,
+            ),
+          );
+        },
+        color: Color.fromRGBO(0, 179, 134, 1.0),
+      ),
+      DialogButton(
+        child: Text(
+          "Cancle",
+          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Montserrat'),
+        ),
+        onPressed: () => Navigator.pop(context),
+        gradient: LinearGradient(
+            colors: [Color.fromRGBO(116, 116, 191, 1.0), Color.fromRGBO(52, 138, 199, 1.0)]),
+      )
+    ],
+  ).show();
 }

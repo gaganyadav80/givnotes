@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
+import 'package:route_transitions/route_transitions.dart';
 
 class TellIndex {
   static int selectedIndex = 0;
@@ -40,7 +41,10 @@ class _DrawerItemsState extends State<DrawerItems> {
           if (nextPage != null) {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => nextPage),
+              PageRouteTransition(
+                builder: (context) => nextPage,
+                animationType: AnimationType.slide_left,
+              ),
             );
           }
         },
