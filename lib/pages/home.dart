@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:givnotes/pages/notesEdit.dart';
+import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/notesDB.dart';
@@ -42,14 +42,15 @@ class _NotesViewState extends State<NotesView> {
                             context,
                             PageRouteTransition(
                               builder: (context) =>
-                                  NotesEdit(NoteMode.Editing, false, notes[index]),
+                                  ZefyrEdit(NoteMode.Editing, false, notes[index]),
+                              // NotesEdit(NoteMode.Editing, false, notes[index]),
                               animationType: AnimationType.fade,
                             ),
                           ).then((value) => setState(() => count++))
                         : Navigator.push(
                             context,
                             PageRouteTransition(
-                              builder: (context) => NotesEdit(NoteMode.Editing, true, notes[index]),
+                              builder: (context) => ZefyrEdit(NoteMode.Editing, true, notes[index]),
                               animationType: AnimationType.fade,
                             ),
                           ).then((value) => setState(() => count++));

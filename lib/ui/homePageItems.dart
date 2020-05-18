@@ -2,9 +2,9 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
-import 'package:givnotes/pages/notesEdit.dart';
 import 'package:givnotes/pages/profile.dart';
 import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:route_transitions/route_transitions.dart';
 
@@ -194,9 +194,8 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
           Navigator.push(
             context,
             PageRouteTransition(
-              builder: (context) => NotesEdit(NoteMode.Adding, false),
+              builder: (context) => ZefyrEdit(NoteMode.Adding, false),
               animationType: AnimationType.scale,
-              curves: Curves.decelerate,
             ),
           );
         },

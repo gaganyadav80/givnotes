@@ -23,6 +23,8 @@ dependencies:
     focus_widget:
     shared_preferences:
     route_transitions:
+    zefyr:
+    quill_delta:
 
     eva_icons_flutter:
     http: ^0.12.1

@@ -49,14 +49,14 @@ class NotesDB {
     );
   }
 
-  static Future trashNote(Map<String, dynamic> note) async {
-    await db.update(
-      notesTable,
-      note,
-      where: 'id = ?',
-      whereArgs: [note['id']],
-    );
-  }
+  // static Future trashNote(Map<String, dynamic> note) async {
+  //   await db.update(
+  //     notesTable,
+  //     note,
+  //     where: 'id = ?',
+  //     whereArgs: [note['id']],
+  //   );
+  // }
 
   static Future deleteNote(int id) async {
     await db.delete(
@@ -67,13 +67,18 @@ class NotesDB {
   }
 
   static Future<List<Map<String, dynamic>>> getTrashNoteList() async {
-    if (db == null) {
-      await open();
-    }
     return await db.query(
       notesTable,
       where: 'trash = ?',
       whereArgs: [1],
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> getItemRenameList(Map<String, dynamic> note) async {
+    return await db.query(
+      notesTable,
+      where: 'title = ? AND text = ?',
+      whereArgs: [note['title'], note['text']],
     );
   }
 }

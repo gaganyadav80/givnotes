@@ -164,7 +164,6 @@ class _LoginPageState extends State<LoginPage> {
                       rt.PageRouteTransition(
                         builder: (context) => NotesView(isTrash: false),
                         animationType: rt.AnimationType.slide_left,
-                        curves: Curves.bounceOut,
                       ),
                     );
                     // TODO: Debug only, remove
