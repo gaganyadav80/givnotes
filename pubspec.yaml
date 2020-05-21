@@ -25,11 +25,15 @@ dependencies:
     route_transitions:
     zefyr:
     quill_delta:
+    lottie:
+    flutter_snake_navigationbar:
+    # animated_bottom_navigation_bar:
+    # dotted_border:
 
     eva_icons_flutter:
     http: ^0.12.1
-    floating_search_bar: ^0.3.0
-    sticky_headers: ^0.1.8+1
+    # floating_search_bar: ^0.3.0
+    # sticky_headers: ^0.1.8+1
 
 dev_dependencies:
     flutter_test:
@@ -41,7 +45,6 @@ flutter:
     assets:
         - assets/images/
         - assets/logo/
-        - assets/logo/icons/
 
     fonts:
         - family: Montserrat
@@ -53,12 +56,18 @@ flutter:
         - family: SourceSansPro-Light
           fonts:
               - asset: assets/fonts/SourceSansPro/SourceSansPro-Light.ttf
-        - family: Gotham
-          fonts:
-              - asset: assets/fonts/Gotham/GothamBook.ttf
-        - family: Gotham-Light
-          fonts:
-              - asset: assets/fonts/Gotham/GothamLight.ttf
         - family: Pacifico
           fonts:
               - asset: assets/fonts/Pacifico/Pacifico-Regular.ttf
+        - family: Arizonia
+          fonts:
+              - asset: assets/fonts/Arizonia/Arizonia-Regular.ttf
+        - family: Averia
+          fonts:
+              - asset: assets/fonts/Averia/Averia-Regular.ttf
+        - family: Abril
+          fonts:
+              - asset: assets/fonts/Abril/Abril-Regular.ttf
+        # - family: Yellowtail
+        #   fonts:
+        #       - asset: assets/fonts/Yellowtail/Yellowtail-Regular.ttf
