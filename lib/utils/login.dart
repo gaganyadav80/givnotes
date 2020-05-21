@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/main.dart';
-import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/profile.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:route_transitions/route_transitions.dart' as rt;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,7 +15,7 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn = GoogleSignIn();
 
 FirebaseUser currentUser;
-String blankUser = 'assets/images/bank_User.png';
+String blankUser = 'assets/images/lion_its.jpg';
 String photoUrl = blankUser, displayName = 'Not Logged in', email = '';
 
 void setUserDetails() async {
@@ -82,100 +83,117 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffFFFFFF),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, top: 80, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(
           children: <Widget>[
-            Row(
-              children: <Widget>[
-                Text(
-                  'Giv',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Montserrat',
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(
-                  'Notes.',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontFamily: 'Montserrat',
-                    fontSize: 18,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 100),
-            Text(
-              'Sign in',
-              style: TextStyle(
-                fontSize: 35,
-                fontFamily: 'Montserrat',
+            Padding(
+              padding: const EdgeInsets.only(top: 80, left: 0, right: 20),
+              child: Lottie.asset(
+                'assets/images/Growth.zip',
+                height: 250,
+                width: double.infinity,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Please sign in to sync.',
-              style: TextStyle(
-                color: darkGrey,
-                fontFamily: 'Montserrat',
-                fontSize: 16,
-              ),
-            ),
-            // !! SignInButton
-            signInButton(context, onProfile: false, isSignOut: false),
-            Center(
-              child: Text(
-                "Don't feel like syncing?",
-                style: TextStyle(
-                  color: Color(0xffaab7bb),
-                  fontFamily: 'Montserrat',
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: Container(
-                width: 170,
-                child: GFButton(
-                  size: 50,
-                  icon: FaIcon(
-                    FontAwesomeIcons.userSlash,
-                    size: 16,
-                    color: Color(0xff54B7E2),
-                  ),
-                  type: GFButtonType.outline2x,
-                  color: Color(0xff54B7E2),
-                  text: 'Skip',
-                  textStyle: TextStyle(
-                    color: Color(0xff54B7E2),
-                    fontSize: 20,
-                    fontFamily: 'Montserrat',
-                  ),
-                  onPressed: () {
-                    setSkip(skip: true);
-                    Navigator.push(
-                      context,
-                      rt.PageRouteTransition(
-                        builder: (context) => NotesView(isTrash: false),
-                        animationType: rt.AnimationType.slide_left,
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 70),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        'Giv',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Montserrat',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    );
-                    // TODO: Debug only, remove
-                    // getSkip().then((value) {
-                    //   print('pre value : $value isSkipped : $isSkipped');
-                    //   setState(() {
-                    //     isSkipped = value;
-                    //   });
-                    // });
-                    // print('post isSkipped : $isSkipped');
-                  },
-                ),
+                      Text(
+                        'Notes.',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontFamily: 'Montserrat',
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 230),
+                  Text(
+                    'Sign in',
+                    style: TextStyle(
+                      fontSize: 35,
+                      fontFamily: 'Montserrat',
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Please sign in to sync.',
+                    style: TextStyle(
+                      color: darkGrey,
+                      fontFamily: 'Montserrat',
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 50),
+                  // !! SignInButton
+                  signInButton(context, onProfile: false, isSignOut: false),
+                  SizedBox(height: 100),
+                  Center(
+                    child: Text(
+                      "Don't feel like syncing?",
+                      style: TextStyle(
+                        color: Color(0xffaab7bb),
+                        fontFamily: 'Montserrat',
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Center(
+                    child: Container(
+                      width: 170,
+                      child: GFButton(
+                        size: 50,
+                        icon: FaIcon(
+                          FontAwesomeIcons.userSlash,
+                          size: 16,
+                          color: Color(0xff5A56D0),
+                        ),
+                        type: GFButtonType.outline2x,
+                        color: Color(0xff5A56D0),
+                        text: 'Skip',
+                        textStyle: TextStyle(
+                          color: Color(0xff5A56D0),
+                          fontSize: 20,
+                          fontFamily: 'Montserrat',
+                        ),
+                        onPressed: () {
+                          setSkip(skip: true);
+                          Navigator.push(
+                            context,
+                            rt.PageRouteTransition(
+                              builder: (context) => NotesView(isTrash: false),
+                              animationType: rt.AnimationType.slide_left,
+                            ),
+                          );
+                          // TODO: Debug only, remove
+                          // getSkip().then((value) {
+                          //   print('pre value : $value isSkipped : $isSkipped');
+                          //   setState(() {
+                          //     isSkipped = value;
+                          //   });
+                          // });
+                          // print('post isSkipped : $isSkipped');
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -186,21 +204,12 @@ class _LoginPageState extends State<LoginPage> {
 }
 
 Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
-  EdgeInsets marginCheck() {
-    if (onProfile == false)
-      return EdgeInsets.only(top: 50, bottom: 230);
-    else
-      return EdgeInsets.zero;
-  }
-
   return Container(
-    margin: marginCheck(),
     height: 65,
     child: GFButton(
       elevation: 4,
       fullWidthButton: true,
-      // color: Color(0xff91dcf5),
-      color: lightBlue,
+      color: onProfile == true ? Colors.black : purple,
       borderShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(13),
       ),
@@ -210,7 +219,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
           FaIcon(
             FontAwesomeIcons.google,
             color: Colors.white,
-            size: 21,
+            size: 22,
           ),
           SizedBox(width: 20),
           Text(
@@ -218,6 +227,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
             style: TextStyle(
               color: Colors.white,
               fontFamily: 'Montserrat',
+              fontWeight: FontWeight.w600,
               fontSize: 22,
               letterSpacing: 1,
             ),

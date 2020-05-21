@@ -3,12 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/ui/splash.dart';
 import 'package:givnotes/utils/login.dart';
 
 // TODO: hide the status bar on login or everywhere
-Color lightBlue = Color(0xff91dcf5), darkGrey = Color(0xff7D9098);
+Color lightBlue = Color(0xff91dcf5), purple = Color(0xff5A56D0), darkGrey = Color(0xff7D9098);
 bool isSkipped;
 
 void main() => runApp(MyApp());
@@ -70,5 +70,3 @@ class _CheckLogInState extends State<CheckLogIn> {
     );
   }
 }
-
-

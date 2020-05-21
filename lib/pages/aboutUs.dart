@@ -14,6 +14,7 @@ class _AboutUsState extends State<AboutUs> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         drawer: DrawerItems(),
         appBar: MyAppBar(''),
         body: Column(

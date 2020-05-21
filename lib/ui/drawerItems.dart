@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -25,7 +25,7 @@ class _DrawerItemsState extends State<DrawerItems> {
 
   Widget myListTileTheme(String title, int index, [Widget nextPage]) {
     return ListTileTheme(
-      selectedColor: Colors.green,
+      selectedColor: Color(0xffEC625C),
       child: ListTile(
         selected: TellIndex.selectedIndex == index ? true : false,
         leading: Icon(

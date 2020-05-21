@@ -3,16 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/pages/profile.dart';
-import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
+import 'package:givnotes/utils/search.dart';
+import 'package:lottie/lottie.dart';
 import 'package:route_transitions/route_transitions.dart';
+
+Color red = Color(0xffEC625C);
 
 class LogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint();
-    paint.color = Colors.deepOrangeAccent[400];
+    paint.color = Colors.black;
     var path = Path();
     // !! Edit after / --> init = 5
     path.lineTo(0, size.height - size.height / 1.5);
@@ -34,24 +38,37 @@ class LogoPainter extends CustomPainter {
 }
 
 // ! Simple AppBar
-class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   final String title;
   final bool isNote;
 
   MyAppBar(this.title, [this.isNote]);
 
+  @override
+  _MyAppBarState createState() => _MyAppBarState();
+
+  @override
+  Size get preferredSize => Size.fromHeight(106);
+}
+
+class _MyAppBarState extends State<MyAppBar> {
   Widget leading(BuildContext context) {
-    if (isNote == true) {
-      return IconButton(
-        icon: Icon(EvaIcons.arrowBack),
-        iconSize: 30,
-        onPressed: () {
-          Navigator.pop(context);
-        },
+    if (widget.isNote == true) {
+      return Padding(
+        padding: const EdgeInsets.all(5),
+        child: IconButton(
+          icon: Lottie.asset('assets/images/back-arrow.json'),
+          color: Colors.black,
+          iconSize: 30,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       );
     } else {
       return IconButton(
-        icon: Icon(Icons.menu),
+        icon: Lottie.asset('assets/images/menu-loading-black.json'),
+        color: Colors.black,
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },
@@ -60,32 +77,41 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromRadius(30.0);
-
-  @override
   Widget build(BuildContext context) {
-    return GFAppBar(
-      leading: leading(context),
-      // bottom: PreferredSize(
-      //   child: CustomPaint(
-      //     size: Size(double.infinity, 120),
-      //     painter: LogoPainter(),
-      //   ),
-      //   preferredSize: preferredSize,
-      // ),
-      backgroundColor: Colors.deepOrangeAccent[400],
-      elevation: 30,
-      searchBar: true,
-      centerTitle: true,
-      title: Text(
-        title, // title
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontFamily: 'SourceSansPro-Light',
-          letterSpacing: 3,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(height: 10),
+        GFAppBar(
+          leading: leading(context),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          // title: Text(
+          //   title,
+          //   style: TextStyle(
+          //     color: Colors.black,
+          //     fontSize: 20,
+          //     fontFamily: 'Abril',
+          //     letterSpacing: 2,
+          //     wordSpacing: 3,
+          //   ),
+          // ),
         ),
-      ),
+        Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: Text(
+            widget.title,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 30,
+              fontFamily: 'Abril',
+              letterSpacing: 2,
+              wordSpacing: 3,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -100,6 +126,7 @@ class _BottomMenuState extends State<BottomMenu> {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
+      color: Colors.black,
       elevation: 30.0,
       shape: CircularNotchedRectangle(),
       child: Container(
@@ -109,11 +136,11 @@ class _BottomMenuState extends State<BottomMenu> {
           children: <Widget>[
             IconButton(
               icon: Icon(
-                Icons.library_books,
-                color: Colors.black,
+                EvaIcons.bookOpenOutline,
+                color: Colors.white,
               ),
               tooltip: 'All Notes',
-              iconSize: 30.0,
+              iconSize: 26,
               onPressed: () {
                 setState(() {
                   TellIndex.selectedIndex = 0;
@@ -131,33 +158,41 @@ class _BottomMenuState extends State<BottomMenu> {
               padding: const EdgeInsets.only(right: 25.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.search,
-                  color: Colors.black,
+                  EvaIcons.search,
+                  color: Colors.white,
                 ),
                 tooltip: 'Search Notes',
-                iconSize: 30.0,
-                onPressed: () {},
+                iconSize: 26,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    PageRouteTransition(
+                      builder: (context) => SearchPage(),
+                      animationType: AnimationType.slide_up,
+                    ),
+                  );
+                },
               ),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: IconButton(
                 icon: Icon(
-                  Icons.star,
-                  color: Colors.black,
+                  EvaIcons.heartOutline,
+                  color: Colors.white,
                 ),
                 tooltip: 'Favourites',
-                iconSize: 30.0,
+                iconSize: 26,
                 onPressed: () {},
               ),
             ),
             IconButton(
               icon: Icon(
-                Icons.account_circle,
-                color: Colors.black,
+                EvaIcons.personOutline,
+                color: Colors.white,
               ),
               tooltip: 'My Profile',
-              iconSize: 30.0,
+              iconSize: 26,
               onPressed: () {
                 Navigator.push(
                   context,
@@ -181,12 +216,13 @@ class ActionBarMenu extends StatefulWidget {
   _ActionBarMenuState createState() => _ActionBarMenuState();
 }
 
-class _ActionBarMenuState extends State<ActionBarMenu> {
+class _ActionBarMenuState extends State<ActionBarMenu> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.7),
+      padding: const EdgeInsets.all(0.0),
       child: FloatingActionButton(
+        elevation: 10.0,
         backgroundColor: Colors.black,
         tooltip: 'Add new note',
         child: Icon(Icons.add),
@@ -203,3 +239,29 @@ class _ActionBarMenuState extends State<ActionBarMenu> {
     );
   }
 }
+
+// AnimationController _controller;
+// bool expanded = true;
+// @override
+// void initState() {
+//   super.initState();
+//   _controller = AnimationController(
+//     vsync: this,
+//     duration: Duration(milliseconds: 400),
+//     reverseDuration: Duration(milliseconds: 400),
+//   );
+// }
+// IconButton(
+//   icon: AnimatedIcon(
+//     color: Colors.black,
+//     icon: AnimatedIcons.menu_arrow,
+//     progress: _controller,
+//     semanticLabel: 'Show menu',
+//   ),
+//   onPressed: () {
+//     setState(() {
+//       expanded ? _controller.forward() : _controller.reverse();
+//       expanded = !expanded;
+//     });
+//   },
+// );

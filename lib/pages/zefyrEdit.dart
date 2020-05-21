@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
-import 'package:givnotes/pages/home.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/homePageItems.dart';
 import 'package:givnotes/utils/notesDB.dart';
@@ -106,10 +106,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           );
 
     return Scaffold(
+      backgroundColor: Colors.white,
       drawer: DrawerItems(),
       appBar: widget.isTrash == false
-          ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'NEW NOTE' : 'EDIT NOTE', true)
-          : MyAppBar('DELETED NOTE', true),
+          ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
+          : MyAppBar('Deleted Note', true),
       body: Container(
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         child: Column(

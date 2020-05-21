@@ -13,6 +13,7 @@ class _NotebooksState extends State<Notebooks> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         drawer: DrawerItems(),
         appBar: MyAppBar('NOTEBOOKS'),
         body: ListView(
