@@ -1,8 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:givnotes/ui/drawerItems.dart';
-import 'package:givnotes/ui/homePageItems.dart';
+import 'package:getflutter/components/button/gf_button.dart';
+import 'package:getflutter/getflutter.dart';
+import 'package:givnotes/enums/homeVariables.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutUs extends StatefulWidget {
   @override
@@ -13,147 +17,248 @@ class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        drawer: DrawerItems(),
-        appBar: MyAppBar(''),
-        body: Column(
-          children: <Widget>[
-            // CustomAppBar(''),
-            Container(height: 10),
-// *** Heading of the page
-            Text(
-              'ABOUT US',
-              style: TextStyle(
-                fontFamily: 'Montserrat',
-                fontSize: 40,
-                letterSpacing: 5,
-              ),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 620,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.fill,
+              image: AssetImage('assets/images/aboutBack.png'),
             ),
-// *** Name says it all
-            Divider(
-              color: Colors.black,
-              endIndent: 60,
-              indent: 60,
-              thickness: 1,
-            ),
-// *** Developer aka Me profile pic
-            Container(
-              margin: EdgeInsets.only(top: 10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(width: 3, color: Colors.black),
+          ),
+          padding: EdgeInsets.only(top: 20, left: 10, right: 10),
+          child: Stack(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Text(
+                    'Giv',
+                    style: GoogleFonts.montserrat(
+                      color: Colors.black,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Text(
+                    'Notes.',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ],
               ),
-              child: Card(
-                borderOnForeground: true,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(80),
+              Container(
+                margin: EdgeInsets.only(top: 70, left: 10, right: 10),
+                decoration: BoxDecoration(
+                  color: whiteIsh,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(3),
+                  // border: Border.all(),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.grey[400],
+                    ),
+                  ],
                 ),
-                elevation: 8,
-                child: CircleAvatar(
-                  radius: 80,
-                  // TODO: Change to a more professional picture
-                  backgroundImage: AssetImage('assets/images/developer.JPEG'),
-                ),
-              ),
-            ),
-// *** Card for the Name
-            Container(
-              margin: EdgeInsets.symmetric(vertical: 15, horizontal: 2),
-              height: 280,
-              width: 370,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(13),
-                ),
-                elevation: 8,
-                color: Colors.black,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-// *** Row to add the heart icon in between
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Made with "',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontFamily: 'SourceSansPro-Light',
-                              letterSpacing: 5,
-                            ),
-                          ),
-                          FaIcon(
-                            FontAwesomeIcons.heart,
-                            color: Colors.white,
-                            size: 20,
-                          ),
-                          Text(
-                            '" by',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 25,
-                              fontFamily: 'SourceSansPro-Light',
-                              letterSpacing: 5,
-                            ),
-                          ),
-                        ],
-                      ),
-                      Text(
-                        'GAGAN',
-                        style: TextStyle(
-                          fontSize: 35,
-                          color: Colors.white,
-                          fontFamily: 'SourceSansPro',
-                          letterSpacing: 3,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Divider(
-                          color: Colors.white,
-                          thickness: 2,
-                          endIndent: 30,
-                          indent: 30,
-                        ),
-                      ),
-                      Text(
-                        'APP DEVELOPER',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
-                          letterSpacing: 5,
-                          fontFamily: 'SourceSansPro-Light',
-                        ),
-                      ),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(top: 5, left: 5),
-                        leading: Icon(
-                          Icons.email,
-                          color: Colors.white,
-                          size: 26,
-                        ),
-                        title: Text(
-                          'gaganyadav80@gmail.com',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'SourceSansPro-Light',
-                            fontSize: 24.0,
-                            letterSpacing: 0.75,
-                          ),
-                        ),
-                      ),
-                    ],
+                child: ListTile(
+                  leading: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: CircleAvatar(
+                      backgroundImage: AssetImage('assets/images/developer.JPEG'),
+                      backgroundColor: whiteIsh,
+                      radius: 25,
+                    ),
+                  ),
+                  title: Text(
+                    'Gagan Yadav',
+                    style: TextStyle(
+                      fontSize: 22,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    '~\$ Developer',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(top: 170, left: 20),
+                child: Text(
+                  'Liked My Work ... \nDon\'t forget to mention it :)',
+                  style: GoogleFonts.ubuntuMono(
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 155,
+                left: 330,
+                child: Text(
+                  '?',
+                  style: TextStyle(
+                    fontSize: 75,
+                    fontFamily: 'Abril',
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 260,
+                left: 24,
+                child: Image(
+                  image: AssetImage('assets/images/mention.png'),
+                  height: 180,
+                  width: 240,
+                ),
+              ),
+              Positioned(
+                top: 265,
+                left: 284,
+                child: Column(
+                  children: <Widget>[
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.twitter.com/gagan_yadav_47';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Twitter profile';
+                        }
+                      },
+                      splashColor: Colors.blue,
+                      color: Colors.blue,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Twitter     ',
+                      icon: Icon(
+                        FontAwesomeIcons.twitter,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
+                    ),
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.instagram.com/gagan.yadav.80';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Instagram profile';
+                        }
+                      },
+                      splashColor: Colors.pink[600],
+                      color: Colors.pink[600],
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Instagram',
+                      icon: Icon(
+                        FontAwesomeIcons.instagram,
+                        color: Colors.pink[600],
+                        size: 20,
+                      ),
+                    ),
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.facebook.com/gagan.77492';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Facebook profile';
+                        }
+                      },
+                      splashColor: Colors.black,
+                      color: Colors.blue[900],
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Facebook ',
+                      icon: Icon(
+                        FontAwesomeIcons.facebookF,
+                        color: Colors.blue[900],
+                        size: 20,
+                      ),
+                    ),
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.github.com/gaganyadav80/givnotes/';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Github profile';
+                        }
+                      },
+                      splashColor: Colors.black,
+                      color: Colors.black,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Github       ',
+                      icon: Icon(
+                        FontAwesomeIcons.github,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // TODO: remove it
+              // Positioned(
+              //   top: 237,
+              //   left: 364,
+              //   child: Text(
+              //     '___\n   |\n   |\n   |\n   |\n   |\n   |\n___|',
+              //     style: GoogleFonts.ubuntuMono(
+              //       fontSize: 25,
+              //     ),
+              //   ),
+              // ),
+              Container(
+                margin: EdgeInsets.only(top: 510, left: 10, right: 10),
+                decoration: BoxDecoration(
+                  color: whiteIsh,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(3),
+                  // border: Border.all(),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.grey[400],
+                    ),
+                  ],
+                ),
+                child: ListTile(
+                  leading: Icon(
+                    CupertinoIcons.conversation_bubble,
+                    size: 45,
+                    color: Colors.greenAccent,
+                  ),
+                  title: Text(
+                    'Found something strange?',
+                    style: GoogleFonts.ubuntuMono(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.greenAccent,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Please let me know.',
+                    style: TextStyle(
+                      fontSize: 17,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
-        bottomNavigationBar: BottomMenu(),
       ),
     );
   }

@@ -1,41 +1,11 @@
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/getflutter.dart';
-import 'package:givnotes/pages/profile.dart';
-import 'package:givnotes/pages/notesView.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/utils/search.dart';
 import 'package:lottie/lottie.dart';
 import 'package:route_transitions/route_transitions.dart';
-
-Color red = Color(0xffEC625C);
-
-class LogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = Paint();
-    paint.color = Colors.black;
-    var path = Path();
-    // !! Edit after / --> init = 5
-    path.lineTo(0, size.height - size.height / 1.5);
-    // !! Edit after (-) minus --> init = 0
-    path.lineTo(size.width / 1.2, size.height - 15);
-    //Added this line
-    path.relativeQuadraticBezierTo(15, 3, 30, -5);
-    // !! Edit after / --> init = 5
-    path.lineTo(size.width, size.height - size.height / 3);
-    path.lineTo(size.width, 0);
-    path.close();
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
-}
 
 // ! Simple AppBar
 class MyAppBar extends StatefulWidget with PreferredSizeWidget {
@@ -48,7 +18,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   _MyAppBarState createState() => _MyAppBarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(106);
+  Size get preferredSize => Size.fromHeight(116);
 }
 
 class _MyAppBarState extends State<MyAppBar> {
@@ -57,17 +27,22 @@ class _MyAppBarState extends State<MyAppBar> {
       return Padding(
         padding: const EdgeInsets.all(5),
         child: IconButton(
-          icon: Lottie.asset('assets/images/back-arrow.json'),
+          icon: Lottie.asset('assets/animations/back-arrow.json'),
           color: Colors.black,
           iconSize: 30,
           onPressed: () {
-            Navigator.pop(context);
+            // Navigator.pop(context);
+            setState(() {
+              Var.noteMode = NoteMode.Adding;
+              Var.selectedIndex = 0;
+              Var.isTrash = false;
+            });
           },
         ),
       );
     } else {
       return IconButton(
-        icon: Lottie.asset('assets/images/menu-loading-black.json'),
+        icon: Lottie.asset('assets/animations/menu-loading-black.json'),
         color: Colors.black,
         onPressed: () {
           Scaffold.of(context).openDrawer();
@@ -84,33 +59,25 @@ class _MyAppBarState extends State<MyAppBar> {
         SizedBox(height: 10),
         GFAppBar(
           leading: leading(context),
-          backgroundColor: Colors.white,
+          backgroundColor: whiteIsh,
           elevation: 0,
           centerTitle: true,
-          // title: Text(
-          //   title,
-          //   style: TextStyle(
-          //     color: Colors.black,
-          //     fontSize: 20,
-          //     fontFamily: 'Abril',
-          //     letterSpacing: 2,
-          //     wordSpacing: 3,
-          //   ),
-          // ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 15),
           child: Text(
             widget.title,
             style: TextStyle(
+              fontFamily: 'Abril',
               color: Colors.black,
               fontSize: 30,
-              fontFamily: 'Abril',
+              fontWeight: FontWeight.w400,
               letterSpacing: 2,
               wordSpacing: 3,
             ),
           ),
         ),
+        SizedBox(height: 10),
       ],
     );
   }
@@ -136,29 +103,29 @@ class _BottomMenuState extends State<BottomMenu> {
           children: <Widget>[
             IconButton(
               icon: Icon(
-                EvaIcons.bookOpenOutline,
+                CupertinoIcons.book,
                 color: Colors.white,
               ),
               tooltip: 'All Notes',
               iconSize: 26,
               onPressed: () {
-                setState(() {
-                  TellIndex.selectedIndex = 0;
-                });
-                Navigator.push(
-                  context,
-                  PageRouteTransition(
-                    builder: (context) => NotesView(isTrash: false),
-                    animationType: AnimationType.slide_up,
-                  ),
-                );
+                // setState(() {
+                //   Var.selectedIndex = 0;
+                // });
+                // Navigator.push(
+                //   context,
+                //   PageRouteTransition(
+                //     builder: (context) => NotesView(isTrash: false),
+                //     animationType: AnimationType.slide_up,
+                //   ),
+                // );
               },
             ),
             Padding(
               padding: const EdgeInsets.only(right: 25.0),
               child: IconButton(
                 icon: Icon(
-                  EvaIcons.search,
+                  CupertinoIcons.search,
                   color: Colors.white,
                 ),
                 tooltip: 'Search Notes',
@@ -178,7 +145,7 @@ class _BottomMenuState extends State<BottomMenu> {
               padding: const EdgeInsets.only(left: 25.0),
               child: IconButton(
                 icon: Icon(
-                  EvaIcons.heartOutline,
+                  CupertinoIcons.heart,
                   color: Colors.white,
                 ),
                 tooltip: 'Favourites',
@@ -188,19 +155,19 @@ class _BottomMenuState extends State<BottomMenu> {
             ),
             IconButton(
               icon: Icon(
-                EvaIcons.personOutline,
+                CupertinoIcons.person,
                 color: Colors.white,
               ),
               tooltip: 'My Profile',
               iconSize: 26,
               onPressed: () {
-                Navigator.push(
-                  context,
-                  PageRouteTransition(
-                    animationType: AnimationType.slide_up,
-                    builder: (context) => MyProfile(),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   PageRouteTransition(
+                //     animationType: AnimationType.slide_up,
+                //     builder: (context) => MyProfile(),
+                //   ),
+                // );
               },
             ),
           ],
@@ -227,13 +194,13 @@ class _ActionBarMenuState extends State<ActionBarMenu> with SingleTickerProvider
         tooltip: 'Add new note',
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-            context,
-            PageRouteTransition(
-              builder: (context) => ZefyrEdit(NoteMode.Adding, false),
-              animationType: AnimationType.scale,
-            ),
-          );
+          // Navigator.push(
+          //   context,
+          //   PageRouteTransition(
+          //     builder: (context) => ZefyrEdit(NoteMode.Adding, false),
+          //     animationType: AnimationType.scale,
+          //   ),
+          // );
         },
       ),
     );

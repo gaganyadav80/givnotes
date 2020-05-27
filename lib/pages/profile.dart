@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/main.dart';
-import 'package:givnotes/ui/drawerItems.dart';
-import 'package:givnotes/ui/homePageItems.dart';
+import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/utils/login.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class MyProfile extends StatefulWidget {
   @override
@@ -15,12 +16,10 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     getSkip().then((bool skip) {
-      print('pre value: $skip and isSkipped: $isSkipped');
       setState(() {
         isSkipped = skip ?? false;
         getUserDetails();
       });
-      print('post value: $skip and isSkipped: $isSkipped');
     });
 
     super.initState();
@@ -28,121 +27,128 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-      drawer: DrawerItems(),
-      appBar: MyAppBar(''),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: <Widget>[
-            CustomPaint(
-              size: Size(double.infinity, 120),
-              painter: LogoPainter(),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 60, right: 250),
-              child: Container(
-                child: Text(
-                  'Profile',
-                  style: TextStyle(
-                    color: Color(0xff252644),
-                    fontSize: 40,
-                    fontFamily: 'Pacifico',
-                  ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: isSkipped == true
+            ? Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 210),
+                      child: Lottie.asset(
+                        blankUser,
+                        height: 200,
+                        width: 200,
+                      ),
+                    ),
+                    SizedBox(height: 50),
+                    Text(
+                      'Oops!',
+                      style: GoogleFonts.montserrat(
+                        color: Colors.teal,
+                        fontSize: 40,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      'Looks like you are not logged in.',
+                      style: GoogleFonts.sourceSansPro(
+                        fontSize: 25,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                    SizedBox(height: 100),
+                    Container(
+                      height: 65,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        shape: BoxShape.rectangle,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: signInButton(context, onProfile: true, isSignOut: false),
+                    ),
+                  ],
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(top: 50),
+                      height: 270,
+                      width: double.infinity,
+                      child: Card(
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 30, right: 30),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(height: 70),
+                              Text(
+                                displayName,
+                                style: GoogleFonts.arizonia(
+                                  color: Colors.black,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                email,
+                                style: GoogleFonts.sourceSansPro(
+                                  color: Colors.black54,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+                              Container(
+                                height: 65,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: signInButton(context, onProfile: true, isSignOut: true),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 30,
+                      child: Container(
+                        height: 100,
+                        width: 100,
+                        child: CircleAvatar(
+                          backgroundImage: cachePhoto,
+                          backgroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 300),
+                      height: 300,
+                      width: double.infinity,
+                      child: Image.asset('assets/images/chatting.png'),
+                    ),
+                  ],
                 ),
               ),
-            ),
-            // *** Developer aka Me profile pic
-            Container(
-              margin: EdgeInsets.only(top: 190, left: 10, right: 10),
-              padding: EdgeInsets.only(left: 10, right: 10),
-              decoration: BoxDecoration(
-                // color: Color(0xffEC625C)
-                color: Color(0xffFAFAFA),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey,
-                    blurRadius: 15,
-                  ),
-                ],
-              ),
-              height: 360,
-              width: 380,
-              child: Column(
-                children: <Widget>[
-                  SizedBox(height: 130),
-                  Text(
-                    isSkipped == true ? 'Not Logged in' : displayName,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 40,
-                      fontFamily: 'Arizonia',
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    isSkipped == true ? 'gaganyadav80@gmail.com' : email,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 23,
-                      fontFamily: 'Averia',
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  SizedBox(height: 65),
-                  Container(
-                    height: 65,
-                    width: 340,
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: isSkipped == false
-                        ? signInButton(context, onProfile: true, isSignOut: true)
-                        : signInButton(context, onProfile: true, isSignOut: false),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              top: 100,
-              child: Container(
-                margin: EdgeInsets.only(top: 10),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    width: 1.5,
-                    color: Color(0xffE67D6A),
-                  ),
-                ),
-                child: Card(
-                  borderOnForeground: true,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(80),
-                  ),
-                  elevation: 5,
-                  child: CircleAvatar(
-                    radius: 80,
-                    backgroundImage:
-                        isSkipped == true ? AssetImage(blankUser) : NetworkImage(photoUrl),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
-      floatingActionButton: ActionBarMenu(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomMenu(),
     );
   }
 }

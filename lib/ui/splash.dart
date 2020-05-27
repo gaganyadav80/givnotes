@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
         child: Container(
@@ -18,19 +19,18 @@ class SplashPage extends StatelessWidget {
                   children: <Widget>[
                     Text(
                       'Giv',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Montserrat',
+                      style: GoogleFonts.montserrat(
                         fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     Text(
                       'Notes.',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontFamily: 'Montserrat',
+                      style: GoogleFonts.montserrat(
                         fontSize: 18,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ],
@@ -44,9 +44,9 @@ class SplashPage extends StatelessWidget {
               const SizedBox(height: 280),
               Text(
                 "Checking your Google Login Status",
-                style: TextStyle(
+                style: GoogleFonts.sourceSansPro(
                   color: Colors.black,
-                  fontFamily: 'SourceSansPro',
+                  fontWeight: FontWeight.w400,
                   fontSize: 20.0,
                 ),
               ),

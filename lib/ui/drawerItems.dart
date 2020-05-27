@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/aboutUs.dart';
+import 'package:givnotes/pages/tagsView.dart';
+import 'package:givnotes/utils/home.dart';
 import 'package:route_transitions/route_transitions.dart';
-
-class TellIndex {
-  static int selectedIndex = 0;
-}
 
 class DrawerItems extends StatefulWidget {
   @override
@@ -16,18 +15,21 @@ class DrawerItems extends StatefulWidget {
 class _DrawerItemsState extends State<DrawerItems> {
   List<IconData> _icons = [
     Icons.library_books,
-    Icons.folder,
+    null,
+    null,
     Icons.bookmark,
+    null,
     Icons.restore_from_trash,
-    Icons.settings,
     Icons.person,
+    Icons.settings,
+    Icons.folder,
   ];
 
   Widget myListTileTheme(String title, int index, [Widget nextPage]) {
     return ListTileTheme(
       selectedColor: Color(0xffEC625C),
       child: ListTile(
-        selected: TellIndex.selectedIndex == index ? true : false,
+        selected: Var.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
           size: 30,
@@ -35,18 +37,24 @@ class _DrawerItemsState extends State<DrawerItems> {
         title: Text(title),
         onTap: () {
           setState(() {
-            TellIndex.selectedIndex = index;
+            if (index == 5)
+              Var.isTrash = true;
+            else
+              Var.isTrash = false;
+
+            Var.selectedIndex = index;
           });
+
           Navigator.pop(context);
-          if (nextPage != null) {
-            Navigator.push(
-              context,
-              PageRouteTransition(
-                builder: (context) => nextPage,
-                animationType: AnimationType.slide_left,
-              ),
-            );
-          }
+          // if (nextPage != null) {
+          Navigator.push(
+            context,
+            PageRouteTransition(
+              builder: (context) => HomePage(),
+              animationType: AnimationType.slide_left,
+            ),
+          );
+          // }
         },
       ),
     );
@@ -70,11 +78,11 @@ class _DrawerItemsState extends State<DrawerItems> {
           ),
           // TODO : point the pages to remaining
           myListTileTheme('All Notes', 0, NotesView(isTrash: false)),
-          myListTileTheme('Notebooks', 1, Notebooks()),
-          myListTileTheme('Tags', 2),
-          myListTileTheme('Trash', 3, NotesView(isTrash: true)),
-          myListTileTheme('Configuration', 4),
-          myListTileTheme('About Us', 5, AboutUs()),
+          myListTileTheme('Notebooks', 8, Notebooks()),
+          myListTileTheme('Tags', 3, TagsView()),
+          myListTileTheme('Trash', 5, NotesView(isTrash: true)),
+          myListTileTheme('Configuration', 7),
+          myListTileTheme('About Us', 6, AboutUs()),
         ],
       ),
     );

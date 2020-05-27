@@ -1,16 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:givnotes/pages/notesView.dart';
+import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/pages/loginPage.dart';
+import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/ui/splash.dart';
-import 'package:givnotes/utils/login.dart';
 
 // TODO: hide the status bar on login or everywhere
-Color lightBlue = Color(0xff91dcf5), purple = Color(0xff5A56D0), darkGrey = Color(0xff7D9098);
-bool isSkipped;
-
+// TODO: suggest to connect to internet on first launch
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -18,20 +15,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      // showPerformanceOverlay: true,
       themeMode: ThemeMode.system,
       home: CheckLogIn(),
     );
   }
-}
-
-void setSkip({bool skip}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('bool', skip);
-}
-
-Future<bool> getSkip() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('bool');
 }
 
 class CheckLogIn extends StatefulWidget {
@@ -42,8 +30,9 @@ class CheckLogIn extends StatefulWidget {
 class _CheckLogInState extends State<CheckLogIn> {
   @override
   void initState() {
+    Var.selectedIndex = 0;
+    Var.isTrash = false;
     getSkip().then((bool skip) {
-      print('pre update skip: $skip and isSkipped: $isSkipped');
       setState(() {
         // isSkipped = skip ?? false;
         if (skip == true || skip == false)
@@ -51,7 +40,6 @@ class _CheckLogInState extends State<CheckLogIn> {
         else
           isSkipped = false;
       });
-      print('post update skip: $skip and isSkipped: $isSkipped');
     });
     super.initState();
   }
@@ -61,11 +49,12 @@ class _CheckLogInState extends State<CheckLogIn> {
     return StreamBuilder(
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (isSkipped == true) return NotesView(isTrash: false);
-        if (snapshot.connectionState == ConnectionState.waiting) return SplashPage();
-        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+        // if (isSkipped == true) return HomePage();
 
-        return NotesView(isTrash: false);
+        if (snapshot.connectionState == ConnectionState.waiting) return SplashPage();
+        if (!snapshot.hasData || snapshot.data == null) return SplashPage();
+
+        return HomePage();
       },
     );
   }

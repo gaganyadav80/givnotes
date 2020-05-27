@@ -13,20 +13,22 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: DrawerItems(),
-      appBar: MyAppBar('Search'),
-      extendBody: true,
-      body: Container(
+    // return Scaffold(
+    //   backgroundColor: Colors.white,
+    //   drawer: DrawerItems(),
+    //   appBar: MyAppBar('Search'),
+    // extendBody: true,
+    return SafeArea(
+      child: Container(
         // margin: EdgeInsets.only(top: 50),
         height: 400,
         width: double.infinity,
-        child: Lottie.asset('assets/images/search-3.json'),
+        child: Lottie.asset('assets/animations/search-2.json'),
       ),
-      floatingActionButton: ActionBarMenu(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomMenu(),
     );
+    //   floatingActionButton: ActionBarMenu(),
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+    //   bottomNavigationBar: BottomMenu(),
+    // );
   }
 }

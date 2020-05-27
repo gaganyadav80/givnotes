@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
-import 'package:givnotes/pages/notesView.dart';
-import 'package:givnotes/ui/drawerItems.dart';
-import 'package:givnotes/ui/homePageItems.dart';
+import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quill_delta/quill_delta.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -14,6 +14,7 @@ import 'package:zefyr/zefyr.dart';
 import 'package:route_transitions/route_transitions.dart' as rt;
 
 enum NoteMode { Editing, Adding }
+
 Future<String> get _localPath async {
   final dir = await getApplicationDocumentsDirectory();
   return dir.path;
@@ -24,7 +25,7 @@ class ZefyrEdit extends StatefulWidget {
   final bool isTrash;
   final Map<String, dynamic> note;
 
-  ZefyrEdit(this.noteMode, [this.isTrash, this.note, Key key]) : super(key: key);
+  ZefyrEdit(this.noteMode, this.isTrash, [this.note, Key key]) : super(key: key);
 
   @override
   _ZefyrEditState createState() => _ZefyrEditState();
@@ -105,13 +106,14 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             ),
           );
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: DrawerItems(),
-      appBar: widget.isTrash == false
-          ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
-          : MyAppBar('Deleted Note', true),
-      body: Container(
+    // return Scaffold(
+    //   backgroundColor: Colors.white,
+    //   drawer: DrawerItems(),
+    //   appBar: widget.isTrash == false
+    //       ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
+    //       : MyAppBar('Deleted Note', true),
+    return SafeArea(
+      child: Container(
         margin: EdgeInsets.only(left: 15, right: 15, top: 10),
         child: Column(
           children: <Widget>[
@@ -127,10 +129,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     fontSize: 25,
                   ),
                 ),
-                style: TextStyle(
+                style: GoogleFonts.montserrat(
                   fontSize: 25,
-                  fontFamily: 'Montserrat',
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
             ),
@@ -173,14 +174,27 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                             });
 
                             _saveDocument(context);
-
+                            setState(() {
+                              Var.isTrash = false;
+                              Var.selectedIndex = 0;
+                            });
                             Navigator.push(
                               context,
                               rt.PageRouteTransition(
-                                builder: (context) => NotesView(isTrash: false),
+                                builder: (context) => HomePage(),
                                 animationType: rt.AnimationType.slide_right,
                               ),
                             );
+
+                            // widget.homeScaffoldKey.currentState.build(context);
+
+                            // Navigator.push(
+                            //   context,
+                            //   rt.PageRouteTransition(
+                            //     builder: (context) => NotesView(isTrash: false),
+                            //     animationType: rt.AnimationType.slide_right,
+                            //   ),
+                            // );
                           } else if (widget?.noteMode == NoteMode.Editing) {
                             NotesDB.updateNote({
                               'id': widget.note['id'],
@@ -188,7 +202,18 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                               'text': _zefyrController.document.toPlainText(),
                             });
                             _saveDocument(context);
-                            Navigator.pop(context);
+                            // Navigator.pop(context);
+                            setState(() {
+                              Var.noteMode = NoteMode.Adding;
+                              Var.selectedIndex = 0;
+                            });
+                            Navigator.push(
+                              context,
+                              rt.PageRouteTransition(
+                                builder: (context) => HomePage(),
+                                animationType: rt.AnimationType.slide_right,
+                              ),
+                            );
                           }
                         },
                       )
@@ -202,7 +227,19 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                             'text': _zefyrController.document.toPlainText(),
                             'trash': 0,
                           });
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
+                          setState(() {
+                            Var.noteMode = NoteMode.Adding;
+                            Var.isTrash = true;
+                            Var.selectedIndex = 5;
+                          });
+                          Navigator.push(
+                            context,
+                            rt.PageRouteTransition(
+                              builder: (context) => HomePage(),
+                              animationType: rt.AnimationType.slide_right,
+                            ),
+                          );
                         },
                       ),
                 // TODO : remove this button, useless
@@ -211,21 +248,51 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                   'Discard',
                   Colors.grey,
                   () {
-                    Navigator.pop(context);
+                    // Navigator.pop(context);
+                    setState(() {
+                      Var.noteMode = NoteMode.Adding;
+                      if (Var.isTrash == true)
+                        Var.selectedIndex = 5;
+                      else
+                        Var.selectedIndex = 0;
+                    });
+                    Navigator.push(
+                      context,
+                      rt.PageRouteTransition(
+                        builder: (context) => HomePage(),
+                        animationType: rt.AnimationType.slide_right,
+                      ),
+                    );
                   },
                 ),
                 SizedBox(width: 20),
 
                 if (widget.noteMode == NoteMode.Editing && widget.isTrash == false)
-                  _NoteButton('Trash', Colors.orange, () async {
-                    await NotesDB.updateNote({
-                      'id': widget.note['id'],
-                      'title': _titleController.text,
-                      'text': _zefyrController.document.toPlainText(),
-                      'trash': 1,
-                    });
-                    Navigator.pop(context);
-                  }),
+                  _NoteButton(
+                    'Trash',
+                    Colors.orange,
+                    () async {
+                      await NotesDB.updateNote({
+                        'id': widget.note['id'],
+                        'title': _titleController.text,
+                        'text': _zefyrController.document.toPlainText(),
+                        'trash': 1,
+                      });
+                      // Navigator.pop(context);
+                      setState(() {
+                        Var.noteMode = NoteMode.Adding;
+                        Var.isTrash = false;
+                        Var.selectedIndex = 0;
+                      });
+                      Navigator.push(
+                        context,
+                        rt.PageRouteTransition(
+                          builder: (context) => HomePage(),
+                          animationType: rt.AnimationType.slide_right,
+                        ),
+                      );
+                    },
+                  ),
                 if (widget.noteMode == NoteMode.Editing && widget.isTrash == true)
                   _NoteButton(
                     'Delete',
@@ -235,6 +302,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                       // ex. 1->2->3 => (and delete 2) => 1->3 => (then update) => 1->2
                       // ?? But can't update the file name if lots of entries to be updated
                       _confirmDeleteAlert(context, widget.note['id']);
+                      setState(() {
+                        Var.noteMode = NoteMode.Adding;
+                        Var.isTrash = true;
+                        Var.selectedIndex = 5;
+                      });
                     },
                   ),
               ],
@@ -243,6 +315,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
         ),
       ),
     );
+    // );
   }
 }
 
@@ -294,7 +367,14 @@ _confirmDeleteAlert(context, int _id) {
           final file = File(path + "/$_id.json");
           file.delete();
           Navigator.pop(context);
-          Navigator.pop(context);
+          // Navigator.pop(context);
+          Navigator.push(
+            context,
+            rt.PageRouteTransition(
+              builder: (context) => HomePage(),
+              animationType: rt.AnimationType.slide_right,
+            ),
+          );
         },
         gradient: LinearGradient(
             colors: [Color.fromRGBO(116, 116, 191, 1.0), Color.fromRGBO(52, 138, 199, 1.0)]),
