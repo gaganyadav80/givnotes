@@ -30,4 +30,7 @@
             android:name="firebase_performance_logcat_enabled"
             android:value="true" /> -->
     </application>
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

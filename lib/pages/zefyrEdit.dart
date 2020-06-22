@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
 import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/ui/drawerItems.dart';
+import 'package:givnotes/ui/customAppBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quill_delta/quill_delta.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:zefyr/zefyr.dart';
-import 'package:route_transitions/route_transitions.dart' as rt;
 
 enum NoteMode { Editing, Adding }
 
@@ -22,16 +22,15 @@ Future<String> get _localPath async {
 
 class ZefyrEdit extends StatefulWidget {
   final NoteMode noteMode;
-  final bool isTrash;
-  final Map<String, dynamic> note;
-
-  ZefyrEdit(this.noteMode, this.isTrash, [this.note, Key key]) : super(key: key);
+  ZefyrEdit({this.noteMode});
 
   @override
   _ZefyrEditState createState() => _ZefyrEditState();
 }
 
 class _ZefyrEditState extends State<ZefyrEdit> {
+  final FlareControls controls = FlareControls();
+
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _zefyrfocusNode = FocusNode();
   final FocusNode _titleFocus = FocusNode();
@@ -40,40 +39,21 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
   Future<NotusDocument> _loadDocument() async {
     final path = await _localPath;
-    if (widget.noteMode == NoteMode.Adding) {
-      file = File(path + "/temp.json");
-      print('file name: ${file.path}');
-      // print('note open id : ${widget.note['id']}');
 
-    } else if (widget.noteMode == NoteMode.Editing) {
-      print('note open id : ${widget.note['id']}');
-      file = File(path + "/${widget.note['id']}.json");
+    if (Var.noteMode == NoteMode.Adding) {
+      file = File(path + "/temp.json");
+      //
+    } else if (Var.noteMode == NoteMode.Editing) {
+      file = File(path + "/${Var.note['id']}.json");
     }
 
     if (await file.exists()) {
       final contents = await file.readAsString();
-      print('load contents: $contents');
       return NotusDocument.fromJson(jsonDecode(contents));
     }
 
     final Delta delta = Delta()..insert("\n");
     return NotusDocument.fromDelta(delta);
-  }
-
-  void _saveDocument(BuildContext context) {
-    // Notus documents can be easily serialized to JSON by passing to
-    // `jsonEncode` directly
-    final contents = jsonEncode(_zefyrController.document);
-    // final path = _localPath;
-    // final file = File("$path/${widget.note['id']}.json");
-    file.writeAsString(contents).then((_) {
-      // TODO: Add a message, snackbar or something
-      print('file name: ${file.path}');
-      // print('Plain text : ${_zefyrController.document.toPlainText()}');
-      // print('To string : ${_zefyrController.document.toString()}');
-      // print('jsonEncode _zefyr.document : $contents');
-      // print('jsonDecode : ${jsonDecode('[{"insert":"${widget.note['text']}"}]')}');
-    });
   }
 
   @override
@@ -88,297 +68,135 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
   @override
   void didChangeDependencies() {
-    if (widget?.noteMode == NoteMode.Editing) {
-      _titleController.text = widget.note['title'];
+    if (Var.noteMode == NoteMode.Editing) {
+      _titleController.text = Var.note['title'];
     }
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    final Widget body = (_zefyrController == null)
-        ? Center(child: CircularProgressIndicator())
+    final Widget _editorBody = (_zefyrController == null)
+        ? Center(
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.white,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+            ),
+          )
         : ZefyrScaffold(
-            child: ZefyrEditor(
-              padding: EdgeInsets.zero,
-              controller: _zefyrController,
-              focusNode: _zefyrfocusNode,
+            child: ZefyrTheme(
+              data: ZefyrThemeData(
+                toolbarTheme: ToolbarTheme(
+                  color: Color(0xffE4E7E9),
+                  toggleColor: Colors.grey,
+                  iconColor: Colors.black,
+                  disabledIconColor: Colors.grey,
+                ),
+              ),
+              //TODO: selection not working properly
+              child: ZefyrEditor(
+                mode: Var.isEditing || Var.noteMode == NoteMode.Adding
+                    ? ZefyrMode.edit
+                    : ZefyrMode.view,
+                autofocus: false,
+                padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                controller: _zefyrController,
+                focusNode: _zefyrfocusNode,
+              ),
             ),
           );
 
-    // return Scaffold(
-    //   backgroundColor: Colors.white,
-    //   drawer: DrawerItems(),
-    //   appBar: widget.isTrash == false
-    //       ? MyAppBar(widget.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
-    //       : MyAppBar('Deleted Note', true),
     return SafeArea(
-      child: Container(
-        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
-        child: Column(
-          children: <Widget>[
-            // ! Text Fields Start
-            FocusWidget(
-              focusNode: _titleFocus,
-              child: TextField(
-                focusNode: _titleFocus,
-                controller: _titleController,
-                decoration: InputDecoration.collapsed(
-                  hintText: 'Untitled',
-                  hintStyle: TextStyle(
-                    fontSize: 25,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomPadding: true,
+        extendBody: true,
+        backgroundColor: Colors.white,
+        appBar: MyAppBar(
+          Var.isTrash ? 'DELETED NOTE' : 'NOTE',
+          isNote: true,
+          controls: controls,
+          titleController: _titleController,
+          zefyrController: _zefyrController,
+          localPath: _localPath,
+          file: file,
+        ),
+        endDrawer: EndDrawerItems(
+          titleController: _titleController,
+          zefyrController: _zefyrController,
+          localPath: _localPath,
+          controls: controls,
+          file: file,
+        ),
+
+        floatingActionButton: Var.noteMode == NoteMode.Editing
+            ? Padding(
+                padding: EdgeInsets.only(bottom: 8 * hm),
+                child: FloatingActionButton(
+                  backgroundColor: Colors.black,
+                  elevation: 5,
+                  child: Icon(
+                    Icons.edit,
                   ),
+                  onPressed: () {
+                    //TODO: change the zefyrMode
+                    controls.play('edit');
+                  },
                 ),
-                style: GoogleFonts.montserrat(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w700,
+              )
+            : null,
+
+        // body of editor
+        body: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+              child: FocusWidget(
+                focusNode: _titleFocus,
+                child: TextField(
+                  focusNode: _titleFocus,
+                  controller: _titleController,
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Untitled',
+                    hintStyle: TextStyle(
+                      fontSize: 2.5 * hm,
+                    ),
+                  ),
+                  style: GoogleFonts.ubuntu(
+                    fontSize: 2.5 * hm,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ),
             Divider(
-              thickness: 0.5,
+              indent: 3.5 * wm,
+              endIndent: 3.5 * wm,
+              thickness: 0.03 * hm,
               color: Colors.black,
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 2.5 * hm),
             Expanded(
               flex: 1,
-              child: body,
+              child: _editorBody,
             ),
-            // ! Text Field Ends
-
-            Container(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                widget.isTrash == false
-                    ? _NoteButton(
-                        'Save',
-                        Colors.green,
-                        () async {
-                          final title = _titleController.text;
-
-                          if (widget?.noteMode == NoteMode.Adding) {
-                            NotesDB.insertNote({
-                              'title': title,
-                              'text': _zefyrController.document.toPlainText(),
-                            });
-
-                            NotesDB.getItemRenameList({
-                              'title': title,
-                              'text': _zefyrController.document.toPlainText(),
-                            }).then((value) async {
-                              print('note insert id : ${value[0]['id']}');
-                              final path = await _localPath;
-                              file.rename(path + '/${value[0]['id']}.json');
-                              print('file name: ${file.path}');
-                            });
-
-                            _saveDocument(context);
-                            setState(() {
-                              Var.isTrash = false;
-                              Var.selectedIndex = 0;
-                            });
-                            Navigator.push(
-                              context,
-                              rt.PageRouteTransition(
-                                builder: (context) => HomePage(),
-                                animationType: rt.AnimationType.slide_right,
-                              ),
-                            );
-
-                            // widget.homeScaffoldKey.currentState.build(context);
-
-                            // Navigator.push(
-                            //   context,
-                            //   rt.PageRouteTransition(
-                            //     builder: (context) => NotesView(isTrash: false),
-                            //     animationType: rt.AnimationType.slide_right,
-                            //   ),
-                            // );
-                          } else if (widget?.noteMode == NoteMode.Editing) {
-                            NotesDB.updateNote({
-                              'id': widget.note['id'],
-                              'title': title,
-                              'text': _zefyrController.document.toPlainText(),
-                            });
-                            _saveDocument(context);
-                            // Navigator.pop(context);
-                            setState(() {
-                              Var.noteMode = NoteMode.Adding;
-                              Var.selectedIndex = 0;
-                            });
-                            Navigator.push(
-                              context,
-                              rt.PageRouteTransition(
-                                builder: (context) => HomePage(),
-                                animationType: rt.AnimationType.slide_right,
-                              ),
-                            );
-                          }
-                        },
-                      )
-                    : _NoteButton(
-                        'Restore',
-                        Colors.green,
-                        () async {
-                          await NotesDB.updateNote({
-                            'id': widget.note['id'],
-                            'title': _titleController.text,
-                            'text': _zefyrController.document.toPlainText(),
-                            'trash': 0,
-                          });
-                          // Navigator.pop(context);
-                          setState(() {
-                            Var.noteMode = NoteMode.Adding;
-                            Var.isTrash = true;
-                            Var.selectedIndex = 5;
-                          });
-                          Navigator.push(
-                            context,
-                            rt.PageRouteTransition(
-                              builder: (context) => HomePage(),
-                              animationType: rt.AnimationType.slide_right,
-                            ),
-                          );
-                        },
-                      ),
-                // TODO : remove this button, useless
-                SizedBox(width: 20),
-                _NoteButton(
-                  'Discard',
-                  Colors.grey,
-                  () {
-                    // Navigator.pop(context);
-                    setState(() {
-                      Var.noteMode = NoteMode.Adding;
-                      if (Var.isTrash == true)
-                        Var.selectedIndex = 5;
-                      else
-                        Var.selectedIndex = 0;
-                    });
-                    Navigator.push(
-                      context,
-                      rt.PageRouteTransition(
-                        builder: (context) => HomePage(),
-                        animationType: rt.AnimationType.slide_right,
-                      ),
-                    );
-                  },
-                ),
-                SizedBox(width: 20),
-
-                if (widget.noteMode == NoteMode.Editing && widget.isTrash == false)
-                  _NoteButton(
-                    'Trash',
-                    Colors.orange,
-                    () async {
-                      await NotesDB.updateNote({
-                        'id': widget.note['id'],
-                        'title': _titleController.text,
-                        'text': _zefyrController.document.toPlainText(),
-                        'trash': 1,
-                      });
-                      // Navigator.pop(context);
-                      setState(() {
-                        Var.noteMode = NoteMode.Adding;
-                        Var.isTrash = false;
-                        Var.selectedIndex = 0;
-                      });
-                      Navigator.push(
-                        context,
-                        rt.PageRouteTransition(
-                          builder: (context) => HomePage(),
-                          animationType: rt.AnimationType.slide_right,
-                        ),
-                      );
-                    },
-                  ),
-                if (widget.noteMode == NoteMode.Editing && widget.isTrash == true)
-                  _NoteButton(
-                    'Delete',
-                    Colors.red,
-                    () {
-                      // TODO: Update the id if inbetween item is deleted
-                      // ex. 1->2->3 => (and delete 2) => 1->3 => (then update) => 1->2
-                      // ?? But can't update the file name if lots of entries to be updated
-                      _confirmDeleteAlert(context, widget.note['id']);
-                      setState(() {
-                        Var.noteMode = NoteMode.Adding;
-                        Var.isTrash = true;
-                        Var.selectedIndex = 5;
-                      });
-                    },
-                  ),
-              ],
-            )
           ],
         ),
       ),
     );
-    // );
   }
 }
 
-class _NoteButton extends StatelessWidget {
-  final String _text;
-  final Color _color;
-  final Function _onPressed;
+// return Scaffold(
+//   backgroundColor: Colors.white,
+//   drawer: DrawerItems(),
+//   appBar: Var.isTrash == false
+//       ? MyAppBar(Var.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
+//       : MyAppBar('Deleted Note', true),
 
-  _NoteButton(this._text, this._color, [this._onPressed]);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialButton(
-      onPressed: _onPressed,
-      child: Text(
-        _text,
-        style: TextStyle(color: Colors.white),
-      ),
-      color: _color,
-    );
-  }
-}
-
-_confirmDeleteAlert(context, int _id) {
-  Alert(
-    context: context,
-    type: AlertType.info,
-    title: "Confirm Delete?",
-    desc: "Are you sure you permanently want to delete your note?",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "Cancle",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-        color: Color.fromRGBO(0, 179, 134, 1.0),
-      ),
-      DialogButton(
-        child: Text(
-          "Delete",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        onPressed: () async {
-          await NotesDB.deleteNote(_id);
-          final path = await _localPath;
-          final file = File(path + "/$_id.json");
-          file.delete();
-          Navigator.pop(context);
-          // Navigator.pop(context);
-          Navigator.push(
-            context,
-            rt.PageRouteTransition(
-              builder: (context) => HomePage(),
-              animationType: rt.AnimationType.slide_right,
-            ),
-          );
-        },
-        gradient: LinearGradient(
-            colors: [Color.fromRGBO(116, 116, 191, 1.0), Color.fromRGBO(52, 138, 199, 1.0)]),
-      )
-    ],
-  ).show();
-}
+// final path = _localPath;
+// final file = File("$path/${Var.note['id']}.json");
+// print('Plain text : ${_zefyrController.document.toPlainText()}');
+// print('To string : ${_zefyrController.document.toString()}');
+// print('jsonEncode _zefyr.document : $contents');
+// print('jsonDecode : ${jsonDecode('[{"insert":"${Var.note['text']}"}]')}');

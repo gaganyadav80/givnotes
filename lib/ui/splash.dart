@@ -1,57 +1,70 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SplashPage extends StatelessWidget {
+  const SplashPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Container(
-        color: Colors.white,
-        child: Container(
-          width: double.infinity,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 80, left: 20),
-                child: Row(
-                  children: <Widget>[
-                    Text(
-                      'Giv',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                      ),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 13 * hm, left: 3 * wm),
+              child: Row(
+                children: <Widget>[
+                  Text(
+                    'Giv',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 2.2 * hm,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
                     ),
-                    Text(
-                      'Notes.',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 18,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  Text(
+                    'Notes.',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 2.2 * hm,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20 * hm),
+            Center(
+              child: Container(
+                height: 150,
+                width: 150,
+                child: FlareActor(
+                  'assets/animations/loading.flr',
+                  animation: 'Alarm',
+                  alignment: Alignment.center,
                 ),
               ),
-              const SizedBox(height: 250.0),
-              SpinKitChasingDots(
-                duration: Duration(seconds: 3),
-                color: Colors.deepOrangeAccent[400],
+            ),
+            // Lottie.asset(
+            //   'assets/animations/infinity.json',
+            //   repeat: true,
+            //   width: 20 * wm,
+            //   height: 7 * hm,
+            //   alignment: Alignment.center,
+            // ),
+            // SizedBox(height: 34.3 * hm),
+            SizedBox(height: 30 * hm),
+            Text(
+              "Checking your Google Login Status",
+              style: GoogleFonts.sourceSansPro(
+                color: Colors.black,
+                fontWeight: FontWeight.w400,
+                fontSize: 2.1 * hm,
               ),
-              const SizedBox(height: 280),
-              Text(
-                "Checking your Google Login Status",
-                style: GoogleFonts.sourceSansPro(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 20.0,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

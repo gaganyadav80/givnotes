@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/ui/drawerItems.dart';
-import 'package:givnotes/ui/homePageItems.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 import 'package:lottie/lottie.dart';
 
 class SearchPage extends StatefulWidget {
@@ -13,22 +12,13 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   backgroundColor: Colors.white,
-    //   drawer: DrawerItems(),
-    //   appBar: MyAppBar('Search'),
-    // extendBody: true,
     return SafeArea(
       child: Container(
-        // margin: EdgeInsets.only(top: 50),
-        height: 400,
-        width: double.infinity,
+        height: 49 * hm,
+        // width: double.infinity,
+        width: 94.9 * wm,
         child: Lottie.asset('assets/animations/search-2.json'),
       ),
     );
-    //   floatingActionButton: ActionBarMenu(),
-    //   floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    //   bottomNavigationBar: BottomMenu(),
-    // );
   }
 }

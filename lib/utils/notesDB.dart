@@ -49,15 +49,6 @@ class NotesDB {
     );
   }
 
-  // static Future trashNote(Map<String, dynamic> note) async {
-  //   await db.update(
-  //     notesTable,
-  //     note,
-  //     where: 'id = ?',
-  //     whereArgs: [note['id']],
-  //   );
-  // }
-
   static Future deleteNote(int id) async {
     await db.delete(
       notesTable,
@@ -82,3 +73,12 @@ class NotesDB {
     );
   }
 }
+
+// static Future trashNote(Map<String, dynamic> note) async {
+//   await db.update(
+//     notesTable,
+//     note,
+//     where: 'id = ?',
+//     whereArgs: [note['id']],
+//   );
+// }

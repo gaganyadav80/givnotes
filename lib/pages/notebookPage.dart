@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 
 class Notebooks extends StatefulWidget {
   @override
@@ -22,7 +23,7 @@ class _NotebooksState extends State<Notebooks> {
             child: ListTile(
               leading: Icon(
                 Icons.folder,
-                size: 30,
+                size: wm < 4 ? 8 * wm : 7 * wm,
               ),
               title: Text('Notebooks'),
               onTap: () {},

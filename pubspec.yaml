@@ -14,29 +14,40 @@ dependencies:
     firebase_auth: ^0.16.0
     google_sign_in: ^4.4.4
     font_awesome_flutter:
-    rflutter_alert:
     getflutter:
     sqflite:
     path_provider:
     intl:
-    flutter_spinkit:
     focus_widget:
     shared_preferences:
     route_transitions:
-    zefyr:
+    # zefyr: ^0.11.0
     quill_delta:
     lottie:
     flutter_snake_navigationbar:
     google_fonts:
     url_launcher: ^5.4.10
+    avatar_glow:
     cached_network_image:
-    responsive_widgets:
+    permission_handler:
+    flare_flutter:
 
-    http: ^0.12.1
+    zefyr:
+        git:
+            url: git://github.com/winwisely99/zefyr.git
+            path: packages/zefyr/
+            commit: 9b032d8
+
+    # http: ^0.12.1
     # floating_search_bar: ^0.3.0
     # sticky_headers: ^0.1.8+1
     # animated_bottom_navigation_bar:
     # dotted_border:
+    # flutter_spinkit:
+    # responsive_widgets:
+    # rflutter_alert:
+
+
 
 dev_dependencies:
     flutter_test:
@@ -56,3 +67,6 @@ flutter:
         - family: Pacifico
           fonts:
               - asset: assets/fonts/Pacifico/Pacifico-Regular.ttf
+        - family: TrashIcon
+          fonts:
+              - asset: assets/fonts/trashIcon/trash-icon.ttf

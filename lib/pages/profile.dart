@@ -1,4 +1,7 @@
+import 'package:avatar_glow/avatar_glow.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/utils/login.dart';
@@ -11,14 +14,12 @@ class MyProfile extends StatefulWidget {
 }
 
 class _MyProfileState extends State<MyProfile> {
-  int count = 0;
-
   @override
   void initState() {
     getSkip().then((bool skip) {
       setState(() {
         isSkipped = skip ?? false;
-        getUserDetails();
+        getUserDetails().whenComplete(() => null);
       });
     });
 
@@ -28,127 +29,152 @@ class _MyProfileState extends State<MyProfile> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        child: isSkipped == true
-            ? Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 210),
-                      child: Lottie.asset(
-                        blankUser,
-                        height: 200,
-                        width: 200,
-                      ),
+      child: isSkipped == true
+          ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4.6 * wm),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(left: 48.6 * wm),
+                    child: Lottie.asset(
+                      blankUser,
+                      height: 24.5 * hm,
+                      width: 46.3 * wm,
                     ),
-                    SizedBox(height: 50),
-                    Text(
-                      'Oops!',
-                      style: GoogleFonts.montserrat(
-                        color: Colors.teal,
-                        fontSize: 40,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  ),
+                  SizedBox(height: 5 * hm),
+                  Text(
+                    'Oops!',
+                    style: GoogleFonts.ubuntu(
+                      color: Colors.teal,
+                      fontSize: 3.5 * hm,
+                      fontWeight: FontWeight.w500,
                     ),
-                    Text(
-                      'Looks like you are not logged in.',
-                      style: GoogleFonts.sourceSansPro(
-                        fontSize: 25,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w300,
-                      ),
+                  ),
+                  SizedBox(height: 0.6 * hm),
+                  Text(
+                    'Looks like you are not logged in.',
+                    style: GoogleFonts.sourceSansPro(
+                      fontSize: 2.5 * hm,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w300,
                     ),
-                    SizedBox(height: 100),
-                    Container(
-                      height: 65,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        shape: BoxShape.rectangle,
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      child: signInButton(context, onProfile: true, isSignOut: false),
+                  ),
+                  SizedBox(height: 5 * hm),
+                  Container(
+                    height: 8 * hm,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.circular(11.58 * wm),
                     ),
-                  ],
-                ),
-              )
-            : Padding(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 50),
-                      height: 270,
-                      width: double.infinity,
-                      child: Card(
-                        elevation: 3,
+                    child: signInButton(context, onProfile: true, isSignOut: false),
+                  ),
+                  SizedBox(height: 5 * hm),
+                  Text(
+                    'Not much here, yet. Maybe I\'ll add later.',
+                    style: GoogleFonts.ubuntu(
+                      fontWeight: FontWeight.w300,
+                      color: Colors.grey,
+                      fontSize: 1.6 * hm,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                  child: Stack(
+                    children: <Widget>[
+                      Card(
+                        margin: EdgeInsets.only(top: 8 * hm),
+                        elevation: 1 * hm,
+                        shadowColor: Colors.grey[300],
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(4.63 * wm),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30, right: 30),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(height: 70),
-                              Text(
+                        // *Profile Card
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(height: 7 * hm),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                              child: Text(
                                 displayName,
                                 style: GoogleFonts.arizonia(
                                   color: Colors.black,
-                                  fontSize: 30,
+                                  fontSize: 3 * hm,
                                   fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.5,
+                                  letterSpacing: 0.12 * wm,
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text(
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                              child: Text(
                                 email,
                                 style: GoogleFonts.sourceSansPro(
                                   color: Colors.black54,
-                                  fontSize: 17,
+                                  fontSize: 1.8 * hm,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
-                              SizedBox(height: 20),
-                              Container(
-                                height: 65,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(50),
+                            ),
+                            SizedBox(height: 5.5 * hm),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 3 * wm),
+                              child: signInButton(context, onProfile: true, isSignOut: true),
+                            ),
+                            SizedBox(height: 2 * hm),
+                          ],
+                        ),
+                      ),
+                      Positioned(
+                        left: 1 * wm,
+                        child: AvatarGlow(
+                          glowColor: Colors.black,
+                          endRadius: 17.4 * wm,
+                          repeat: true,
+                          showTwoGlows: true,
+                          duration: Duration(seconds: 3),
+                          repeatPauseDuration: Duration(milliseconds: 100),
+                          child: Material(
+                            elevation: 5,
+                            shape: CircleBorder(),
+                            child: CircleAvatar(
+                              radius: 10.5 * wm,
+                              backgroundColor: Colors.white,
+                              child: ClipOval(
+                                child: CachedNetworkImage(
+                                  errorWidget: (context, url, error) =>
+                                      FaIcon(FontAwesomeIcons.unlink),
+                                  placeholder: (context, url) => CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+                                  ),
+                                  imageUrl: photoUrl,
+                                  fit: BoxFit.fill,
                                 ),
-                                child: signInButton(context, onProfile: true, isSignOut: true),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 10,
-                      left: 30,
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        child: CircleAvatar(
-                          backgroundImage: cachePhoto,
-                          backgroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 300),
-                      height: 300,
-                      width: double.infinity,
-                      child: Image.asset('assets/images/chatting.png'),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-      ),
+                Container(
+                  height: 27 * hm,
+                  width: double.infinity,
+                  child: Image.asset('assets/images/profile.png'),
+                ),
+              ],
+            ),
     );
   }
 }

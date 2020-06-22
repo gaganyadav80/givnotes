@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/ui/baseWidget.dart';
+import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
-import 'package:givnotes/ui/homePageItems.dart';
+import 'package:givnotes/ui/customAppBar.dart';
+import 'package:givnotes/utils/permissions.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -14,71 +16,123 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // static var _homeScaffoldKey = GlobalKey<ScaffoldState>();
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget(
-      builder: (context, sizingInformation) {
-        return Scaffold(
-          extendBodyBehindAppBar: true,
-          resizeToAvoidBottomInset: true,
-          extendBody: true,
-          backgroundColor: whiteIsh,
-          appBar: MyAppBar(Var.setTitle(), Var.isNote),
-          drawer: DrawerItems(),
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomPadding: true,
+      extendBody: true,
+      backgroundColor: Colors.white,
+      appBar: MyAppBar(Var.setTitle(), isNote: false),
+      drawer: DrawerItems(),
+      body: Var.pageNavigation[Var.selectedIndex],
 
-          // TODO: fix it so I can route other pages in this body
-          body: Var.pageNavigation[Var.selectedIndex],
-
-          // !! Bottom Navigation
-          bottomNavigationBar: SnakeNavigationBar(
-            elevation: 20,
-            shadowColor: Colors.black,
-            // currentIndex: Var.selectedIndex < 5 ? Var.selectedIndex : 0,
-            currentIndex: Var.selectedIndex,
-            style: SnakeBarStyle.pinned,
-            snakeShape: SnakeShape.indicator,
-            snakeColor: Colors.black,
-            backgroundColor: whiteIsh,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            shape: BeveledRectangleBorder(
-              side: BorderSide(color: Colors.black, width: 0.5),
-              // borderRadius: BorderRadius.only(
-              //   topLeft: Radius.circular(15),
-              //   topRight: Radius.circular(15),
-              // ),
+      floatingActionButton: Var.isTrash
+          ? SizedBox.shrink()
+          : FloatingActionButton(
+              tooltip: 'New Note',
+              backgroundColor: Colors.black,
+              splashColor: Colors.black,
+              elevation: 5,
+              child: Icon(
+                Icons.add,
+              ),
+              onPressed: () async {
+                await HandlePermission().requestPermission().then((value) {
+                  if (value) {
+                    Var.isEditing = true;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
+                      ),
+                    );
+                  } else {
+                    if (isPermanentDisabled) {
+                      HandlePermission().permanentDisabled(context);
+                    }
+                    setState(() => Var.selectedIndex = 0);
+                  }
+                });
+              },
             ),
-            onPositionChanged: (index) {
-              if (index == 0) Var.isTrash = false;
-              setState(() => Var.selectedIndex = index);
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.book),
-                title: Text('All Notes'),
+
+      // !! Bottom Navigation
+      bottomNavigationBar: SnakeNavigationBar(
+        elevation: 20,
+        shadowColor: Colors.black,
+        currentIndex: Var.selectedIndex,
+        style: SnakeBarStyle.pinned,
+        snakeShape: SnakeShape.indicator,
+        snakeColor: Colors.black,
+        backgroundColor: Color(0xffFAFAFA),
+        showSelectedLabels: true,
+        showUnselectedLabels: true,
+        shape: BeveledRectangleBorder(
+          side: BorderSide(color: Colors.black, width: 0.02 * hm),
+        ),
+        onPositionChanged: (index) async {
+          if (index == 0) Var.isTrash = false;
+          setState(() => Var.selectedIndex = index);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              CupertinoIcons.book,
+              size: 3 * hm,
+            ),
+            title: Text(
+              'All Notes',
+              style: GoogleFonts.ubuntu(
+                color: Colors.black,
+                fontSize: 1.2 * hm,
               ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search),
-                title: Text('Search'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.add_circled),
-                title: Text('New Note'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.bookmark),
-                title: Text('Tags'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person),
-                title: Text('Profile'),
-              ),
-            ],
+            ),
           ),
-        );
-      },
+          BottomNavigationBarItem(
+            icon: Icon(
+              CupertinoIcons.search,
+              size: 3 * hm,
+            ),
+            title: Text(
+              'Search',
+              style: GoogleFonts.ubuntu(
+                color: Colors.black,
+                fontSize: 1.2 * hm,
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              CupertinoIcons.bookmark,
+              size: 3 * hm,
+            ),
+            title: Text(
+              'Tags',
+              style: GoogleFonts.ubuntu(
+                color: Colors.black,
+                fontSize: 1.2 * hm,
+              ),
+            ),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              CupertinoIcons.person,
+              size: 3 * hm,
+            ),
+            title: Text(
+              'Profile',
+              style: GoogleFonts.ubuntu(
+                color: Colors.black,
+                fontSize: 1.2 * hm,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

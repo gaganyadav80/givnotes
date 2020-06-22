@@ -1,12 +1,10 @@
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:route_transitions/route_transitions.dart' as rt;
+import 'package:route_transitions/route_transitions.dart';
 
 class NotesView extends StatefulWidget {
   final bool isTrash;
@@ -21,105 +19,120 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    // backgroundColor: Colors.white,
-    // extendBodyBehindAppBar: true,
-    // extendBody: true,
-    // drawer: DrawerItems(),
-    // !! isTrash
-    // appBar: MyAppBar(widget.isTrash == false ? 'ALL NOTES' : 'TRASH'),
-    return FutureBuilder(
-      // !! isTrash
-      future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          final notes = snapshot.data;
-          return notes.length == 0
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: widget.isTrash
-                      ? Column(
-                          children: <Widget>[
-                            SizedBox(
-                              width: double.infinity,
-                              height: 30,
+    return SafeArea(
+      child: Container(
+        child: FutureBuilder(
+          future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final notes = snapshot.data;
+              if (notes.length == 0) {
+                return widget.isTrash == true
+                    ? Stack(
+                        children: [
+                          Positioned(
+                            top: 49 * hm,
+                            left: 50 * wm,
+                            child: Image(
+                              image: AssetImage('assets/images/trash.png'),
+                              height: 25 * hm,
+                              width: 45 * wm,
                             ),
-                            Image.asset(
-                              'assets/images/trash.png',
-                              width: 350,
-                              height: 400,
+                          ),
+                          Positioned(
+                            top: 25 * hm,
+                            left: 20 * wm,
+                            child: Column(
+                              children: [
+                                Text(
+                                  "You don't have any trash",
+                                  style: GoogleFonts.ubuntu(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 2.0 * hm,
+                                  ),
+                                ),
+                                SizedBox(height: 0.5 * hm),
+                                Text(
+                                  "Create 'em, trash 'em. See them",
+                                  style: GoogleFonts.ubuntu(
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 1.5 * hm,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              'Looks like you\'re empty. Ugh?',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 25,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Lottie.asset(
-                          'assets/animations/1.json',
-                          width: double.infinity,
-                          height: 550,
+                          )
+                        ],
+                      )
+                    : Padding(
+                        padding: EdgeInsets.only(left: 11 * wm),
+                        child: Image.asset(
+                          'assets/images/lady-on-phone.png',
+                          width: 75 * wm,
+                          height: 65 * hm,
                         ),
-                )
-              : ListView.builder(
+                      );
+              } else {
+                return ListView.builder(
                   itemCount: notes.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
-                        setState(() {
-                          Var.noteMode = NoteMode.Editing;
-                          Var.note = notes[index];
-                          Var.selectedIndex = 2;
-                        });
+                        Var.noteMode = NoteMode.Editing;
+                        Var.note = notes[index];
+                        Var.isEditing = true;
+
                         Navigator.push(
                           context,
-                          rt.PageRouteTransition(
-                            builder: (context) => HomePage(),
-                            animationType: rt.AnimationType.fade,
+                          PageRouteTransition(
+                            builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+                            animationType: AnimationType.slide_up,
                           ),
                         );
-                        // Navigator.push(
-                        //   context,
-                        //   PageRouteTransition(
-                        //     builder: (context) =>
-                        //         ZefyrEdit(NoteMode.Editing, widget.isTrash, notes[index]),
-                        //     // NotesEdit(NoteMode.Editing, false, notes[index]),
-                        //     animationType: AnimationType.fade,
-                        //   ),
-                        // ).then((value) => setState(() => count++));
                       },
                       child: Card(
-                        elevation: 3,
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              _NoteTitle(notes[index]['title']),
-                              Container(height: 4),
-                              _NoteText(notes[index]['text']),
-                            ],
-                          ),
+                        elevation: 0,
+                        margin: EdgeInsets.symmetric(vertical: 0.8 * hm, horizontal: 2.8 * wm),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Divider(
+                              height: 0.03 * hm,
+                              color: Colors.black,
+                            ),
+                            SizedBox(height: 1.5 * hm),
+                            _NoteTitle(notes[index]['title']),
+                            SizedBox(height: 0.5 * hm),
+                            _NoteText(notes[index]['text']),
+                            SizedBox(height: 2 * hm),
+                            Divider(
+                              height: 0.03 * hm,
+                              color: Colors.black,
+                            ),
+                          ],
                         ),
                       ),
                     );
                   },
                 );
-        }
-        // TODO: for in menu splash screen
-        // return Center(child: CircularProgressIndicator(backgroundColor: Colors.white));
-        return SpinKitChasingDots(
-          color: Colors.deepOrangeAccent[400],
-        );
-      },
+              }
+            }
+            return Padding(
+              padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
+              child: Container(
+                height: 120,
+                width: 120,
+                child: FlareActor(
+                  'assets/animations/loading.flr',
+                  animation: 'Alarm',
+                  alignment: Alignment.center,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     );
-    // floatingActionButton: ActionBarMenu(),
-    // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    // bottomNavigationBar: BottomMenu(),
-    // );
   }
 }
 
@@ -131,9 +144,9 @@ class _NoteTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       _title,
-      style: TextStyle(
-        fontSize: 25,
-        fontWeight: FontWeight.w700,
+      style: GoogleFonts.ubuntu(
+        fontSize: 2.3 * hm,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -147,8 +160,11 @@ class _NoteText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       _text,
-      style: TextStyle(color: Colors.grey[800]),
-      maxLines: 2,
+      style: TextStyle(
+        color: Colors.grey[800],
+        fontSize: 1.6 * hm,
+      ),
+      maxLines: 5,
       overflow: TextOverflow.ellipsis,
     );
   }
