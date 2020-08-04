@@ -48,7 +48,7 @@ class _MyProfileState extends State<MyProfile> {
                     'Oops!',
                     style: GoogleFonts.ubuntu(
                       color: Colors.teal,
-                      fontSize: 3.5 * hm,
+                      fontSize: 7.5 * wm,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -56,7 +56,7 @@ class _MyProfileState extends State<MyProfile> {
                   Text(
                     'Looks like you are not logged in.',
                     style: GoogleFonts.sourceSansPro(
-                      fontSize: 2.5 * hm,
+                      fontSize: 4.7 * wm,
                       color: Colors.grey,
                       fontWeight: FontWeight.w300,
                     ),
@@ -78,7 +78,7 @@ class _MyProfileState extends State<MyProfile> {
                     style: GoogleFonts.ubuntu(
                       fontWeight: FontWeight.w300,
                       color: Colors.grey,
-                      fontSize: 1.6 * hm,
+                      fontSize: 1.8 * hm,
                       fontStyle: FontStyle.italic,
                     ),
                   ),

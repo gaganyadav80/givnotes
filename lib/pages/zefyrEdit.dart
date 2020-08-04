@@ -7,7 +7,6 @@ import 'package:focus_widget/focus_widget.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
-import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quill_delta/quill_delta.dart';
@@ -106,84 +105,164 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             ),
           );
 
+    void updateEditMode(bool value) {
+      setState(() {
+        Var.isEditing = value;
+      });
+    }
+
     return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        resizeToAvoidBottomPadding: true,
-        extendBody: true,
-        backgroundColor: Colors.white,
-        appBar: MyAppBar(
-          Var.isTrash ? 'DELETED NOTE' : 'NOTE',
-          isNote: true,
-          controls: controls,
-          titleController: _titleController,
-          zefyrController: _zefyrController,
-          localPath: _localPath,
-          file: file,
-        ),
-        endDrawer: EndDrawerItems(
-          titleController: _titleController,
-          zefyrController: _zefyrController,
-          localPath: _localPath,
-          controls: controls,
-          file: file,
-        ),
+      child: WillPopScope(
+        onWillPop: _onPop,
+        child: Scaffold(
+          resizeToAvoidBottomInset: true,
+          resizeToAvoidBottomPadding: true,
+          extendBody: true,
+          backgroundColor: Colors.white,
+          appBar: MyAppBar(
+            Var.isTrash ? 'DELETED NOTE' : 'NOTE',
+            isNote: true,
+            controls: controls,
+            titleController: _titleController,
+            zefyrController: _zefyrController,
+            localPath: _localPath,
+            file: file,
+            updateZefyrEditMode: updateEditMode,
+          ),
+          endDrawer: EndDrawerItems(
+            titleController: _titleController,
+            zefyrController: _zefyrController,
+            updateZefyrEditMode: updateEditMode,
+            localPath: _localPath,
+            controls: controls,
+            file: file,
+          ),
 
-        floatingActionButton: Var.noteMode == NoteMode.Editing
-            ? Padding(
-                padding: EdgeInsets.only(bottom: 8 * hm),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.black,
-                  elevation: 5,
-                  child: Icon(
-                    Icons.edit,
-                  ),
-                  onPressed: () {
-                    //TODO: change the zefyrMode
-                    controls.play('edit');
-                  },
-                ),
-              )
-            : null,
-
-        // body of editor
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
-              child: FocusWidget(
-                focusNode: _titleFocus,
-                child: TextField(
-                  focusNode: _titleFocus,
-                  controller: _titleController,
-                  decoration: InputDecoration.collapsed(
-                    hintText: 'Untitled',
-                    hintStyle: TextStyle(
-                      fontSize: 2.5 * hm,
+          floatingActionButton: Var.noteMode == NoteMode.Editing && Var.isEditing == false
+              ? Padding(
+                  padding: EdgeInsets.only(bottom: 8 * hm),
+                  child: FloatingActionButton(
+                    tooltip: 'Edit',
+                    backgroundColor: Colors.black,
+                    elevation: 5,
+                    child: Icon(
+                      Icons.edit,
+                      size: 4 * wm,
                     ),
+                    onPressed: () {
+                      setState(() {
+                        Var.isEditing = true;
+                      });
+                      controls.play('edit');
+                    },
                   ),
-                  style: GoogleFonts.ubuntu(
-                    fontSize: 2.5 * hm,
-                    fontWeight: FontWeight.w500,
+                )
+              : null,
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
+          // body of editor
+          body: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                child: FocusWidget(
+                  focusNode: _titleFocus,
+                  child: TextField(
+                    readOnly: !Var.isEditing,
+                    focusNode: _titleFocus,
+                    controller: _titleController,
+                    enableInteractiveSelection: true,
+                    enableSuggestions: true,
+                    keyboardAppearance: Brightness.light,
+                    decoration: InputDecoration.collapsed(
+                      hintText: 'Untitled',
+                      hintStyle: TextStyle(
+                        fontSize: 2.5 * hm,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 2.5 * hm,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textInputAction: TextInputAction.next,
+                    onEditingComplete: () {
+                      _zefyrfocusNode.requestFocus();
+                    },
                   ),
                 ),
               ),
-            ),
-            Divider(
-              indent: 3.5 * wm,
-              endIndent: 3.5 * wm,
-              thickness: 0.03 * hm,
-              color: Colors.black,
-            ),
-            SizedBox(height: 2.5 * hm),
-            Expanded(
-              flex: 1,
-              child: _editorBody,
-            ),
-          ],
+              Divider(
+                indent: 3.5 * wm,
+                endIndent: 3.5 * wm,
+                thickness: 0.03 * hm,
+                color: Colors.black,
+              ),
+              SizedBox(height: 2.5 * hm),
+              Expanded(
+                flex: 1,
+                child: _editorBody,
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<bool> _onPop() async {
+    if (_titleController.text.isEmpty) {
+      return (await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Note is Empty!'),
+              content: Text("Please add a title! Can't save empty :)"),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    Var.isEditing = false;
+                  },
+                  child: Text('Discard'),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('Edit'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    } else if (_titleController.text.isNotEmpty && Var.isEditing == true) {
+      return (await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text('Changes not saved'),
+              content: Text("You have unsaved changed. Sure want to exit?"),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                    Var.isEditing = false;
+                  },
+                  child: Text('Leave'),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: Text('Edit'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    } else {
+      Var.isEditing = false;
+    }
+    return true;
   }
 }
 

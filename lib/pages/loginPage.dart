@@ -48,10 +48,9 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 17 * hm, left: 4 * wm, right: 4 * wm),
+                padding: EdgeInsets.only(top: 32 * wm, left: 3 * wm, right: 3 * wm),
                 child: Image.asset(
                   'assets/images/growth.png',
-                  height: 27 * hm,
                   width: double.infinity,
                 ),
               ),
@@ -85,7 +84,7 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'Sign in',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 3.8 * hm,
+                        fontSize: 3.2 * hm,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -93,42 +92,44 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'Please sign in to sync.',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 1.8 * hm,
+                        fontSize: 1.5 * hm,
                         color: darkGrey,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    SizedBox(height: 6.1 * hm),
                     // !! SignInButton
+                    SizedBox(height: 6.1 * hm),
                     signInButton(context, onProfile: false, isSignOut: false),
                     SizedBox(height: 3.7 * hm),
+
                     Center(
                       child: Text(
                         "Don't feel like syncing?",
                         style: GoogleFonts.ubuntu(
                           color: Color(0xffaab7bb),
-                          fontSize: 1.6 * hm,
+                          fontSize: 1.5 * hm,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
                     ),
-                    SizedBox(height: 1.2 * hm),
+                    SizedBox(height: hm),
                     Center(
                       child: Container(
-                        width: 33 * wm,
+                        width: 30 * wm,
                         child: GFButton(
-                          size: hm < 6.5 ? 7 * hm : 5.5 * hm,
+                          size: hm < 6.5 ? 6 * hm : 5 * hm,
+                          splashColor: Colors.black,
                           icon: FaIcon(
                             FontAwesomeIcons.userSlash,
-                            size: 1.8 * hm,
-                            color: Color(0xff5A56D0),
+                            size: 1.6 * hm,
+                            color: Colors.black,
                           ),
                           type: GFButtonType.outline2x,
-                          color: Color(0xff5A56D0),
+                          color: Colors.black,
                           text: 'Skip',
                           textStyle: GoogleFonts.ubuntu(
-                            color: Color(0xff5A56D0),
-                            fontSize: 2.2 * hm,
+                            color: Colors.black,
+                            fontSize: 2 * hm,
                             fontWeight: FontWeight.w400,
                           ),
                           onPressed: () async {
@@ -140,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                               context,
                               PageRouteTransition(
                                 builder: (context) => HomePage(),
-                                animationType: AnimationType.slide_right,
+                                animationType: AnimationType.fade,
                               ),
                             );
                           },
@@ -150,37 +151,21 @@ class _LoginPageState extends State<LoginPage> {
                     SizedBox(height: 4.4 * hm),
                     if (isConnected == false && isFirstLaunch == true)
                       Center(
-                        child: Text(
-                          '* Note:- Please be connected to the internet',
-                          style: GoogleFonts.ubuntu(
-                            color: Color(0xffaab7bb),
-                            fontSize: 1.4 * hm,
-                            fontWeight: FontWeight.w300,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    if (isConnected == false && isFirstLaunch == true)
-                      Center(
-                        child: Text(
-                          'We need it, to load custom fonts',
-                          style: GoogleFonts.ubuntu(
-                            color: Color(0xffaab7bb),
-                            fontSize: 1.4 * hm,
-                            fontWeight: FontWeight.w300,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    if (isConnected == false && isFirstLaunch == true)
-                      Center(
-                        child: Text(
-                          '( One time thing only, I promise )',
-                          style: GoogleFonts.ubuntu(
-                            color: Color(0xffaab7bb),
-                            fontSize: 1.4 * hm,
-                            fontWeight: FontWeight.w300,
-                            fontStyle: FontStyle.italic,
+                        child: RichText(
+                          text: TextSpan(
+                            style: GoogleFonts.ubuntu(
+                              color: Color(0xffaab7bb),
+                              fontSize: 1.4 * hm,
+                              fontWeight: FontWeight.w300,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: '* Note:- Please be connected to the internet\n',
+                              ),
+                              TextSpan(text: '          We need it, to load custom fonts\n'),
+                              TextSpan(text: '          ( One time thing only, I promise )')
+                            ],
                           ),
                         ),
                       ),
@@ -199,15 +184,15 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
   return Container(
     decoration: BoxDecoration(boxShadow: [
       BoxShadow(
-        blurRadius: 10,
+        blurRadius: 8,
         color: Colors.grey[400],
       )
     ]),
-    height: hm < 7 ? 9 * hm : 8 * hm,
+    height: hm < 7 ? 8.2 * hm : 7.2 * hm,
     child: GFButton(
-      elevation: 4,
+      elevation: 2,
       fullWidthButton: true,
-      color: onProfile == true ? Colors.black : purple,
+      color: onProfile == true ? Colors.black : Colors.red[400],
       borderShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(3 * wm),
       ),
@@ -217,7 +202,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
           FaIcon(
             FontAwesomeIcons.google,
             color: Colors.white,
-            size: onProfile ? 2.2 * hm : 2.5 * hm,
+            size: 2.2 * hm,
           ),
           SizedBox(width: 4.6 * wm),
           Text(
@@ -225,7 +210,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
             style: GoogleFonts.ubuntu(
               color: Colors.white,
               letterSpacing: 0.5,
-              fontSize: onProfile ? 2.5 * hm : 2.9 * hm,
+              fontSize: 2.6 * hm,
             ),
           ),
         ],
@@ -241,7 +226,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
                   context,
                   PageRouteTransition(
                     builder: (context) => HomePage(),
-                    animationType: onProfile ? AnimationType.fade : AnimationType.slide_down,
+                    animationType: AnimationType.fade,
                   ),
                 );
               }).catchError((e) => print(e));
@@ -275,7 +260,7 @@ _signOutAlert(BuildContext context) {
                 context,
                 PageRouteTransition(
                   builder: (context) => LoginPage(),
-                  animationType: AnimationType.slide_up,
+                  animationType: AnimationType.fade,
                 ),
               );
             },

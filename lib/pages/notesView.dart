@@ -4,6 +4,7 @@ import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class NotesView extends StatefulWidget {
@@ -15,122 +16,148 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  int count = 0;
+  DateTime created, modified;
 
   @override
   Widget build(BuildContext context) {
+    print('${TimeOfDayFormat.HH_colon_mm}');
     return SafeArea(
-      child: Container(
-        child: FutureBuilder(
-          future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final notes = snapshot.data;
-              if (notes.length == 0) {
-                return widget.isTrash == true
-                    ? Stack(
-                        children: [
-                          Positioned(
-                            top: 49 * hm,
-                            left: 50 * wm,
-                            child: Image(
-                              image: AssetImage('assets/images/trash.png'),
-                              height: 25 * hm,
-                              width: 45 * wm,
-                            ),
+      child: FutureBuilder(
+        future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final notes = snapshot.data;
+            if (notes.length == 0) {
+              return widget.isTrash == true
+                  ? Stack(
+                      children: [
+                        Positioned(
+                          top: 49 * hm,
+                          left: 50 * wm,
+                          child: Image(
+                            image: AssetImage('assets/images/trash.png'),
+                            height: 25 * hm,
+                            width: 45 * wm,
                           ),
-                          Positioned(
-                            top: 25 * hm,
-                            left: 20 * wm,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "You don't have any trash",
-                                  style: GoogleFonts.ubuntu(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 2.0 * hm,
-                                  ),
-                                ),
-                                SizedBox(height: 0.5 * hm),
-                                Text(
-                                  "Create 'em, trash 'em. See them",
-                                  style: GoogleFonts.ubuntu(
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 1.5 * hm,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    : Padding(
-                        padding: EdgeInsets.only(left: 11 * wm),
-                        child: Image.asset(
-                          'assets/images/lady-on-phone.png',
-                          width: 75 * wm,
-                          height: 65 * hm,
                         ),
-                      );
-              } else {
-                return ListView.builder(
-                  itemCount: notes.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        Var.noteMode = NoteMode.Editing;
-                        Var.note = notes[index];
-                        Var.isEditing = true;
-
-                        Navigator.push(
-                          context,
-                          PageRouteTransition(
-                            builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
-                            animationType: AnimationType.slide_up,
+                        Positioned(
+                          top: 25 * hm,
+                          left: 20 * wm,
+                          child: Column(
+                            children: [
+                              Text(
+                                "You don't have any trash",
+                                style: GoogleFonts.ubuntu(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 2.0 * hm,
+                                ),
+                              ),
+                              SizedBox(height: 0.5 * hm),
+                              Text(
+                                "Create 'em, trash 'em. See them",
+                                style: GoogleFonts.ubuntu(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 1.5 * hm,
+                                ),
+                              ),
+                            ],
                           ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 0,
-                        margin: EdgeInsets.symmetric(vertical: 0.8 * hm, horizontal: 2.8 * wm),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Divider(
-                              height: 0.03 * hm,
-                              color: Colors.black,
-                            ),
-                            SizedBox(height: 1.5 * hm),
-                            _NoteTitle(notes[index]['title']),
-                            SizedBox(height: 0.5 * hm),
-                            _NoteText(notes[index]['text']),
-                            SizedBox(height: 2 * hm),
-                            Divider(
-                              height: 0.03 * hm,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
+                        )
+                      ],
+                    )
+                  : Padding(
+                      padding: EdgeInsets.only(left: 11 * wm),
+                      child: Image.asset(
+                        'assets/images/lady-on-phone.png',
+                        width: 75 * wm,
+                        height: 65 * hm,
                       ),
                     );
-                  },
-                );
-              }
+            } else {
+              return ListView.builder(
+                reverse: true,
+                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                itemCount: notes.length,
+                itemBuilder: (context, index) {
+                  //
+                  // created = DateFormat('dd-MM-yyyy').parse(notes[index]['created']);
+                  // modified = DateFormat('dd-MM-yyyy').parse(notes[index]['modified']);
+                  //
+                  return GestureDetector(
+                    onTap: () {
+                      Var.noteMode = NoteMode.Editing;
+                      Var.note = notes[index];
+                      print('isEditing: ${Var.isEditing}');
+
+                      Navigator.push(
+                        context,
+                        PageRouteTransition(
+                          builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+                          animationType: AnimationType.slide_right,
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 0,
+                      margin: EdgeInsets.symmetric(horizontal: 2.8 * wm),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Divider(
+                            height: 0.03 * hm,
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 1.5 * hm),
+                          Text(
+                            // notes[index]['created'].toString().substring(0, 10),
+                            notes[index]['created'],
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey,
+                              fontSize: 1.6 * hm,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          Text(
+                            notes[index]['modified'],
+                            style: GoogleFonts.ubuntu(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey,
+                              fontSize: 1.6 * hm,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          SizedBox(height: 2 * hm),
+                          _NoteTitle(notes[index]['title']),
+                          SizedBox(height: 0.5 * hm),
+                          _NoteText(notes[index]['text']),
+                          SizedBox(height: 2 * hm),
+                          Divider(
+                            height: 0.03 * hm,
+                            color: Colors.black,
+                          ),
+                          SizedBox(height: 1 * hm),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
             }
-            return Padding(
-              padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
-              child: Container(
-                height: 120,
-                width: 120,
-                child: FlareActor(
-                  'assets/animations/loading.flr',
-                  animation: 'Alarm',
-                  alignment: Alignment.center,
-                ),
+          }
+          return Padding(
+            padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
+            child: Container(
+              height: 120,
+              width: 120,
+              child: FlareActor(
+                'assets/animations/loading.flr',
+                animation: 'Alarm',
+                alignment: Alignment.center,
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

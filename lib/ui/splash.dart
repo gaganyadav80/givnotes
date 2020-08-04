@@ -38,8 +38,8 @@ class SplashPage extends StatelessWidget {
             SizedBox(height: 20 * hm),
             Center(
               child: Container(
-                height: 150,
-                width: 150,
+                height: 18.4 * hm,
+                width: 34.7 * wm,
                 child: FlareActor(
                   'assets/animations/loading.flr',
                   animation: 'Alarm',

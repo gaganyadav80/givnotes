@@ -30,7 +30,7 @@ double hm = SizeConfig.heightMultiplier;
 double wm = SizeConfig.widthMultiplier;
 
 // * Skip funcitionality
-void setSkip({bool skip}) async {
+void setSkip({bool skip = false}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setBool('bool', skip);
 }

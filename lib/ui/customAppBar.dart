@@ -10,12 +10,14 @@ import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
-import 'package:lottie/lottie.dart';
+import 'package:intl/intl.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 
 // ! Simple AppBar
 class MyAppBar extends StatefulWidget with PreferredSizeWidget {
+  final Function updateZefyrEditMode;
   final String title;
   final FlareControls controls;
   final bool isNote;
@@ -32,6 +34,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
     this.zefyrController,
     this.localPath,
     this.file,
+    this.updateZefyrEditMode,
   });
 
   @override
@@ -42,14 +45,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
 }
 
 class _MyAppBarState extends State<MyAppBar> {
-  void _saveDocument(BuildContext context) {
-    final contents = jsonEncode(widget.zefyrController.document);
-    widget.file.writeAsString(contents).then((_) {
-      //
-      print('file saving name: ${widget.file.path}');
-    });
-  }
-  // AnimationController _controller;
+  String time;
 
   @override
   Widget build(BuildContext context) {
@@ -98,95 +94,135 @@ class _MyAppBarState extends State<MyAppBar> {
   Widget leading(BuildContext context) {
     if (widget.isNote == true) {
       return Padding(
-        padding: EdgeInsets.symmetric(vertical: 0.62 * hm, horizontal: 1.16 * wm),
-        child: Padding(
-          padding: EdgeInsets.only(bottom: hm, left: wm, right: wm),
-          child: InkWell(
-            onTap: () {
-              if (Var.isEditing == false) {
-                //?
-                Var.noteMode = NoteMode.Adding;
-                Navigator.push(
+        padding: EdgeInsets.only(
+          top: 0.62 * hm,
+          bottom: (0.62 * hm) + hm,
+          left: (1.16 * wm) + wm,
+          right: (1.16 * wm) + wm,
+        ),
+        child: InkWell(
+          onTap: () {
+            if (Var.isEditing == false) {
+              //
+              Var.noteMode = NoteMode.Adding;
+              Navigator.push(
+                context,
+                PageRouteTransition(
+                  builder: (context) => HomePage(),
+                  animationType: AnimationType.fade,
+                ),
+              );
+              //
+            } else if (Var.isEditing) {
+              String title = widget.titleController.text;
+              String note = widget.zefyrController.document.toPlainText().trim();
+
+              if (title.isEmpty && note.isEmpty) {
+                //
+                Toast.show(
+                  "Can't create empty note.",
                   context,
-                  PageRouteTransition(
-                    builder: (context) => HomePage(),
-                    animationType: AnimationType.slide_right,
-                  ),
+                  duration: Toast.LENGTH_LONG,
+                  gravity: Toast.BOTTOM,
+                  backgroundRadius: 5,
                 );
-                //?
-              } else if (Var.isEditing == true) {
-                final title = widget.titleController.text;
+                Navigator.pop(context);
+                //
+              } else {
+                //
+                widget.controls.play('save');
+                widget.updateZefyrEditMode(false);
 
-                if (title.isEmpty) {
-                  //?
-                  Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text("Can't save empty note. Please add a title!"),
-                    duration: Duration(seconds: 2),
-                  ));
-                  //?
-                } else {
-                  //?
-                  widget.controls.play('save');
-                  Var.isEditing = false;
+                if (Var.noteMode == NoteMode.Adding) {
+                  //
+                  time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
+                  //
+                  if (title.isEmpty) title = 'Untitled';
+                  NotesDB.insertNote({
+                    'title': title,
+                    'text': widget.zefyrController.document.toPlainText(),
+                    'created': time,
+                    'modified': time,
+                  });
 
-                  if (Var.noteMode == NoteMode.Adding) {
-                    NotesDB.insertNote({
-                      'title': title,
-                      'text': widget.zefyrController.document.toPlainText(),
-                    });
+                  NotesDB.getItemToRename({
+                    'title': title,
+                    'text': widget.zefyrController.document.toPlainText(),
+                    'created': time,
+                  }).then((value) async {
+                    final path = await widget.localPath;
+                    await widget.file.rename(path + '/${value[0]['id']}.json');
+                  });
 
-                    NotesDB.getItemRenameList({
-                      'title': title,
-                      'text': widget.zefyrController.document.toPlainText(),
-                    }).then((value) async {
-                      final path = await widget.localPath;
-                      await widget.file.rename(path + '/${value[0]['id']}.json');
-                    });
-
-                    _saveDocument(context);
-                    Navigator.push(
+                  _saveDocument(context).then((value) {
+                    Toast.show(
+                      value ? 'Note saved...' : 'Ops! Error saving :(',
                       context,
-                      PageRouteTransition(
-                        builder: (context) => HomePage(),
-                        animationType: AnimationType.slide_up,
-                      ),
+                      duration: 10,
+                      gravity: Toast.BOTTOM,
+                      backgroundRadius: 5,
                     );
+                  });
 
-                    //?
-                  } else if (Var.noteMode == NoteMode.Editing) {
-                    NotesDB.updateNote({
-                      'id': Var.note['id'],
-                      'title': title,
-                      'text': widget.zefyrController.document.toPlainText(),
-                    });
+                  //
+                } else if (Var.noteMode == NoteMode.Editing) {
+                  //
+                  time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
+                  //
+                  NotesDB.updateNote({
+                    'id': Var.note['id'],
+                    'title': title,
+                    'text': widget.zefyrController.document.toPlainText(),
+                    'modified': time,
+                  });
 
-                    _saveDocument(context);
-
-                    Var.noteMode = NoteMode.Adding;
-                    Navigator.pop(context);
-                  }
+                  _saveDocument(context).then((value) {
+                    Toast.show(
+                      value ? 'Note saved...' : 'Ops! Error saving :(',
+                      context,
+                      duration: 10,
+                      gravity: Toast.BOTTOM,
+                      backgroundRadius: 5,
+                    );
+                  });
                 }
               }
-            },
-            child: FlareActor(
-              'assets/animations/arrow-tick.flr',
-              animation: Var.noteMode == NoteMode.Adding ? 'edit' : 'idle',
-              controller: widget.controls,
-              alignment: Alignment.center,
-              fit: BoxFit.contain,
-            ),
+              Var.isEditing = false;
+            }
+          },
+          child: FlareActor(
+            'assets/animations/arrow-tick.flr',
+            animation: Var.noteMode == NoteMode.Adding ? 'idle-tick' : 'idle-arrow',
+            controller: widget.controls,
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
           ),
         ),
       );
     } else {
       return IconButton(
-        icon: Lottie.asset('assets/animations/menu-black.json'),
+        icon: Icon(Icons.menu),
         color: Colors.black,
         onPressed: () {
           Scaffold.of(context).openDrawer();
         },
       );
     }
+  }
+
+  Future<bool> _saveDocument(BuildContext context) {
+    final contents = jsonEncode(widget.zefyrController.document);
+    widget.file.writeAsString(contents).then(
+      (_) {
+        print('file saving name: ${widget.file.path}');
+        return Future.value(true);
+      },
+      onError: (_) {
+        print('Error saving file: ${widget.file.path}');
+        return Future.value(false);
+      },
+    );
+    return Future.value(true);
   }
 }
 
@@ -222,3 +258,8 @@ class _MyAppBarState extends State<MyAppBar> {
 //     });
 //   },
 // );
+
+// Scaffold.of(context).showSnackBar(SnackBar(
+//   content: Text("Can't save empty note. Please add a title!"),
+//   duration: Duration(seconds: 2),
+// ));

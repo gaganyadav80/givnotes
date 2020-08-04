@@ -19,12 +19,6 @@ class _AboutUsState extends State<AboutUs> {
     return SafeArea(
       child: Container(
         height: 76 * hm,
-        // decoration: BoxDecoration(
-        //   image: DecorationImage(
-        //     fit: BoxFit.fill,
-        //     image: AssetImage('assets/images/aboutBack2.png'),
-        //   ),
-        // ),
         padding: EdgeInsets.only(left: 2.3 * wm, right: 2.3 * wm),
         child: Stack(
           children: <Widget>[
@@ -88,15 +82,15 @@ class _AboutUsState extends State<AboutUs> {
                 title: Text(
                   'Gagan Yadav',
                   style: TextStyle(
-                    fontSize: 2.0 * hm,
+                    fontSize: 4.0 * wm,
                     color: Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 subtitle: Text(
-                  '~\$ Developer',
+                  '~\$ Developer  (piru dev)',
                   style: TextStyle(
-                    fontSize: 1.5 * hm,
+                    fontSize: 3 * wm,
                     color: Colors.black,
                   ),
                 ),
@@ -107,7 +101,7 @@ class _AboutUsState extends State<AboutUs> {
               child: Text(
                 'Liked My Work ... \nDon\'t forget to mention it :)',
                 style: GoogleFonts.ubuntu(
-                  fontSize: 1.8 * hm,
+                  fontSize: 3.4 * wm,
                 ),
               ),
             ),
@@ -117,7 +111,7 @@ class _AboutUsState extends State<AboutUs> {
               child: Text(
                 '?',
                 style: TextStyle(
-                  fontSize: 6.5 * hm,
+                  fontSize: 12.5 * wm,
                   fontFamily: 'Abril',
                 ),
               ),

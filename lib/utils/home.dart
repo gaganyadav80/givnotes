@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
@@ -7,6 +9,8 @@ import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:givnotes/utils/permissions.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:toast/toast.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -16,123 +20,163 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int count = 0;
+  DateTime currentBackPressTime;
+  // int count = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      resizeToAvoidBottomInset: true,
-      resizeToAvoidBottomPadding: true,
-      extendBody: true,
-      backgroundColor: Colors.white,
-      appBar: MyAppBar(Var.setTitle(), isNote: false),
-      drawer: DrawerItems(),
-      body: Var.pageNavigation[Var.selectedIndex],
-
-      floatingActionButton: Var.isTrash
-          ? SizedBox.shrink()
-          : FloatingActionButton(
-              tooltip: 'New Note',
-              backgroundColor: Colors.black,
-              splashColor: Colors.black,
-              elevation: 5,
-              child: Icon(
-                Icons.add,
-              ),
-              onPressed: () async {
-                await HandlePermission().requestPermission().then((value) {
-                  if (value) {
-                    Var.isEditing = true;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
-                      ),
-                    );
-                  } else {
-                    if (isPermanentDisabled) {
-                      HandlePermission().permanentDisabled(context);
-                    }
-                    setState(() => Var.selectedIndex = 0);
-                  }
-                });
-              },
-            ),
-
-      // !! Bottom Navigation
-      bottomNavigationBar: SnakeNavigationBar(
-        elevation: 20,
-        shadowColor: Colors.black,
-        currentIndex: Var.selectedIndex,
-        style: SnakeBarStyle.pinned,
-        snakeShape: SnakeShape.indicator,
-        snakeColor: Colors.black,
-        backgroundColor: Color(0xffFAFAFA),
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        shape: BeveledRectangleBorder(
-          side: BorderSide(color: Colors.black, width: 0.02 * hm),
+    return WillPopScope(
+      onWillPop: () => _onPop(),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomPadding: true,
+        extendBody: true,
+        backgroundColor: Colors.white,
+        appBar: MyAppBar(
+          Var.setTitle(),
+          isNote: false,
         ),
-        onPositionChanged: (index) async {
-          if (index == 0) Var.isTrash = false;
-          setState(() => Var.selectedIndex = index);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.book,
-              size: 3 * hm,
-            ),
-            title: Text(
-              'All Notes',
-              style: GoogleFonts.ubuntu(
-                color: Colors.black,
-                fontSize: 1.2 * hm,
+        drawer: DrawerItems(),
+        body: Var.pageNavigation[Var.selectedIndex],
+
+        floatingActionButton: Var.selectedIndex != 0
+            ? SizedBox.shrink()
+            : FloatingActionButton(
+                tooltip: 'New Note',
+                backgroundColor: Colors.black,
+                splashColor: Colors.black,
+                elevation: 5,
+                child: Icon(Icons.add),
+                onPressed: () async {
+                  await HandlePermission().requestPermission().then((value) {
+                    if (value) {
+                      Var.isEditing = true;
+                      Var.noteMode = NoteMode.Adding;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
+                        ),
+                      );
+                    } else {
+                      if (isPermanentDisabled) {
+                        HandlePermission().permanentDisabled(context);
+                      }
+                      setState(() => Var.selectedIndex = 0);
+                    }
+                  });
+                },
+              ),
+
+        // !! Bottom Navigation
+        bottomNavigationBar: SnakeNavigationBar(
+          elevation: 20,
+          shadowColor: Colors.black,
+          currentIndex: Var.selectedIndex,
+          style: SnakeBarStyle.pinned,
+          snakeShape: SnakeShape.indicator,
+          snakeColor: Colors.black,
+          backgroundColor: Color(0xffFAFAFA),
+          showSelectedLabels: true,
+          showUnselectedLabels: true,
+          shape: BeveledRectangleBorder(
+            side: BorderSide(color: Colors.black, width: 0.02 * hm),
+          ),
+          onPositionChanged: (index) async {
+            if (index == 0) Var.isTrash = false;
+            setState(() => Var.selectedIndex = index);
+          },
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.book,
+                size: 3 * hm,
+              ),
+              title: Text(
+                'All Notes',
+                style: GoogleFonts.ubuntu(
+                  color: Colors.black,
+                  fontSize: 1.2 * hm,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.search,
-              size: 3 * hm,
-            ),
-            title: Text(
-              'Search',
-              style: GoogleFonts.ubuntu(
-                color: Colors.black,
-                fontSize: 1.2 * hm,
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.search,
+                size: 3 * hm,
+              ),
+              title: Text(
+                'Search',
+                style: GoogleFonts.ubuntu(
+                  color: Colors.black,
+                  fontSize: 1.2 * hm,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.bookmark,
-              size: 3 * hm,
-            ),
-            title: Text(
-              'Tags',
-              style: GoogleFonts.ubuntu(
-                color: Colors.black,
-                fontSize: 1.2 * hm,
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.bookmark,
+                size: 3 * hm,
+              ),
+              title: Text(
+                'Tags',
+                style: GoogleFonts.ubuntu(
+                  color: Colors.black,
+                  fontSize: 1.2 * hm,
+                ),
               ),
             ),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              CupertinoIcons.person,
-              size: 3 * hm,
-            ),
-            title: Text(
-              'Profile',
-              style: GoogleFonts.ubuntu(
-                color: Colors.black,
-                fontSize: 1.2 * hm,
+            BottomNavigationBarItem(
+              icon: Icon(
+                CupertinoIcons.person,
+                size: 3 * hm,
+              ),
+              title: Text(
+                'Profile',
+                style: GoogleFonts.ubuntu(
+                  color: Colors.black,
+                  fontSize: 1.2 * hm,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
+  }
+
+  Future<bool> _onPop() async {
+    if (Var.selectedIndex != 0) {
+      Var.selectedIndex = 0;
+      Navigator.push(
+        context,
+        PageRouteTransition(
+          builder: (context) => HomePage(),
+          animationType: AnimationType.fade,
+        ),
+      );
+      return true;
+      //
+    } else if (Var.selectedIndex == 0) {
+      //
+      DateTime now = DateTime.now();
+      if (currentBackPressTime == null ||
+          now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+        currentBackPressTime = now;
+        Toast.show(
+          'Press back again to exit',
+          context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM,
+          backgroundRadius: 5,
+        );
+        return false;
+        //
+      }
+      if (Platform.isAndroid) SystemNavigator.pop();
+      return true;
+    }
+    return false;
   }
 }

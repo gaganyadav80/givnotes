@@ -23,8 +23,8 @@ class HandlePermission {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Open Settings?'),
-          content: Text('To enable storage permission. \nCan\'t save your notes without it.'),
+          // title: Text('Open Settings?'),
+          content: Text('Go to settings to enable storage permission.'),
           actions: [
             FlatButton(
               child: Text(
@@ -57,52 +57,3 @@ class HandlePermission {
     );
   }
 }
-
-// CupertinoAlertDialog(
-//       title: Text('Open settings ?'),
-//       content: Text(
-//           'Please open the app settings \nto enable storage permission. \nCan\'t save your notes right now.\n'),
-//       actions: <Widget>[
-//         CupertinoDialogAction(
-//           child: Text(
-//             'Later',
-//             style: GoogleFonts.sourceSansPro(
-//               fontWeight: FontWeight.w300,
-//               color: Colors.red,
-//               fontSize: 16,
-//             ),
-//           ),
-//           onPressed: () {
-//             Navigator.pop(context);
-//           },
-//         ),
-//         CupertinoDialogAction(
-//           isDefaultAction: true,
-//           child: Text(
-//             'Sure',
-//             style: GoogleFonts.sourceSansPro(
-//               fontWeight: FontWeight.w300,
-//               fontSize: 16,
-//             ),
-//           ),
-//           onPressed: () {
-//             openAppSettings();
-//             Navigator.pop(context);
-//           },
-//         )
-//       ],
-//     );
-
-// void request() async {
-// Map<Permission, PermissionStatus> status = await [
-//   Permission.storage,
-// ].request();
-
-// if (await Permission.storage.isPermanentlyDenied && await Permission.storage.isDenied) {
-//   isStorageDisabled = true;
-//   print(status[Permission.storage]);
-// } else {
-//   isStorageDisabled = false;
-//   print(status[Permission.storage]);
-// }
-// }

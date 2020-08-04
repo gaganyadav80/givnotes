@@ -18,7 +18,9 @@ class NotesDB {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
           text TEXT NOT NULL,
-          trash BOOLEAN DEFAULT 0
+          trash BOOLEAN DEFAULT 0,
+          created TEXT NOT NULL,
+          modified TEXT NOT NULL
         );
         ''');
       },
@@ -65,11 +67,11 @@ class NotesDB {
     );
   }
 
-  static Future<List<Map<String, dynamic>>> getItemRenameList(Map<String, dynamic> note) async {
+  static Future<List<Map<String, dynamic>>> getItemToRename(Map<String, dynamic> note) async {
     return await db.query(
       notesTable,
-      where: 'title = ? AND text = ?',
-      whereArgs: [note['title'], note['text']],
+      where: 'title = ? AND text = ? AND created = ?',
+      whereArgs: [note['title'], note['text'], note['created']],
     );
   }
 }

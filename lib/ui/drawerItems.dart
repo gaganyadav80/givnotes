@@ -5,7 +5,6 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getflutter/components/list_tile/gf_list_tile.dart';
-import 'package:getflutter/components/toast/gf_toast.dart';
 import 'package:getflutter/getflutter.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/notesView.dart';
@@ -15,7 +14,10 @@ import 'package:givnotes/pages/tagsView.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 
 // ! Drawer
@@ -38,9 +40,14 @@ class DrawerItems extends StatelessWidget {
         selected: Var.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
-          size: 3.4 * hm,
+          size: 5.3 * wm,
         ),
-        title: Text(title),
+        title: Text(
+          title,
+          style: GoogleFonts.ubuntu(
+            fontSize: 3.4 * wm,
+          ),
+        ),
         onTap: () {
           if (index == 4)
             Var.isTrash = true;
@@ -94,11 +101,13 @@ class DrawerItems extends StatelessWidget {
 class EndDrawerItems extends StatelessWidget {
   final TextEditingController titleController;
   final ZefyrController zefyrController;
+  final Function updateZefyrEditMode;
   final Future<String> localPath;
   final FlareControls controls;
   final File file;
 
   EndDrawerItems({
+    this.updateZefyrEditMode,
     this.titleController,
     this.zefyrController,
     this.localPath,
@@ -106,12 +115,19 @@ class EndDrawerItems extends StatelessWidget {
     this.file,
   });
 
-  void _saveDocument(BuildContext context) {
+  Future<bool> _saveDocument(BuildContext context) {
     final contents = jsonEncode(zefyrController.document);
-    file.writeAsString(contents).then((_) {
-      //
-      print('file saving name: ${file.path}');
-    });
+    file.writeAsString(contents).then(
+      (_) {
+        print('file saving name: ${file.path}');
+        return Future.value(true);
+      },
+      onError: () {
+        print('Error saving file: ${file.path}');
+        return Future.value(false);
+      },
+    );
+    return Future.value(true);
   }
 
   Widget myEndDrawerListTheme(
@@ -124,23 +140,23 @@ class EndDrawerItems extends StatelessWidget {
       onTap: onPressed,
       child: Column(
         children: [
-          SizedBox(height: 0.5 * hm),
+          SizedBox(height: wm),
           GFListTile(
             padding: EdgeInsets.zero,
             margin: EdgeInsets.only(left: 5 * wm, right: 5 * wm),
             avatar: Icon(
               icon,
-              size: 2.4 * hm,
+              size: 4.5 * wm,
             ),
             title: Text(
               title,
               style: TextStyle(
-                fontSize: 1.8 * hm,
+                fontSize: 3.4 * wm,
                 fontWeight: FontWeight.w300,
               ),
             ),
           ),
-          SizedBox(height: 0.5 * hm),
+          SizedBox(height: wm),
           Divider(
             thickness: 0.01 * hm,
             height: 0.01 * hm,
@@ -165,48 +181,97 @@ class EndDrawerItems extends StatelessWidget {
                     'Save note',
                     Icons.check,
                     () {
-                      final title = titleController.text;
+                      if (Var.isEditing == false) {
+                        //
+                        Var.noteMode = NoteMode.Adding;
+                        Navigator.push(
+                          context,
+                          PageRouteTransition(
+                            builder: (context) => HomePage(),
+                            animationType: AnimationType.fade,
+                          ),
+                        );
+                        //
+                      } else if (Var.isEditing) {
+                        String title = titleController.text;
+                        String note = zefyrController.document.toPlainText().trim();
 
-                      if (title.isEmpty) {
-                        Navigator.pop(context);
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("Can't save empty note. Please add a title!"),
-                          duration: Duration(seconds: 2),
-                        ));
-                      } else {
-                        controls.play('save');
-                        Var.isEditing = false;
-
-                        if (Var.noteMode == NoteMode.Adding) {
-                          NotesDB.insertNote({
-                            'title': title,
-                            'text': zefyrController.document.toPlainText(),
-                          });
-
-                          NotesDB.getItemRenameList({
-                            'title': title,
-                            'text': zefyrController.document.toPlainText(),
-                          }).then((value) async {
-                            final path = await localPath;
-                            await file.rename(path + '/${value[0]['id']}.json');
-                          });
-
-                          _saveDocument(context);
-                          Navigator.pop(context);
-
+                        if (title.isEmpty && note.isEmpty) {
                           //
-                        } else if (Var.noteMode == NoteMode.Editing) {
-                          NotesDB.updateNote({
-                            'id': Var.note['id'],
-                            'title': title,
-                            'text': zefyrController.document.toPlainText(),
-                          });
-
-                          _saveDocument(context);
-
-                          Var.noteMode = NoteMode.Adding;
+                          Toast.show(
+                            "Can't save empty note. Please add a title!",
+                            context,
+                            duration: Toast.LENGTH_LONG,
+                            gravity: Toast.BOTTOM,
+                            backgroundRadius: 5,
+                            backgroundColor: Colors.black,
+                          );
                           Navigator.pop(context);
+                          Navigator.pop(context);
+                          //
+                        } else {
+                          //
+                          String time;
+                          controls.play('save');
+                          updateZefyrEditMode(false);
+
+                          print('isEditing: ${Var.isEditing}');
+
+                          if (Var.noteMode == NoteMode.Adding) {
+                            // time = DateFormat('yyyy-MM-dd - kk:mm').format(DateTime.now());
+                            time = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+
+                            if (title.isEmpty) title = 'Untitled';
+                            NotesDB.insertNote({
+                              'title': title,
+                              'text': zefyrController.document.toPlainText(),
+                              'created': time,
+                              'modified': time,
+                            });
+
+                            NotesDB.getItemToRename({
+                              'title': title,
+                              'text': zefyrController.document.toPlainText(),
+                              'created': time,
+                            }).then((value) async {
+                              final path = await localPath;
+                              await file.rename(path + '/${value[0]['id']}.json');
+                            });
+
+                            _saveDocument(context).then((value) {
+                              Toast.show(
+                                value ? 'Note saved...' : 'Ops! Error saving :(',
+                                context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM,
+                                backgroundRadius: 5,
+                                backgroundColor: Colors.black,
+                              );
+                            });
+                            //
+                          } else if (Var.noteMode == NoteMode.Editing) {
+                            file.lastModified().then((value) {
+                              time = DateFormat('yyyy-MM-dd HH:mm:ss').format(value);
+                            });
+                            NotesDB.updateNote({
+                              'id': Var.note['id'],
+                              'title': title,
+                              'text': zefyrController.document.toPlainText(),
+                              'modified': time,
+                            });
+
+                            _saveDocument(context).then((value) {
+                              Toast.show(
+                                value ? 'Note saved...' : 'Ops! Error saving :(',
+                                context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM,
+                                backgroundRadius: 5,
+                              );
+                            });
+                          }
                         }
+                        Var.isEditing = false;
                       }
                     },
                     context,
@@ -223,14 +288,12 @@ class EndDrawerItems extends StatelessWidget {
                       });
 
                       Var.noteMode = NoteMode.Adding;
-                      // Var.isTrash = true;
-                      // Var.selectedIndex = 4;
 
                       Navigator.push(
                         context,
                         PageRouteTransition(
                           builder: (context) => HomePage(),
-                          animationType: AnimationType.slide_up,
+                          animationType: AnimationType.slide_left,
                         ),
                       );
                     },
@@ -246,7 +309,7 @@ class EndDrawerItems extends StatelessWidget {
                         ? () {
                             // TODO: Update the id if inbetween item is deleted
                             // ex. 1->2->3 => (and delete 2) => 1->3 => (then update) => 1->2
-                            // ?? But can't update the file name if lots of entries to be updated
+                            // But can't update the file name if lots of entries to be updated
                             _confirmDeleteAlert(context, Var.note['id'], localPath);
                           }
                         : () async {
@@ -257,17 +320,13 @@ class EndDrawerItems extends StatelessWidget {
                               'trash': 1,
                             });
 
-                            // setState(() {
                             Var.noteMode = NoteMode.Adding;
-                            // Var.isTrash = false;
-                            // Var.selectedIndex = 0;
-                            // });
 
                             Navigator.push(
                               context,
                               PageRouteTransition(
                                 builder: (context) => HomePage(),
-                                animationType: AnimationType.slide_up,
+                                animationType: AnimationType.slide_left,
                               ),
                             );
                           },
@@ -287,7 +346,7 @@ _confirmDeleteAlert(context, int _id, Future<String> _localPath) {
     builder: (BuildContext context) {
       return AlertDialog(
         title: Text('Confirm Delete!'),
-        content: Text('Are you sure you permanently want to delte this note?'),
+        content: Text('Are you sure you permanently want to delete this note?'),
         actions: [
           FlatButton(
             onPressed: () => Navigator.pop(context),
@@ -301,18 +360,14 @@ _confirmDeleteAlert(context, int _id, Future<String> _localPath) {
               final file = File(path + "/$_id.json");
               file.delete();
 
-              // setState(() {
               Var.noteMode = NoteMode.Adding;
-              // Var.isTrash = true;
-              // Var.selectedIndex = 4;
-              // });
 
               Navigator.pop(context);
               Navigator.push(
                 context,
                 PageRouteTransition(
                   builder: (context) => HomePage(),
-                  animationType: AnimationType.slide_up,
+                  animationType: AnimationType.fade,
                 ),
               );
             },
