@@ -1,12 +1,8 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:getflutter/components/search_bar/gf_search_bar.dart';
+import 'package:getwidget/components/search_bar/gf_search_bar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lottie/lottie.dart';
-import 'package:route_transitions/route_transitions.dart';
 
 class SearchPage extends StatefulWidget {
   SearchPage({Key key}) : super(key: key);
@@ -92,18 +88,19 @@ class _SearchPageState extends State<SearchPage> {
               );
             }
 
-            return Padding(
-              padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
-              child: Container(
-                height: 120,
-                width: 120,
-                child: FlareActor(
-                  'assets/animations/loading.flr',
-                  animation: 'Alarm',
-                  alignment: Alignment.center,
-                ),
-              ),
-            );
+            // return Padding(
+            //   padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
+            //   child: Container(
+            //     height: 120,
+            //     width: 120,
+            //     child: FlareActor(
+            //       'assets/animations/loading.flr',
+            //       animation: 'Alarm',
+            //       alignment: Alignment.center,
+            //     ),
+            //   ),
+            // );
+            return Scaffold(backgroundColor: Colors.white);
           },
         ),
       ),

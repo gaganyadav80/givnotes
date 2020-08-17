@@ -5,7 +5,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/components/appbar/gf_appbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/home.dart';
@@ -25,9 +25,11 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   final ZefyrController zefyrController;
   final Future<String> localPath;
   final File file;
+  final bool zefyrFlag;
 
   MyAppBar(
     this.title, {
+    this.zefyrFlag = false,
     this.isNote,
     this.controls,
     this.titleController,
@@ -41,7 +43,7 @@ class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   _MyAppBarState createState() => _MyAppBarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(14 * hm);
+  Size get preferredSize => Size.fromHeight(zefyrFlag ? 10 * hm : 14 * hm);
 }
 
 class _MyAppBarState extends State<MyAppBar> {
@@ -69,14 +71,8 @@ class _MyAppBarState extends State<MyAppBar> {
                   )
                 : SizedBox.shrink(),
           ],
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 3.47 * wm),
-          child: Text(
-            widget.title,
+          title: Text(
+            widget.zefyrFlag ? widget.title : "",
             style: TextStyle(
               fontFamily: 'Abril',
               color: Colors.black,
@@ -85,8 +81,26 @@ class _MyAppBarState extends State<MyAppBar> {
               wordSpacing: 0.7 * wm,
             ),
           ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
         ),
-        SizedBox(height: 1.23 * hm),
+        widget.zefyrFlag
+            ? SizedBox.shrink()
+            : Padding(
+                padding: EdgeInsets.only(left: 3.47 * wm),
+                child: Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontFamily: 'Abril',
+                    color: Colors.black,
+                    fontSize: 2.8 * hm,
+                    fontWeight: FontWeight.w400,
+                    wordSpacing: 0.7 * wm,
+                  ),
+                ),
+              ),
+        // SizedBox(height: 1.23 * hm),
       ],
     );
   }
@@ -151,7 +165,7 @@ class _MyAppBarState extends State<MyAppBar> {
                     'created': time,
                   }).then((value) async {
                     final path = await widget.localPath;
-                    await widget.file.rename(path + '/${value[0]['id']}.json');
+                    await widget.file.rename(path + '/notes/${value[0]['id']}.json');
                   });
 
                   _saveDocument(context).then((value) {

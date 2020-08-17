@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getflutter/components/button/gf_button.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/shape/gf_button_shape.dart';
+import 'package:getwidget/types/gf_button_type.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -88,7 +89,7 @@ class _AboutUsState extends State<AboutUs> {
                   ),
                 ),
                 subtitle: Text(
-                  '~\$ Developer  (piru dev)',
+                  '~\$ Developer  (bish)',
                   style: TextStyle(
                     fontSize: 3 * wm,
                     color: Colors.black,
@@ -97,7 +98,7 @@ class _AboutUsState extends State<AboutUs> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20 * hm, left: 3 * wm),
+              padding: EdgeInsets.only(top: 21 * hm, left: 3 * wm),
               child: Text(
                 'Liked My Work ... \nDon\'t forget to mention it :)',
                 style: GoogleFonts.ubuntu(
@@ -107,7 +108,7 @@ class _AboutUsState extends State<AboutUs> {
             ),
             Positioned(
               top: 18.5 * hm,
-              left: 55 * wm,
+              left: 50 * wm,
               child: Text(
                 '?',
                 style: TextStyle(
@@ -118,7 +119,7 @@ class _AboutUsState extends State<AboutUs> {
             ),
             Positioned(
               top: 29.7 * hm,
-              left: 2.5 * wm,
+              left: 1.5 * wm,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(1.9 * wm),
                 child: Image.asset(
@@ -130,91 +131,94 @@ class _AboutUsState extends State<AboutUs> {
               ),
             ),
             Positioned(
-              top: 29.5 * hm,
-              left: 65.8 * wm,
-              child: Column(
-                children: <Widget>[
-                  GFButton(
-                    onPressed: () async {
-                      final String url = 'https://www.twitter.com/_yadavGagan';
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not open Twitter profile';
-                      }
-                    },
-                    splashColor: Colors.blue,
-                    color: Colors.blue,
-                    type: GFButtonType.outline,
-                    shape: GFButtonShape.standard,
-                    text: 'Twitter     ',
-                    icon: Icon(
-                      FontAwesomeIcons.twitter,
+              top: 27.5 * hm,
+              left: 63 * wm,
+              child: Container(
+                width: 30 * wm,
+                child: Column(
+                  children: <Widget>[
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.twitter.com/_yadavGagan';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Twitter profile';
+                        }
+                      },
+                      splashColor: Colors.blue,
                       color: Colors.blue,
-                      size: 2.5 * hm,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Twitter     ',
+                      icon: Icon(
+                        FontAwesomeIcons.twitter,
+                        color: Colors.blue,
+                        size: 2.5 * hm,
+                      ),
                     ),
-                  ),
-                  GFButton(
-                    onPressed: () async {
-                      final String url = 'https://www.instagram.com/gagan.yadav.80';
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not open Instagram profile';
-                      }
-                    },
-                    splashColor: Colors.pink[600],
-                    color: Colors.pink[600],
-                    type: GFButtonType.outline,
-                    shape: GFButtonShape.standard,
-                    text: 'Instagram',
-                    icon: Icon(
-                      FontAwesomeIcons.instagram,
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.instagram.com/gagan.yadav.80';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Instagram profile';
+                        }
+                      },
+                      splashColor: Colors.pink[600],
                       color: Colors.pink[600],
-                      size: 2.5 * hm,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Instagram',
+                      icon: Icon(
+                        FontAwesomeIcons.instagram,
+                        color: Colors.pink[600],
+                        size: 2.5 * hm,
+                      ),
                     ),
-                  ),
-                  GFButton(
-                    onPressed: () async {
-                      final String url = 'https://www.facebook.com/gagan.77492';
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not open Facebook profile';
-                      }
-                    },
-                    splashColor: Colors.blue[900],
-                    color: Colors.blue[900],
-                    type: GFButtonType.outline,
-                    shape: GFButtonShape.standard,
-                    text: 'Facebook ',
-                    icon: Icon(
-                      FontAwesomeIcons.facebookF,
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.facebook.com/gagan.77492';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Facebook profile';
+                        }
+                      },
+                      splashColor: Colors.blue[900],
                       color: Colors.blue[900],
-                      size: 2.5 * hm,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Facebook ',
+                      icon: Icon(
+                        FontAwesomeIcons.facebookF,
+                        color: Colors.blue[900],
+                        size: 2.5 * hm,
+                      ),
                     ),
-                  ),
-                  GFButton(
-                    onPressed: () async {
-                      final String url = 'https://www.github.com/gaganyadav80/givnotes/';
-                      if (await canLaunch(url)) {
-                        await launch(url);
-                      } else {
-                        throw 'Could not open Github profile';
-                      }
-                    },
-                    splashColor: Colors.black,
-                    color: Colors.black,
-                    type: GFButtonType.outline,
-                    shape: GFButtonShape.standard,
-                    text: 'Github       ',
-                    icon: Icon(
-                      FontAwesomeIcons.github,
+                    GFButton(
+                      onPressed: () async {
+                        final String url = 'https://www.github.com/gaganyadav80/givnotes/';
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not open Github profile';
+                        }
+                      },
+                      splashColor: Colors.black,
                       color: Colors.black,
-                      size: 2.5 * hm,
+                      type: GFButtonType.outline,
+                      shape: GFButtonShape.standard,
+                      text: 'Github       ',
+                      icon: Icon(
+                        FontAwesomeIcons.github,
+                        color: Colors.black,
+                        size: 2.5 * hm,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             Container(

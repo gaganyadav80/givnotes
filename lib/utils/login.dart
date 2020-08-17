@@ -3,7 +3,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn googleSignIn = GoogleSignIn();
+final GoogleSignIn googleSignIn =
+    GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.appdata']);
+GoogleSignInAccount googleSignInAccount;
+
+FirebaseUser temp;
 
 FirebaseUser currentUser;
 String blankUser = 'assets/animations/people-portrait.json';
@@ -26,9 +30,9 @@ Future<void> getUserDetails() async {
 }
 
 Future<FirebaseUser> signInWithGoogle() async {
-  final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-  final GoogleSignInAuthentication googleSignInAuthentication =
-      await googleSignInAccount.authentication;
+  final GoogleSignInAccount gSA = await googleSignIn.signIn();
+  googleSignInAccount = gSA;
+  final GoogleSignInAuthentication googleSignInAuthentication = await gSA.authentication;
 
   final AuthCredential credential = GoogleAuthProvider.getCredential(
     accessToken: googleSignInAuthentication.accessToken,

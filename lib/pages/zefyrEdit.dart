@@ -40,10 +40,10 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     final path = await _localPath;
 
     if (Var.noteMode == NoteMode.Adding) {
-      file = File(path + "/temp.json");
+      file = File(path + "/notes/temp.json");
       //
     } else if (Var.noteMode == NoteMode.Editing) {
-      file = File(path + "/${Var.note['id']}.json");
+      file = File(path + "/notes/${Var.note['id']}.json");
     }
 
     if (await file.exists()) {
@@ -71,6 +71,12 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       _titleController.text = Var.note['title'];
     }
     super.didChangeDependencies();
+  }
+
+  void updateEditMode(bool value) {
+    setState(() {
+      Var.isEditing = value;
+    });
   }
 
   @override
@@ -105,12 +111,6 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             ),
           );
 
-    void updateEditMode(bool value) {
-      setState(() {
-        Var.isEditing = value;
-      });
-    }
-
     return SafeArea(
       child: WillPopScope(
         onWillPop: _onPop,
@@ -122,6 +122,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           appBar: MyAppBar(
             Var.isTrash ? 'DELETED NOTE' : 'NOTE',
             isNote: true,
+            zefyrFlag: true,
             controls: controls,
             titleController: _titleController,
             zefyrController: _zefyrController,
@@ -163,6 +164,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           // body of editor
           body: Column(
             children: <Widget>[
+              // SizedBox(height: hm),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
                 child: FocusWidget(
@@ -176,15 +178,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     keyboardAppearance: Brightness.light,
                     decoration: InputDecoration.collapsed(
                       hintText: 'Untitled',
-                      hintStyle: TextStyle(
-                        fontSize: 2.5 * hm,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      hintStyle: TextStyle(fontSize: 3 * hm),
                     ),
-                    style: GoogleFonts.ubuntu(
-                      fontSize: 2.5 * hm,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: GoogleFonts.ubuntu(fontSize: 3 * hm),
                     textInputAction: TextInputAction.next,
                     onEditingComplete: () {
                       _zefyrfocusNode.requestFocus();
@@ -215,7 +211,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       return (await showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Note is Empty!'),
+              // title: Text('Note is Empty!'),
               content: Text("Please add a title! Can't save empty :)"),
               actions: <Widget>[
                 FlatButton(
@@ -239,7 +235,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       return (await showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: Text('Changes not saved'),
+              // title: Text('Changes not saved'),
               content: Text("You have unsaved changed. Sure want to exit?"),
               actions: <Widget>[
                 FlatButton(
@@ -259,6 +255,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             ),
           )) ??
           false;
+    } else if (_titleController.text.isNotEmpty) {
+      if (MediaQuery.of(context).viewInsets.bottom != 0) {
+        return false;
+      }
+      return true;
     } else {
       Var.isEditing = false;
     }

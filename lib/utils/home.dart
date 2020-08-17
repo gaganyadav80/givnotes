@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
@@ -91,52 +92,52 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.book,
-                size: 3 * hm,
+                size: 3.5 * hm,
               ),
               title: Text(
                 'All Notes',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.2 * hm,
+                  fontSize: 1.5 * hm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.search,
-                size: 3 * hm,
+                size: 3.5 * hm,
               ),
               title: Text(
                 'Search',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.2 * hm,
+                  fontSize: 1.5 * hm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.bookmark,
-                size: 3 * hm,
+                size: 3.5 * hm,
               ),
               title: Text(
                 'Tags',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.2 * hm,
+                  fontSize: 1.5 * hm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.person,
-                size: 3 * hm,
+                size: 3.5 * hm,
               ),
               title: Text(
                 'Profile',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.2 * hm,
+                  fontSize: 1.5 * hm,
                 ),
               ),
             ),

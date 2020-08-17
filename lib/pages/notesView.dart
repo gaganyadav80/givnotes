@@ -1,11 +1,10 @@
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:givnotes/utils/driveapi.dart';
 
 class NotesView extends StatefulWidget {
   final bool isTrash;
@@ -16,11 +15,10 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  DateTime created, modified;
+  // DateTime created, modified;
 
   @override
   Widget build(BuildContext context) {
-    print('${TimeOfDayFormat.HH_colon_mm}');
     return SafeArea(
       child: FutureBuilder(
         future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
@@ -75,10 +73,11 @@ class _NotesViewState extends State<NotesView> {
                     );
             } else {
               return ListView.builder(
-                reverse: true,
+                // reverse: true,
                 keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
+                  index = notes.length - index - 1;
                   //
                   // created = DateFormat('dd-MM-yyyy').parse(notes[index]['created']);
                   // modified = DateFormat('dd-MM-yyyy').parse(notes[index]['modified']);
@@ -103,14 +102,18 @@ class _NotesViewState extends State<NotesView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          MaterialButton(
+                            color: Colors.red,
+                            onPressed: () => uploadFileToGoogleDrive(context),
+                            child: Text("Upload"),
+                          ),
                           Divider(
                             height: 0.03 * hm,
                             color: Colors.black,
                           ),
                           SizedBox(height: 1.5 * hm),
                           Text(
-                            // notes[index]['created'].toString().substring(0, 10),
-                            notes[index]['created'],
+                            "created:     ${notes[index]['created']}",
                             style: GoogleFonts.ubuntu(
                               fontWeight: FontWeight.w300,
                               color: Colors.grey,
@@ -119,7 +122,7 @@ class _NotesViewState extends State<NotesView> {
                             ),
                           ),
                           Text(
-                            notes[index]['modified'],
+                            "modified:   ${notes[index]['modified']}",
                             style: GoogleFonts.ubuntu(
                               fontWeight: FontWeight.w300,
                               color: Colors.grey,
@@ -145,18 +148,19 @@ class _NotesViewState extends State<NotesView> {
               );
             }
           }
-          return Padding(
-            padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
-            child: Container(
-              height: 120,
-              width: 120,
-              child: FlareActor(
-                'assets/animations/loading.flr',
-                animation: 'Alarm',
-                alignment: Alignment.center,
-              ),
-            ),
-          );
+          // return Padding(
+          //   padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
+          //   child: Container(
+          //     height: 120,
+          //     width: 120,
+          //     child: FlareActor(
+          //       'assets/animations/loading.flr',
+          //       animation: 'Alarm',
+          //       alignment: Alignment.center,
+          //     ),
+          //   ),
+          // );
+          return Scaffold(backgroundColor: Colors.white);
         },
       ),
     );

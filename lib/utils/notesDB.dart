@@ -1,7 +1,41 @@
 import 'dart:async';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+part 'notesDB.g.dart';
+
+// Flutter secure storage
+final storage = FlutterSecureStorage();
+//
+
+// Hive
+@HiveType(typeId: 0)
+class givnotesDB {
+  @HiveField(0)
+  final String title;
+
+  @HiveField(1)
+  final String text;
+
+  @HiveField(2)
+  final String ftext;
+
+  @HiveField(3)
+  final bool trash;
+
+  @HiveField(4)
+  final String created;
+
+  @HiveField(5)
+  final String modified;
+
+  givnotesDB({this.title, this.text, this.ftext, this.trash = false, this.created, this.modified});
+}
+//
+
+// SQFlite
 final String notesTable = 'notes';
 
 class NotesDB {

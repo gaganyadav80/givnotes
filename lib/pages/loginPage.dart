@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/types/gf_button_type.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/login.dart';
@@ -48,14 +49,14 @@ class _LoginPageState extends State<LoginPage> {
           child: Stack(
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(top: 32 * wm, left: 3 * wm, right: 3 * wm),
+                padding: EdgeInsets.only(top: 15 * hm, left: 3 * wm, right: 3 * wm),
                 child: Image.asset(
                   'assets/images/growth.png',
                   width: double.infinity,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 4.6 * wm, right: 4.6 * wm),
+                padding: EdgeInsets.only(left: 3 * wm, right: 4.6 * wm),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           'Giv',
                           style: GoogleFonts.ubuntu(
-                            fontSize: 2.2 * hm,
+                            fontSize: 2.5 * hm,
                             color: Colors.black,
                             fontWeight: FontWeight.w700,
                           ),
@@ -73,18 +74,18 @@ class _LoginPageState extends State<LoginPage> {
                         Text(
                           'Notes.',
                           style: GoogleFonts.ubuntu(
-                            fontSize: 2.2 * hm,
+                            fontSize: 2.5 * hm,
                             color: Colors.black,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 40 * hm),
+                    SizedBox(height: 37 * hm),
                     Text(
                       'Sign in',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 3.2 * hm,
+                        fontSize: 4 * hm,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -92,13 +93,12 @@ class _LoginPageState extends State<LoginPage> {
                     Text(
                       'Please sign in to sync.',
                       style: GoogleFonts.ubuntu(
-                        fontSize: 1.5 * hm,
+                        fontSize: 2 * hm,
                         color: darkGrey,
-                        fontWeight: FontWeight.w400,
                       ),
                     ),
                     // !! SignInButton
-                    SizedBox(height: 6.1 * hm),
+                    SizedBox(height: 4 * hm),
                     signInButton(context, onProfile: false, isSignOut: false),
                     SizedBox(height: 3.7 * hm),
 
@@ -107,17 +107,18 @@ class _LoginPageState extends State<LoginPage> {
                         "Don't feel like syncing?",
                         style: GoogleFonts.ubuntu(
                           color: Color(0xffaab7bb),
-                          fontSize: 1.5 * hm,
+                          fontSize: 1.8 * hm,
                           fontWeight: FontWeight.w400,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     ),
-                    SizedBox(height: hm),
+                    SizedBox(height: hm / 1.5),
                     Center(
                       child: Container(
                         width: 30 * wm,
                         child: GFButton(
-                          size: hm < 6.5 ? 6 * hm : 5 * hm,
+                          size: 11 * wm,
                           splashColor: Colors.black,
                           icon: FaIcon(
                             FontAwesomeIcons.userSlash,
@@ -148,14 +149,14 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 4.4 * hm),
+                    SizedBox(height: 6 * hm),
                     if (isConnected == false && isFirstLaunch == true)
                       Center(
                         child: RichText(
                           text: TextSpan(
                             style: GoogleFonts.ubuntu(
                               color: Color(0xffaab7bb),
-                              fontSize: 1.4 * hm,
+                              fontSize: 1.6 * hm,
                               fontWeight: FontWeight.w300,
                               fontStyle: FontStyle.italic,
                             ),
@@ -188,7 +189,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
         color: Colors.grey[400],
       )
     ]),
-    height: hm < 7 ? 8.2 * hm : 7.2 * hm,
+    height: 15 * wm,
     child: GFButton(
       elevation: 2,
       fullWidthButton: true,
@@ -204,13 +205,13 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
             color: Colors.white,
             size: 2.2 * hm,
           ),
-          SizedBox(width: 4.6 * wm),
+          SizedBox(width: 2.6 * wm),
           Text(
             isSignOut == false ? 'Sign in' : 'Sign out',
             style: GoogleFonts.ubuntu(
               color: Colors.white,
               letterSpacing: 0.5,
-              fontSize: 2.6 * hm,
+              fontSize: 3 * hm,
             ),
           ),
         ],
@@ -243,7 +244,7 @@ _signOutAlert(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Sign Out?'),
+        // title: Text('Sign Out?'),
         content: Text('Please confirm your sign out.'),
         actions: [
           FlatButton(
@@ -270,11 +271,3 @@ _signOutAlert(BuildContext context) {
     },
   );
 }
-
-// getSkip().then((value) {
-//   print('pre value : $value isSkipped : $isSkipped');
-//   setState(() {
-//     isSkipped = value;
-//   });
-// });
-// print('post isSkipped : $isSkipped');

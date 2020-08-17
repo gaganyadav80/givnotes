@@ -102,14 +102,14 @@ class _MyProfileState extends State<MyProfile> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            SizedBox(height: 7 * hm),
+                            SizedBox(height: 14 * wm),
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                               child: Text(
                                 displayName,
                                 style: GoogleFonts.arizonia(
                                   color: Colors.black,
-                                  fontSize: 3 * hm,
+                                  fontSize: 4 * hm,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.12 * wm,
                                 ),
@@ -121,8 +121,9 @@ class _MyProfileState extends State<MyProfile> {
                                 email,
                                 style: GoogleFonts.sourceSansPro(
                                   color: Colors.black54,
-                                  fontSize: 1.8 * hm,
+                                  fontSize: 2.2 * hm,
                                   fontWeight: FontWeight.w400,
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
                             ),
@@ -135,31 +136,28 @@ class _MyProfileState extends State<MyProfile> {
                           ],
                         ),
                       ),
-                      Positioned(
-                        left: 1 * wm,
-                        child: AvatarGlow(
-                          glowColor: Colors.black,
-                          endRadius: 17.4 * wm,
-                          repeat: true,
-                          showTwoGlows: true,
-                          duration: Duration(seconds: 3),
-                          repeatPauseDuration: Duration(milliseconds: 100),
-                          child: Material(
-                            elevation: 5,
-                            shape: CircleBorder(),
-                            child: CircleAvatar(
-                              radius: 10.5 * wm,
-                              backgroundColor: Colors.white,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  errorWidget: (context, url, error) =>
-                                      FaIcon(FontAwesomeIcons.unlink),
-                                  placeholder: (context, url) => CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                                  ),
-                                  imageUrl: photoUrl,
-                                  fit: BoxFit.fill,
+                      AvatarGlow(
+                        glowColor: Colors.black,
+                        endRadius: 17.4 * wm,
+                        repeat: true,
+                        showTwoGlows: true,
+                        duration: Duration(seconds: 3),
+                        repeatPauseDuration: Duration(milliseconds: 100),
+                        child: Material(
+                          elevation: 5,
+                          shape: CircleBorder(),
+                          child: CircleAvatar(
+                            radius: 10.5 * wm,
+                            backgroundColor: Colors.white,
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                errorWidget: (context, url, error) =>
+                                    FaIcon(FontAwesomeIcons.unlink),
+                                placeholder: (context, url) => CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                 ),
+                                imageUrl: photoUrl,
+                                fit: BoxFit.fill,
                               ),
                             ),
                           ),

@@ -4,8 +4,7 @@ import 'dart:io';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:getflutter/components/list_tile/gf_list_tile.dart';
-import 'package:getflutter/getflutter.dart';
+import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/notebookPage.dart';
@@ -40,12 +39,12 @@ class DrawerItems extends StatelessWidget {
         selected: Var.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
-          size: 5.3 * wm,
+          size: 6.5 * wm,
         ),
         title: Text(
           title,
           style: GoogleFonts.ubuntu(
-            fontSize: 3.4 * wm,
+            fontSize: 4 * wm,
           ),
         ),
         onTap: () {
@@ -140,23 +139,23 @@ class EndDrawerItems extends StatelessWidget {
       onTap: onPressed,
       child: Column(
         children: [
-          SizedBox(height: wm),
+          SizedBox(height: hm * 2),
           GFListTile(
             padding: EdgeInsets.zero,
             margin: EdgeInsets.only(left: 5 * wm, right: 5 * wm),
             avatar: Icon(
               icon,
-              size: 4.5 * wm,
+              size: 2.7 * hm,
             ),
             title: Text(
               title,
               style: TextStyle(
-                fontSize: 3.4 * wm,
+                fontSize: 2.7 * hm,
                 fontWeight: FontWeight.w300,
               ),
             ),
           ),
-          SizedBox(height: wm),
+          SizedBox(height: hm * 2),
           Divider(
             thickness: 0.01 * hm,
             height: 0.01 * hm,
@@ -176,6 +175,27 @@ class EndDrawerItems extends StatelessWidget {
         elevation: 40,
         child: Column(
           children: <Widget>[
+            Container(
+              color: Colors.black,
+              height: 25 * hm,
+              child: Center(
+                child: Text(
+                  "Notes context menu",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 3.5 * hm,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+              ),
+            ),
+            Divider(
+              thickness: 0.01 * hm,
+              height: 0.01 * hm,
+              color: Colors.black,
+              indent: 6.5 * wm,
+              endIndent: 4 * wm,
+            ),
             Var.isTrash == false
                 ? myEndDrawerListTheme(
                     'Save note',
@@ -310,6 +330,7 @@ class EndDrawerItems extends StatelessWidget {
                             // TODO: Update the id if inbetween item is deleted
                             // ex. 1->2->3 => (and delete 2) => 1->3 => (then update) => 1->2
                             // But can't update the file name if lots of entries to be updated
+                            Navigator.pop(context);
                             _confirmDeleteAlert(context, Var.note['id'], localPath);
                           }
                         : () async {
