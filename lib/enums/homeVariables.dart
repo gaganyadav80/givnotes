@@ -4,54 +4,15 @@ import 'package:givnotes/pages/aboutUs.dart';
 import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/profile.dart';
+import 'package:givnotes/pages/settings.dart';
 import 'package:givnotes/pages/tagsView.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/search.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-// * Custom Trash icon
-const IconData trashIcon = IconData(0xe800, fontFamily: 'TrashIcon', fontPackage: null);
-
-// * Custom Colors
-Color lightBlue = Color(0xff91dcf5);
-Color purple = Color(0xff5A56D0);
-Color darkGrey = Color(0xff7D9098);
-Color whiteIsh = Color(0xffFBF8FC);
-Color red = Color(0xffEC625C);
-
-// * Logic values
-bool isSkipped = false;
-bool isConnected = false;
-bool isFirstLaunch = true;
-bool isPermanentDisabled = false;
 
 // * Responsive values
 double hm = SizeConfig.heightMultiplier;
 double wm = SizeConfig.widthMultiplier;
 
-// * Skip funcitionality
-void setSkip({bool skip = false}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('bool', skip);
-}
-
-Future<bool> getSkip() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('bool');
-}
-
-// * Check first launch
-void setFirstLaunch({bool isFirstLaunch = true}) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('isFirstLaunch', isFirstLaunch);
-}
-
-Future<bool> getFirstLauch() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getBool('isFirstLaunch');
-}
-
-// * Home scaffold body navigation
 class Var {
   static int selectedIndex = 0;
   static bool isTrash = false;
@@ -66,8 +27,8 @@ class Var {
     MyProfile(), //? 3   --> Profile
     NotesView(isTrash: true), //? 4    --> Trash
     AboutUs(), //? 5    --> About Us
-    null, //Config                    //? 6    --> Config
-    Notebooks(), //? 7    --> Notebook (temp)
+    SettingsPage(), //? 6    --> Config
+    // Notebooks(), // 7    --> Notebook (temp)
   ];
 
   static List<String> _appBarTitle = [
@@ -78,7 +39,7 @@ class Var {
     'TRASH',
     'ABOUT US',
     'CONFIGURATION',
-    'NOTEBOOKS',
+    // 'NOTEBOOKS',
   ];
 
   static String setTitle() {
@@ -96,9 +57,10 @@ class Var {
       return _appBarTitle[5]; //? About Us
     } else if (Var.selectedIndex == 6) {
       return _appBarTitle[6]; //? Config
-    } else if (Var.selectedIndex == 7) {
-      return _appBarTitle[7]; //? Notebook
     } else
       return 'OOPS! ERROR';
+    // else if (Var.selectedIndex == 7) {
+    //   return _appBarTitle[7]; //? Notebook
+    // }
   }
 }

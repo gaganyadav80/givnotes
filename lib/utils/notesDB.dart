@@ -1,42 +1,9 @@
 import 'dart:async';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hive/hive.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:givnotes/enums/homeVariables.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_sqlcipher/sqflite.dart';
 
-part 'notesDB.g.dart';
-
-// Flutter secure storage
-final storage = FlutterSecureStorage();
-//
-
-// Hive
-@HiveType(typeId: 0)
-class givnotesDB {
-  @HiveField(0)
-  final String title;
-
-  @HiveField(1)
-  final String text;
-
-  @HiveField(2)
-  final String ftext;
-
-  @HiveField(3)
-  final bool trash;
-
-  @HiveField(4)
-  final String created;
-
-  @HiveField(5)
-  final String modified;
-
-  givnotesDB({this.title, this.text, this.ftext, this.trash = false, this.created, this.modified});
-}
-//
-
-// SQFlite
-final String notesTable = 'notes';
+String notesTable = 'notes';
 
 class NotesDB {
   static Database db;
@@ -44,6 +11,7 @@ class NotesDB {
   static Future open() async {
     db = await openDatabase(
       join(await getDatabasesPath(), 'givnotes.db'),
+      password: '87755c1d-acc9-4fa1-8eb3-8905a22e64b0',
       version: 1,
       // TODO: create different table for each user and one for non-user
       onCreate: (Database db, int version) async {
@@ -52,6 +20,7 @@ class NotesDB {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           title TEXT NOT NULL,
           text TEXT NOT NULL,
+          znote TEXT NOT NULL,
           trash BOOLEAN DEFAULT 0,
           created TEXT NOT NULL,
           modified TEXT NOT NULL
@@ -68,7 +37,8 @@ class NotesDB {
     return await db.query(
       notesTable,
       where: 'trash = ?',
-      whereArgs: [0],
+      // whereArgs: [0],
+      whereArgs: Var.isTrash ? [1] : [0],
     );
   }
 
@@ -92,29 +62,20 @@ class NotesDB {
       whereArgs: [id],
     );
   }
-
-  static Future<List<Map<String, dynamic>>> getTrashNoteList() async {
-    return await db.query(
-      notesTable,
-      where: 'trash = ?',
-      whereArgs: [1],
-    );
-  }
-
-  static Future<List<Map<String, dynamic>>> getItemToRename(Map<String, dynamic> note) async {
-    return await db.query(
-      notesTable,
-      where: 'title = ? AND text = ? AND created = ?',
-      whereArgs: [note['title'], note['text'], note['created']],
-    );
-  }
 }
 
-// static Future trashNote(Map<String, dynamic> note) async {
-//   await db.update(
+// static Future<List<Map<String, dynamic>>> getTrashNoteList() async {
+//   return await db.query(
 //     notesTable,
-//     note,
-//     where: 'id = ?',
-//     whereArgs: [note['id']],
+//     where: 'trash = ?',
+//     whereArgs: [1],
 //   );
 // }
+
+//   static Future<List<Map<String, dynamic>>> getItemToRename(Map<String, dynamic> note) async {
+//     return await db.query(
+//       notesTable,
+//       where: 'title = ? AND text = ? AND created = ?',
+//       whereArgs: [note['title'], note['text'], note['created']],
+//     );
+//   }

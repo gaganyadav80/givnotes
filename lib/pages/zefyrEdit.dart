@@ -1,23 +1,29 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
+import 'package:getwidget/components/appbar/gf_appbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
+import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import 'package:quill_delta/quill_delta.dart';
+import 'package:route_transitions/route_transitions.dart';
+import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 
 enum NoteMode { Editing, Adding }
 
-Future<String> get _localPath async {
-  final dir = await getApplicationDocumentsDirectory();
-  return dir.path;
-}
+// Future<String> get _localPath async {
+//   final dir = await getApplicationDocumentsDirectory();
+//   return dir.path;
+// }
 
 class ZefyrEdit extends StatefulWidget {
   final NoteMode noteMode;
@@ -34,20 +40,27 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   final FocusNode _zefyrfocusNode = FocusNode();
   final FocusNode _titleFocus = FocusNode();
   ZefyrController _zefyrController;
-  File file;
+  // File file;
 
   Future<NotusDocument> _loadDocument() async {
-    final path = await _localPath;
+    // final path = (await getApplicationDocumentsDirectory()).path;
 
-    if (Var.noteMode == NoteMode.Adding) {
-      file = File(path + "/notes/temp.json");
-      //
-    } else if (Var.noteMode == NoteMode.Editing) {
-      file = File(path + "/notes/${Var.note['id']}.json");
-    }
+    // if (Var.noteMode == NoteMode.Adding) {
+    //   file = File(path + "/notes/temp.json");
+    // } else if (Var.noteMode == NoteMode.Editing) {
+    //   file = File(path + "/notes/${Var.note['id']}.json");
+    // }
 
-    if (await file.exists()) {
-      final contents = await file.readAsString();
+    // if (await file.exists()) {
+    //   final contents = await file.readAsString();
+    //   return NotusDocument.fromJson(jsonDecode(contents));
+    // }
+
+    // final Delta delta = Delta()..insert("\n");
+    // return NotusDocument.fromDelta(delta);
+
+    if (Var.noteMode == NoteMode.Editing) {
+      final contents = Var.note['znote'].toString();
       return NotusDocument.fromJson(jsonDecode(contents));
     }
 
@@ -78,6 +91,8 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       Var.isEditing = value;
     });
   }
+
+  // TextSelectionControls _textSelectionControls;
 
   @override
   Widget build(BuildContext context) {
@@ -119,24 +134,17 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           resizeToAvoidBottomPadding: true,
           extendBody: true,
           backgroundColor: Colors.white,
-          appBar: MyAppBar(
-            Var.isTrash ? 'DELETED NOTE' : 'NOTE',
-            isNote: true,
-            zefyrFlag: true,
+          appBar: ZefyrEditAppBar(
+            saveNote: saveNote,
             controls: controls,
-            titleController: _titleController,
-            zefyrController: _zefyrController,
-            localPath: _localPath,
-            file: file,
-            updateZefyrEditMode: updateEditMode,
           ),
+          //
           endDrawer: EndDrawerItems(
             titleController: _titleController,
             zefyrController: _zefyrController,
             updateZefyrEditMode: updateEditMode,
-            localPath: _localPath,
             controls: controls,
-            file: file,
+            // file: file,
           ),
 
           floatingActionButton: Var.noteMode == NoteMode.Editing && Var.isEditing == false
@@ -159,7 +167,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                   ),
                 )
               : null,
-          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
           // body of editor
           body: Column(
@@ -205,14 +213,18 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       ),
     );
   }
+  // End of build above
 
   Future<bool> _onPop() async {
-    if (_titleController.text.isEmpty) {
+    String title = _titleController.text;
+    String note = _zefyrController.document.toPlainText().trim();
+
+    if (title.isEmpty || note.isEmpty) {
       return (await showDialog(
             context: context,
             builder: (context) => AlertDialog(
               // title: Text('Note is Empty!'),
-              content: Text("Please add a title! Can't save empty :)"),
+              content: Text("Your note is empty! Can't save it :)"),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () {
@@ -230,31 +242,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ],
             ),
           )) ??
-          false;
-    } else if (_titleController.text.isNotEmpty && Var.isEditing == true) {
-      return (await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              // title: Text('Changes not saved'),
-              content: Text("You have unsaved changed. Sure want to exit?"),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                    Var.isEditing = false;
-                  },
-                  child: Text('Leave'),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('Edit'),
-                ),
-              ],
-            ),
-          )) ??
-          false;
+          true;
+    } else if (title.isNotEmpty || note.isNotEmpty) {
+      saveNote();
+      //
+      //
     } else if (_titleController.text.isNotEmpty) {
       if (MediaQuery.of(context).viewInsets.bottom != 0) {
         return false;
@@ -263,20 +255,89 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     } else {
       Var.isEditing = false;
     }
-    return true;
+    return false;
   }
+
+  void saveNote() {
+    String time;
+
+    if (Var.isEditing == false) {
+      //
+      Var.noteMode = NoteMode.Adding;
+      Navigator.push(
+        context,
+        PageRouteTransition(
+          builder: (context) => HomePage(),
+          animationType: AnimationType.fade,
+        ),
+      );
+      //
+    } else if (Var.isEditing) {
+      String title = _titleController.text;
+      String note = _zefyrController.document.toPlainText().trim();
+
+      if (title.isEmpty && note.isEmpty) {
+        //
+        showToast("Can't create empty note.");
+        Navigator.pop(context);
+        //
+      } else {
+        //
+        controls.play('save');
+        updateEditMode(false);
+
+        if (Var.noteMode == NoteMode.Adding) {
+          //
+          time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
+          //
+          if (title.isEmpty) title = 'Untitled';
+          // ! generate unique id for noteid
+          NotesDB.insertNote({
+            'title': title,
+            'text': _zefyrController.document.toPlainText(),
+            'znote': jsonEncode(_zefyrController.document),
+            'created': time,
+            'modified': time,
+          });
+
+          showToast('Note saved');
+
+          if (!prefsBox.containsKey('searchList')) {
+            prefsBox.put('searchList', []);
+          }
+          final List<String> list = (prefsBox.get('searchList') as List).cast<String>();
+          list.add(title + ' ' + note);
+          prefsBox.put('searchList', list);
+          //
+        } else if (Var.noteMode == NoteMode.Editing) {
+          //
+          time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
+          //
+          NotesDB.updateNote({
+            'id': Var.note['id'],
+            'title': title,
+            'text': _zefyrController.document.toPlainText(),
+            'znote': jsonEncode(_zefyrController.document),
+            'modified': time,
+          });
+
+          showToast('Note saved');
+        }
+      }
+      Var.isEditing = false;
+    }
+  }
+
+  void showToast(String msg) {
+    Toast.show(
+      msg,
+      context,
+      duration: 3,
+      gravity: Toast.BOTTOM,
+      backgroundColor: toastGrey,
+      backgroundRadius: 5,
+    );
+  }
+
+  // End of widget
 }
-
-// return Scaffold(
-//   backgroundColor: Colors.white,
-//   drawer: DrawerItems(),
-//   appBar: Var.isTrash == false
-//       ? MyAppBar(Var.noteMode == NoteMode.Adding ? 'New Note' : 'Edit Note', true)
-//       : MyAppBar('Deleted Note', true),
-
-// final path = _localPath;
-// final file = File("$path/${Var.note['id']}.json");
-// print('Plain text : ${_zefyrController.document.toPlainText()}');
-// print('To string : ${_zefyrController.document.toString()}');
-// print('jsonEncode _zefyr.document : $contents');
-// print('jsonDecode : ${jsonDecode('[{"insert":"${Var.note['text']}"}]')}');

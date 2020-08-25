@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,12 +17,16 @@ class MyProfile extends StatefulWidget {
 class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
-    getSkip().then((bool skip) {
-      setState(() {
-        isSkipped = skip ?? false;
-        getUserDetails().whenComplete(() => null);
-      });
+    setState(() {
+      isSkipped = prefsBox.get('skip') ?? false;
+      // getUserDetails();
     });
+    // getSkip().then((bool skip) {
+    //   setState(() {
+    //     isSkipped = skip ?? false;
+    //     getUserDetails();
+    //   });
+    // });
 
     super.initState();
   }
@@ -38,7 +43,7 @@ class _MyProfileState extends State<MyProfile> {
                   Padding(
                     padding: EdgeInsets.only(left: 48.6 * wm),
                     child: Lottie.asset(
-                      blankUser,
+                      'assets/animations/people-portrait.json',
                       height: 24.5 * hm,
                       width: 46.3 * wm,
                     ),
@@ -106,7 +111,7 @@ class _MyProfileState extends State<MyProfile> {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                               child: Text(
-                                displayName,
+                                userDetails['name'],
                                 style: GoogleFonts.arizonia(
                                   color: Colors.black,
                                   fontSize: 4 * hm,
@@ -118,7 +123,7 @@ class _MyProfileState extends State<MyProfile> {
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                               child: Text(
-                                email,
+                                userDetails['email'],
                                 style: GoogleFonts.sourceSansPro(
                                   color: Colors.black54,
                                   fontSize: 2.2 * hm,
@@ -156,7 +161,7 @@ class _MyProfileState extends State<MyProfile> {
                                 placeholder: (context, url) => CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                 ),
-                                imageUrl: photoUrl,
+                                imageUrl: userDetails['url'],
                                 fit: BoxFit.fill,
                               ),
                             ),

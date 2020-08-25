@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 
 class Notebooks extends StatefulWidget {
   @override

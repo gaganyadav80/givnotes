@@ -1,21 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/pages/notesView.dart';
-import 'package:givnotes/pages/notebookPage.dart';
-import 'package:givnotes/pages/aboutUs.dart';
-import 'package:givnotes/pages/tagsView.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:route_transitions/route_transitions.dart';
+import 'package:morpheus/page_routes/morpheus_page_route.dart';
 import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 
@@ -32,7 +28,7 @@ List<IconData> _icons = [
 ];
 
 class DrawerItems extends StatelessWidget {
-  Widget myListTileTheme(String title, int index, BuildContext context, [Widget nextPage]) {
+  Widget myListTileTheme(String title, int index, BuildContext context) {
     return ListTileTheme(
       selectedColor: Color(0xffEC625C),
       child: ListTile(
@@ -58,9 +54,9 @@ class DrawerItems extends StatelessWidget {
           Navigator.pop(context);
           Navigator.push(
             context,
-            PageRouteTransition(
+            MorpheusPageRoute(
               builder: (context) => HomePage(),
-              animationType: AnimationType.slide_left,
+              // animationType: AnimationType.scale,
             ),
           );
         },
@@ -84,12 +80,12 @@ class DrawerItems extends StatelessWidget {
             ),
             child: null,
           ),
-          myListTileTheme('All Notes', 0, context, NotesView(isTrash: false)),
-          myListTileTheme('Notebooks', 7, context, Notebooks()),
-          myListTileTheme('Tags', 2, context, TagsView()),
-          myListTileTheme('Trash', 4, context, NotesView(isTrash: true)),
+          myListTileTheme('All Notes', 0, context), // NotesView(isTrash: false)
+          // myListTileTheme('Notebooks', 7, context), //  Notebooks()
+          myListTileTheme('Tags', 2, context), // TagsView()
+          myListTileTheme('Trash', 4, context), // NotesView(isTrash: true)
           myListTileTheme('Configuration', 6, context),
-          myListTileTheme('About Us', 5, context, AboutUs()),
+          myListTileTheme('About Us', 5, context), // AboutUs()
         ],
       ),
     );
@@ -101,33 +97,33 @@ class EndDrawerItems extends StatelessWidget {
   final TextEditingController titleController;
   final ZefyrController zefyrController;
   final Function updateZefyrEditMode;
-  final Future<String> localPath;
+  // final Future<String> localPath;
   final FlareControls controls;
-  final File file;
+  // final File file;
 
   EndDrawerItems({
     this.updateZefyrEditMode,
     this.titleController,
     this.zefyrController,
-    this.localPath,
+    // this.localPath,
     this.controls,
-    this.file,
+    // this.file,
   });
 
-  Future<bool> _saveDocument(BuildContext context) {
-    final contents = jsonEncode(zefyrController.document);
-    file.writeAsString(contents).then(
-      (_) {
-        print('file saving name: ${file.path}');
-        return Future.value(true);
-      },
-      onError: () {
-        print('Error saving file: ${file.path}');
-        return Future.value(false);
-      },
-    );
-    return Future.value(true);
-  }
+  // Future<bool> _saveDocument(BuildContext context) {
+  //   final contents = jsonEncode(zefyrController.document);
+  //   file.writeAsString(contents).then(
+  //     (_) {
+  //       print('file saving name: ${file.path}');
+  //       return Future.value(true);
+  //     },
+  //     onError: () {
+  //       print('Error saving file: ${file.path}');
+  //       return Future.value(false);
+  //     },
+  //   );
+  //   return Future.value(true);
+  // }
 
   Widget myEndDrawerListTheme(
     String title,
@@ -189,13 +185,6 @@ class EndDrawerItems extends StatelessWidget {
                 ),
               ),
             ),
-            Divider(
-              thickness: 0.01 * hm,
-              height: 0.01 * hm,
-              color: Colors.black,
-              indent: 6.5 * wm,
-              endIndent: 4 * wm,
-            ),
             Var.isTrash == false
                 ? myEndDrawerListTheme(
                     'Save note',
@@ -206,9 +195,9 @@ class EndDrawerItems extends StatelessWidget {
                         Var.noteMode = NoteMode.Adding;
                         Navigator.push(
                           context,
-                          PageRouteTransition(
+                          MorpheusPageRoute(
                             builder: (context) => HomePage(),
-                            animationType: AnimationType.fade,
+                            // animationType: AnimationType.fade,
                           ),
                         );
                         //
@@ -218,16 +207,13 @@ class EndDrawerItems extends StatelessWidget {
 
                         if (title.isEmpty && note.isEmpty) {
                           //
-                          Toast.show(
-                            "Can't save empty note. Please add a title!",
+                          showToast(
                             context,
-                            duration: Toast.LENGTH_LONG,
-                            gravity: Toast.BOTTOM,
-                            backgroundRadius: 5,
-                            backgroundColor: Colors.black,
+                            "Can't save empty note. Please add a title!",
                           );
+                          //! Only close the drawer
                           Navigator.pop(context);
-                          Navigator.pop(context);
+                          // Navigator.pop(context);
                           //
                         } else {
                           //
@@ -235,60 +221,68 @@ class EndDrawerItems extends StatelessWidget {
                           controls.play('save');
                           updateZefyrEditMode(false);
 
-                          print('isEditing: ${Var.isEditing}');
-
                           if (Var.noteMode == NoteMode.Adding) {
-                            // time = DateFormat('yyyy-MM-dd - kk:mm').format(DateTime.now());
                             time = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
 
                             if (title.isEmpty) title = 'Untitled';
+
                             NotesDB.insertNote({
                               'title': title,
                               'text': zefyrController.document.toPlainText(),
+                              'znote': jsonEncode(zefyrController.document),
                               'created': time,
                               'modified': time,
                             });
 
-                            NotesDB.getItemToRename({
-                              'title': title,
-                              'text': zefyrController.document.toPlainText(),
-                              'created': time,
-                            }).then((value) async {
-                              final path = await localPath;
-                              await file.rename(path + '/${value[0]['id']}.json');
-                            });
+                            showToast(context, 'Note saved');
+                            Navigator.pop(context);
 
-                            _saveDocument(context).then((value) {
-                              Toast.show(
-                                value ? 'Note saved...' : 'Ops! Error saving :(',
-                                context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM,
-                                backgroundRadius: 5,
-                                backgroundColor: Colors.black,
-                              );
-                            });
+                            if (!prefsBox.containsKey('searchList')) {
+                              prefsBox.put('searchList', []);
+                            }
+                            final List<dynamic> list =
+                                (prefsBox.get('searchList') as List).cast<String>();
+                            list.add(title + ' ' + note);
+                            prefsBox.put('searchList', list);
+
+                            // NotesDB.getItemToRename({
+                            //   'title': title,
+                            //   'text': zefyrController.document.toPlainText(),
+                            //   'created': time,
+                            // }).then((value) async {
+                            //   final path = (await getApplicationDocumentsDirectory()).path;
+                            //   await file.rename(path + '/${value[0]['id']}.json');
+                            // });
+
+                            // _saveDocument(context).then((value) {
+                            //   showToast(
+                            //     context,
+                            //     value ? 'Note saved...' : 'Ops! Error saving :(',
+                            //   );
+                            // });
                             //
                           } else if (Var.noteMode == NoteMode.Editing) {
-                            file.lastModified().then((value) {
-                              time = DateFormat('yyyy-MM-dd HH:mm:ss').format(value);
-                            });
+                            // file.lastModified().then((value) {
+                            //   time = DateFormat('yyyy-MM-dd HH:mm:ss').format(value);
+                            // });
+                            time = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
                             NotesDB.updateNote({
                               'id': Var.note['id'],
                               'title': title,
                               'text': zefyrController.document.toPlainText(),
+                              'znote': jsonEncode(zefyrController.document),
                               'modified': time,
                             });
 
-                            _saveDocument(context).then((value) {
-                              Toast.show(
-                                value ? 'Note saved...' : 'Ops! Error saving :(',
-                                context,
-                                duration: Toast.LENGTH_LONG,
-                                gravity: Toast.BOTTOM,
-                                backgroundRadius: 5,
-                              );
-                            });
+                            showToast(context, 'Note saved');
+                            Navigator.pop(context);
+
+                            // _saveDocument(context).then((value) {
+                            //   showToast(
+                            //     context,
+                            //     value ? 'Note saved...' : 'Ops! Error saving :(',
+                            //   );
+                            // });
                           }
                         }
                         Var.isEditing = false;
@@ -300,10 +294,11 @@ class EndDrawerItems extends StatelessWidget {
                     'Restore note',
                     Icons.arrow_upward,
                     () async {
+                      //! Check this
                       await NotesDB.updateNote({
                         'id': Var.note['id'],
-                        'title': titleController.text,
-                        'text': zefyrController.document.toPlainText(),
+                        // 'title': titleController.text,
+                        // 'text': zefyrController.document.toPlainText(),
                         'trash': 0,
                       });
 
@@ -311,9 +306,9 @@ class EndDrawerItems extends StatelessWidget {
 
                       Navigator.push(
                         context,
-                        PageRouteTransition(
+                        MorpheusPageRoute(
                           builder: (context) => HomePage(),
-                          animationType: AnimationType.slide_left,
+                          // animationType: AnimationType.slide_left,
                         ),
                       );
                     },
@@ -327,17 +322,15 @@ class EndDrawerItems extends StatelessWidget {
                     trashIcon,
                     Var.isTrash
                         ? () {
-                            // TODO: Update the id if inbetween item is deleted
-                            // ex. 1->2->3 => (and delete 2) => 1->3 => (then update) => 1->2
-                            // But can't update the file name if lots of entries to be updated
                             Navigator.pop(context);
-                            _confirmDeleteAlert(context, Var.note['id'], localPath);
+                            _confirmDeleteAlert(context, Var.note['id']);
                           }
                         : () async {
+                            //! this check laso ucfk uoy
                             await NotesDB.updateNote({
                               'id': Var.note['id'],
-                              'title': titleController.text,
-                              'text': zefyrController.document.toPlainText(),
+                              // 'title': titleController.text,
+                              // 'text': zefyrController.document.toPlainText(),
                               'trash': 1,
                             });
 
@@ -345,9 +338,9 @@ class EndDrawerItems extends StatelessWidget {
 
                             Navigator.push(
                               context,
-                              PageRouteTransition(
+                              MorpheusPageRoute(
                                 builder: (context) => HomePage(),
-                                animationType: AnimationType.slide_left,
+                                // animationType: AnimationType.slide_left,
                               ),
                             );
                           },
@@ -359,14 +352,25 @@ class EndDrawerItems extends StatelessWidget {
       ),
     );
   }
+
+  void showToast(BuildContext context, String msg) {
+    Toast.show(
+      msg,
+      context,
+      duration: 3,
+      gravity: Toast.BOTTOM,
+      backgroundColor: toastGrey,
+      backgroundRadius: 5,
+    );
+  }
 }
 
-_confirmDeleteAlert(context, int _id, Future<String> _localPath) {
+_confirmDeleteAlert(context, int _id) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Confirm Delete!'),
+        // title: Text('Confirm Delete!'),
         content: Text('Are you sure you permanently want to delete this note?'),
         actions: [
           FlatButton(
@@ -377,18 +381,18 @@ _confirmDeleteAlert(context, int _id, Future<String> _localPath) {
             child: Text('Delete'),
             onPressed: () async {
               await NotesDB.deleteNote(_id);
-              final path = await _localPath;
-              final file = File(path + "/$_id.json");
-              file.delete();
+              // final path = (await getApplicationDocumentsDirectory()).path;
+              // final file = File(path + "/$_id.json");
+              // file.delete();
 
               Var.noteMode = NoteMode.Adding;
 
               Navigator.pop(context);
               Navigator.push(
                 context,
-                PageRouteTransition(
+                MorpheusPageRoute(
                   builder: (context) => HomePage(),
-                  animationType: AnimationType.fade,
+                  // animationType: AnimationType.fade,
                 ),
               );
             },

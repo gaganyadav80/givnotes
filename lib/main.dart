@@ -1,22 +1,26 @@
-import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/enums/sizeConfig.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/ui/splashscreen.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/login.dart';
-import 'package:givnotes/utils/notesDB.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as path;
+import 'package:path_provider/path_provider.dart' as Path;
+import 'package:preferences/preference_service.dart';
 
 void main() async {
-  final appDir = await path.getApplicationDocumentsDirectory();
+  // Hive
+  WidgetsFlutterBinding.ensureInitialized();
+  await PrefService.init(prefix: 'pref_');
+  final appDir = await Path.getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
-  Hive.registerAdapter(givnotesDBAdapter());
+  prefsBox = await Hive.openBox('prefs');
+  //
+
   runApp(MyApp());
 }
 
@@ -31,7 +35,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           // showPerformanceOverlay: true,
           home: SplashScreen(
-            // TODO change it to 3 sec
             seconds: 3,
             navigateAfterSeconds: CheckLogIn(),
             backgroundColor: Colors.white,
@@ -42,10 +45,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<String> get _localPath async {
-  final dir = await path.getApplicationDocumentsDirectory();
-  return dir.path;
-}
+// Future<String> get _localPath async {
+//   final dir = await Path.getApplicationDocumentsDirectory();
+//   return dir.path;
+// }
 
 class CheckLogIn extends StatefulWidget {
   @override
@@ -57,13 +60,15 @@ class _CheckLogInState extends State<CheckLogIn> {
   void initState() {
     Var.selectedIndex = 0;
     Var.isTrash = false;
-    getSkip().then((bool skip) {
-      if (skip == true || skip == false)
-        isSkipped = skip;
-      else
-        isSkipped = false;
-    });
-    _localPath.then((value) => Directory("$value/notes").create());
+
+    checkKeys();
+    // getSkip().then((bool skip) {
+    //   if (skip == true || skip == false)
+    //     isSkipped = skip;
+    //   else
+    //     isSkipped = false;
+    // });
+    // _localPath.then((value) => Directory("$value/notes").create());
     super.initState();
   }
 
@@ -73,16 +78,32 @@ class _CheckLogInState extends State<CheckLogIn> {
       stream: FirebaseAuth.instance.onAuthStateChanged,
       builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
         if (isSkipped == true) return HomePage();
-        setFirstLaunch();
 
         if (snapshot.connectionState == ConnectionState.waiting)
           return Scaffold(backgroundColor: Colors.black);
 
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
-        if (snapshot.hasData) temp = snapshot.data;
+        //! Check on profile init state
+        if (snapshot.hasData) currentUser = snapshot.data;
+        getUserDetails();
+
         return HomePage();
       },
     );
+  }
+
+  void checkKeys() {
+    if (!prefsBox.containsKey('skip')) {
+      prefsBox.put('skip', false);
+    } else {
+      isSkipped = prefsBox.get('skip');
+    }
+
+    if (!prefsBox.containsKey('firstLaunch')) {
+      prefsBox.put('firstLaunch', true);
+    } else {
+      isFirstLaunch = prefsBox.get('firstLaunch');
+    }
   }
 }

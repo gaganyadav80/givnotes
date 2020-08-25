@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
+import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/utils/permissions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
@@ -25,6 +27,12 @@ class _HomePageState extends State<HomePage> {
   // int count = 0;
 
   @override
+  void initState() {
+    super.initState();
+    // getUserDetails();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onPop(),
@@ -34,10 +42,8 @@ class _HomePageState extends State<HomePage> {
         resizeToAvoidBottomPadding: true,
         extendBody: true,
         backgroundColor: Colors.white,
-        appBar: MyAppBar(
-          Var.setTitle(),
-          isNote: false,
-        ),
+        appBar: MyAppBar(Var.setTitle()),
+        //
         drawer: DrawerItems(),
         body: Var.pageNavigation[Var.selectedIndex],
 
@@ -149,6 +155,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<bool> _onPop() async {
     if (Var.selectedIndex != 0) {
+      Var.isTrash = false;
       Var.selectedIndex = 0;
       Navigator.push(
         context,
@@ -168,13 +175,15 @@ class _HomePageState extends State<HomePage> {
         Toast.show(
           'Press back again to exit',
           context,
-          duration: Toast.LENGTH_LONG,
+          duration: 3,
           gravity: Toast.BOTTOM,
+          backgroundColor: toastGrey,
           backgroundRadius: 5,
         );
         return false;
         //
       }
+      await NotesDB.db.close();
       if (Platform.isAndroid) SystemNavigator.pop();
       return true;
     }

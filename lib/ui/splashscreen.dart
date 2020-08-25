@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:route_transitions/route_transitions.dart';
 
 class SplashScreen extends StatefulWidget {
   final int seconds;
@@ -33,8 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
         //     MaterialPageRoute(builder: (BuildContext context) => widget.navigateAfterSeconds));
         Navigator.push(
           context,
-          MaterialPageRoute(
+          PageRouteTransition(
             builder: (context) => widget.navigateAfterSeconds,
+            animationType: AnimationType.fade,
           ),
         );
       } else {

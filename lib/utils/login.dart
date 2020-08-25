@@ -1,32 +1,39 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final GoogleSignIn googleSignIn =
     GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.appdata']);
 GoogleSignInAccount googleSignInAccount;
 
-FirebaseUser temp;
-
 FirebaseUser currentUser;
-String blankUser = 'assets/animations/people-portrait.json';
-String photoUrl = '', displayName = 'Not Logged in', email = '';
+// String blankUser = 'assets/animations/people-portrait.json';
+// String photoUrl = '', displayName = 'Not Logged in', email = '';
+
+Map<dynamic, dynamic> userDetails;
+//  = {'url': '', 'name': 'Not Logged in', 'email': ''};
 
 Future<void> setUserDetails() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefsBox.put('user', {
+    'url': currentUser.photoUrl,
+    'name': currentUser.displayName,
+    'email': currentUser.email,
+  });
 
-  await prefs.setString('url', currentUser.photoUrl);
-  await prefs.setString('name', currentUser.displayName);
-  await prefs.setString('email', currentUser.email);
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // await prefs.setString('url', currentUser.photoUrl);
+  // await prefs.setString('name', currentUser.displayName);
+  // await prefs.setString('email', currentUser.email);
 }
 
 Future<void> getUserDetails() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
+  userDetails = await prefsBox.get('user') as Map;
 
-  photoUrl = prefs.getString('url');
-  displayName = prefs.getString('name');
-  email = prefs.getString('email');
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // photoUrl = prefs.getString('url');
+  // displayName = prefs.getString('name');
+  // email = prefs.getString('email');
 }
 
 Future<FirebaseUser> signInWithGoogle() async {
@@ -50,6 +57,7 @@ Future<FirebaseUser> signInWithGoogle() async {
 
   // !! persistent the userdetails
   await setUserDetails();
+  getUserDetails();
 
   print('currentUser succeeded: ${currentUser.displayName}');
   return currentUser;

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:getwidget/components/search_bar/gf_search_bar.dart';
+// import 'package:getwidget/components/search_bar/gf_search_bar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/utils/GFSearchBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,11 +14,19 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<String> searchItems = List<String>();
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+    if (!prefsBox.containsKey('searchList')) {
+      prefsBox.put('searchList', []);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    // print('SEARCH LIST = ${prefsBox.get('searchList')} =======================');
     return SafeArea(
       child: Container(
         child: FutureBuilder(
@@ -25,12 +35,8 @@ class _SearchPageState extends State<SearchPage> {
             if (snapshot.connectionState == ConnectionState.done) {
               final notes = snapshot.data;
 
-              for (int i = 0; i < notes.length; i++) {
-                searchItems.add(notes[i]['title'] + " " + notes[i]['text']);
-              }
               return GFSearchBar(
-                searchList: searchItems,
-                hideSearchBoxWhenItemSelected: true,
+                searchList: (prefsBox.get('searchList') as List).cast<String>(),
                 searchQueryBuilder: (query, list) {
                   return list
                       .where((item) => item.toLowerCase().contains(query.toLowerCase()))
@@ -45,11 +51,12 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 overlaySearchListItemBuilder: (item) {
-                  index = searchItems.indexOf(item);
+                  index = (prefsBox.get('searchList') as List).cast<String>().indexOf(item);
+                  // print("ITEM = $item ================");
 
                   return Card(
                     elevation: 0,
-                    margin: EdgeInsets.symmetric(horizontal: 2.8 * wm),
+                    margin: EdgeInsets.zero,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -58,6 +65,25 @@ class _SearchPageState extends State<SearchPage> {
                           color: Colors.black,
                         ),
                         SizedBox(height: 1.5 * hm),
+                        Text(
+                          "created:     ${notes[index]['created']}",
+                          style: GoogleFonts.ubuntu(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.grey,
+                            fontSize: 1.6 * hm,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        Text(
+                          "modified:   ${notes[index]['modified']}",
+                          style: GoogleFonts.ubuntu(
+                            fontWeight: FontWeight.w300,
+                            color: Colors.grey,
+                            fontSize: 1.6 * hm,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                        SizedBox(height: 2 * hm),
                         Text(
                           notes[index]['title'],
                           style: GoogleFonts.ubuntu(
@@ -76,30 +102,23 @@ class _SearchPageState extends State<SearchPage> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 2 * hm),
+                        Divider(
+                          height: 0.03 * hm,
+                          color: Colors.black,
+                        ),
+                        SizedBox(height: 1 * hm),
                       ],
                     ),
                   );
                 },
                 onItemSelected: (item) {
-                  setState(() {
-                    print('$item');
-                  });
+                  // setState(() {
+                  //   print('$item');
+                  // });
+                  print("ITEM = $item ================");
                 },
               );
             }
-
-            // return Padding(
-            //   padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
-            //   child: Container(
-            //     height: 120,
-            //     width: 120,
-            //     child: FlareActor(
-            //       'assets/animations/loading.flr',
-            //       animation: 'Alarm',
-            //       alignment: Alignment.center,
-            //     ),
-            //   ),
-            // );
             return Scaffold(backgroundColor: Colors.white);
           },
         ),
