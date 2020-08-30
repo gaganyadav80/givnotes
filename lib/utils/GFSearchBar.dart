@@ -146,48 +146,44 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
     searchBox = Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       margin: const EdgeInsets.only(bottom: 12),
-      child: FocusWidget(
+      child: TextField(
+        controller: textController,
         focusNode: _focusNode,
-        // onLostFocus: (widget, focusNode) => setState(() => isSearchBoxSelected = false),
-        child: TextField(
-          controller: textController,
-          focusNode: _focusNode,
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
-          decoration: widget.searchBoxInputDecoration == null
-              ? InputDecoration(
-                  enabledBorder: const OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Colors.black,
-                    ),
+        cursorColor: Colors.black,
+        style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+        decoration: widget.searchBoxInputDecoration == null
+            ? InputDecoration(
+                enabledBorder: const OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      // color: Theme.of(context).primaryColor,
-                      color: Colors.black,
-                    ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    // color: Theme.of(context).primaryColor,
+                    color: Colors.black,
                   ),
-                  suffixIcon: isSearchBoxSelected
-                      ? InkWell(
-                          child: const Icon(
-                            Icons.close,
-                            size: 22,
-                            color: Colors.black,
-                          ),
-                          onTap: onCloseOverlaySearchList,
-                        )
-                      : Icon(Icons.search, color: Colors.grey[600]),
-                  border: InputBorder.none,
-                  hintText: '',
-                  contentPadding: const EdgeInsets.only(
-                    left: 16,
-                    right: 20,
-                    top: 14,
-                    bottom: 14,
-                  ),
-                )
-              : widget.searchBoxInputDecoration,
-        ),
+                ),
+                suffixIcon: isSearchBoxSelected
+                    ? InkWell(
+                        child: const Icon(
+                          Icons.close,
+                          size: 22,
+                          color: Colors.black,
+                        ),
+                        onTap: onCloseOverlaySearchList,
+                      )
+                    : Icon(Icons.search, color: Colors.grey[600]),
+                border: InputBorder.none,
+                hintText: '',
+                contentPadding: const EdgeInsets.only(
+                  left: 16,
+                  right: 20,
+                  top: 14,
+                  bottom: 14,
+                ),
+              )
+            : widget.searchBoxInputDecoration,
       ),
     );
 

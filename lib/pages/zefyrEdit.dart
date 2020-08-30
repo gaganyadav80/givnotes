@@ -1,10 +1,8 @@
 import 'dart:convert';
 
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_widget/focus_widget.dart';
-import 'package:getwidget/components/appbar/gf_appbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
@@ -40,6 +38,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   final FocusNode _zefyrfocusNode = FocusNode();
   final FocusNode _titleFocus = FocusNode();
   ZefyrController _zefyrController;
+  TextSelectionControls textSelectionControls;
   // File file;
 
   Future<NotusDocument> _loadDocument() async {
@@ -183,7 +182,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     controller: _titleController,
                     enableInteractiveSelection: true,
                     enableSuggestions: true,
-                    keyboardAppearance: Brightness.light,
+                    expands: true,
+                    maxLines: 2,
+                    textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration.collapsed(
                       hintText: 'Untitled',
                       hintStyle: TextStyle(fontSize: 3 * hm),

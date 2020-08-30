@@ -19,6 +19,10 @@
     "string": "cpp",
     "string_view": "cpp",
     "tuple": "cpp",
-    "version": "cpp"
+    "version": "cpp",
+    "deque": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "initializer_list": "cpp"
   }
 }
