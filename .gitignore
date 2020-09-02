@@ -33,6 +33,7 @@ givnotesExtras/
 linux/
 web/
 android/app/google-services.json
+bfg-1.13.0.jar
 
 # Web related
 lib/generated_plugin_registrant.dart

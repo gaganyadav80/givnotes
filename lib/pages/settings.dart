@@ -1,116 +1,185 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/utils/lockscreen.dart';
 import 'package:preferences/preferences.dart';
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({Key key}) : super(key: key);
 
   @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  bool biometricActive = true;
+  @override
   Widget build(BuildContext context) {
     return PreferencePage([
+      PreferenceTitle(
+        '  !! Coming soon START !!',
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontStyle: FontStyle.italic,
+        ),
+      ),
       PreferenceTitle('General'),
+
       DropdownPreference(
         'Sort notes',
         'sort_notes',
         defaultVal: 'Date created',
+        disabled: true,
         values: ['Date created', 'Date modified', 'A-Z Title', 'Z-A Title'],
         onChange: ((value) {
           print(value);
         }),
       ),
       PreferenceTitle('Personalization'),
+
       DropdownPreference(
         'App theme',
         'app_theme',
+        disabled: true,
         defaultVal: 'Light',
         values: ['Light', 'Dark'],
         onChange: ((value) {
           print(value);
         }),
       ),
+      DropdownPreference(
+        'Accent color',
+        'accent_color',
+        disabled: true,
+        defaultVal: 'Black',
+        values: ['Black', 'Blue', 'Red'],
+        onChange: ((value) {
+          print(value);
+        }),
+      ),
+      PreferenceTitle(
+        '  !! Coming soon END !!',
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontStyle: FontStyle.italic,
+        ),
+      ),
       PreferenceTitle('Security'),
-      PreferenceDialogLink(
-        'Content Types',
-        dialog: PreferenceDialog(
-          [
-            CheckboxPreference('Text', 'content_show_text'),
-            CheckboxPreference('Images', 'content_show_image'),
-            CheckboxPreference('Music', 'content_show_audio')
-          ],
-          title: 'Enabled Content Types',
-          cancelText: 'Cancel',
-          submitText: 'Save',
-          onlySaveOnSubmit: true,
-        ),
-      ),
-      PreferenceTitle('More Dialogs'),
-      PreferenceDialogLink(
-        'Android\'s "ListPreference"',
-        dialog: PreferenceDialog(
-          [
-            RadioPreference('Select me!', 'select_1', 'android_listpref_selected'),
-            RadioPreference('Hello World!', 'select_2', 'android_listpref_selected'),
-            RadioPreference('Test', 'select_3', 'android_listpref_selected'),
-          ],
-          title: 'Select an option',
-          cancelText: 'Cancel',
-          submitText: 'Save',
-          onlySaveOnSubmit: true,
-        ),
-      ),
-      PreferenceDialogLink(
-        'Android\'s "ListPreference" with autosave',
-        dialog: PreferenceDialog(
-          [
-            RadioPreference('Select me!', 'select_1', 'android_listpref_auto_selected'),
-            RadioPreference('Hello World!', 'select_2', 'android_listpref_auto_selected'),
-            RadioPreference('Test', 'select_3', 'android_listpref_auto_selected'),
-          ],
-          title: 'Select an option',
-          cancelText: 'Close',
-        ),
-      ),
-      PreferenceDialogLink(
-        'Android\'s "MultiSelectListPreference"',
-        dialog: PreferenceDialog(
-          [
-            CheckboxPreference('A enabled', 'android_multilistpref_a'),
-            CheckboxPreference('B enabled', 'android_multilistpref_b'),
-            CheckboxPreference('C enabled', 'android_multilistpref_c'),
-          ],
-          title: 'Select multiple options',
-          cancelText: 'Cancel',
-          submitText: 'Save',
-          onlySaveOnSubmit: true,
-        ),
-      ),
-      PreferenceHider([
-        PreferenceTitle('Experimental'),
-        SwitchPreference(
-          'Show Operating System',
-          'exp_showos',
-          desc: 'This option shows the users operating system in his profile',
-        )
-      ], '!advanced_enabled'), // Use ! to get reversed boolean values
-      PreferenceTitle('Advanced'),
-      CheckboxPreference(
-        'Enable Advanced Features',
-        'advanced_enabled',
-        onChange: () {},
-        onDisable: () {
-          PrefService.setBool('exp_showos', false);
+      SwitchPreference(
+        'Enable app lock',
+        'app_lock',
+        desc: 'Add 4 digit pin',
+        defaultVal: false,
+        ignoreTileTap: true,
+        onEnable: () {
+          if (!prefsBox.containsKey('passcode')) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddLockscreen(),
+              ),
+            );
+          } else {
+            AppLock.of(context).enable();
+            prefsBox.put('applock', true);
+            setState(() {
+              biometricActive = true;
+            });
+          }
         },
-      )
+        onDisable: () {
+          AppLock.of(context).disable();
+          prefsBox.put('applock', false);
+          setState(() {
+            biometricActive = false;
+          });
+        },
+      ),
+      SwitchPreference(
+        'Biometric authentication',
+        'biometric',
+        desc: 'Enablr fingerprint/Face unlock',
+        defaultVal: false,
+        disabled: !biometricActive,
+        onEnable: () {
+          prefsBox.put('biometric', true);
+        },
+        onDisable: () {
+          prefsBox.put('biometric', false);
+        },
+      ),
+      PreferenceText(
+        'Change Passcode',
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Lockscreen(changePassAuth: true),
+            ),
+          );
+        },
+      ),
+
+      // !! ========================================================
+
+      PreferenceTitle('Details Section'),
+      PreferencePageLink(
+        'Device',
+        leading: Icon(Icons.phone_iphone),
+        trailing: Icon(Icons.keyboard_arrow_right),
+        page: PreferencePage([
+          PreferenceTitle('Device'),
+          PreferenceText(
+            """
+Brand:   ${androidInfo.manufacturer}
+Device:  ${androidInfo.device}
+Model:   ${androidInfo.model}
+  """,
+            overflow: TextOverflow.visible,
+          ),
+          PreferenceTitle('Software'),
+          PreferenceText(
+            """
+Host distro:  ${androidInfo.host}
+Android ID:  ${androidInfo.androidId}
+Fingerprint:  ${androidInfo.fingerprint}
+  """,
+            overflow: TextOverflow.visible,
+          ),
+          PreferenceTitle('Hardware'),
+          PreferenceText(
+            """
+Architecture:  ${androidInfo.supported64BitAbis}
+Hardware:  ${androidInfo.hardware}
+Device ID:  ${androidInfo.id}
+Display:  ${androidInfo.display}
+  """,
+            overflow: TextOverflow.visible,
+          ),
+        ]),
+      ),
+      PreferencePageLink(
+        'Application',
+        leading: Icon(Icons.settings_applications),
+        trailing: Icon(Icons.keyboard_arrow_right),
+        page: PreferencePage([
+          PreferenceTitle('Device'),
+          PreferenceText(
+            """
+App name:  ${packageInfo.appName}
+Package:   ${packageInfo.packageName}
+Version:   ${packageInfo.version}
+Build_no:  ${packageInfo.buildNumber}
+  """,
+            overflow: TextOverflow.visible,
+          ),
+        ]),
+      ),
+
+      //! =============================================
     ]);
   }
 }
-
-// DropdownPreference<int>(
-//   'Number of items',
-//   'items_count',
-//   defaultVal: 2,
-//   displayValues: ['One', 'Two', 'Three', 'Four'],
-//   values: [1, 2, 3, 4],
-// ),
 
 // RadioPreference(
 //   'Light Theme',
@@ -121,45 +190,7 @@ class SettingsPage extends StatelessWidget {
 //     DynamicTheme.of(context).setBrightness(Brightness.light);
 //   },
 // ),
-// PreferenceTitle('Messaging'),
-// PreferencePageLink(
-//   'Notifications',
-//   leading: Icon(Icons.message),
-//   trailing: Icon(Icons.keyboard_arrow_right),
-//   page: PreferencePage([
-//     PreferenceTitle('New Posts'),
-//     SwitchPreference(
-//       'New Posts from Friends',
-//       'notification_newpost_friend',
-//       defaultVal: true,
-//     ),
-//     PreferenceTitle('Private Messages'),
-//     SwitchPreference(
-//       'Private Messages from Friends',
-//       'notification_pm_friend',
-//       defaultVal: true,
-//     ),
-//     SwitchPreference(
-//       'Private Messages from Strangers',
-//       'notification_pm_stranger',
-//       onEnable: () async {
-//         // Write something in Firestore or send a request
-//         await Future.delayed(Duration(seconds: 1));
 
-//         print('Enabled Notifications for PMs from Strangers!');
-//       },
-//       onDisable: () async {
-//         // Write something in Firestore or send a request
-//         await Future.delayed(Duration(seconds: 1));
-
-//         // No Connection? No Problem! Just throw an Exception with your custom message...
-//         throw Exception('No Connection');
-
-//         // Disabled Notifications for PMs from Strangers!
-//       },
-//     ),
-//   ]),
-// ),
 // PreferenceTitle('User'),
 // TextFieldPreference(
 //   'Display Name',
@@ -195,3 +226,62 @@ class SettingsPage extends StatelessWidget {
 //   ),
 //   onPop: () {},
 // ),
+
+//  PreferenceDialogLink(
+//         'Android\'s "ListPreference"',
+//         dialog: PreferenceDialog(
+//           [
+//             RadioPreference('Select me!', 'select_1', 'android_listpref_selected'),
+//             RadioPreference('Hello World!', 'select_2', 'android_listpref_selected'),
+//             RadioPreference('Test', 'select_3', 'android_listpref_selected'),
+//           ],
+//           title: 'Select an option',
+//           cancelText: 'Cancel',
+//           submitText: 'Save',
+//           onlySaveOnSubmit: true,
+//         ),
+//       ),
+//       PreferenceDialogLink(
+//         'Android\'s "ListPreference" with autosave',
+//         dialog: PreferenceDialog(
+//           [
+//             RadioPreference('Select me!', 'select_1', 'android_listpref_auto_selected'),
+//             RadioPreference('Hello World!', 'select_2', 'android_listpref_auto_selected'),
+//             RadioPreference('Test', 'select_3', 'android_listpref_auto_selected'),
+//           ],
+//           title: 'Select an option',
+//           cancelText: 'Close',
+//         ),
+//       ),
+//       PreferenceDialogLink(
+//         'Android\'s "MultiSelectListPreference"',
+//         dialog: PreferenceDialog(
+//           [
+//             CheckboxPreference('A enabled', 'android_multilistpref_a'),
+//             CheckboxPreference('B enabled', 'android_multilistpref_b'),
+//             CheckboxPreference('C enabled', 'android_multilistpref_c'),
+//           ],
+//           title: 'Select multiple options',
+//           cancelText: 'Cancel',
+//           submitText: 'Save',
+//           onlySaveOnSubmit: true,
+//         ),
+//       ),
+
+// PreferenceHider([
+//         PreferenceTitle('Experimental'),
+//         SwitchPreference(
+//           'Show Operating System',
+//           'exp_showos',
+//           desc: 'This option shows the users operating system in his profile',
+//         )
+//       ], '!advanced_enabled'), // Use ! to get reversed boolean values
+//       PreferenceTitle('Advanced'),
+//       CheckboxPreference(
+//         'Enable Advanced Features',
+//         'advanced_enabled',
+//         onChange: () {},
+//         onDisable: () {
+//           PrefService.setBool('exp_showos', false);
+//         },
+//       ),

@@ -48,23 +48,11 @@ dependencies:
     package_info: '>=0.4.3 <2.0.0'
     preferences: ^5.2.1
     multi_select_item: ^1.0.3
+    flutter_app_lock: ^1.3.1
+    flutter_screen_lock: ^1.2.4
+    local_auth: ^0.6.3+1
 
-    # zefyr:
-    #     git:
-    #         url: git://github.com/winwisely99/zefyr.git
-    #         path: packages/zefyr/
-    #         commit: 9b032d8
-
-    # http: ^0.12.1
     # floating_search_bar: ^0.3.0
-    # sticky_headers: ^0.1.8+1
-    # animated_bottom_navigation_bar:
-    # dotted_border:
-    # flutter_spinkit:
-    # responsive_widgets:
-    # rflutter_alert:
-
-
 
 dev_dependencies:
     flutter_test:

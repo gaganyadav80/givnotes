@@ -156,7 +156,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> _onPop() async {
     if (Var.selectedIndex != 0) {
       Var.isTrash = false;
-      Var.selectedIndex = 0;
+      // Var.selectedIndex = 0;
       Navigator.push(
         context,
         PageRouteTransition(

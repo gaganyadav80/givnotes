@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/sizeConfig.dart';
 import 'package:givnotes/pages/aboutUs.dart';
-import 'package:givnotes/pages/notebookPage.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/profile.dart';
 import 'package:givnotes/pages/settings.dart';

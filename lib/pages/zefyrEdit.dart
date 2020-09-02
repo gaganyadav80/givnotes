@@ -105,6 +105,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
         : ZefyrScaffold(
             child: ZefyrTheme(
               data: ZefyrThemeData(
+                // defaultLineTheme: LineTheme(textStyle: TextStyle()),
                 toolbarTheme: ToolbarTheme(
                   color: Color(0xffE4E7E9),
                   toggleColor: Colors.grey,
@@ -182,8 +183,6 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     controller: _titleController,
                     enableInteractiveSelection: true,
                     enableSuggestions: true,
-                    expands: true,
-                    maxLines: 2,
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration.collapsed(
                       hintText: 'Untitled',
@@ -203,7 +202,24 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                 thickness: 0.03 * hm,
                 color: Colors.black,
               ),
-              SizedBox(height: 2.5 * hm),
+              SizedBox(height: hm),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Divider(
+                        endIndent: 2.5 * wm,
+                        thickness: 0.03 * hm,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text('your note below'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 1.5 * hm),
               Expanded(
                 flex: 1,
                 child: _editorBody,

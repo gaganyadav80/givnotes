@@ -4,8 +4,6 @@ import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:route_transitions/route_transitions.dart';
-import 'package:givnotes/utils/driveapi.dart';
 
 class NotesView extends StatefulWidget {
   final bool isTrash;

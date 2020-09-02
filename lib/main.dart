@@ -1,27 +1,42 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/enums/sizeConfig.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/ui/splashscreen.dart';
 import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/utils/lockscreen.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as Path;
 import 'package:preferences/preference_service.dart';
 
 void main() async {
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    if (kReleaseMode) {
+      if (Platform.isAndroid) SystemNavigator.pop();
+    }
+  };
   // Hive
   WidgetsFlutterBinding.ensureInitialized();
-  await PrefService.init(prefix: 'pref_');
   final appDir = await Path.getApplicationDocumentsDirectory();
   Hive.init(appDir.path);
   prefsBox = await Hive.openBox('prefs');
   //
-
-  runApp(MyApp());
+  runApp(AppLock(
+    builder: (_) => MyApp(),
+    lockScreen: Lockscreen(changePassAuth: false),
+    enabled: prefsBox.get('applock') ?? false,
+  ));
+  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -45,11 +60,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Future<String> get _localPath async {
-//   final dir = await Path.getApplicationDocumentsDirectory();
-//   return dir.path;
-// }
-
 class CheckLogIn extends StatefulWidget {
   @override
   _CheckLogInState createState() => _CheckLogInState();
@@ -62,13 +72,8 @@ class _CheckLogInState extends State<CheckLogIn> {
     Var.isTrash = false;
 
     checkKeys();
-    // getSkip().then((bool skip) {
-    //   if (skip == true || skip == false)
-    //     isSkipped = skip;
-    //   else
-    //     isSkipped = false;
-    // });
-    // _localPath.then((value) => Directory("$value/notes").create());
+    initInfo();
+    PrefService.init(prefix: 'pref_');
     super.initState();
   }
 
@@ -105,5 +110,20 @@ class _CheckLogInState extends State<CheckLogIn> {
     } else {
       isFirstLaunch = prefsBox.get('firstLaunch');
     }
+
+    if (!prefsBox.containsKey('applock')) {
+      prefsBox.put('applock', false);
+    }
+    if (!prefsBox.containsKey('biometric')) {
+      prefsBox.put('biometric', false);
+    }
   }
 }
+
+// getSkip().then((bool skip) {
+//   if (skip == true || skip == false)
+//     isSkipped = skip;
+//   else
+//     isSkipped = false;
+// });
+// _localPath.then((value) => Directory("$value/notes").create());

@@ -12,6 +12,7 @@ import 'package:givnotes/utils/login.dart';
 import 'package:givnotes/utils/permissions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
+import 'package:givnotes/enums/prefs.dart' as prefs;
 
 // !! Login Page Design
 class LoginPage extends StatefulWidget {
@@ -246,7 +247,7 @@ Widget signInButton(BuildContext context, {bool onProfile, bool isSignOut}) {
                     animationType: AnimationType.fade,
                   ),
                 );
-              }).catchError((e) => print(e));
+              }).catchError((e) => prefs.errorAlert(context, e));
             }
           : () {
               _signOutAlert(context);

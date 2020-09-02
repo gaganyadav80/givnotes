@@ -25,6 +25,12 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
               Scaffold.of(context).openDrawer();
             },
           ),
+          // actions: [
+          //   FlatButton(
+          //     child: Text('Select All'),
+          //     onPressed: () {},
+          //   )
+          // ],
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
