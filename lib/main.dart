@@ -18,6 +18,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as Path;
 import 'package:preferences/preference_service.dart';
 
+// TODO: change icons and black/white theme
 void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
@@ -31,11 +32,13 @@ void main() async {
   Hive.init(appDir.path);
   prefsBox = await Hive.openBox('prefs');
   //
-  runApp(AppLock(
-    builder: (_) => MyApp(),
-    lockScreen: Lockscreen(changePassAuth: false),
-    enabled: prefsBox.get('applock') ?? false,
-  ));
+  runApp(
+    AppLock(
+      builder: (_) => MyApp(),
+      lockScreen: Lockscreen(changePassAuth: false),
+      enabled: prefsBox.get('applock') ?? false,
+    ),
+  );
   // runApp(MyApp());
 }
 
@@ -50,7 +53,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           // showPerformanceOverlay: true,
           home: SplashScreen(
-            seconds: 3,
+            seconds: 1,
             navigateAfterSeconds: CheckLogIn(),
             backgroundColor: Colors.white,
           ),

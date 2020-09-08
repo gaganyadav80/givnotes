@@ -13,11 +13,12 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool biometricActive = true;
+
   @override
   Widget build(BuildContext context) {
     return PreferencePage([
       PreferenceTitle(
-        '  !! Coming soon START !!',
+        '  !! Below features are Coming Soon !!',
         style: TextStyle(
           color: Colors.grey[500],
           fontStyle: FontStyle.italic,
@@ -58,7 +59,7 @@ class _SettingsPageState extends State<SettingsPage> {
         }),
       ),
       PreferenceTitle(
-        '  !! Coming soon END !!',
+        '  !! Above features are Coming Soon !!',
         style: TextStyle(
           color: Colors.grey[500],
           fontStyle: FontStyle.italic,
@@ -98,9 +99,9 @@ class _SettingsPageState extends State<SettingsPage> {
       SwitchPreference(
         'Biometric authentication',
         'biometric',
-        desc: 'Enablr fingerprint/Face unlock',
+        desc: 'Enable Fingerprint/Face unlock',
         defaultVal: false,
-        disabled: !biometricActive,
+        disabled: !prefsBox.get('applock'),
         onEnable: () {
           prefsBox.put('biometric', true);
         },

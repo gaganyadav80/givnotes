@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flare_flutter/flare_controls.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:focus_widget/focus_widget.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
@@ -75,6 +75,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
         _zefyrController = ZefyrController(document);
       });
     });
+    if (widget.noteMode == NoteMode.Adding) _titleFocus.requestFocus();
   }
 
   @override
@@ -85,11 +86,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     super.didChangeDependencies();
   }
 
-  void updateEditMode(bool value) {
-    setState(() {
-      Var.isEditing = value;
-    });
-  }
+  // void updateEditMode(bool value) {
+  //   setState(() {
+  //     Var.isEditing = value;
+  //   });
+  // }
 
   // TextSelectionControls _textSelectionControls;
 
@@ -142,22 +143,21 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           endDrawer: EndDrawerItems(
             titleController: _titleController,
             zefyrController: _zefyrController,
-            updateZefyrEditMode: updateEditMode,
+            // updateZefyrEditMode: updateEditMode,
             controls: controls,
             // file: file,
           ),
 
-          floatingActionButton: Var.noteMode == NoteMode.Editing && Var.isEditing == false
-              ? Padding(
-                  padding: EdgeInsets.only(bottom: 8 * hm),
-                  child: FloatingActionButton(
+          floatingActionButton: Var.noteMode == NoteMode.Editing && !Var.isEditing
+              ? Container(
+                  height: 14 * wm,
+                  child: FloatingActionButton.extended(
                     tooltip: 'Edit',
                     backgroundColor: Colors.black,
                     elevation: 5,
-                    child: Icon(
-                      Icons.edit,
-                      size: 4 * wm,
-                    ),
+                    // icon: Icon(Icons.create, size: 5 * wm),
+                    icon: Icon(CupertinoIcons.pen, size: 5 * wm),
+                    label: Text('  Edit'),
                     onPressed: () {
                       setState(() {
                         Var.isEditing = true;
@@ -167,33 +167,28 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                   ),
                 )
               : null,
-          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 
           // body of editor
           body: Column(
             children: <Widget>[
-              // SizedBox(height: hm),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
-                child: FocusWidget(
+                child: TextField(
+                  readOnly: !Var.isEditing,
                   focusNode: _titleFocus,
-                  child: TextField(
-                    readOnly: !Var.isEditing,
-                    focusNode: _titleFocus,
-                    controller: _titleController,
-                    enableInteractiveSelection: true,
-                    enableSuggestions: true,
-                    textCapitalization: TextCapitalization.sentences,
-                    decoration: InputDecoration.collapsed(
-                      hintText: 'Untitled',
-                      hintStyle: TextStyle(fontSize: 3 * hm),
-                    ),
-                    style: GoogleFonts.ubuntu(fontSize: 3 * hm),
-                    textInputAction: TextInputAction.next,
-                    onEditingComplete: () {
-                      _zefyrfocusNode.requestFocus();
-                    },
+                  controller: _titleController,
+                  enableInteractiveSelection: true,
+                  enableSuggestions: true,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration.collapsed(
+                    hintText: 'Untitled',
+                    hintStyle: TextStyle(fontSize: 3 * hm),
                   ),
+                  style: GoogleFonts.ubuntu(fontSize: 3 * hm),
+                  textInputAction: TextInputAction.next,
+                  onEditingComplete: () {
+                    _zefyrfocusNode.requestFocus();
+                  },
                 ),
               ),
               Divider(
@@ -202,7 +197,6 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                 thickness: 0.03 * hm,
                 color: Colors.black,
               ),
-              SizedBox(height: hm),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
                 child: Row(
@@ -235,8 +229,10 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   Future<bool> _onPop() async {
     String title = _titleController.text;
     String note = _zefyrController.document.toPlainText().trim();
+    _titleFocus.unfocus();
+    _zefyrfocusNode.unfocus();
 
-    if (title.isEmpty || note.isEmpty) {
+    if (title.isEmpty && note.isEmpty) {
       return (await showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -259,16 +255,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ],
             ),
           )) ??
-          true;
+          false;
     } else if (title.isNotEmpty || note.isNotEmpty) {
       saveNote();
       //
       //
-    } else if (_titleController.text.isNotEmpty) {
-      if (MediaQuery.of(context).viewInsets.bottom != 0) {
-        return false;
-      }
-      return true;
     } else {
       Var.isEditing = false;
     }
@@ -295,20 +286,23 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
       if (title.isEmpty && note.isEmpty) {
         //
-        showToast("Can't create empty note.");
+        FocusScope.of(context).unfocus();
+        showToast("Can't create empty note");
         Navigator.pop(context);
         //
       } else {
         //
+        FocusScope.of(context).unfocus();
         controls.play('save');
-        updateEditMode(false);
+        // updateEditMode(false);
+        // Var.isEditing = false;
 
         if (Var.noteMode == NoteMode.Adding) {
           //
           time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
           //
           if (title.isEmpty) title = 'Untitled';
-          // ! generate unique id for noteid
+          // TODO: generate unique id for noteid
           NotesDB.insertNote({
             'title': title,
             'text': _zefyrController.document.toPlainText(),

@@ -9,7 +9,6 @@ import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:morpheus/page_routes/morpheus_page_route.dart';
 import 'package:toast/toast.dart';
@@ -35,12 +34,13 @@ class DrawerItems extends StatelessWidget {
         selected: Var.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
-          size: 6.5 * wm,
+          size: 7.5 * wm,
         ),
         title: Text(
           title,
-          style: GoogleFonts.ubuntu(
-            fontSize: 4 * wm,
+          style: TextStyle(
+            fontSize: 6 * wm,
+            fontWeight: FontWeight.w300,
           ),
         ),
         onTap: () {
@@ -207,9 +207,10 @@ class EndDrawerItems extends StatelessWidget {
 
                         if (title.isEmpty && note.isEmpty) {
                           //
+                          FocusScope.of(context).unfocus();
                           showToast(
                             context,
-                            "Can't save empty note. Please add a title!",
+                            "Can't create empty note",
                           );
                           //! Only close the drawer
                           Navigator.pop(context);
@@ -218,8 +219,10 @@ class EndDrawerItems extends StatelessWidget {
                         } else {
                           //
                           String time;
+                          FocusScope.of(context).unfocus();
                           controls.play('save');
-                          updateZefyrEditMode(false);
+                          // updateZefyrEditMode(false);
+                          Var.isEditing = false;
 
                           if (Var.noteMode == NoteMode.Adding) {
                             time = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());

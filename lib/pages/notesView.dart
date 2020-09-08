@@ -1,9 +1,17 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
+import 'package:givnotes/ui/const_notes_view.dart';
+import 'package:givnotes/utils/multi_select_item.dart';
 import 'package:givnotes/utils/notesDB.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:givnotes/utils/permissions.dart';
+import 'package:morpheus/morpheus.dart';
+
+MultiSelectController multiSelectController = MultiSelectController();
+List notes = List();
+IconData fabIcon = Icons.add;
+String fabLabel = '';
 
 class NotesView extends StatefulWidget {
   final bool isTrash;
@@ -14,68 +22,35 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
-  // DateTime created, modified;
+  void refreshNotesView() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    // multiSelectController.disableEditingWhenNoneSelected = true;
+    // if (prefsBox.containsKey('searchList')) {
+    //   multiSelectController.set((prefsBox.get('searchList') as List).length);
+    // }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: FutureBuilder(
-        // ! Chechk this
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: FutureBuilder(
         // future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
         future: NotesDB.getNoteList(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            final notes = snapshot.data;
+            notes = snapshot.data;
             if (notes.length == 0) {
-              return widget.isTrash == true
-                  ? Stack(
-                      children: [
-                        Positioned(
-                          top: 49 * hm,
-                          left: 50 * wm,
-                          child: Image(
-                            image: AssetImage('assets/images/trash.png'),
-                            height: 25 * hm,
-                            width: 45 * wm,
-                          ),
-                        ),
-                        Positioned(
-                          top: 25 * hm,
-                          left: 20 * wm,
-                          child: Column(
-                            children: [
-                              Text(
-                                "You don't have any trash",
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 2.0 * hm,
-                                ),
-                              ),
-                              SizedBox(height: 0.5 * hm),
-                              Text(
-                                "Create 'em, trash 'em. See them",
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 1.5 * hm,
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  : Padding(
-                      padding: EdgeInsets.only(left: 11 * wm),
-                      child: Image.asset(
-                        'assets/images/lady-on-phone.png',
-                        width: 75 * wm,
-                        height: 65 * hm,
-                      ),
-                    );
+              //
+              return const NotesEmptyView();
+              //
             } else {
               return ListView.builder(
-                // reverse: true,
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                 itemCount: notes.length,
                 itemBuilder: (context, index) {
                   index = notes.length - index - 1;
@@ -83,130 +58,49 @@ class _NotesViewState extends State<NotesView> {
                   // created = DateFormat('dd-MM-yyyy').parse(notes[index]['created']);
                   // modified = DateFormat('dd-MM-yyyy').parse(notes[index]['modified']);
                   //
-                  return OpenContainer(
-                    transitionDuration: Duration(milliseconds: 500),
-                    transitionType: ContainerTransitionType.fade,
-                    closedElevation: 0.0,
-                    openElevation: 0.0,
-                    closedBuilder: (context, action) {
-                      return Card(
-                        elevation: 0,
-                        margin: EdgeInsets.symmetric(horizontal: 2.8 * wm),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            // MaterialButton(
-                            //   color: Colors.red,
-                            //   onPressed: () => uploadFileToGoogleDrive(context),
-                            //   child: Text("Upload"),
-                            // ),
-                            Divider(
-                              height: 0.03 * hm,
-                              color: Colors.black,
-                            ),
-                            SizedBox(height: 1.5 * hm),
-                            Text(
-                              "created:     ${notes[index]['created']}",
-                              style: GoogleFonts.ubuntu(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey,
-                                fontSize: 1.6 * hm,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            Text(
-                              "modified:   ${notes[index]['modified']}",
-                              style: GoogleFonts.ubuntu(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey,
-                                fontSize: 1.6 * hm,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                            SizedBox(height: 2 * hm),
-                            _NoteTitle(notes[index]['title']),
-                            SizedBox(height: 0.5 * hm),
-                            _NoteText(notes[index]['text']),
-                            SizedBox(height: 2 * hm),
-                            Divider(
-                              height: 0.03 * hm,
-                              color: Colors.black,
-                            ),
-                            SizedBox(height: 1 * hm),
-                          ],
-                        ),
-                      );
-                    },
-                    openBuilder: (context, action) {
-                      Var.noteMode = NoteMode.Editing;
-                      Var.note = notes[index];
-                      // print('isEditing: ${Var.isEditing}');
+                  return Dismissible(
+                    key: UniqueKey(),
+                    background: Container(
+                      color: Colors.red[200],
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.restore_from_trash,
+                            size: 10 * wm,
+                          ),
+                          SizedBox(width: 10 * wm)
+                        ],
+                      ),
+                    ),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      if (!Var.isTrash) {
+                        NotesDB.updateNote({
+                          'id': notes[index]['id'],
+                          'trash': 1,
+                        });
+                        print('moved to trash');
 
-                      return ZefyrEdit(noteMode: NoteMode.Editing);
+                        // setState(() {
+                        multiSelectController.set(notes.length);
+                        // });
+                      } else {
+                        NotesDB.updateNote({
+                          'id': notes[index]['id'],
+                          'trash': 0,
+                        });
+                        print('moved to notes');
+
+                        multiSelectController.set(notes.length);
+                      }
+                      setState(() {});
                     },
+                    child: OnlyUpdateNoteCard(
+                      index: index,
+                    ),
                   );
-                  // return GestureDetector(
-                  //   onTap: () {
-                  //     Var.noteMode = NoteMode.Editing;
-                  //     Var.note = notes[index];
-                  //     print('isEditing: ${Var.isEditing}');
-
-                  //     Navigator.push(
-                  //       context,
-                  //       PageRouteTransition(
-                  //         builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
-                  //         animationType: AnimationType.fade,
-                  //       ),
-                  //     );
-                  //   },
-                  //   child: Card(
-                  //     elevation: 0,
-                  //     margin: EdgeInsets.symmetric(horizontal: 2.8 * wm),
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: <Widget>[
-                  //         MaterialButton(
-                  //           color: Colors.red,
-                  //           onPressed: () => uploadFileToGoogleDrive(context),
-                  //           child: Text("Upload"),
-                  //         ),
-                  //         Divider(
-                  //           height: 0.03 * hm,
-                  //           color: Colors.black,
-                  //         ),
-                  //         SizedBox(height: 1.5 * hm),
-                  //         Text(
-                  //           "created:     ${notes[index]['created']}",
-                  //           style: GoogleFonts.ubuntu(
-                  //             fontWeight: FontWeight.w300,
-                  //             color: Colors.grey,
-                  //             fontSize: 1.6 * hm,
-                  //             fontStyle: FontStyle.italic,
-                  //           ),
-                  //         ),
-                  //         Text(
-                  //           "modified:   ${notes[index]['modified']}",
-                  //           style: GoogleFonts.ubuntu(
-                  //             fontWeight: FontWeight.w300,
-                  //             color: Colors.grey,
-                  //             fontSize: 1.6 * hm,
-                  //             fontStyle: FontStyle.italic,
-                  //           ),
-                  //         ),
-                  //         SizedBox(height: 2 * hm),
-                  //         _NoteTitle(notes[index]['title']),
-                  //         SizedBox(height: 0.5 * hm),
-                  //         _NoteText(notes[index]['text']),
-                  //         SizedBox(height: 2 * hm),
-                  //         Divider(
-                  //           height: 0.03 * hm,
-                  //           color: Colors.black,
-                  //         ),
-                  //         SizedBox(height: 1 * hm),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // );
                 },
               );
             }
@@ -214,53 +108,208 @@ class _NotesViewState extends State<NotesView> {
           return Scaffold(backgroundColor: Colors.white);
         },
       ),
-    );
-  }
-}
-
-class _NoteTitle extends StatelessWidget {
-  final String _title;
-  _NoteTitle(this._title);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      _title,
-      style: GoogleFonts.ubuntu(
-        fontSize: 2.3 * hm,
-        fontWeight: FontWeight.w600,
+      floatingActionButton: OnlyUpdateFAB(
+        refreshNotesView: refreshNotesView,
       ),
     );
   }
 }
 
-class _NoteText extends StatelessWidget {
-  final String _text;
-  _NoteText(this._text);
+// ignore: must_be_immutable
+class OnlyUpdateNoteCard extends StatefulWidget {
+  OnlyUpdateNoteCard({
+    Key key,
+    @required this.index,
+  }) : super(key: key);
+
+  final int index;
 
   @override
+  _OnlyUpdateNoteCardState createState() => _OnlyUpdateNoteCardState();
+}
+
+class _OnlyUpdateNoteCardState extends State<OnlyUpdateNoteCard> {
+  @override
   Widget build(BuildContext context) {
-    return Text(
-      _text,
-      style: TextStyle(
-        color: Colors.grey[800],
-        fontSize: 1.6 * hm,
+    return InkWell(
+      onLongPress: () {
+        setState(() {
+          multiSelectController.toggle(widget.index);
+          fabIcon = Var.isTrash ? Icons.restore : Icons.restore_from_trash;
+          fabLabel = Var.isTrash ? 'Restore' : 'Trash';
+        });
+
+        fabState.refreshFab();
+      },
+      onTap: () {
+        if (multiSelectController.isSelecting) {
+          setState(() {
+            multiSelectController.toggle(widget.index);
+            if (!multiSelectController.isSelecting) {
+              fabIcon = Icons.add;
+            }
+          });
+
+          fabState.refreshFab();
+          //
+        } else {
+          Var.noteMode = NoteMode.Editing;
+          Var.note = notes[widget.index];
+
+          Navigator.push(
+            context,
+            MorpheusPageRoute(
+              builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+            ),
+          );
+        }
+      },
+      child: NotesCard(
+        controller: multiSelectController,
+        notes: notes,
+        index: widget.index,
       ),
-      maxLines: 5,
-      overflow: TextOverflow.ellipsis,
     );
   }
 }
 
-// return Padding(
-//   padding: EdgeInsets.only(left: 36 * wm, top: 21 * hm),
-//   child: Container(
-//     height: 120,
-//     width: 120,
-//     child: FlareActor(
-//       'assets/animations/loading.flr',
-//       animation: 'Alarm',
-//       alignment: Alignment.center,
-//     ),
-//   ),
-// );
+class OnlyUpdateFAB extends StatefulWidget {
+  OnlyUpdateFAB({Key key, this.refreshNotesView}) : super(key: key);
+
+  final Function() refreshNotesView;
+
+  @override
+  _OnlyUpdateFABState createState() => _OnlyUpdateFABState();
+}
+
+_OnlyUpdateFABState fabState = _OnlyUpdateFABState();
+
+class _OnlyUpdateFABState extends State<OnlyUpdateFAB> {
+  void refreshFab() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fabState = this;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !multiSelectController.isSelecting && !Var.isTrash
+        ? FloatingActionButton(
+            heroTag: 'b',
+            tooltip: 'New Note',
+            backgroundColor: Colors.black,
+            splashColor: Colors.black,
+            elevation: 5,
+            child: Icon(Icons.add),
+            onPressed: () async {
+              await HandlePermission().requestPermission().then((value) {
+                if (value) {
+                  Var.isEditing = true;
+                  Var.noteMode = NoteMode.Adding;
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
+                    ),
+                  );
+                } else {
+                  if (isPermanentDisabled) {
+                    HandlePermission().permanentDisabled(context);
+                  }
+                  setState(() => Var.selectedIndex = 0);
+                }
+              });
+            },
+          )
+        : !multiSelectController.isSelecting && Var.isTrash
+            ? SizedBox.shrink()
+            : Container(
+                height: 14 * wm,
+                child: FloatingActionButton.extended(
+                  heroTag: 'b',
+                  backgroundColor: Colors.black,
+                  splashColor: Colors.black,
+                  elevation: 5,
+                  icon: Icon(fabIcon),
+                  label: Text(fabLabel),
+                  onPressed: getMultiselectFunction(),
+                ),
+              );
+  }
+
+  Function() getMultiselectFunction() {
+    if (!Var.isTrash) {
+      return () => trash();
+    } else if (Var.isTrash) {
+      return () => restore();
+    }
+    return () {};
+  }
+
+  void delete() {
+    multiSelectController.selectedIndexes.forEach((element) {
+      NotesDB.deleteNote(element);
+    });
+
+    // setState(() {
+    multiSelectController.set(notes.length);
+    fabIcon = Icons.add;
+    // });
+    widget.refreshNotesView();
+  }
+
+  void trash() {
+    multiSelectController.selectedIndexes.forEach((element) {
+      NotesDB.updateNote({
+        'id': notes[element]['id'],
+        'trash': 1,
+      });
+    });
+
+    // setState(() {
+    multiSelectController.set(notes.length);
+    fabIcon = Icons.add;
+    // });
+    widget.refreshNotesView();
+  }
+
+  void restore() {
+    multiSelectController.selectedIndexes.forEach((element) {
+      NotesDB.updateNote({
+        'id': notes[element]['id'],
+        'trash': 0,
+      });
+    });
+
+    // setState(() {
+    multiSelectController.set(notes.length);
+    fabIcon = Icons.add;
+    // });
+    widget.refreshNotesView();
+  }
+}
+
+// return multiSelectController.isSelecting == false
+//     ? OpenContainer(
+//         transitionDuration: Duration(milliseconds: 500),
+//         transitionType: ContainerTransitionType.fade,
+//         closedElevation: 0.0,
+//         openElevation: 0.0,
+//         closedBuilder: (context, action) {
+//           return NotesCard(
+//             controller: multiSelectController,
+//             notes: notes,
+//             index: widget.index,
+//           );
+//         },
+//         openBuilder: (context, action) {
+//           Var.noteMode = NoteMode.Editing;
+//           Var.note = notes[widget.index];
+
+//           return ZefyrEdit(noteMode: NoteMode.Editing);
+//         },
+//       )

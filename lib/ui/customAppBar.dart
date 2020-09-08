@@ -5,13 +5,19 @@ import 'package:getwidget/components/appbar/gf_appbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 
-class MyAppBar extends StatelessWidget with PreferredSizeWidget {
+class MyAppBar extends StatefulWidget with PreferredSizeWidget {
   final String title;
+
   const MyAppBar(this.title, {Key key}) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(13 * hm);
+  _MyAppBarState createState() => _MyAppBarState();
 
+  @override
+  Size get preferredSize => Size.fromHeight(22.7 * wm);
+}
+
+class _MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,12 +31,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
               Scaffold.of(context).openDrawer();
             },
           ),
-          // actions: [
-          //   FlatButton(
-          //     child: Text('Select All'),
-          //     onPressed: () {},
-          //   )
-          // ],
+          // actions: getAppBarActions(),
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
@@ -38,11 +39,11 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
         Container(
           width: double.infinity,
           color: Colors.white,
-          height: 5 * hm,
+          height: 4 * hm,
           child: Padding(
             padding: EdgeInsets.only(left: 3.47 * wm),
             child: Text(
-              title,
+              widget.title,
               style: TextStyle(
                 fontFamily: 'Abril',
                 color: Colors.black,
@@ -57,6 +58,31 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
       ],
     );
   }
+
+  // List<Widget> getAppBarActions() {
+  //   if (multiSelectController.isSelecting && (Var.selectedIndex == 0 || Var.selectedIndex == 4)) {
+  //     if (Var.isTrash) {
+  //       return [
+  //         FlatButton(
+  //           child: Text('Restore'),
+  //           onPressed: () {},
+  //         ),
+  //         FlatButton(
+  //           child: Text('Delete'),
+  //           onPressed: () {},
+  //         )
+  //       ];
+  //     } else {
+  //       return [
+  //         FlatButton(
+  //           child: Text('Trash'),
+  //           onPressed: () {},
+  //         )
+  //       ];
+  //     }
+  //   }
+  //   return [];
+  // }
 }
 
 class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -69,7 +95,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(13 * hm);
+  Size get preferredSize => Size.fromHeight(17 * wm);
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +103,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: Padding(
         padding: EdgeInsets.only(
           top: 0.62 * hm,
-          bottom: (0.62 * hm) + hm,
+          bottom: (0.62 * hm),
           left: (1.16 * wm) + wm,
           right: (1.16 * wm) + wm,
         ),

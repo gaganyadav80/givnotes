@@ -9,7 +9,7 @@ Box prefsBox;
 AndroidDeviceInfo androidInfo;
 PackageInfo packageInfo;
 
-// * Custom Trash icon
+// * Custom icon
 final IconData trashIcon = IconData(0xe800, fontFamily: 'TrashIcon', fontPackage: null);
 
 // * Custom Colors

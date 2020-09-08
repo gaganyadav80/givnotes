@@ -6,11 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
-import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
-import 'package:givnotes/utils/permissions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
@@ -19,66 +17,30 @@ class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   DateTime currentBackPressTime;
-  // int count = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    // getUserDetails();
-  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () => _onPop(),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+        // extendBodyBehindAppBar: true,
         resizeToAvoidBottomInset: true,
         resizeToAvoidBottomPadding: true,
-        extendBody: true,
+        // extendBody: true,
         backgroundColor: Colors.white,
         appBar: MyAppBar(Var.setTitle()),
         //
         drawer: DrawerItems(),
         body: Var.pageNavigation[Var.selectedIndex],
 
-        floatingActionButton: Var.selectedIndex != 0
-            ? SizedBox.shrink()
-            : FloatingActionButton(
-                tooltip: 'New Note',
-                backgroundColor: Colors.black,
-                splashColor: Colors.black,
-                elevation: 5,
-                child: Icon(Icons.add),
-                onPressed: () async {
-                  await HandlePermission().requestPermission().then((value) {
-                    if (value) {
-                      Var.isEditing = true;
-                      Var.noteMode = NoteMode.Adding;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
-                        ),
-                      );
-                    } else {
-                      if (isPermanentDisabled) {
-                        HandlePermission().permanentDisabled(context);
-                      }
-                      setState(() => Var.selectedIndex = 0);
-                    }
-                  });
-                },
-              ),
-
         // !! Bottom Navigation
         bottomNavigationBar: SnakeNavigationBar(
-          elevation: 20,
+          elevation: 10,
           shadowColor: Colors.black,
           currentIndex: Var.selectedIndex,
           style: SnakeBarStyle.pinned,
@@ -98,52 +60,52 @@ class _HomePageState extends State<HomePage> {
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.book,
-                size: 3.5 * hm,
+                size: 6.62 * wm,
               ),
               title: Text(
                 'All Notes',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.5 * hm,
+                  fontSize: 2.83 * wm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.search,
-                size: 3.5 * hm,
+                size: 6.62 * wm,
               ),
               title: Text(
                 'Search',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.5 * hm,
+                  fontSize: 2.83 * wm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.bookmark,
-                size: 3.5 * hm,
+                size: 6.62 * wm,
               ),
               title: Text(
                 'Tags',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.5 * hm,
+                  fontSize: 2.83 * wm,
                 ),
               ),
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.person,
-                size: 3.5 * hm,
+                size: 6.62 * wm,
               ),
               title: Text(
                 'Profile',
                 style: GoogleFonts.ubuntu(
                   color: Colors.black,
-                  fontSize: 1.5 * hm,
+                  fontSize: 2.83 * wm,
                 ),
               ),
             ),
@@ -156,7 +118,7 @@ class _HomePageState extends State<HomePage> {
   Future<bool> _onPop() async {
     if (Var.selectedIndex != 0) {
       Var.isTrash = false;
-      // Var.selectedIndex = 0;
+      Var.selectedIndex = 0;
       Navigator.push(
         context,
         PageRouteTransition(

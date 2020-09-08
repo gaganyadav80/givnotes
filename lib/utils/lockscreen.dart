@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:flutter_screen_lock/circle_input_button.dart';
+import 'package:flutter_screen_lock/dot_secret_ui.dart';
 import 'package:flutter_screen_lock/lock_screen.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/utils/home.dart';
@@ -9,7 +11,10 @@ import 'package:morpheus/morpheus.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class Lockscreen extends StatefulWidget {
-  Lockscreen({Key key, @required this.changePassAuth}) : super(key: key);
+  Lockscreen({
+    Key key,
+    @required this.changePassAuth,
+  }) : super(key: key);
 
   final bool changePassAuth;
 
@@ -18,7 +23,18 @@ class Lockscreen extends StatefulWidget {
 }
 
 class _LockscreenState extends State<Lockscreen> {
-  // bool isFingerprint = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  // }
+
+  // @override
+  // void dispose() {
+  //   // restore status bar
+  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
+  //   super.dispose();
+  // }
 
   Future<bool> biometrics(BuildContext context) async {
     final LocalAuthentication auth = new LocalAuthentication();
@@ -26,7 +42,8 @@ class _LockscreenState extends State<Lockscreen> {
 
     try {
       authenticated = await auth.authenticateWithBiometrics(
-        localizedReason: 'Authenticate to unlock givnotes',
+        // localizedReason: 'Authenticate to unlock givnotes',
+        localizedReason: '',
         useErrorDialogs: true,
         stickyAuth: false,
       );
@@ -36,9 +53,6 @@ class _LockscreenState extends State<Lockscreen> {
     if (!mounted) return false;
     if (authenticated) {
       return true;
-      // setState(() {
-      //   isFingerprint = true;
-      // });
     }
     return false;
   }
@@ -46,37 +60,70 @@ class _LockscreenState extends State<Lockscreen> {
   @override
   Widget build(BuildContext context) {
     return LockScreen(
-      title: 'Enter your passcode',
+      title: 'Enter Passcode',
       correctString: prefsBox.get('passcode'),
       confirmMode: false,
-      canCancel: false,
+      digits: 4,
+      canCancel: widget.changePassAuth,
       canBiometric: prefsBox.get('biometric') ?? false,
-      showBiometricFirst: true,
+      showBiometricFirst: prefsBox.get('biometric') ?? true,
       biometricAuthenticate: biometrics,
       backgroundColorOpacity: 1,
-      // onCompleted: (context, _) => AppLock.of(context).didUnlock(),
-      onUnlocked: () => widget.changePassAuth
-          ? Navigator.push(
-              context,
-              PageRouteTransition(
-                builder: (context) => AddLockscreen(),
-                animationType: AnimationType.slide_right,
-              ),
-            )
-          : AppLock.of(context).didUnlock(),
+      onUnlocked: widget.changePassAuth
+          ? () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                PageRouteTransition(
+                  builder: (context) => AddLockscreen(),
+                  animationType: AnimationType.slide_right,
+                  curves: Curves.easeOut,
+                ),
+              );
+            }
+          : () {
+              AppLock.of(context).didUnlock();
+            },
+      dotSecretConfig: DotSecretConfig(
+        dotSize: 15,
+        dotBorderColor: Colors.teal[200],
+        enabledColor: Colors.teal[100],
+        padding: EdgeInsets.symmetric(horizontal: 75, vertical: 0),
+      ),
+      circleInputButtonConfig: CircleInputButtonConfig(
+        backgroundColor: Colors.teal[200],
+      ),
     );
   }
 }
 
-class AddLockscreen extends StatelessWidget {
+class AddLockscreen extends StatefulWidget {
   const AddLockscreen({Key key}) : super(key: key);
+
+  @override
+  _AddLockscreenState createState() => _AddLockscreenState();
+}
+
+class _AddLockscreenState extends State<AddLockscreen> {
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  // }
+
+  // @override
+  // void dispose() {
+  //   // restore status bar
+  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: LockScreen(
-        title: 'Enter new passcode',
+        title: 'Enter New Passcode',
         confirmMode: true,
         canCancel: true,
         canBiometric: false,
@@ -88,13 +135,22 @@ class AddLockscreen extends StatelessWidget {
           Navigator.push(context, MorpheusPageRoute(builder: (context) => HomePage()));
           passChangeAlert(context);
         },
+        dotSecretConfig: DotSecretConfig(
+          dotSize: 15,
+          dotBorderColor: Colors.teal[200],
+          enabledColor: Colors.teal[100],
+          padding: EdgeInsets.symmetric(horizontal: 75, vertical: 0),
+        ),
+        circleInputButtonConfig: CircleInputButtonConfig(
+          backgroundColor: Colors.teal[200],
+        ),
       ),
     );
   }
 }
 
 passChangeAlert(BuildContext context) {
-  Future.delayed(Duration(milliseconds: 1000), () async {
+  Future.delayed(Duration(milliseconds: 500), () async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {

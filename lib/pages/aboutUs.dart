@@ -10,45 +10,40 @@ import 'package:givnotes/enums/prefs.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutUs extends StatefulWidget {
-  @override
-  _AboutUsState createState() => _AboutUsState();
-}
-
-class _AboutUsState extends State<AboutUs> {
+class AboutUs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Container(
-        height: 76 * hm,
-        padding: EdgeInsets.only(left: 2.3 * wm, right: 2.3 * wm),
-        child: Stack(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 2.3 * wm),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Divider(
               color: Colors.black,
               height: 3,
             ),
             Padding(
-              padding: EdgeInsets.only(top: hm, left: 2.3 * wm),
+              padding: EdgeInsets.only(top: hm),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Image(
                     image: AssetImage('assets/logo/owlCute-transparent.png'),
-                    height: 5.0 * hm,
+                    height: 9.5 * wm,
                   ),
                   Text(
                     'Giv',
                     style: GoogleFonts.montserrat(
                       color: Colors.black,
-                      fontSize: 2.2 * hm,
+                      fontSize: 4.5 * wm,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Text(
                     'Notes.',
                     style: GoogleFonts.montserrat(
-                      fontSize: 2.2 * hm,
+                      fontSize: 4.5 * wm,
                       color: Colors.black,
                       fontWeight: FontWeight.w400,
                     ),
@@ -57,7 +52,7 @@ class _AboutUsState extends State<AboutUs> {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 8.6 * hm, left: 2.3 * wm, right: 2.3 * wm),
+              // margin: EdgeInsets.only(top: 4 * hm),
               decoration: BoxDecoration(
                 color: whiteIsh,
                 shape: BoxShape.rectangle,
@@ -99,131 +94,131 @@ class _AboutUsState extends State<AboutUs> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 21 * hm, left: 3 * wm),
-              child: Text(
-                'Liked My Work ... \nDon\'t forget to mention it :)',
-                style: GoogleFonts.ubuntu(
-                  fontSize: 3.4 * wm,
-                ),
+              padding: EdgeInsets.only(top: 0 * hm),
+              child: Row(
+                children: [
+                  Text(
+                    'Liked My Work ... \nDon\'t forget to mention it :)',
+                    style: GoogleFonts.ubuntu(
+                      fontSize: 4 * wm,
+                    ),
+                  ),
+                  SizedBox(width: 2 * wm),
+                  Text(
+                    '?',
+                    style: TextStyle(
+                      fontSize: 12.5 * wm,
+                      fontFamily: 'Abril',
+                    ),
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              top: 18.5 * hm,
-              left: 50 * wm,
-              child: Text(
-                '?',
-                style: TextStyle(
-                  fontSize: 12.5 * wm,
-                  fontFamily: 'Abril',
+            // SizedBox(height: 2 * hm),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(1.9 * wm),
+                  child: Image.asset(
+                    'assets/images/share.png',
+                    height: 22 * hm,
+                    width: 58.5 * wm,
+                    fit: BoxFit.fill,
+                  ),
                 ),
-              ),
-            ),
-            Positioned(
-              top: 29.7 * hm,
-              left: 1.5 * wm,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(1.9 * wm),
-                child: Image.asset(
-                  'assets/images/share.png',
-                  height: 22 * hm,
-                  width: 58.5 * wm,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 27.5 * hm,
-              left: 63 * wm,
-              child: Container(
-                width: 30 * wm,
-                child: Column(
-                  children: <Widget>[
-                    GFButton(
-                      onPressed: () async {
-                        final String url = 'https://www.twitter.com/_yadavGagan';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not open Twitter profile';
-                        }
-                      },
-                      splashColor: Colors.blue,
-                      color: Colors.blue,
-                      type: GFButtonType.outline,
-                      shape: GFButtonShape.standard,
-                      text: 'Twitter     ',
-                      icon: Icon(
-                        FontAwesomeIcons.twitter,
+                Container(
+                  width: 30 * wm,
+                  child: Column(
+                    children: <Widget>[
+                      GFButton(
+                        onPressed: () async {
+                          final String url = 'https://www.twitter.com/_yadavGagan';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not open Twitter profile';
+                          }
+                        },
+                        splashColor: Colors.blue,
                         color: Colors.blue,
-                        size: 2.5 * hm,
+                        type: GFButtonType.outline,
+                        shape: GFButtonShape.standard,
+                        text: 'Twitter     ',
+                        icon: Icon(
+                          FontAwesomeIcons.twitter,
+                          color: Colors.blue,
+                          size: 2.5 * hm,
+                        ),
                       ),
-                    ),
-                    GFButton(
-                      onPressed: () async {
-                        final String url = 'https://www.instagram.com/gagan.yadav.80';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not open Instagram profile';
-                        }
-                      },
-                      splashColor: Colors.pink[600],
-                      color: Colors.pink[600],
-                      type: GFButtonType.outline,
-                      shape: GFButtonShape.standard,
-                      text: 'Instagram',
-                      icon: Icon(
-                        FontAwesomeIcons.instagram,
+                      GFButton(
+                        onPressed: () async {
+                          final String url = 'https://www.instagram.com/gagan.yadav.80';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not open Instagram profile';
+                          }
+                        },
+                        splashColor: Colors.pink[600],
                         color: Colors.pink[600],
-                        size: 2.5 * hm,
+                        type: GFButtonType.outline,
+                        shape: GFButtonShape.standard,
+                        text: 'Instagram',
+                        icon: Icon(
+                          FontAwesomeIcons.instagram,
+                          color: Colors.pink[600],
+                          size: 2.5 * hm,
+                        ),
                       ),
-                    ),
-                    GFButton(
-                      onPressed: () async {
-                        final String url = 'https://www.facebook.com/gagan.77492';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not open Facebook profile';
-                        }
-                      },
-                      splashColor: Colors.blue[900],
-                      color: Colors.blue[900],
-                      type: GFButtonType.outline,
-                      shape: GFButtonShape.standard,
-                      text: 'Facebook ',
-                      icon: Icon(
-                        FontAwesomeIcons.facebookF,
+                      GFButton(
+                        onPressed: () async {
+                          final String url = 'https://www.facebook.com/gagan.77492';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not open Facebook profile';
+                          }
+                        },
+                        splashColor: Colors.blue[900],
                         color: Colors.blue[900],
-                        size: 2.5 * hm,
+                        type: GFButtonType.outline,
+                        shape: GFButtonShape.standard,
+                        text: 'Facebook ',
+                        icon: Icon(
+                          FontAwesomeIcons.facebookF,
+                          color: Colors.blue[900],
+                          size: 2.5 * hm,
+                        ),
                       ),
-                    ),
-                    GFButton(
-                      onPressed: () async {
-                        final String url = 'https://www.github.com/gaganyadav80/givnotes/';
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not open Github profile';
-                        }
-                      },
-                      splashColor: Colors.black,
-                      color: Colors.black,
-                      type: GFButtonType.outline,
-                      shape: GFButtonShape.standard,
-                      text: 'Github       ',
-                      icon: Icon(
-                        FontAwesomeIcons.github,
+                      GFButton(
+                        onPressed: () async {
+                          final String url = 'https://www.github.com/gaganyadav80/givnotes/';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not open Github profile';
+                          }
+                        },
+                        splashColor: Colors.black,
                         color: Colors.black,
-                        size: 2.5 * hm,
+                        type: GFButtonType.outline,
+                        shape: GFButtonShape.standard,
+                        text: 'Github       ',
+                        icon: Icon(
+                          FontAwesomeIcons.github,
+                          color: Colors.black,
+                          size: 2.5 * hm,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
+            // SizedBox(height: 3 * hm),
             Container(
-              margin: EdgeInsets.only(top: 57 * hm, left: 2.3 * wm, right: 2.3 * wm),
+              // margin: EdgeInsets.only(top: 2 * hm),
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.rectangle,
@@ -257,10 +252,10 @@ class _AboutUsState extends State<AboutUs> {
                 ),
               ),
             ),
-            Positioned(
-              top: 71 * hm,
-              left: 29 * wm,
+            Padding(
+              padding: EdgeInsets.only(bottom: 2 * wm),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     Icons.copyright,
@@ -270,7 +265,7 @@ class _AboutUsState extends State<AboutUs> {
                     '  Givnotes Inc.',
                     style: GoogleFonts.ubuntu(
                       fontWeight: FontWeight.w500,
-                      fontSize: 1.8 * hm,
+                      fontSize: 3.6 * wm,
                     ),
                   ),
                 ],

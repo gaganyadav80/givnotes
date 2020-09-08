@@ -41,20 +41,20 @@ uploadFileToGoogleDrive(BuildContext context) async {
     googleSignInAccount = googleSignIn.currentUser;
     // print(googleSignInAccount);
 
-    GoogleHttpClient client = GoogleHttpClient(await googleSignInAccount.authHeaders);
-    ga.DriveApi drive = ga.DriveApi(client);
+    // GoogleHttpClient client = GoogleHttpClient(await googleSignInAccount.authHeaders);
+    // ga.DriveApi drive = ga.DriveApi(client);
 
-    ga.File notesToUpload = ga.File();
-    ga.File dbToUpload = ga.File();
-    final appDirPath = (await getApplicationDocumentsDirectory()).path;
+    // ga.File notesToUpload = ga.File();
+    // ga.File dbToUpload = ga.File();
+    // final appDirPath = (await getApplicationDocumentsDirectory()).path;
     final dbpath = await getDatabasesPath();
 
-    final notes = Directory("$appDirPath/notes/").listSync();
+    // final notes = Directory("$appDirPath/notes/").listSync();
 
 // !! no such file or directory error for db file
 // TODO upload db to firebase storage + change it to hive for encryption
     File dbfile = File("$dbpath/givenotes.db");
-    File file;
+    // File file;
 
     debugPrint("DB PATH = ${dbfile.path} ++++++++++++++++++++++++++++++++++++++++++++++++");
 
