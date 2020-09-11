@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 
 typedef QueryListItemBuilder<T> = Widget Function(T item);
@@ -150,6 +151,9 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
         focusNode: _focusNode,
         cursorColor: Colors.black,
         style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+        onEditingComplete: () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
         decoration: widget.searchBoxInputDecoration == null
             ? InputDecoration(
                 enabledBorder: const OutlineInputBorder(
@@ -216,8 +220,10 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
       overlaySearchList.remove();
     }
     overlaySearchList = null;
-    _focusNode.unfocus();
-    textController.clear();
+    // _focusNode.unfocus();
+    // textController.clear();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+
     setState(() {
       notifier.value = item;
       isFocused = false;

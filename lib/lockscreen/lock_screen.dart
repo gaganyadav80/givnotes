@@ -5,10 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screen_lock/circle_input_button.dart';
-import 'package:flutter_screen_lock/dot_secret_ui.dart';
-// import 'dot_secret_ui.dart';
-// import 'circle_input_button.dart';
+import 'package:givnotes/utils/move_to_background.dart';
+import 'dot_secret_ui.dart';
+import 'circle_input_button.dart';
 
 /// commented out all the Navigator.of(context).pop();
 /// to make it work with AppLock package
@@ -214,7 +213,7 @@ class _LockScreenState extends State<LockScreen> {
   final StreamController<bool> validateStreamController = StreamController<bool>();
 
   // control for Android back button
-  bool _needClose = false;
+  // bool _needClose = false;
 
   // confirm flag
   bool _isConfirmation = false;
@@ -347,7 +346,7 @@ class _LockScreenState extends State<LockScreen> {
           // call user function
           widget.onCompleted(context, enteredValue);
         } else {
-          _needClose = true;
+          // _needClose = true;
           // Navigator.of(context).pop();
         }
 
@@ -367,6 +366,7 @@ class _LockScreenState extends State<LockScreen> {
   Widget build(BuildContext context) {
     _enteredStreamListener();
     _removedStreamListener();
+
     var _rowMarginSize = MediaQuery.of(context).size.width * 0.025;
     var _columnMarginSize = MediaQuery.of(context).size.width * 0.065;
     var _heightMargiz = MediaQuery.of(context).size.height / 100;
@@ -379,7 +379,7 @@ class _LockScreenState extends State<LockScreen> {
           return true;
         }
         // print("SYSTEM POP =======================");
-        if (Platform.isAndroid) SystemNavigator.pop();
+        if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
 
         return false;
       },
@@ -389,7 +389,6 @@ class _LockScreenState extends State<LockScreen> {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 SizedBox(height: 5 * _heightMargiz),
                 Image.asset(

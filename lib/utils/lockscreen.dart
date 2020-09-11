@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
-import 'package:flutter_screen_lock/circle_input_button.dart';
-import 'package:flutter_screen_lock/dot_secret_ui.dart';
-import 'package:flutter_screen_lock/lock_screen.dart';
 import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/lockscreen/dot_secret_ui.dart';
+import 'package:givnotes/lockscreen/lock_screen.dart';
+import 'package:givnotes/lockscreen/circle_input_button.dart';
 import 'package:givnotes/utils/home.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
@@ -23,19 +23,6 @@ class Lockscreen extends StatefulWidget {
 }
 
 class _LockscreenState extends State<Lockscreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  // }
-
-  // @override
-  // void dispose() {
-  //   // restore status bar
-  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
-  //   super.dispose();
-  // }
-
   Future<bool> biometrics(BuildContext context) async {
     final LocalAuthentication auth = new LocalAuthentication();
     bool authenticated = false;
@@ -105,19 +92,6 @@ class AddLockscreen extends StatefulWidget {
 }
 
 class _AddLockscreenState extends State<AddLockscreen> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  // }
-
-  // @override
-  // void dispose() {
-  //   // restore status bar
-  //   SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top, SystemUiOverlay.bottom]);
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

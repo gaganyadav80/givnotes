@@ -29,112 +29,99 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     // print('SEARCH LIST = ${prefsBox.get('searchList')} =======================');
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(top: 1.5 * hm),
-        child: Container(
-          child: FutureBuilder(
-            future: NotesDB.getNoteList(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                final notes = snapshot.data;
+    return Padding(
+      padding: EdgeInsets.only(top: 1.5 * hm),
+      child: FutureBuilder(
+        future: NotesDB.getNoteList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            final notes = snapshot.data;
 
-                return GFSearchBar(
-                  searchList: (prefsBox.get('searchList') as List).cast<String>(),
-                  searchQueryBuilder: (query, list) {
-                    return list
-                        .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-                        .toList();
-                  },
-                  noItemsFoundWidget: Text(
-                    'Ops! nothing found',
-                    style: GoogleFonts.ubuntu(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w300,
-                      color: Colors.grey,
+            return GFSearchBar(
+              searchList: (prefsBox.get('searchList') as List).cast<String>(),
+              searchQueryBuilder: (query, list) {
+                return list
+                    .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+                    .toList();
+              },
+              noItemsFoundWidget: Text(
+                'Ops! nothing found',
+                style: GoogleFonts.ubuntu(
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey,
+                ),
+              ),
+              overlaySearchListItemBuilder: (item) {
+                index = (prefsBox.get('searchList') as List).cast<String>().indexOf(item);
+
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Divider(
+                      height: 0.03 * hm,
+                      color: Colors.black,
                     ),
-                  ),
-                  overlaySearchListItemBuilder: (item) {
-                    index = (prefsBox.get('searchList') as List).cast<String>().indexOf(item);
-                    // print("ITEM = $item ================");
-
-                    return Card(
-                      elevation: 0,
-                      margin: EdgeInsets.zero,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Divider(
-                            height: 0.03 * hm,
-                            color: Colors.black,
-                          ),
-                          SizedBox(height: 1.5 * hm),
-                          Text(
-                            "created:     ${notes[index]['created']}",
-                            style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey,
-                              fontSize: 1.6 * hm,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          Text(
-                            "modified:   ${notes[index]['modified']}",
-                            style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey,
-                              fontSize: 1.6 * hm,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                          SizedBox(height: 2 * hm),
-                          Text(
-                            notes[index]['title'],
-                            style: GoogleFonts.ubuntu(
-                              fontSize: 2.3 * hm,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: 0.5 * hm),
-                          Text(
-                            notes[index]['text'],
-                            style: TextStyle(
-                              color: Colors.grey[800],
-                              fontSize: 1.6 * hm,
-                            ),
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(height: 2 * hm),
-                          Divider(
-                            height: 0.03 * hm,
-                            color: Colors.black,
-                          ),
-                          SizedBox(height: 1 * hm),
-                        ],
+                    SizedBox(height: 1.5 * hm),
+                    Text(
+                      "created:     ${notes[index]['created']}",
+                      style: GoogleFonts.ubuntu(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.grey,
+                        fontSize: 1.6 * hm,
+                        fontStyle: FontStyle.italic,
                       ),
-                    );
-                  },
-                  onItemSelected: (item) {
-                    // setState(() {
-                    //   print('$item');
-                    // });
-                    // print("ITEM = $item ================");
-                    Var.noteMode = NoteMode.Editing;
-                    Var.note = notes[index];
-                    Navigator.push(
-                      context,
-                      MorpheusPageRoute(
-                        builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+                    ),
+                    Text(
+                      "modified:   ${notes[index]['modified']}",
+                      style: GoogleFonts.ubuntu(
+                        fontWeight: FontWeight.w300,
+                        color: Colors.grey,
+                        fontSize: 1.6 * hm,
+                        fontStyle: FontStyle.italic,
                       ),
-                    );
-                  },
+                    ),
+                    SizedBox(height: 2 * hm),
+                    Text(
+                      notes[index]['title'],
+                      style: GoogleFonts.ubuntu(
+                        fontSize: 2.3 * hm,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(height: 0.5 * hm),
+                    Text(
+                      notes[index]['text'],
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 1.6 * hm,
+                      ),
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 2 * hm),
+                    Divider(
+                      height: 0.03 * hm,
+                      color: Colors.black,
+                    ),
+                    SizedBox(height: 1 * hm),
+                  ],
                 );
-              }
-              return Scaffold(backgroundColor: Colors.white);
-            },
-          ),
-        ),
+              },
+              onItemSelected: (item) {
+                Var.noteMode = NoteMode.Editing;
+                Var.note = notes[index];
+                Navigator.push(
+                  context,
+                  MorpheusPageRoute(
+                    builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+                  ),
+                );
+              },
+            );
+          }
+          return Scaffold(backgroundColor: Colors.white);
+        },
       ),
     );
   }

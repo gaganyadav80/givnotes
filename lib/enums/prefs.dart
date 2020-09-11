@@ -10,7 +10,7 @@ AndroidDeviceInfo androidInfo;
 PackageInfo packageInfo;
 
 // * Custom icon
-final IconData trashIcon = IconData(0xe800, fontFamily: 'TrashIcon', fontPackage: null);
+final IconData trashIcon = IconData(0xe811, fontFamily: 'TrashIcon', fontPackage: null);
 
 // * Custom Colors
 // final Color lightBlue = Color(0xff91dcf5);

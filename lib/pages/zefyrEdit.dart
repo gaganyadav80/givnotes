@@ -86,11 +86,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     super.didChangeDependencies();
   }
 
-  // void updateEditMode(bool value) {
-  //   setState(() {
-  //     Var.isEditing = value;
-  //   });
-  // }
+  void updateEditMode(bool value) {
+    setState(() {
+      Var.isEditing = value;
+    });
+  }
 
   // TextSelectionControls _textSelectionControls;
 
@@ -143,7 +143,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           endDrawer: EndDrawerItems(
             titleController: _titleController,
             zefyrController: _zefyrController,
-            // updateZefyrEditMode: updateEditMode,
+            updateZefyrEditMode: updateEditMode,
             controls: controls,
             // file: file,
           ),
@@ -227,11 +227,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   // End of build above
 
   Future<bool> _onPop() async {
-    String title = _titleController.text;
-    String note = _zefyrController.document.toPlainText().trim();
     _titleFocus.unfocus();
     _zefyrfocusNode.unfocus();
 
+    String title = _titleController.text;
+    String note = _zefyrController.document.toPlainText().trim();
     if (title.isEmpty && note.isEmpty) {
       return (await showDialog(
             context: context,
@@ -261,7 +261,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       //
       //
     } else {
-      Var.isEditing = false;
+      updateEditMode(false);
     }
     return false;
   }
@@ -294,7 +294,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
         //
         FocusScope.of(context).unfocus();
         controls.play('save');
-        // updateEditMode(false);
+        updateEditMode(false);
         // Var.isEditing = false;
 
         if (Var.noteMode == NoteMode.Adding) {
@@ -335,7 +335,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           showToast('Note saved');
         }
       }
-      Var.isEditing = false;
+      // Var.isEditing = false;
     }
   }
 

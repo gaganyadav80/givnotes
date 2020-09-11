@@ -14,32 +14,32 @@ import 'package:morpheus/page_routes/morpheus_page_route.dart';
 import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 
-// ! Drawer
-List<IconData> _icons = [
-  CupertinoIcons.book,
-  null,
-  CupertinoIcons.bookmark,
-  null,
-  trashIcon,
-  CupertinoIcons.person,
-  CupertinoIcons.settings,
-  CupertinoIcons.folder,
-];
-
 class DrawerItems extends StatelessWidget {
+  final List<IconData> _icons = [
+    CupertinoIcons.book,
+    null,
+    CupertinoIcons.bookmark,
+    null,
+    trashIcon,
+    CupertinoIcons.person,
+    CupertinoIcons.settings,
+    // CupertinoIcons.folder,
+  ];
+
   Widget myListTileTheme(String title, int index, BuildContext context) {
     return ListTileTheme(
-      selectedColor: Color(0xffEC625C),
+      // selectedColor: Color(0xffEC625C),
+      selectedColor: Colors.teal,
       child: ListTile(
         selected: Var.selectedIndex == index ? true : false,
         leading: Icon(
           _icons[index],
-          size: 7.5 * wm,
+          size: 7 * wm,
         ),
         title: Text(
           title,
           style: TextStyle(
-            fontSize: 6 * wm,
+            fontSize: 5 * wm,
             fontWeight: FontWeight.w300,
           ),
         ),
@@ -221,8 +221,8 @@ class EndDrawerItems extends StatelessWidget {
                           String time;
                           FocusScope.of(context).unfocus();
                           controls.play('save');
-                          // updateZefyrEditMode(false);
-                          Var.isEditing = false;
+                          updateZefyrEditMode(false);
+                          // Var.isEditing = false;
 
                           if (Var.noteMode == NoteMode.Adding) {
                             time = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
@@ -288,7 +288,7 @@ class EndDrawerItems extends StatelessWidget {
                             // });
                           }
                         }
-                        Var.isEditing = false;
+                        // Var.isEditing = false;
                       }
                     },
                     context,
