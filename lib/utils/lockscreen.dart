@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:givnotes/enums/prefs.dart';
-import 'package:givnotes/lockscreen/dot_secret_ui.dart';
-import 'package:givnotes/lockscreen/lock_screen.dart';
-import 'package:givnotes/lockscreen/circle_input_button.dart';
-import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/packages/lock_screen/dot_secret_ui.dart';
+import 'package:givnotes/packages/lock_screen/lock_screen.dart';
+import 'package:givnotes/packages/lock_screen/circle_input_button.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:morpheus/morpheus.dart';

@@ -11,12 +11,15 @@ import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/enums/sizeConfig.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/ui/splashscreen.dart';
-import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/utils/lockscreen.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as Path;
 import 'package:preferences/preference_service.dart';
+import 'package:provider/provider.dart';
+
+import 'database/moor_database.dart';
 
 // TODO: change icons and black/white theme
 void main() async {
@@ -49,6 +52,8 @@ class MyApp extends StatelessWidget {
       builder: (context, constraints) {
         SizeConfig().init(constraints);
 
+        // return Provider(
+        // create: (_) => GivnotesDatabase(),
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           // showPerformanceOverlay: true,
@@ -58,6 +63,7 @@ class MyApp extends StatelessWidget {
             backgroundColor: Colors.white,
           ),
         );
+        // );
       },
     );
   }
@@ -87,8 +93,7 @@ class _CheckLogInState extends State<CheckLogIn> {
       builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
         if (isSkipped == true) return HomePage();
 
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Scaffold(backgroundColor: Colors.black);
+        if (snapshot.connectionState == ConnectionState.waiting) return Scaffold(backgroundColor: Colors.black);
 
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 

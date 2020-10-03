@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:givnotes/database/moor_database.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
 
@@ -131,8 +133,7 @@ class HomePageState extends State<HomePage> {
     } else if (Var.selectedIndex == 0) {
       //
       DateTime now = DateTime.now();
-      if (currentBackPressTime == null ||
-          now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+      if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
         currentBackPressTime = now;
         Toast.show(
           'Press back again to exit',
@@ -146,6 +147,7 @@ class HomePageState extends State<HomePage> {
         //
       }
       await NotesDB.db.close();
+      // Provider.of<GivnotesDatabase>(context).close();
       if (Platform.isAndroid) SystemNavigator.pop();
       return true;
     }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:getwidget/components/search_bar/gf_search_bar.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/packages/GFSearchBar.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:givnotes/utils/GFSearchBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:morpheus/morpheus.dart';
@@ -40,9 +40,7 @@ class _SearchPageState extends State<SearchPage> {
             return GFSearchBar(
               searchList: (prefsBox.get('searchList') as List).cast<String>(),
               searchQueryBuilder: (query, list) {
-                return list
-                    .where((item) => item.toLowerCase().contains(query.toLowerCase()))
-                    .toList();
+                return list.where((item) => item.toLowerCase().contains(query.toLowerCase())).toList();
               },
               noItemsFoundWidget: Text(
                 'Ops! nothing found',
