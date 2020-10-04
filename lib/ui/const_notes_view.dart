@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/utils/multi_select_item.dart';
+import 'package:givnotes/packages/multi_select_item.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NotesCard extends StatelessWidget {

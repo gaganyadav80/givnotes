@@ -9,9 +9,6 @@ Box prefsBox;
 AndroidDeviceInfo androidInfo;
 PackageInfo packageInfo;
 
-// * Custom icon
-// final IconData trashIcon = IconData(0xe811, fontFamily: 'TrashIcon', fontPackage: null);
-
 // * Custom Colors
 // final Color lightBlue = Color(0xff91dcf5);
 // final Color purple = Color(0xff5A56D0);

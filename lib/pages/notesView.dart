@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/packages/multi_select_item.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/const_notes_view.dart';
-import 'package:givnotes/utils/multi_select_item.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/utils/permissions.dart';
 import 'package:morpheus/morpheus.dart';
@@ -78,7 +78,7 @@ class _NotesViewState extends State<NotesView> {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Icon(
-                                    Var.isTrash ? Icons.restore : Icons.restore_from_trash,
+                                    Var.isTrash ? Icons.restore : Icons.delete,
                                     size: 10 * wm,
                                   ),
                                   SizedBox(width: 10 * wm)
@@ -130,12 +130,8 @@ class _NotesViewState extends State<NotesView> {
   }
 }
 
-// ignore: must_be_immutable
 class OnlyUpdateNoteCard extends StatefulWidget {
-  OnlyUpdateNoteCard({
-    Key key,
-    @required this.index,
-  }) : super(key: key);
+  OnlyUpdateNoteCard({Key key, @required this.index}) : super(key: key);
 
   final int index;
 
@@ -265,17 +261,17 @@ class _OnlyUpdateFABState extends State<OnlyUpdateFAB> {
     return () {};
   }
 
-  void delete() {
-    multiSelectController.selectedIndexes.forEach((element) {
-      NotesDB.deleteNote(element);
-    });
+  // void delete() {
+  //   multiSelectController.selectedIndexes.forEach((element) {
+  //     NotesDB.deleteNote(element);
+  //   });
 
-    // setState(() {
-    multiSelectController.set(notes.length);
-    fabIcon = Icons.add;
-    // });
-    widget.refreshNotesView();
-  }
+  //   // setState(() {
+  //   multiSelectController.set(notes.length);
+  //   fabIcon = Icons.add;
+  //   // });
+  //   widget.refreshNotesView();
+  // }
 
   void trash() {
     multiSelectController.selectedIndexes.forEach((element) {

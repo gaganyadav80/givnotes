@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
-import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:intl/intl.dart';
@@ -20,7 +20,7 @@ class DrawerItems extends StatelessWidget {
     null,
     CupertinoIcons.bookmark,
     null,
-    trashIcon,
+    CupertinoIcons.delete,
     CupertinoIcons.person,
     CupertinoIcons.settings,
     // CupertinoIcons.folder,
@@ -243,8 +243,7 @@ class EndDrawerItems extends StatelessWidget {
                             if (!prefsBox.containsKey('searchList')) {
                               prefsBox.put('searchList', []);
                             }
-                            final List<dynamic> list =
-                                (prefsBox.get('searchList') as List).cast<String>();
+                            final List<dynamic> list = (prefsBox.get('searchList') as List).cast<String>();
                             list.add(title + ' ' + note);
                             prefsBox.put('searchList', list);
 
@@ -322,7 +321,7 @@ class EndDrawerItems extends StatelessWidget {
             Var.noteMode == NoteMode.Editing
                 ? myEndDrawerListTheme(
                     Var.isTrash ? 'Delete note' : 'Trash note',
-                    trashIcon,
+                    CupertinoIcons.delete,
                     Var.isTrash
                         ? () {
                             Navigator.pop(context);

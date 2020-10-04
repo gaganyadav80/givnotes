@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:givnotes/database/moor_database.dart';
 import 'package:givnotes/enums/sizeConfig.dart';
 import 'package:givnotes/pages/aboutUs.dart';
 import 'package:givnotes/pages/notesView.dart';
@@ -17,6 +18,7 @@ class Var {
   static bool isTrash = false;
   static bool isEditing = false;
   static Map<String, dynamic> note;
+  // static NotesDBData _note;
   static NoteMode noteMode = NoteMode.Adding;
 
   static List<Widget> pageNavigation = [

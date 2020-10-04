@@ -7,7 +7,7 @@ import 'package:givnotes/enums/homeVariables.dart';
 import 'package:givnotes/enums/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
-import 'package:givnotes/utils/home.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +40,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   ZefyrController _zefyrController;
   TextSelectionControls textSelectionControls;
   // File file;
+  // GivnotesDatabase database;
 
   Future<NotusDocument> _loadDocument() async {
     // final path = (await getApplicationDocumentsDirectory()).path;
@@ -96,6 +97,8 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
   @override
   Widget build(BuildContext context) {
+    // database = Provider.of<GivnotesDatabase>(context);
+
     final Widget _editorBody = (_zefyrController == null)
         ? Center(
             child: CircularProgressIndicator(
@@ -116,9 +119,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ),
               //TODO: selection not working properly
               child: ZefyrEditor(
-                mode: Var.isEditing || Var.noteMode == NoteMode.Adding
-                    ? ZefyrMode.edit
-                    : ZefyrMode.view,
+                mode: Var.isEditing || Var.noteMode == NoteMode.Adding ? ZefyrMode.edit : ZefyrMode.view,
                 autofocus: false,
                 padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
                 controller: _zefyrController,
@@ -310,6 +311,14 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             'created': time,
             'modified': time,
           });
+          // database.insertNote(NotesDBCompanion(
+          //   title: title,
+          //   note: _zefyrController.document.toPlainText(),
+          //   znote: jsonEncode(_zefyrController.document),
+          //   created: DateTime.now(),
+          //   modified: DateTime.now(),
+          //   trash: false,
+          // ));
 
           showToast('Note saved');
 
@@ -331,6 +340,15 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             'znote': jsonEncode(_zefyrController.document),
             'modified': time,
           });
+          // database.updateNote(NotesDBData(
+          //   id: Var.note.id,
+          //   title: title,
+          //   note: _zefyrController.document.toPlainText(),
+          //   znote: jsonEncode(_zefyrController.document),
+          //   created: DateTime.now(),
+          //   modified: DateTime.now(),
+          //   trash: false,
+          // ));
 
           showToast('Note saved');
         }
