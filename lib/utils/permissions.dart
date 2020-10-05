@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 

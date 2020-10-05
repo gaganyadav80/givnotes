@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/packages/multi_select_item.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/const_notes_view.dart';

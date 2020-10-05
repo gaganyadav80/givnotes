@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/packages/lock_screen/dot_secret_ui.dart';
 import 'package:givnotes/packages/lock_screen/lock_screen.dart';
 import 'package:givnotes/packages/lock_screen/circle_input_button.dart';

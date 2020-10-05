@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/utils/lockscreen.dart';
 import 'package:preferences/preferences.dart';
 

@@ -2,8 +2,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/pages/loginPage.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -156,8 +156,7 @@ class _MyProfileState extends State<MyProfile> {
                             backgroundColor: Colors.white,
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                errorWidget: (context, url, error) =>
-                                    FaIcon(FontAwesomeIcons.unlink),
+                                errorWidget: (context, url, error) => FaIcon(FontAwesomeIcons.unlink),
                                 placeholder: (context, url) => CircularProgressIndicator(
                                   valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                                 ),

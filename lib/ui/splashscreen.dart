@@ -2,7 +2,7 @@ import 'dart:core';
 import 'dart:async';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/variables/homeVariables.dart';
 import 'package:route_transitions/route_transitions.dart';
 
 class SplashScreen extends StatefulWidget {

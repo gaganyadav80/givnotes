@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/types/gf_button_type.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:givnotes/utils/permissions.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:givnotes/enums/prefs.dart' as prefs;
+import 'package:givnotes/variables/prefs.dart' as prefs;
 
 // !! Login Page Design
 class LoginPage extends StatefulWidget {
@@ -27,8 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       switch (result) {
         case ConnectivityResult.none:
           setState(() => isConnected = false);

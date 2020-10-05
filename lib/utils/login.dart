@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-final GoogleSignIn googleSignIn =
-    GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.appdata']);
+final GoogleSignIn googleSignIn = GoogleSignIn(scopes: ['https://www.googleapis.com/auth/drive.appdata']);
 GoogleSignInAccount googleSignInAccount;
 
 FirebaseUser currentUser;

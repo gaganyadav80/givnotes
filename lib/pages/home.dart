@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:givnotes/utils/notesDB.dart';
@@ -144,6 +144,8 @@ class HomePageState extends State<HomePage> {
         return false;
         //
       }
+
+      //TODO close database
       await NotesDB.db.close();
       // Provider.of<GivnotesDatabase>(context).close();
       if (Platform.isAndroid) SystemNavigator.pop();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:getwidget/components/search_bar/gf_search_bar.dart';
-import 'package:givnotes/enums/homeVariables.dart';
-import 'package:givnotes/enums/prefs.dart';
+import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/packages/GFSearchBar.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/notesDB.dart';

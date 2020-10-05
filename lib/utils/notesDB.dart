@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:givnotes/enums/homeVariables.dart';
+import 'package:givnotes/variables/homeVariables.dart';
 import 'package:path/path.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 

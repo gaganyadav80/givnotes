@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/database/moor_database.dart';
-import 'package:givnotes/enums/sizeConfig.dart';
+import 'package:givnotes/models/notes_model.dart';
 import 'package:givnotes/pages/aboutUs.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/profile.dart';
@@ -8,6 +7,7 @@ import 'package:givnotes/pages/settings.dart';
 import 'package:givnotes/pages/tagsView.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/utils/search.dart';
+import 'package:givnotes/variables/sizeConfig.dart';
 
 // * Responsive values
 double hm = SizeConfig.heightMultiplier;
@@ -29,7 +29,6 @@ class Var {
     NotesView(isTrash: true), //? 4    --> Trash
     AboutUs(), //? 5    --> About Us
     SettingsPage(), //? 6    --> Config
-    // Notebooks(), // 7    --> Notebook (temp)
   ];
 
   static List<String> _appBarTitle = [
@@ -60,8 +59,5 @@ class Var {
       return _appBarTitle[6]; //? Config
     } else
       return 'OOPS! ERROR';
-    // else if (Var.selectedIndex == 7) {
-    //   return _appBarTitle[7]; //? Notebook
-    // }
   }
 }
