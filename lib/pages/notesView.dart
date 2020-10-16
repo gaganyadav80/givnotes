@@ -1,214 +1,207 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:givnotes/database/HiveDB.dart';
+import 'package:givnotes/packages/unicorndial/speed_dial_controller.dart';
+import 'package:givnotes/packages/unicorndial/unicorndial.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/packages/multi_select_item.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/ui/const_notes_view.dart';
-import 'package:givnotes/utils/notesDB.dart';
 import 'package:givnotes/utils/permissions.dart';
-import 'package:morpheus/morpheus.dart';
 
-MultiSelectController multiSelectController = MultiSelectController();
-List notes = List();
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 IconData fabIcon = Icons.add;
 String fabLabel = '';
 
 class NotesView extends StatefulWidget {
   final bool isTrash;
-  NotesView({this.isTrash});
+  NotesView({key, this.isTrash}) : super(key: key);
 
   @override
-  _NotesViewState createState() => _NotesViewState();
+  NotesViewState createState() => NotesViewState();
 }
 
-class _NotesViewState extends State<NotesView> {
-  int animateIndex = 0;
-
-  void refreshNotesView() {
-    setState(() {});
-  }
+class NotesViewState extends State<NotesView> {
+  int _animateIndex = 0;
+  List<NotesModel> _notes = List<NotesModel>();
+  MultiSelectController _multiSelectController;
+  SpeedDialController _speedDialController;
 
   @override
   void initState() {
-    // multiSelectController.disableEditingWhenNoneSelected = true;
-    // if (prefsBox.containsKey('searchList')) {
-    //   multiSelectController.set((prefsBox.get('searchList') as List).length);
-    // }
+    _multiSelectController = MultiSelectController();
+    _speedDialController = SpeedDialController();
     super.initState();
+  }
+
+  refreshNotesView() {
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: FutureBuilder(
-        // future: widget.isTrash == false ? NotesDB.getNoteList() : NotesDB.getTrashNoteList(),
-        future: NotesDB.getNoteList(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            notes = snapshot.data;
-            if (notes.length == 0) {
-              //
-              return const NotesEmptyView();
-              //
-            } else {
-              return AnimationLimiter(
-                child: ListView.builder(
-                  itemCount: notes.length,
-                  itemBuilder: (context, index) {
-                    animateIndex = index;
-                    index = notes.length - index - 1;
-                    //
-                    // created = DateFormat('dd-MM-yyyy').parse(notes[index]['created']);
-                    // modified = DateFormat('dd-MM-yyyy').parse(notes[index]['modified']);
-                    //
-                    return AnimationConfiguration.staggeredList(
-                      position: animateIndex,
-                      duration: const Duration(milliseconds: 375),
-                      child: SlideAnimation(
-                        verticalOffset: 25.0,
-                        child: FadeInAnimation(
-                          child: Dismissible(
-                            key: UniqueKey(),
-                            background: Container(
-                              color: Var.isTrash ? Colors.teal[300] : Colors.red[400],
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Var.isTrash ? Icons.restore : Icons.delete,
-                                    size: 10 * wm,
-                                  ),
-                                  SizedBox(width: 10 * wm)
-                                ],
+      body: ValueListenableBuilder(
+        valueListenable: Hive.box<NotesModel>('givnnotes').listenable(),
+        builder: (context, Box<NotesModel> box, widget) {
+          _notes = box.values.where((element) => element.trash == Var.isTrash).toList();
+
+          if (box.isEmpty || _notes.length == 0) {
+            return NotesEmptyView();
+          }
+
+          return AnimationLimiter(
+            child: ListView.builder(
+              itemCount: _notes.length,
+              itemBuilder: (context, index) {
+                _animateIndex = index;
+                index = _notes.length - index - 1;
+
+                var note = _notes[index];
+
+                return AnimationConfiguration.staggeredList(
+                  position: _animateIndex,
+                  duration: const Duration(milliseconds: 375),
+                  child: SlideAnimation(
+                    verticalOffset: 25.0,
+                    child: FadeInAnimation(
+                      child: Dismissible(
+                        key: UniqueKey(),
+                        background: Container(
+                          color: Var.isTrash ? Colors.teal[300] : Color(0xffEC625C),
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Var.isTrash ? Icons.restore : Icons.delete,
+                                size: 10 * wm,
                               ),
-                            ),
-                            direction: DismissDirection.endToStart,
-                            onDismissed: (direction) {
-                              if (!Var.isTrash) {
-                                NotesDB.updateNote({
-                                  'id': notes[index]['id'],
-                                  'trash': 1,
-                                });
-                                print('moved to trash');
-
-                                // setState(() {
-                                multiSelectController.set(notes.length);
-                                // });
-                              } else {
-                                NotesDB.updateNote({
-                                  'id': notes[index]['id'],
-                                  'trash': 0,
-                                });
-                                print('moved to notes');
-
-                                multiSelectController.set(notes.length);
-                              }
-                              setState(() {});
-                            },
-                            child: OnlyUpdateNoteCard(
-                              index: index,
-                            ),
+                              SizedBox(width: 10 * wm)
+                            ],
                           ),
                         ),
+                        direction: DismissDirection.endToStart,
+                        onDismissed: (direction) {
+                          if (!Var.isTrash) {
+                            note.trash = !note.trash;
+                            note.save();
+
+                            _multiSelectController.set(_notes.length);
+                          } else {
+                            note.trash = false;
+                            note.save();
+                            print('moved to notes');
+
+                            _multiSelectController.set(_notes.length);
+                          }
+                        },
+                        child: NotesCard(
+                          note: note,
+                          index: index,
+                          multiSelectController: _multiSelectController,
+                          notesViewUpdate: refreshNotesView,
+                        ),
                       ),
-                    );
-                  },
-                ),
-              );
-            }
-          }
-          return Scaffold(backgroundColor: Colors.white);
-        },
-      ),
-      floatingActionButton: OnlyUpdateFAB(
-        refreshNotesView: refreshNotesView,
-      ),
-    );
-  }
-}
-
-class OnlyUpdateNoteCard extends StatefulWidget {
-  OnlyUpdateNoteCard({Key key, @required this.index}) : super(key: key);
-
-  final int index;
-
-  @override
-  _OnlyUpdateNoteCardState createState() => _OnlyUpdateNoteCardState();
-}
-
-class _OnlyUpdateNoteCardState extends State<OnlyUpdateNoteCard> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onLongPress: () {
-        setState(() {
-          multiSelectController.toggle(widget.index);
-          fabIcon = Var.isTrash ? Icons.restore : Icons.restore_from_trash;
-          fabLabel = Var.isTrash ? 'Restore' : 'Trash';
-        });
-
-        fabState.refreshFab();
-      },
-      onTap: () {
-        if (multiSelectController.isSelecting) {
-          setState(() {
-            multiSelectController.toggle(widget.index);
-            if (!multiSelectController.isSelecting) {
-              fabIcon = Icons.add;
-            }
-          });
-
-          fabState.refreshFab();
-          //
-        } else {
-          Var.noteMode = NoteMode.Editing;
-          Var.note = notes[widget.index];
-
-          Navigator.push(
-            context,
-            MorpheusPageRoute(
-              builder: (context) => ZefyrEdit(noteMode: NoteMode.Editing),
+                    ),
+                  ),
+                );
+              },
             ),
           );
-        }
-      },
-      child: NotesCard(
-        controller: multiSelectController,
-        notes: notes,
-        index: widget.index,
+        },
       ),
+      floatingActionButton: !_multiSelectController.isSelecting && !Var.isTrash
+          ? UnicornDialer(
+              parentButton: Icon(
+                CupertinoIcons.add,
+                color: Colors.white,
+              ),
+              parentButtonBackground: Colors.black,
+              finalButtonIcon: Icon(
+                Icons.close,
+                color: Colors.white,
+              ),
+              hasBackground: true,
+              controller: _speedDialController,
+              childButtons: unicornButton,
+              onMainButtonPressed: () async {
+                await HandlePermission().requestPermission().then((value) {
+                  if (value) {
+                    Var.isEditing = true;
+                    Var.noteMode = NoteMode.Adding;
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
+                      ),
+                    );
+                  } else {
+                    if (isPermanentDisabled) {
+                      HandlePermission().permanentDisabled(context);
+                    }
+                    setState(() => Var.selectedIndex = 0);
+                  }
+                });
+              },
+            )
+          : !_multiSelectController.isSelecting && Var.isTrash
+              ? SizedBox.shrink()
+              : FloatingActionButton.extended(
+                  heroTag: 'parent',
+                  backgroundColor: Colors.black,
+                  splashColor: Colors.black,
+                  elevation: 5,
+                  icon: Icon(
+                    fabIcon,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    fabLabel,
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {},
+                ),
     );
   }
-}
 
-class OnlyUpdateFAB extends StatefulWidget {
-  OnlyUpdateFAB({Key key, this.refreshNotesView}) : super(key: key);
+  List<UnicornButton> unicornButton = [
+    Var.isTrash
+        ? UnicornButton(
+            currentButton: FloatingActionButton(
+              backgroundColor: Colors.black,
+              splashColor: Colors.black,
+              elevation: 5,
+              child: Icon(
+                Icons.restore,
+                color: Colors.white,
+              ),
+              onPressed: () async {},
+            ),
+          )
+        : UnicornButton(
+            currentButton: FloatingActionButton(
+              backgroundColor: Colors.black,
+              splashColor: Colors.black,
+              elevation: 5,
+              child: Icon(
+                Icons.delete,
+                color: Colors.white,
+              ),
+              onPressed: () async {},
+            ),
+          ),
+  ];
 
-  final Function() refreshNotesView;
-
-  @override
-  _OnlyUpdateFABState createState() => _OnlyUpdateFABState();
-}
-
-_OnlyUpdateFABState fabState = _OnlyUpdateFABState();
-
-class _OnlyUpdateFABState extends State<OnlyUpdateFAB> {
-  void refreshFab() {
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fabState = this;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return !multiSelectController.isSelecting && !Var.isTrash
+  Widget floatingActionButton() {
+    return !_multiSelectController.isSelecting && !Var.isTrash
         ? FloatingActionButton(
             heroTag: 'b',
             tooltip: 'New Note',
@@ -234,9 +227,12 @@ class _OnlyUpdateFABState extends State<OnlyUpdateFAB> {
                   setState(() => Var.selectedIndex = 0);
                 }
               });
+
+              // if (animatedListKey.currentState != null) animatedListKey.currentState.insertItem(_notes.length);
+              // count++;
             },
           )
-        : !multiSelectController.isSelecting && Var.isTrash
+        : !_multiSelectController.isSelecting && Var.isTrash
             ? SizedBox.shrink()
             : Container(
                 height: 14 * wm,
@@ -247,60 +243,81 @@ class _OnlyUpdateFABState extends State<OnlyUpdateFAB> {
                   elevation: 5,
                   icon: Icon(fabIcon),
                   label: Text(fabLabel),
-                  onPressed: getMultiselectFunction(),
+                  onPressed: getMultiselectFunction,
                 ),
               );
   }
 
   Function() getMultiselectFunction() {
     if (!Var.isTrash) {
-      return () => trash();
+      return () => print('call trash');
     } else if (Var.isTrash) {
-      return () => restore();
+      return () => print('call restore');
     }
     return () {};
   }
 
-  // void delete() {
-  //   multiSelectController.selectedIndexes.forEach((element) {
-  //     NotesDB.deleteNote(element);
-  //   });
-
-  //   // setState(() {
-  //   multiSelectController.set(notes.length);
-  //   fabIcon = Icons.add;
-  //   // });
-  //   widget.refreshNotesView();
-  // }
-
-  void trash() {
-    multiSelectController.selectedIndexes.forEach((element) {
-      NotesDB.updateNote({
-        'id': notes[element]['id'],
-        'trash': 1,
-      });
+  void delete() {
+    _multiSelectController.selectedIndexes.forEach((element) {
+      print('delete note');
     });
 
     // setState(() {
-    multiSelectController.set(notes.length);
+    _multiSelectController.set(_notes.length);
     fabIcon = Icons.add;
     // });
-    widget.refreshNotesView();
+  }
+
+  void trash() {
+    _multiSelectController.selectedIndexes.forEach((element) {
+      print('trash note');
+    });
+
+    // setState(() {
+    _multiSelectController.set(_notes.length);
+    fabIcon = Icons.add;
+    // });
   }
 
   void restore() {
-    multiSelectController.selectedIndexes.forEach((element) {
-      NotesDB.updateNote({
-        'id': notes[element]['id'],
-        'trash': 0,
-      });
+    _multiSelectController.selectedIndexes.forEach((element) {
+      print('restore note');
     });
 
     // setState(() {
-    multiSelectController.set(notes.length);
+    _multiSelectController.set(_notes.length);
     fabIcon = Icons.add;
     // });
-    widget.refreshNotesView();
+  }
+}
+
+class NotesCardTemp extends StatefulWidget {
+  NotesCardTemp({
+    Key key,
+    @required this.index,
+    @required this.note,
+    @required this.multiSelectController,
+    this.notesViewUpdate,
+  }) : super(key: key);
+
+  final int index;
+  final NotesModel note;
+  final MultiSelectController multiSelectController;
+  final Function notesViewUpdate;
+
+  @override
+  _NotesCardTempState createState() => _NotesCardTempState();
+}
+
+class _NotesCardTempState extends State<NotesCardTemp> {
+  @override
+  Widget build(BuildContext context) {
+    return NotesCard(
+      note: widget.note,
+      index: widget.index,
+      multiSelectController: widget.multiSelectController,
+      notesViewUpdate: widget.notesViewUpdate,
+    );
   }
 }
 

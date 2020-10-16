@@ -1,75 +1,176 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/packages/multi_select_item.dart';
+import 'package:givnotes/pages/notesView.dart';
+import 'package:givnotes/pages/zefyrEdit.dart';
+import 'package:givnotes/variables/homeVariables.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:morpheus/page_routes/morpheus_page_route.dart';
 
-class NotesCard extends StatelessWidget {
-  const NotesCard({Key key, this.controller, this.index, this.notes}) : super(key: key);
+class NotesCard extends StatefulWidget {
+  NotesCard({
+    Key key,
+    @required this.index,
+    @required this.note,
+    @required this.multiSelectController,
+    this.notesViewUpdate,
+  }) : super(key: key);
 
-  final MultiSelectController controller;
-  final List notes;
   final int index;
+  final NotesModel note;
+  final MultiSelectController multiSelectController;
+  final Function notesViewUpdate;
+
+  @override
+  _NotesCardState createState() => _NotesCardState();
+}
+
+class _NotesCardState extends State<NotesCard> {
+  String _created;
+  // String _modified;
+  bool compactTags = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _created = DateFormat.yMMMd().add_jm().format(widget.note.created);
+    // _modified = DateFormat.yMMMd().format(widget.note.modified);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      color: controller.isSelected(index) ? Colors.grey[300] : Colors.white,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Divider(
-              height: 0.057 * wm,
-              color: Colors.black,
-            ),
-            SizedBox(height: 2.8 * wm),
-            Text(
-              "created:     ${notes[index]['created']}",
-              style: GoogleFonts.ubuntu(
-                fontWeight: FontWeight.w300,
-                color: Colors.grey,
-                fontSize: 3 * wm,
-                fontStyle: FontStyle.italic,
+      color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
+      // shape: RoundedRectangleBorder(
+      //   side: BorderSide(color: Colors.grey[300], width: 1),
+      //   borderRadius: BorderRadius.circular(5),
+      // ),
+      // margin: EdgeInsets.zero,
+      child: InkWell(
+        onLongPress: () {
+          setState(() {
+            widget.multiSelectController.toggle(widget.index);
+            fabIcon = Var.isTrash ? Icons.restore : Icons.restore_from_trash;
+            fabLabel = Var.isTrash ? 'Restore' : 'Trash';
+          });
+          widget.notesViewUpdate();
+        },
+        onTap: () {
+          if (widget.multiSelectController.isSelecting) {
+            setState(() {
+              widget.multiSelectController.toggle(widget.index);
+              if (!widget.multiSelectController.isSelecting) {
+                fabIcon = Icons.add;
+              }
+            });
+            widget.notesViewUpdate();
+            //
+          } else {
+            Var.noteMode = NoteMode.Editing;
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ZefyrEdit(
+                  noteMode: NoteMode.Editing,
+                  note: widget.note,
+                ),
               ),
-            ),
-            Text(
-              "modified:   ${notes[index]['modified']}",
-              style: GoogleFonts.ubuntu(
-                fontWeight: FontWeight.w300,
-                color: Colors.grey,
-                fontSize: 3 * wm,
-                fontStyle: FontStyle.italic,
+            );
+          }
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Divider(
+                height: 0.057 * wm,
+                color: Colors.black,
               ),
-            ),
-            SizedBox(height: 3.8 * wm),
-            // _NoteTitle(notes[index]['title']),
-            Text(
-              notes[index]['title'],
-              style: GoogleFonts.ubuntu(
-                fontSize: 4.4 * wm,
-                fontWeight: FontWeight.w600,
+              SizedBox(height: 1.5 * wm),
+              Container(
+                height: compactTags ? 1 * hm : 2 * hm,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.note.tags.length,
+                  itemBuilder: (context, index) {
+                    String title = widget.note.tags[index];
+                    Color color = Color(widget.note.tagColor[index]);
+
+                    return compactTags
+                        ? Container(
+                            width: 7.6 * wm,
+                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: SizedBox.shrink(),
+                          )
+                        : Container(
+                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                            padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                            decoration: BoxDecoration(
+                              color: color,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Text(
+                                //TODO remove
+                                title.toUpperCase(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 0.5,
+                                  fontSize: 1.2 * hm,
+                                ),
+                              ),
+                            ),
+                          );
+                  },
+                ),
               ),
-            ),
-            SizedBox(height: 0.95 * wm),
-            // _NoteText(notes[index]['text']),
-            Text(
-              notes[index]['text'],
-              style: TextStyle(
-                color: Colors.grey[800],
-                fontSize: 3 * wm,
+              SizedBox(height: 2 * wm),
+              Text(
+                widget.note.title,
+                style: GoogleFonts.ubuntu(
+                  fontSize: 4.4 * wm,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-              maxLines: 5,
-              overflow: TextOverflow.ellipsis,
-            ),
-            SizedBox(height: 0.95 * wm),
-            Divider(
-              height: 0.057 * wm,
-              color: Colors.black,
-            ),
-            // SizedBox(height: 1 * hm),
-          ],
+              SizedBox(height: 1 * wm),
+              Text(
+                widget.note.text,
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 3 * wm,
+                ),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              // SizedBox(height: 1 * hm),
+              Text(
+                "created  $_created",
+                style: GoogleFonts.ubuntu(
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey,
+                  fontSize: 3 * wm,
+                  // fontStyle: FontStyle.italic,
+                ),
+              ),
+              SizedBox(height: 1 * hm),
+              Divider(
+                height: 0.057 * wm,
+                color: Colors.black,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -87,7 +87,7 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
     _searchList.addAll(_list);
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        textController.clear();
+        // textController.clear();
         if (overlaySearchList != null) {
           overlaySearchList.remove();
         }
@@ -117,16 +117,17 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
         } else {
           overlaySearchList.markNeedsBuild();
         }
-      } else {
-        _searchList
-          ..clear()
-          ..addAll(_list);
-        if (overlaySearchList == null) {
-          onTextFieldFocus();
-        } else {
-          overlaySearchList.markNeedsBuild();
-        }
       }
+      // } else {
+      //   _searchList
+      //     ..clear()
+      //     ..addAll(_list);
+      //   if (overlaySearchList == null) {
+      //     onTextFieldFocus();
+      //   } else {
+      //     overlaySearchList.markNeedsBuild();
+      //   }
+      // }
     });
   }
 
@@ -140,8 +141,7 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
 
   @override
   Widget build(BuildContext context) {
-    overlaySearchListHeight =
-        widget.overlaySearchListHeight ?? MediaQuery.of(context).size.height / 1.55;
+    overlaySearchListHeight = widget.overlaySearchListHeight ?? MediaQuery.of(context).size.height / 1.55;
 
     searchBox = Container(
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -174,7 +174,14 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
                       )
                     : Icon(Icons.search, color: Colors.black),
                 border: InputBorder.none,
-                hintText: '',
+                hintText: 'Search your ass off',
+                hintStyle: TextStyle(
+                  fontFamily: 'Helvetica',
+                  fontWeight: FontWeight.w300,
+                  color: Colors.grey,
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                ),
                 contentPadding: const EdgeInsets.only(
                   left: 16,
                   right: 20,
@@ -256,55 +263,57 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
       Offset.zero & overlay.size,
     );
     overlaySearchList = OverlayEntry(
-        builder: (context) => Positioned(
-              left: position.left,
-              width: width,
-              child: CompositedTransformFollower(
-                offset: const Offset(
-                  0,
-                  56,
-                ),
-                showWhenUnlinked: false,
-                link: _layerLink,
-                child: GFCard(
-                  padding: EdgeInsets.zero,
-                  color: Colors.white,
-                  elevation: 0,
-                  content: _searchList.isNotEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: <Widget>[
-                            Container(
-                              height: overlaySearchListHeight,
-                              child: ListView.builder(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                itemBuilder: (context, index) => Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () => onSearchListItemSelected(_searchList[index]),
-                                    child: textController.text.isNotEmpty
-                                        ? widget.overlaySearchListItemBuilder(
-                                            _searchList.elementAt(index),
-                                          )
-                                        : SizedBox.shrink(),
-                                  ),
-                                ),
-                                itemCount: _searchList.length,
-                              ),
+      builder: (context) => Positioned(
+        left: position.left,
+        width: width,
+        child: CompositedTransformFollower(
+          offset: const Offset(
+            0,
+            56,
+          ),
+          showWhenUnlinked: false,
+          link: _layerLink,
+          child: GFCard(
+            padding: EdgeInsets.zero,
+            color: Colors.transparent,
+            elevation: 0,
+            content: _searchList.isNotEmpty
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        // color: Colors.transparent,
+                        height: overlaySearchListHeight,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          itemBuilder: (context, index) => Material(
+                            // color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => onSearchListItemSelected(_searchList[index]),
+                              child: textController.text.isNotEmpty
+                                  ? widget.overlaySearchListItemBuilder(
+                                      _searchList.elementAt(index),
+                                    )
+                                  : SizedBox.shrink(),
                             ),
-                          ],
-                        )
-                      : widget.noItemsFoundWidget != null
-                          ? Center(
-                              child: widget.noItemsFoundWidget,
-                            )
-                          : Container(
-                              child: const Text('no items found'),
-                            ),
-                ),
-              ),
-            ));
+                          ),
+                          itemCount: _searchList.length,
+                        ),
+                      ),
+                    ],
+                  )
+                : widget.noItemsFoundWidget != null
+                    ? Center(
+                        child: widget.noItemsFoundWidget,
+                      )
+                    : Container(
+                        child: const Text('no items found'),
+                      ),
+          ),
+        ),
+      ),
+    );
     Overlay.of(context).insert(overlaySearchList);
   }
 }
