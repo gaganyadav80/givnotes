@@ -95,7 +95,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(17 * wm);
+  Size get preferredSize => Size.fromHeight(15 * wm);
 
   @override
   Widget build(BuildContext context) {
@@ -131,6 +131,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
           },
         ),
       ],
+      //TODO maybe remove it
       title: Text(
         Var.isTrash ? 'DELETED NOTE' : 'NOTE',
         style: TextStyle(
@@ -147,132 +148,6 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
     );
   }
 }
-
-// Widget leading(BuildContext context) {
-//   if (widget.isNote == true) {
-//     return Padding(
-//       padding: EdgeInsets.only(
-//         top: 0.62 * hm,
-//         bottom: (0.62 * hm) + hm,
-//         left: (1.16 * wm) + wm,
-//         right: (1.16 * wm) + wm,
-//       ),
-//       child: InkWell(
-//         onTap: () {
-//           if (Var.isEditing == false) {
-//             //
-//             Var.noteMode = NoteMode.Adding;
-//             Navigator.push(
-//               context,
-//               PageRouteTransition(
-//                 builder: (context) => HomePage(),
-//                 animationType: AnimationType.fade,
-//               ),
-//             );
-//             //
-//           } else if (Var.isEditing) {
-//             String title = widget.titleController.text;
-//             String note = widget.zefyrController.document.toPlainText().trim();
-
-//             if (title.isEmpty && note.isEmpty) {
-//               //
-//               showToast("Can't create empty note.");
-//               Navigator.pop(context);
-//               //
-//             } else {
-//               //
-//               widget.controls.play('save');
-//               widget.updateZefyrEditMode(false);
-
-//               if (Var.noteMode == NoteMode.Adding) {
-//                 //
-//                 time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
-//                 //
-//                 if (title.isEmpty) title = 'Untitled';
-//                 // ! generate unique id for noteid
-//                 NotesDB.insertNote({
-//                   'title': title,
-//                   'text': widget.zefyrController.document.toPlainText(),
-//                   'znote': jsonEncode(widget.zefyrController.document),
-//                   'created': time,
-//                   'modified': time,
-//                 });
-
-//                 showToast('Note saved');
-//                 if (!prefsBox.containsKey('searchList')) {
-//                   prefsBox.put('searchList', []);
-//                 }
-//                 final List<String> list = (prefsBox.get('searchList') as List).cast<String>();
-//                 list.add(title + ' ' + note);
-//                 prefsBox.put('searchList', list);
-
-//                 // NotesDB.getItemToRename({
-//                 //   'title': title,
-//                 //   'text': widget.zefyrController.document.toPlainText(),
-//                 //   'created': time,
-//                 // }).then((value) async {
-//                 //   final path = (await getApplicationDocumentsDirectory()).path;
-//                 //   await widget.file.rename(path + '/notes/${value[0]['id']}.json');
-//                 // });
-
-//                 // _saveDocument().then((value) {
-//                 //   Toast.show(
-//                 //     value ? 'Note saved...' : 'Ops! Error saving :(',
-//                 //     context,
-//                 //     duration: 3,
-//                 //     gravity: Toast.BOTTOM,
-//                 //     backgroundRadius: 5,
-//                 //   );
-//                 // });
-
-//                 //
-//               } else if (Var.noteMode == NoteMode.Editing) {
-//                 //
-//                 time = DateFormat('dd/MM/yyyy HH:mm:ss').format(DateTime.now());
-//                 //
-//                 NotesDB.updateNote({
-//                   'id': Var.note['id'],
-//                   'title': title,
-//                   'text': widget.zefyrController.document.toPlainText(),
-//                   'znote': jsonEncode(widget.zefyrController.document),
-//                   'modified': time,
-//                 });
-
-//                 showToast('Note saved');
-
-//                 // _saveDocument().then((value) {
-//                 //   Toast.show(
-//                 //     value ? 'Note saved...' : 'Ops! Error saving :(',
-//                 //     context,
-//                 //     duration: 10,
-//                 //     gravity: Toast.BOTTOM,
-//                 //     backgroundRadius: 5,
-//                 //   );
-//                 // });
-//               }
-//             }
-//             Var.isEditing = false;
-//           }
-//         },
-//         child: FlareActor(
-//           'assets/animations/arrow-tick.flr',
-//           animation: Var.noteMode == NoteMode.Adding ? 'idle-tick' : 'idle-arrow',
-//           controller: widget.controls,
-//           alignment: Alignment.center,
-//           fit: BoxFit.contain,
-//         ),
-//       ),
-//     );
-//   } else {
-//     return IconButton(
-//       icon: Icon(Icons.menu),
-//       color: Colors.black,
-//       onPressed: () {
-//         Scaffold.of(context).openDrawer();
-//       },
-//     );
-//   }
-// }
 
 //!!
 //!!

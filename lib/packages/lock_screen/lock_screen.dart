@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:givnotes/packages/move_to_background.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'dot_secret_ui.dart';
 import 'circle_input_button.dart';
 
@@ -169,8 +171,8 @@ class LockScreen extends StatefulWidget {
   final void Function(BuildContext, String) onCompleted;
   final bool canBiometric;
   final bool showBiometricFirst;
-  @Deprecated('use biometricAuthenticate.')
-  final void Function(BuildContext) biometricFunction;
+  // @Deprecated('use biometricAuthenticate.')
+  // final void Function(BuildContext) biometricFunction;
   final Future<bool> Function(BuildContext) biometricAuthenticate;
   final StreamController<void> showBiometricFirstController;
   final Color backgroundColor;
@@ -193,7 +195,7 @@ class LockScreen extends StatefulWidget {
     this.onCompleted,
     this.canBiometric = false,
     this.showBiometricFirst = false,
-    this.biometricFunction,
+    // this.biometricFunction,
     this.biometricAuthenticate,
     this.showBiometricFirstController,
     this.backgroundColor = Colors.white,
@@ -233,23 +235,23 @@ class _LockScreenState extends State<LockScreen> {
     ]);
 
     if (widget.showBiometricFirst) {
-      // Maintain compatibility.
-      if (widget.biometricFunction != null) {
-        // Set the listener if there is a stream option.
-        if (widget.showBiometricFirstController != null) {
-          widget.showBiometricFirstController.stream.listen((_) {
-            widget.biometricFunction(context);
-          });
-        } else {
-          // It is executed by a certain time.
-          Future.delayed(
-            Duration(milliseconds: 350),
-            () {
-              widget.biometricFunction(context);
-            },
-          );
-        }
-      }
+      // // Maintain compatibility.
+      // if (widget.biometricFunction != null) {
+      //   // Set the listener if there is a stream option.
+      //   if (widget.showBiometricFirstController != null) {
+      //     widget.showBiometricFirstController.stream.listen((_) {
+      //       widget.biometricFunction(context);
+      //     });
+      //   } else {
+      //     // It is executed by a certain time.
+      //     Future.delayed(
+      //       Duration(milliseconds: 350),
+      //       () {
+      //         widget.biometricFunction(context);
+      //       },
+      //     );
+      //   }
+      // }
 
       if (widget.biometricAuthenticate != null) {
         // Set the listener if there is a stream option.
@@ -370,15 +372,14 @@ class _LockScreenState extends State<LockScreen> {
     var _rowMarginSize = MediaQuery.of(context).size.width * 0.025;
     var _columnMarginSize = MediaQuery.of(context).size.width * 0.065;
     var _heightMargiz = MediaQuery.of(context).size.height / 100;
-    final bool _heightLess = _heightMargiz < 7.5;
+    final bool _heightLess = _heightMargiz < 7.7;
 
     return WillPopScope(
       onWillPop: () async {
         if (widget.canCancel) {
-          // print("NAVIGATOR POP =====================");
+          Navigator.pop(context, false);
           return true;
         }
-        // print("SYSTEM POP =======================");
         if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
 
         return false;
@@ -448,33 +449,29 @@ class _LockScreenState extends State<LockScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
-                            _heightMargiz < 7.5
+                            _heightLess
                                 ? widget.canCancel
                                     ? _buildBothSidesButton(context, _cancleSideButton())
                                     : _buildBothSidesButton(context, _biometricButton())
                                 : _buildBothSidesButton(context, _biometricButton()),
                             _buildNumberTextButton(context, '0'),
-                            _heightMargiz < 7.5
-                                ? _buildBothSidesButton(context, _deleteSideButton())
-                                : _buildBothSidesButton(context, Container()),
+                            _heightLess ? _buildBothSidesButton(context, _deleteSideButton()) : _buildBothSidesButton(context, Container()),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (_heightMargiz > 7.5)
+                if (!_heightLess)
                   Container(
                     margin: EdgeInsets.symmetric(
-                      vertical: _rowMarginSize,
-                      horizontal: _columnMarginSize + 25,
+                      // vertical: _rowMarginSize,
+                      horizontal: _columnMarginSize + 20,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        widget.canCancel
-                            ? _buildBothSidesButton(context, _cancleSideButton())
-                            : SizedBox.shrink(),
+                        widget.canCancel ? _buildBothSidesButton(context, _cancleSideButton()) : SizedBox.shrink(),
                         _buildBothSidesButton(context, _deleteSideButton()),
                       ],
                     ),
@@ -530,12 +527,12 @@ class _LockScreenState extends State<LockScreen> {
       child: widget.biometricButton,
       onPressed: () {
         // Maintain compatibility
-        if (widget.biometricFunction == null && widget.biometricAuthenticate == null) {
+        if (widget.biometricAuthenticate == null) {
           throw Exception('specify biometricFunction or biometricAuthenticate.');
         } else {
-          if (widget.biometricFunction != null) {
-            widget.biometricFunction(context);
-          }
+          // if (widget.biometricFunction != null) {
+          //   widget.biometricFunction(context);
+          // }
 
           if (widget.biometricAuthenticate != null) {
             widget.biometricAuthenticate(context).then((unlocked) {
@@ -572,11 +569,9 @@ class _LockScreenState extends State<LockScreen> {
         softWrap: false,
         textAlign: TextAlign.center,
       ),
-      onPressed: widget.confirmMode
-          ? () {
-              Navigator.pop(context);
-            }
-          : () => Navigator.pop(context),
+      onPressed: () {
+        Navigator.of(context).pop(false);
+      },
       shape: CircleBorder(
         side: BorderSide(
           color: Colors.transparent,

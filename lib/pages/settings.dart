@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/utils/lockscreen.dart';
 import 'package:preferences/preferences.dart';
@@ -12,8 +13,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool biometricActive = true;
-
   @override
   Widget build(BuildContext context) {
     return PreferencePage([
@@ -71,29 +70,31 @@ class _SettingsPageState extends State<SettingsPage> {
         'app_lock',
         desc: 'Add 4 digit pin',
         defaultVal: false,
-        ignoreTileTap: true,
+        ignoreTileTap: false,
         onEnable: () {
+          //TODO switch turn on after cancle on add passcode
           if (!prefsBox.containsKey('passcode')) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => AddLockscreen(),
               ),
-            );
+            ).then((value) {
+              if (!value) {
+                PrefService.setBool('app_lock', false);
+                setState(() {});
+              }
+            });
           } else {
             AppLock.of(context).enable();
             prefsBox.put('applock', true);
-            setState(() {
-              biometricActive = true;
-            });
+            setState(() {});
           }
         },
         onDisable: () {
           AppLock.of(context).disable();
           prefsBox.put('applock', false);
-          setState(() {
-            biometricActive = false;
-          });
+          setState(() {});
         },
       ),
       SwitchPreference(
@@ -154,6 +155,7 @@ Architecture:  ${androidInfo.supported64BitAbis}
 Hardware:  ${androidInfo.hardware}
 Device ID:  ${androidInfo.id}
 Display:  ${androidInfo.display}
+HM - WM:  $hm - $wm
   """,
             overflow: TextOverflow.visible,
           ),
@@ -169,8 +171,9 @@ Display:  ${androidInfo.display}
             """
 App name:  ${packageInfo.appName}
 Package:   ${packageInfo.packageName}
-Version:   ${packageInfo.version}
 Build_no:  ${packageInfo.buildNumber}
+App Release Version:   ${packageInfo.version}
+Development Version:   3.0.0
   """,
             overflow: TextOverflow.visible,
           ),

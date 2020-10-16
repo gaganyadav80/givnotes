@@ -4,14 +4,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
+import 'package:givnotes/database/hive_db_helper.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
-import 'package:givnotes/utils/notesDB.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
 import 'package:toast/toast.dart';
+
+GlobalKey<HomePageState> _homeScaffoldKey = GlobalKey<HomePageState>();
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -22,6 +24,10 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   DateTime currentBackPressTime;
+
+  void _rebuildHome() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,9 @@ class HomePageState extends State<HomePage> {
         backgroundColor: Colors.white,
         appBar: MyAppBar(Var.setTitle()),
         //
-        drawer: DrawerItems(),
+        drawer: DrawerItems(
+          rebuildHome: _rebuildHome,
+        ),
         body: Var.pageNavigation[Var.selectedIndex],
 
         // !! Bottom Navigation
@@ -62,52 +70,28 @@ class HomePageState extends State<HomePage> {
                 CupertinoIcons.book,
                 size: 6.62 * wm,
               ),
-              title: Text(
-                'All Notes',
-                style: GoogleFonts.ubuntu(
-                  color: Colors.black,
-                  fontSize: 2.83 * wm,
-                ),
-              ),
+              label: 'All Notes',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.search,
                 size: 6.62 * wm,
               ),
-              title: Text(
-                'Search',
-                style: GoogleFonts.ubuntu(
-                  color: Colors.black,
-                  fontSize: 2.83 * wm,
-                ),
-              ),
+              label: 'Seach',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.bookmark,
                 size: 6.62 * wm,
               ),
-              title: Text(
-                'Tags',
-                style: GoogleFonts.ubuntu(
-                  color: Colors.black,
-                  fontSize: 2.83 * wm,
-                ),
-              ),
+              label: 'Tags',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 CupertinoIcons.person,
                 size: 6.62 * wm,
               ),
-              title: Text(
-                'Profile',
-                style: GoogleFonts.ubuntu(
-                  color: Colors.black,
-                  fontSize: 2.83 * wm,
-                ),
-              ),
+              label: 'Profile',
             ),
           ],
         ),
@@ -145,9 +129,7 @@ class HomePageState extends State<HomePage> {
         //
       }
 
-      //TODO close database
-      await NotesDB.db.close();
-      // Provider.of<GivnotesDatabase>(context).close();
+      HiveDBServices()?.closeBox();
       if (Platform.isAndroid) SystemNavigator.pop();
       return true;
     }
