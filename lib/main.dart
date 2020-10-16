@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
+import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/variables/sizeConfig.dart';
@@ -15,11 +15,8 @@ import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/utils/lockscreen.dart';
 import 'package:givnotes/utils/login.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart' as Path;
 import 'package:preferences/preference_service.dart';
-// import 'package:provider/provider.dart';
-
-// import 'database/moor_database.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 // TODO: change icons and black/white theme
 void main() async {
@@ -31,8 +28,13 @@ void main() async {
   };
   // Hive
   WidgetsFlutterBinding.ensureInitialized();
-  final appDir = await Path.getApplicationDocumentsDirectory();
-  Hive.init(appDir.path);
+
+  await Hive.initFlutter();
+  Hive.registerAdapter<NotesModel>(NotesModelAdapter());
+  // Hive.registerAdapter<PrefsModel>(PrefsModelAdapter());
+
+  await Hive.openBox<NotesModel>('givnnotes');
+
   prefsBox = await Hive.openBox('prefs');
   //
   runApp(
@@ -42,7 +44,6 @@ void main() async {
       enabled: prefsBox.get('applock') ?? false,
     ),
   );
-  // runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -57,6 +58,12 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           // showPerformanceOverlay: true,
+          theme: ThemeData(
+            fontFamily: 'SFPro',
+            accentColor: Colors.grey[400],
+            accentColorBrightness: Brightness.light,
+            toggleableActiveColor: Colors.blue,
+          ),
           home: SplashScreen(
             seconds: 1,
             navigateAfterSeconds: CheckLogIn(),
@@ -83,6 +90,7 @@ class _CheckLogInState extends State<CheckLogIn> {
     checkKeys();
     initInfo();
     PrefService.init(prefix: 'pref_');
+
     super.initState();
   }
 
@@ -124,6 +132,10 @@ class _CheckLogInState extends State<CheckLogIn> {
     }
     if (!prefsBox.containsKey('biometric')) {
       prefsBox.put('biometric', false);
+    }
+    if (!prefsBox.containsKey('allTags')) {
+      prefsBox.put('allTags', []);
+      prefsBox.put('tagColors', []);
     }
   }
 }

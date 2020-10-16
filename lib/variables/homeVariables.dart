@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/models/notes_model.dart';
 import 'package:givnotes/pages/aboutUs.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/profile.dart';
@@ -17,7 +16,7 @@ class Var {
   static int selectedIndex = 0;
   static bool isTrash = false;
   static bool isEditing = false;
-  static Map<String, dynamic> note;
+  // static NotesModel note;
   // static NotesDBData _note;
   static NoteMode noteMode = NoteMode.Adding;
 
