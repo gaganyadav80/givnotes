@@ -36,12 +36,12 @@ class HiveDBServices {
     return -1;
   }
 
-  Future updateNote(int index, NotesModel note) async {
+  Future updateNote(dynamic index, NotesModel note) async {
     var box = await givnotesBox();
     if (note != null) await box.put(index, note);
   }
 
-  Future deleteNote(int index) async {
+  Future deleteNote(dynamic index) async {
     var box = await givnotesBox();
     await box.delete(index);
   }

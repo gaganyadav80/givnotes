@@ -5,9 +5,11 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
+import 'package:givnotes/packages/flutter_material_color_picker/material_color_picker.dart';
 import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
@@ -105,9 +107,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     });
   }
 
+  bool zefyrEditMode = false;
+
   @override
   Widget build(BuildContext context) {
-    final bool editMode = (Var.isEditing || (Var.noteMode == NoteMode.Adding));
+    zefyrEditMode = (Var.isEditing || (Var.noteMode == NoteMode.Adding));
 
     //TODO copy zefyr to packages and customize
     // and add a fontFamily parameter to ZefyrThemeData
@@ -176,14 +180,14 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             data: _zefyrThemeData,
             child: ZefyrField(
               expands: true,
-              showCursor: editMode,
-              readOnly: !editMode,
+              showCursor: zefyrEditMode,
+              readOnly: !zefyrEditMode,
               autofocus: false,
               controller: _zefyrController,
               focusNode: _zefyrfocusNode,
               padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
               decoration: InputDecoration(
-                hintText: '     Your Note here...',
+                hintText: '  Your Note here...',
                 hintStyle: TextStyle(
                   fontFamily: 'SFPro',
                   fontSize: 2.3 * hm,
@@ -243,7 +247,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                       children: [
                         getNoteTags(),
                         _noteTags.length == 0 ? SizedBox.shrink() : SizedBox(width: 10),
-                        editMode
+                        zefyrEditMode
                             ? Container(
                                 height: 4.7 * hm,
                                 decoration: BoxDecoration(
@@ -255,13 +259,17 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                                 ),
                                 child: InkWell(
                                   borderRadius: BorderRadius.circular(25),
-                                  onTap: () => showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => _addTagsBottomSheet(context),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-                                    ),
-                                  ),
+                                  onTap: () {
+                                    editNoteTag = false;
+
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) => _addTagsBottomSheet(context),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                                      ),
+                                    );
+                                  },
                                   child: Icon(
                                     Icons.add,
                                     color: Colors.blueGrey,
@@ -306,7 +314,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ),
               Container(
                 width: double.infinity,
-                child: editMode
+                child: zefyrEditMode
                     ? ZefyrToolbar.basic(
                         controller: _zefyrController,
                       )
@@ -321,6 +329,8 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           updateZefyrEditMode: updateEditMode,
           controls: controls,
           note: widget.note,
+          noteTags: _noteTags,
+          noteTagColors: _noteTagColors,
         ),
         floatingActionButton: Var.noteMode == NoteMode.Editing && !Var.isEditing
             ? Container(
@@ -415,22 +425,28 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           //   },
           // ),
           onPressed: (item) {
-            _newTagTextController.text = item.title;
-            return showModalBottomSheet(
-              context: context,
-              builder: (context) => _addTagsBottomSheet(context),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-              ),
-            );
+            if (zefyrEditMode) {
+              _newTagTextController.text = item.title;
+              editNoteTag = true;
+              editIndex = item.index;
+
+              return showModalBottomSheet(
+                context: context,
+                builder: (context) => _addTagsBottomSheet(context),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                ),
+              );
+            }
           },
         );
       },
     );
   }
 
-  int colorIndex = Random().nextInt(10);
-  int colorLength = 10;
+  int colorValue = 0;
+  bool editNoteTag = false;
+  int editIndex = 0;
 
   Container _addTagsBottomSheet(BuildContext context) {
     return Container(
@@ -502,28 +518,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                 height: 50,
                 width: 70 * wm,
                 color: Colors.transparent,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: colorLength,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          colorIndex = index;
-                          colorLength = 1;
-                        });
-                      },
-                      child: Container(
-                        height: 40,
-                        width: 40,
-                        margin: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _newtagColors[index],
-                        ),
-                      ),
-                    );
+                child: MaterialColorPicker(
+                  onMainColorChange: (color) {
+                    colorValue = color.value;
                   },
+                  allowShades: false,
                 ),
               ),
             ],
@@ -533,11 +532,12 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                height: 40,
+                height: 50,
                 width: 90,
                 child: RaisedButton(
                   elevation: 0,
                   onPressed: () {
+                    editNoteTag = false;
                     _newTagTextController.clear();
                     Navigator.pop(context);
                   },
@@ -555,7 +555,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ),
               SizedBox(width: 15),
               Container(
-                height: 40,
+                height: 50,
                 width: 90,
                 child: RaisedButton(
                   elevation: 0,
@@ -577,7 +577,8 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     } else {
                       if (!_allTags.contains(_newTagTextController.text)) {
                         _allTags.add(_newTagTextController.text);
-                        _allTagColors.add(_newtagColors[colorIndex].value);
+                        _allTagColors.add(colorValue);
+                        //
                       } else {
                         flag = _allTagColors.elementAt(_allTags.indexOf(_newTagTextController.text));
                       }
@@ -586,9 +587,13 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                         _noteTags.add(_newTagTextController.text);
 
                         if (flag == 0)
-                          _noteTagColors.add(_newtagColors[colorIndex].value);
+                          _noteTagColors.add(colorValue);
                         else
                           _noteTagColors.add(flag);
+                        //
+                      } else if (editNoteTag) {
+                        _noteTags[editIndex] = _newTagTextController.text;
+                        _noteTagColors[editIndex] = colorValue;
                         //
                       } else {
                         showToast("Tag already added");
@@ -597,6 +602,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                       _newTagTextController.clear();
 
                       Navigator.pop(context);
+                      editNoteTag = false;
                     }
                   },
                 ),
@@ -608,18 +614,18 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     );
   }
 
-  List<Color> _newtagColors = [
-    Colors.orange,
-    Colors.red,
-    Colors.pinkAccent,
-    Colors.purpleAccent,
-    Colors.blueAccent,
-    Colors.tealAccent,
-    Colors.greenAccent,
-    Colors.lightGreenAccent,
-    Colors.yellowAccent,
-    Colors.brown,
-  ];
+  // List<Color> _newtagColors = [
+  //   Colors.orange,
+  //   Colors.red,
+  //   Colors.pinkAccent,
+  //   Colors.purpleAccent,
+  //   Colors.blueAccent,
+  //   Colors.tealAccent,
+  //   Colors.greenAccent,
+  //   Colors.lightGreenAccent,
+  //   Colors.yellowAccent,
+  //   Colors.brown,
+  // ];
 
   Future<bool> _onPop() async {
     _titleFocus.unfocus();
@@ -687,7 +693,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           await _dbServices.insertNote(
             NotesModel()
               ..title = _title.isNotEmpty ? _title : 'Untitled'
-              ..text = _note + '\n'
+              ..text = _note
               ..znote = jsonEncode(_zefyrController.document)
               ..created = DateTime.now()
               ..modified = DateTime.now()
@@ -702,7 +708,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             widget.note.key,
             NotesModel()
               ..title = _title.isNotEmpty ? _title : 'Untitled'
-              ..text = _note + '\n'
+              ..text = _note
               ..znote = jsonEncode(_zefyrController.document)
               ..trash = widget.note.trash
               ..created = widget.note.created

@@ -171,7 +171,8 @@ class _MyProfileState extends State<MyProfile> {
                   ),
                 ),
                 Container(
-                  height: 27 * hm,
+                  // height: 27 * hm,
+                  height: 52 * wm,
                   width: double.infinity,
                   child: Image.asset('assets/images/profile.png'),
                 ),

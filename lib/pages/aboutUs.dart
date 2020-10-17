@@ -23,33 +23,30 @@ class AboutUs extends StatelessWidget {
               color: Colors.black,
               height: 3,
             ),
-            Padding(
-              padding: EdgeInsets.only(top: hm),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage('assets/logo/owlCute-transparent.png'),
-                    height: 9.5 * wm,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Image(
+                  image: AssetImage('assets/logo/owlCute-transparent.png'),
+                  height: 9.5 * wm,
+                ),
+                Text(
+                  'Giv',
+                  style: GoogleFonts.montserrat(
+                    color: Colors.black,
+                    fontSize: 4.5 * wm,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    'Giv',
-                    style: GoogleFonts.montserrat(
-                      color: Colors.black,
-                      fontSize: 4.5 * wm,
-                      fontWeight: FontWeight.w600,
-                    ),
+                ),
+                Text(
+                  'Notes.',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 4.5 * wm,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
                   ),
-                  Text(
-                    'Notes.',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 4.5 * wm,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
             Container(
               // margin: EdgeInsets.only(top: 4 * hm),
@@ -193,7 +190,7 @@ class AboutUs extends StatelessWidget {
                       ),
                       GFButton(
                         onPressed: () async {
-                          final String url = 'https://www.github.com/gaganyadav80/givnotes/';
+                          final String url = 'https://www.github.com/gaganyadav80/givnotes/issues';
                           if (await canLaunch(url)) {
                             await launch(url);
                           } else {
@@ -218,7 +215,7 @@ class AboutUs extends StatelessWidget {
             ),
             // SizedBox(height: 3 * hm),
             Container(
-              // margin: EdgeInsets.only(top: 2 * hm),
+              padding: EdgeInsets.only(top: 0, bottom: 5),
               decoration: BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.rectangle,
@@ -245,7 +242,7 @@ class AboutUs extends StatelessWidget {
                   ),
                 ),
                 subtitle: Text(
-                  'Please let me know.',
+                  'Please let me know.\nUse one of the social links to report',
                   style: TextStyle(
                     fontSize: 1.4 * hm,
                   ),
@@ -253,7 +250,7 @@ class AboutUs extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 2 * wm),
+              padding: EdgeInsets.only(bottom: 3 * wm),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
