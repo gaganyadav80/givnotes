@@ -288,7 +288,7 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
                         child: ListView.builder(
                           padding: const EdgeInsets.symmetric(vertical: 4),
                           itemBuilder: (context, index) => Material(
-                            // color: Colors.transparent,
+                            color: Colors.white,
                             child: InkWell(
                               onTap: () => onSearchListItemSelected(_searchList[index]),
                               child: textController.text.isNotEmpty

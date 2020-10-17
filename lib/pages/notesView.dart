@@ -152,21 +152,21 @@ class NotesViewState extends State<NotesView> {
             )
           : !_multiSelectController.isSelecting && Var.isTrash
               ? SizedBox.shrink()
-              : FloatingActionButton.extended(
+              : FloatingActionButton(
                   heroTag: 'parent',
                   backgroundColor: Colors.black,
                   splashColor: Colors.black,
                   elevation: 5,
-                  icon: Icon(
+                  child: Icon(
                     fabIcon,
                     color: Colors.white,
                   ),
-                  label: Text(
-                    fabLabel,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
+                  // label: Text(
+                  //   fabLabel,
+                  //   style: TextStyle(
+                  //     color: Colors.white,
+                  //   ),
+                  // ),
                   onPressed: () {},
                 ),
     );

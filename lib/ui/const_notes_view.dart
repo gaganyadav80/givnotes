@@ -6,7 +6,6 @@ import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:morpheus/page_routes/morpheus_page_route.dart';
 
 class NotesCard extends StatefulWidget {
   NotesCard({
@@ -52,7 +51,7 @@ class _NotesCardState extends State<NotesCard> {
         onLongPress: () {
           setState(() {
             widget.multiSelectController.toggle(widget.index);
-            fabIcon = Var.isTrash ? Icons.restore : Icons.restore_from_trash;
+            fabIcon = Var.isTrash ? Icons.restore : Icons.delete;
             fabLabel = Var.isTrash ? 'Restore' : 'Trash';
           });
           widget.notesViewUpdate();
@@ -90,52 +89,55 @@ class _NotesCardState extends State<NotesCard> {
                 height: 0.057 * wm,
                 color: Colors.black,
               ),
-              SizedBox(height: 1.5 * wm),
-              Container(
-                height: compactTags ? 1 * hm : 2 * hm,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: widget.note.tags.length,
-                  itemBuilder: (context, index) {
-                    String title = widget.note.tags[index];
-                    Color color = Color(widget.note.tagColor[index]);
+              // SizedBox(height: 1.5 * wm),
+              widget.note.tags.length == 0
+                  ? SizedBox.shrink()
+                  : Container(
+                      margin: EdgeInsets.only(top: 1.5 * wm),
+                      height: compactTags ? 1 * hm : 2 * hm,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: widget.note.tags.length,
+                        itemBuilder: (context, index) {
+                          String title = widget.note.tags[index];
+                          Color color = Color(widget.note.tagColor[index]);
 
-                    return compactTags
-                        ? Container(
-                            width: 7.6 * wm,
-                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                            decoration: BoxDecoration(
-                              color: color,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: SizedBox.shrink(),
-                          )
-                        : Container(
-                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                            padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                            decoration: BoxDecoration(
-                              color: color,
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Text(
-                                //TODO remove
-                                title.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 0.5,
-                                  fontSize: 1.2 * hm,
-                                ),
-                              ),
-                            ),
-                          );
-                  },
-                ),
-              ),
+                          return compactTags
+                              ? Container(
+                                  width: 7.6 * wm,
+                                  margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: SizedBox.shrink(),
+                                )
+                              : Container(
+                                  margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                  padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                  decoration: BoxDecoration(
+                                    color: color,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      //TODO remove
+                                      title.toUpperCase(),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        letterSpacing: 0.5,
+                                        fontSize: 1.2 * hm,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                        },
+                      ),
+                    ),
               SizedBox(height: 2 * wm),
               Text(
                 widget.note.title,
@@ -149,12 +151,12 @@ class _NotesCardState extends State<NotesCard> {
                 widget.note.text,
                 style: TextStyle(
                   color: Colors.grey[800],
-                  fontSize: 3 * wm,
+                  // fontSize: 3 * wm,
                 ),
-                maxLines: 3,
+                maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),
-              // SizedBox(height: 1 * hm),
+              SizedBox(height: wm),
               Text(
                 "created  $_created",
                 style: GoogleFonts.ubuntu(
@@ -164,7 +166,7 @@ class _NotesCardState extends State<NotesCard> {
                   // fontStyle: FontStyle.italic,
                 ),
               ),
-              SizedBox(height: 1 * hm),
+              SizedBox(height: 1.5 * wm),
               Divider(
                 height: 0.057 * wm,
                 color: Colors.black,

@@ -861,20 +861,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2+1"
-  sqflite_sqlcipher:
-    dependency: "direct main"
-    description:
-      name: sqflite_sqlcipher
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.1"
-  sqlbrite:
-    dependency: "direct main"
-    description:
-      name: sqlbrite
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.4.0"
   stack_trace:
     dependency: transitive
     description:
