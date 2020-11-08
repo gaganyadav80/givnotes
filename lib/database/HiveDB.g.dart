@@ -23,14 +23,13 @@ class NotesModelAdapter extends TypeAdapter<NotesModel> {
       ..trash = fields[3] as bool
       ..created = fields[4] as DateTime
       ..modified = fields[5] as DateTime
-      ..tags = (fields[6] as List)?.cast<String>()
-      ..tagColor = (fields[7] as List)?.cast<int>();
+      ..tagsMap = (fields[6] as Map)?.cast<String, int>();
   }
 
   @override
   void write(BinaryWriter writer, NotesModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -44,9 +43,7 @@ class NotesModelAdapter extends TypeAdapter<NotesModel> {
       ..writeByte(5)
       ..write(obj.modified)
       ..writeByte(6)
-      ..write(obj.tags)
-      ..writeByte(7)
-      ..write(obj.tagColor);
+      ..write(obj.tagsMap);
   }
 
   @override

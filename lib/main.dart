@@ -133,9 +133,10 @@ class _CheckLogInState extends State<CheckLogIn> {
     if (!prefsBox.containsKey('biometric')) {
       prefsBox.put('biometric', false);
     }
-    if (!prefsBox.containsKey('allTags')) {
-      prefsBox.put('allTags', []);
-      prefsBox.put('tagColors', []);
+    if (!prefsBox.containsKey('allTagsMap')) {
+      prefsBox.put('allTagsMap', {});
+      // prefsBox.put('allTags', []);
+      // prefsBox.put('tagColors', []);
     }
   }
 }

@@ -41,10 +41,12 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   ZefyrController _zefyrController = ZefyrController();
 
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-  List<String> _noteTags = <String>[];
-  List<int> _noteTagColors = [];
-  List<String> _allTags = [];
-  List<int> _allTagColors = [];
+  // List<String> _noteTags = <String>[];
+  // List<int> _noteTagColors = [];
+  Map<String, int> _noteTagsMap = {};
+  Map<String, int> _allTagsMap = {};
+  // List<String> _allTags = [];
+  // List<int> _allTagColors = [];
 
   Future<NotusDocument> _loadDocument() async {
     if (Var.noteMode == NoteMode.Editing) {
@@ -68,15 +70,18 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     if (widget.noteMode == NoteMode.Adding) {
       _titleFocus.requestFocus();
     } else if (widget.noteMode == NoteMode.Editing) {
-      _noteTags = widget.note.tags;
-      _noteTagColors = widget.note.tagColor;
+      _noteTagsMap = widget.note.tagsMap;
+      // _noteTags = widget.note.tags;
+      // _noteTagColors = widget.note.tagColor;
     }
 
     _dbServices = HiveDBServices();
     _zefyrfocusNode.unfocus();
 
-    _allTags = (prefsBox.get('allTags') as List).cast<String>();
-    _allTagColors = (prefsBox.get('tagColors') as List).cast<int>();
+    // _allTags = (prefsBox.get('allTags') as List).cast<String>();
+    // _allTagColors = (prefsBox.get('tagColors') as List).cast<int>();
+
+    _allTagsMap = (prefsBox.get('allTagsMap') as Map).cast<String, int>();
   }
 
   @override
@@ -89,8 +94,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
   @override
   void dispose() {
-    prefsBox.put('allTags', _allTags);
-    prefsBox.put('tagColors', _allTagColors);
+    // prefsBox.put('allTags', _allTags);
+    // prefsBox.put('tagColors', _allTagColors);
+    prefsBox.put('allTagsMap', _allTagsMap);
 
     _zefyrController?.dispose();
     _zefyrfocusNode?.dispose();
@@ -107,10 +113,10 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   }
 
   bool zefyrEditMode = false;
-  int colorValue = 0;
   bool editNoteTag = false;
-  int editIndex = 0;
+  String editIndex = '';
   int randomTagColor = Random().nextInt(6);
+  int colorValue = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +253,13 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                   child: Row(
                     children: [
                       getNoteTags(),
-                      _noteTags.length == 0 ? SizedBox.shrink() : SizedBox(width: 10),
+                      _noteTagsMap.length == 0 ? SizedBox.shrink() : SizedBox(width: 10),
                       zefyrEditMode
                           ? Container(
                               height: 4.0 * hm,
+                              width: 8 * wm,
                               decoration: BoxDecoration(
+                                color: Colors.transparent,
                                 shape: BoxShape.circle,
                                 border: Border.all(
                                   color: Colors.blueGrey,
@@ -265,7 +273,10 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
                                   showModalBottomSheet(
                                     context: context,
-                                    builder: (context) => _addTagsBottomSheet(context),
+                                    builder: (context) {
+                                      colorValue = materialColors[randomTagColor].value;
+                                      return _addTagsBottomSheet(context);
+                                    },
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
                                     ),
@@ -274,11 +285,11 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                                 child: Icon(
                                   Icons.add,
                                   color: Colors.blueGrey,
-                                  size: 3.4 * hm,
+                                  size: 2 * hm,
                                 ),
                               ),
                             )
-                          : _noteTags.length == 0
+                          : _noteTagsMap.length == 0
                               ? Container(
                                   // color: Colors.orangeAccent,
                                   height: 4 * hm,
@@ -302,12 +313,13 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                   ),
                 ),
               ),
-              Divider(
-                color: Colors.grey,
-                indent: 15,
-                endIndent: 15,
-                thickness: 1,
-              ),
+              // Divider(
+              //   color: Colors.grey,
+              //   indent: 15,
+              //   endIndent: 15,
+              //   thickness: 1,
+              // ),
+              SizedBox(height: 2 * wm),
               Expanded(
                 child: _editorBody,
               ),
@@ -328,8 +340,8 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           updateZefyrEditMode: updateEditMode,
           controls: controls,
           note: widget.note,
-          noteTags: _noteTags,
-          noteTagColors: _noteTagColors,
+          noteTagsMap: _noteTagsMap,
+          // noteTagColors: _noteTagColors,
         ),
         floatingActionButton: Var.noteMode == NoteMode.Editing && !Var.isEditing
             ? Container(
@@ -384,17 +396,17 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   }
 
   Widget getNoteTags() {
+    final noteTag = _noteTagsMap.keys.toList();
+
     return Tags(
       key: _tagStateKey,
-      itemCount: _noteTags.length,
+      itemCount: _noteTagsMap.length,
       itemBuilder: (int index) {
-        final noteTag = _noteTags[index];
-
         return ItemTags(
           key: Key(index.toString()),
           elevation: 0,
           index: index,
-          title: noteTag,
+          title: noteTag[index],
           active: false,
           combine: ItemTagsCombine.withTextBefore,
           //
@@ -404,9 +416,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
-          border: Border.all(color: Color(_noteTagColors[index]), width: 2),
-          textActiveColor: Color(_noteTagColors[index]),
-          textColor: Color(_noteTagColors[index]),
+          border: Border.all(color: Color(_noteTagsMap[noteTag[index]]), width: 2),
+          textActiveColor: Color(_noteTagsMap[noteTag[index]]),
+          textColor: Color(_noteTagsMap[noteTag[index]]),
           activeColor: Colors.white,
           //
           // removeButton: ItemTagsRemoveButton(
@@ -426,7 +438,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             if (zefyrEditMode) {
               _newTagTextController.text = item.title;
               editNoteTag = true;
-              editIndex = item.index;
+              editIndex = item.title;
 
               return showModalBottomSheet(
                 context: context,
@@ -570,25 +582,30 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     if (_newTagTextController.text.isEmpty) {
                       showToast("Tag name is required");
                     } else {
-                      if (!_allTags.contains(_newTagTextController.text)) {
-                        _allTags.add(_newTagTextController.text);
-                        _allTagColors.add(colorValue);
+                      if (!_allTagsMap.containsKey(_newTagTextController.text)) {
+                        _allTagsMap[_newTagTextController.text] = colorValue;
+                        // _allTags.add(_newTagTextController.text);
+                        // _allTagColors.add(colorValue);
                         //
                       } else {
-                        flag = _allTagColors.elementAt(_allTags.indexOf(_newTagTextController.text));
+                        flag = _allTagsMap[_newTagTextController.text];
+                        // flag = _allTagColors.elementAt(_allTags.indexOf(_newTagTextController.text));
                       }
 
-                      if (!_noteTags.contains(_newTagTextController.text)) {
-                        _noteTags.add(_newTagTextController.text);
+                      if (!_noteTagsMap.containsKey(_newTagTextController.text)) {
+                        // _noteTags.add(_newTagTextController.text);
 
                         if (flag == 0)
-                          _noteTagColors.add(colorValue);
+                          _noteTagsMap[_newTagTextController.text] = colorValue;
+                        // _noteTagColors.add(colorValue);
                         else
-                          _noteTagColors.add(flag);
-                        //
+                          _noteTagsMap[_newTagTextController.text] = flag;
+                        // _noteTagColors.add(flag);
                       } else if (editNoteTag) {
-                        _noteTags[editIndex] = _newTagTextController.text;
-                        _noteTagColors[editIndex] = colorValue;
+                        _noteTagsMap.remove(editIndex);
+                        _noteTagsMap[_newTagTextController.text] = colorValue;
+                        // _noteTags[editIndex] = _newTagTextController.text;
+                        // _noteTagColors[editIndex] = colorValue;
                         //
                       } else {
                         showToast("Tag already added");
@@ -629,29 +646,34 @@ class _ZefyrEditState extends State<ZefyrEdit> {
     String title = _titleController.text;
     String note = _zefyrController.document.toPlainText().trim();
     if (title.isEmpty && note.isEmpty) {
-      return (await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              // title: Text('Note is Empty!'),
-              content: Text("Your note is empty! Can't save it :)"),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                    Var.isEditing = false;
-                  },
-                  child: Text('Discard'),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
-                  child: Text('Edit'),
-                ),
-              ],
-            ),
-          )) ??
-          false;
+      FocusScope.of(context).unfocus();
+      showToast("Can't create empty note");
+      // Navigator.pop(context);
+      Var.isEditing = false;
+      return true;
+      // return (await showDialog(
+      //       context: context,
+      //       builder: (context) => AlertDialog(
+      //         // title: Text('Note is Empty!'),
+      //         content: Text("Your note is empty! Can't save it :)"),
+      //         actions: <Widget>[
+      //           FlatButton(
+      //             onPressed: () {
+      //               Navigator.of(context).pop(true);
+      //               Var.isEditing = false;
+      //             },
+      //             child: Text('Discard'),
+      //           ),
+      //           FlatButton(
+      //             onPressed: () {
+      //               Navigator.of(context).pop(false);
+      //             },
+      //             child: Text('Edit'),
+      //           ),
+      //         ],
+      //       ),
+      //     )) ??
+      //     false;
     } else if (title.isNotEmpty || note.isNotEmpty) {
       saveNote();
       //
@@ -692,8 +714,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ..znote = jsonEncode(_zefyrController.document)
               ..created = DateTime.now()
               ..modified = DateTime.now()
-              ..tags = _noteTags
-              ..tagColor = _noteTagColors,
+              ..tagsMap = _noteTagsMap,
+            // ..tags = _noteTags
+            // ..tagColor = _noteTagColors,
           );
 
           showToast('Note saved');
@@ -708,8 +731,9 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ..trash = widget.note.trash
               ..created = widget.note.created
               ..modified = DateTime.now()
-              ..tags = _noteTags
-              ..tagColor = _noteTagColors,
+              ..tagsMap = _noteTagsMap,
+            // ..tags = _noteTags
+            // ..tagColor = _noteTagColors,
           );
 
           showToast('Note saved');
