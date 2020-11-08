@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/database/HiveDB.dart';
+import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
@@ -10,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 
 class TagsView extends StatefulWidget {
   @override
@@ -58,8 +58,8 @@ class _TagsViewState extends State<TagsView> {
                 if (_notes.length == 0) {
                   return SingleChildScrollView(
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(12 * wm, 5 * hm, 12 * wm, 0),
-                      child: Image.asset('assets/images/search-1.png'),
+                      padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
+                      child: Image.asset('assets/images/tags-view-1.png'),
                     ),
                   );
                 }
@@ -245,7 +245,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             ),
           ],
           onEditingComplete: () {
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
+            // SystemChannels.textInput.invokeMethod('TextInput.hide');
             _searchTagFocus.unfocus();
           },
           decoration: InputDecoration(
@@ -281,7 +281,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 });
 
                 _searchTagController.clear();
-                SystemChannels.textInput.invokeMethod('TextInput.hide');
+                // SystemChannels.textInput.invokeMethod('TextInput.hide');
                 _searchTagFocus.unfocus();
               },
               child: Icon(
@@ -307,11 +307,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
               textStyle: TextStyle(
                 fontSize: 1.8 * hm,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
                 letterSpacing: 0.5,
               ),
 
-              border: Border.all(color: Color(_allTagColors[index]), width: 3),
+              border: Border.all(color: Color(_allTagColors[index]), width: 2),
               textActiveColor: Colors.white,
               textColor: Color(_allTagColors[index]),
               combine: ItemTagsCombine.withTextBefore,

@@ -5,18 +5,18 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
+import 'package:givnotes/packages/flutter_material_color_picker/colors.dart';
 import 'package:givnotes/packages/flutter_material_color_picker/material_color_picker.dart';
+import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:intl/intl.dart';
-import 'package:toast/toast.dart';
 
 enum NoteMode { Editing, Adding }
 
@@ -54,7 +54,6 @@ class _ZefyrEditState extends State<ZefyrEdit> {
 
     // Delta delta = Delta()..insert("\n");
     // return NotusDocument.fromDelta(delta);
-    //TODO check this
     return NotusDocument();
   }
 
@@ -108,13 +107,15 @@ class _ZefyrEditState extends State<ZefyrEdit> {
   }
 
   bool zefyrEditMode = false;
+  int colorValue = 0;
+  bool editNoteTag = false;
+  int editIndex = 0;
+  int randomTagColor = Random().nextInt(6);
 
   @override
   Widget build(BuildContext context) {
     zefyrEditMode = (Var.isEditing || (Var.noteMode == NoteMode.Adding));
 
-    //TODO copy zefyr to packages and customize
-    // and add a fontFamily parameter to ZefyrThemeData
     final ZefyrThemeData _zefyrThemeData = ZefyrThemeData(
       bold: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'SFPro'),
       italic: TextStyle(fontStyle: FontStyle.italic, fontFamily: 'SFPro'),
@@ -124,7 +125,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           height: 1.3,
           color: Colors.black,
         ),
-        spacing: VerticalSpacing(top: 6.0),
+        spacing: VerticalSpacing(top: 3),
       ),
       heading1: TextBlockTheme(
         style: TextStyle(
@@ -185,9 +186,10 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               autofocus: false,
               controller: _zefyrController,
               focusNode: _zefyrfocusNode,
-              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+              // padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
               decoration: InputDecoration(
-                hintText: '  Your Note here...',
+                contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                hintText: 'Your Note here...',
                 hintStyle: TextStyle(
                   fontFamily: 'SFPro',
                   fontSize: 2.3 * hm,
@@ -218,20 +220,21 @@ class _ZefyrEditState extends State<ZefyrEdit> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: getTitleTextField(),
               ),
-              SizedBox(height: 1 * hm),
+              SizedBox(height: wm),
               widget.noteMode == NoteMode.Editing
                   ? Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Text(
                         'modified ${DateFormat.yMMMd().add_Hm().format(widget.note.modified)}',
                         style: TextStyle(
                           fontFamily: 'ZillaSlab',
                           color: Colors.black.withOpacity(0.7),
-                          fontWeight: FontWeight.w600,
-                          fontSize: 2.5 * hm,
+                          fontWeight: FontWeight.w400,
+                          fontSize: 2 * hm,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                     )
@@ -241,75 +244,71 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Container(
-                    height: 4.8 * hm,
-                    child: Row(
-                      children: [
-                        getNoteTags(),
-                        _noteTags.length == 0 ? SizedBox.shrink() : SizedBox(width: 10),
-                        zefyrEditMode
-                            ? Container(
-                                height: 4.7 * hm,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.blueGrey,
-                                    width: 2,
-                                  ),
+                  child: Row(
+                    children: [
+                      getNoteTags(),
+                      _noteTags.length == 0 ? SizedBox.shrink() : SizedBox(width: 10),
+                      zefyrEditMode
+                          ? Container(
+                              height: 4.0 * hm,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.blueGrey,
+                                  width: 2,
                                 ),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(25),
-                                  onTap: () {
-                                    editNoteTag = false;
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(25),
+                                onTap: () {
+                                  editNoteTag = false;
 
-                                    showModalBottomSheet(
-                                      context: context,
-                                      builder: (context) => _addTagsBottomSheet(context),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.add,
-                                    color: Colors.blueGrey,
-                                    size: 3.4 * hm,
-                                  ),
+                                  showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => _addTagsBottomSheet(context),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  Icons.add,
+                                  color: Colors.blueGrey,
+                                  size: 3.4 * hm,
                                 ),
-                              )
-                            : _noteTags.length == 0
-                                ? Container(
-                                    // color: Colors.orangeAccent,
-                                    height: 4.8 * hm,
-                                    child: Center(
-                                      child: Text(
-                                        '"no tags added"',
-                                        style: TextStyle(
-                                          fontFamily: 'ZillaSlab',
-                                          color: Colors.black.withOpacity(0.7),
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 2.5 * hm,
-                                        ),
+                              ),
+                            )
+                          : _noteTags.length == 0
+                              ? Container(
+                                  // color: Colors.orangeAccent,
+                                  height: 4 * hm,
+                                  child: Center(
+                                    child: Text(
+                                      '"no tags added. Click on the edit button and then + to add new tags"',
+                                      style: TextStyle(
+                                        fontFamily: 'ZillaSlab',
+                                        color: Colors.black.withOpacity(0.7),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 2.5 * hm,
                                       ),
                                     ),
-                                  )
-                                : Container(
-                                    color: Colors.transparent,
-                                    height: 4.8 * hm,
                                   ),
-                      ],
-                    ),
+                                )
+                              : Container(
+                                  color: Colors.transparent,
+                                  height: 4.0 * hm,
+                                ),
+                    ],
                   ),
                 ),
               ),
-              // Divider(
-              //   color: Colors.grey,
-              //   indent: 15,
-              //   endIndent: 15,
-              //   thickness: 1,
-              // ),
+              Divider(
+                color: Colors.grey,
+                indent: 15,
+                endIndent: 15,
+                thickness: 1,
+              ),
               Expanded(
-                flex: 1,
                 child: _editorBody,
               ),
               Container(
@@ -395,18 +394,17 @@ class _ZefyrEditState extends State<ZefyrEdit> {
           key: Key(index.toString()),
           elevation: 0,
           index: index,
-          //TODO remove uppercase
-          title: noteTag.toUpperCase(),
+          title: noteTag,
           active: false,
           combine: ItemTagsCombine.withTextBefore,
           //
-          padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
+          // padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
           textStyle: TextStyle(
             fontSize: 1.8 * hm,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w600,
             letterSpacing: 0.5,
           ),
-          border: Border.all(color: Color(_noteTagColors[index]), width: 3),
+          border: Border.all(color: Color(_noteTagColors[index]), width: 2),
           textActiveColor: Color(_noteTagColors[index]),
           textColor: Color(_noteTagColors[index]),
           activeColor: Colors.white,
@@ -443,10 +441,6 @@ class _ZefyrEditState extends State<ZefyrEdit> {
       },
     );
   }
-
-  int colorValue = 0;
-  bool editNoteTag = false;
-  int editIndex = 0;
 
   Container _addTagsBottomSheet(BuildContext context) {
     return Container(
@@ -515,7 +509,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
               ),
               SizedBox(width: 5),
               Container(
-                height: 50,
+                height: 70,
                 width: 70 * wm,
                 color: Colors.transparent,
                 child: MaterialColorPicker(
@@ -523,6 +517,7 @@ class _ZefyrEditState extends State<ZefyrEdit> {
                     colorValue = color.value;
                   },
                   allowShades: false,
+                  selectedColor: materialColors[randomTagColor],
                 ),
               ),
             ],

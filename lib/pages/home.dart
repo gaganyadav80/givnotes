@@ -5,15 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
+import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:route_transitions/route_transitions.dart';
-import 'package:toast/toast.dart';
 
-GlobalKey<HomePageState> _homeScaffoldKey = GlobalKey<HomePageState>();
+// GlobalKey<HomePageState> _homeScaffoldKey = GlobalKey<HomePageState>();
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

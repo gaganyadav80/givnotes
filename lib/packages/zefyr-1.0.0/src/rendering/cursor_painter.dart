@@ -30,9 +30,7 @@ class CursorPainter {
     assert(cursorPrototype != null);
 
     final paint = Paint()..color = effectiveColor;
-    final Offset caretOffset =
-        editable.getOffsetForCaret(textPosition, cursorPrototype) +
-            effectiveOffset;
+    final Offset caretOffset = editable.getOffsetForCaret(textPosition, cursorPrototype) + effectiveOffset;
     Rect caretRect = cursorPrototype.shift(caretOffset);
     if (style.offset != null) caretRect = caretRect.shift(style.offset);
 
@@ -76,8 +74,7 @@ class CursorPainter {
       }
     }
 
-    caretRect = caretRect.shift(
-        _getPixelPerfectCursorOffset(editable, caretRect, devicePixelRatio));
+    caretRect = caretRect.shift(_getPixelPerfectCursorOffset(editable, caretRect, devicePixelRatio));
 
     if (style.radius == null) {
       canvas.drawRect(caretRect, paint);
@@ -87,18 +84,11 @@ class CursorPainter {
     }
   }
 
-  Offset _getPixelPerfectCursorOffset(
-      RenderContentProxyBox editable, Rect caretRect, double devicePixelRatio) {
+  Offset _getPixelPerfectCursorOffset(RenderContentProxyBox editable, Rect caretRect, double devicePixelRatio) {
     final Offset caretPosition = editable.localToGlobal(caretRect.topLeft);
     final double pixelMultiple = 1.0 / devicePixelRatio;
-    final double pixelPerfectOffsetX = caretPosition.dx.isFinite
-        ? (caretPosition.dx / pixelMultiple).round() * pixelMultiple -
-            caretPosition.dx
-        : caretPosition.dx;
-    final double pixelPerfectOffsetY = caretPosition.dy.isFinite
-        ? (caretPosition.dy / pixelMultiple).round() * pixelMultiple -
-            caretPosition.dy
-        : caretPosition.dy;
+    final double pixelPerfectOffsetX = caretPosition.dx.isFinite ? (caretPosition.dx / pixelMultiple).round() * pixelMultiple - caretPosition.dx : caretPosition.dx;
+    final double pixelPerfectOffsetY = caretPosition.dy.isFinite ? (caretPosition.dy / pixelMultiple).round() * pixelMultiple - caretPosition.dy : caretPosition.dy;
     return Offset(pixelPerfectOffsetX, pixelPerfectOffsetY);
   }
 }
