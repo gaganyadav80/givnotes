@@ -23,10 +23,13 @@ class NotesModel extends HiveObject {
   DateTime modified;
 
   @HiveField(6)
-  List<String> tags = [];
+  Map<String, int> tagsMap = {};
 
-  @HiveField(7)
-  List<int> tagColor = [];
+  // @HiveField(6)
+  // List<String> tags = [];
+
+  // @HiveField(7)
+  // List<int> tagColor = [];
 }
 
 // @HiveType(typeId: 1)

@@ -97,8 +97,9 @@ class EndDrawerItems extends StatelessWidget {
   final FlareControls controls;
   final NotesModel note;
 
-  List<String> noteTags = <String>[];
-  List<int> noteTagColors = [];
+  final Map<String, int> noteTagsMap;
+  // List<String> noteTags = <String>[];
+  // List<int> noteTagColors = [];
 
   final HiveDBServices _dbServices = HiveDBServices();
 
@@ -108,8 +109,7 @@ class EndDrawerItems extends StatelessWidget {
     this.zefyrController,
     this.controls,
     this.note,
-    this.noteTags,
-    this.noteTagColors,
+    this.noteTagsMap,
   });
 
   @override
@@ -170,8 +170,9 @@ class EndDrawerItems extends StatelessWidget {
                                 ..znote = jsonEncode(zefyrController.document)
                                 ..created = DateTime.now()
                                 ..modified = DateTime.now()
-                                ..tags = noteTags
-                                ..tagColor = noteTagColors,
+                                ..tagsMap = noteTagsMap,
+                              // ..tags = noteTags
+                              // ..tagColor = noteTagColors,
                             );
 
                             showToast(context, 'Note saved');
@@ -186,8 +187,9 @@ class EndDrawerItems extends StatelessWidget {
                                 ..trash = note.trash
                                 ..created = note.created
                                 ..modified = DateTime.now()
-                                ..tags = noteTags
-                                ..tagColor = noteTagColors,
+                                ..tagsMap = noteTagsMap,
+                              // ..tags = noteTags
+                              // ..tagColor = noteTagColors,
                             );
 
                             showToast(context, 'Note saved');

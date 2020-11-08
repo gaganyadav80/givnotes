@@ -87,8 +87,8 @@ class _NotesCardState extends State<NotesCard> {
                 color: Colors.black,
               ),
               // SizedBox(height: 1.5 * wm),
-              widget.note.tags.length == 0
-                  ? SizedBox.shrink()
+              widget.note.tagsMap.length == 0
+                  ? SizedBox(height: wm)
                   : Container(
                       margin: EdgeInsets.only(top: 1.5 * wm),
                       height: compactTags ? 1 * hm : 2 * hm,
@@ -97,10 +97,10 @@ class _NotesCardState extends State<NotesCard> {
                       ),
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: widget.note.tags.length,
+                        itemCount: widget.note.tagsMap.length,
                         itemBuilder: (context, index) {
-                          String tagsTitle = widget.note.tags[index];
-                          Color color = Color(widget.note.tagColor[index]);
+                          String tagsTitle = widget.note.tagsMap.keys.toList()[index];
+                          Color color = Color(widget.note.tagsMap[tagsTitle]);
 
                           return compactTags
                               ? Container(
@@ -122,7 +122,7 @@ class _NotesCardState extends State<NotesCard> {
                                   child: Center(
                                     child: Text(
                                       //TODO remove uppercase
-                                      tagsTitle.toUpperCase(),
+                                      tagsTitle,
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,

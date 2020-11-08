@@ -55,6 +55,28 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  // void onSearchListItemLongPress(NotesModel item) {
+  //   // SystemChannels.textInput.invokeMethod('TextInput.hide');
+  //   _focusNode.unfocus();
+
+  //   showModalBottomSheet(
+  //     context: context,
+  //     builder: (context) {
+  //       return Container(
+  //         height: 55 * hm,
+  //         padding: EdgeInsets.symmetric(horizontal: 3.5 * wm, vertical: 2.5 * hm),
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [],
+  //         ),
+  //       );
+  //     },
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+  //     ),
+  //   );
+  // }
+
   void onSearchListItemSelected(NotesModel item) {
     // _focusNode.unfocus();
     // textController.clear();
@@ -133,6 +155,7 @@ class _SearchPageState extends State<SearchPage> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(5),
                               onTap: () => onSearchListItemSelected(_searchList[index]),
+                              // onLongPress: () => onSearchListItemLongPress(_searchList[index]),
                               child: _textController.text.isNotEmpty
                                   ? Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
@@ -147,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              item.tags.length == 0
+                                              item.tagsMap.length == 0
                                                   ? SizedBox.shrink()
                                                   : Expanded(
                                                       flex: 4,
@@ -159,10 +182,10 @@ class _SearchPageState extends State<SearchPage> {
                                                         ),
                                                         child: ListView.builder(
                                                           scrollDirection: Axis.horizontal,
-                                                          itemCount: item.tags.length,
+                                                          itemCount: item.tagsMap.length,
                                                           itemBuilder: (context, index) {
-                                                            String title = item.tags[index];
-                                                            Color color = Color(item.tagColor[index]);
+                                                            String title = item.tagsMap.keys.toList()[index];
+                                                            Color color = Color(item.tagsMap[title]);
 
                                                             return compactTags
                                                                 ? Container(

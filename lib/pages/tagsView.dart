@@ -51,7 +51,7 @@ class _TagsViewState extends State<TagsView> {
                 _notes = box.values.where((element) {
                   return (element.trash == Var.isTrash) &&
                       lst.any((title) {
-                        return element.tags.contains(title);
+                        return element.tagsMap.containsKey(title);
                       });
                 }).toList();
 
@@ -100,26 +100,7 @@ class _TagsViewState extends State<TagsView> {
                                 height: 0.057 * wm,
                                 color: Colors.black,
                               ),
-                              SizedBox(height: 2.8 * wm),
-                              Text(
-                                "created:     $_created",
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey,
-                                  fontSize: 3 * wm,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              Text(
-                                "modified:   $_modified",
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey,
-                                  fontSize: 3 * wm,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              SizedBox(height: 3.8 * wm),
+                              SizedBox(height: 2 * wm),
                               Text(
                                 note.title,
                                 style: GoogleFonts.ubuntu(
@@ -127,17 +108,27 @@ class _TagsViewState extends State<TagsView> {
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
-                              SizedBox(height: 0.95 * wm),
+                              SizedBox(height: 1 * wm),
                               Text(
                                 note.text,
                                 style: TextStyle(
                                   color: Colors.grey[800],
-                                  fontSize: 3 * wm,
+                                  // fontSize: 3 * wm,
                                 ),
                                 maxLines: 5,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: 0.95 * wm),
+                              SizedBox(height: wm),
+                              Text(
+                                "created  $_created",
+                                style: GoogleFonts.ubuntu(
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.grey,
+                                  fontSize: 3 * wm,
+                                  // fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                              SizedBox(height: 1.5 * wm),
                               Divider(
                                 height: 0.057 * wm,
                                 color: Colors.black,
@@ -180,8 +171,9 @@ class SearchTagsTextField extends StatefulWidget {
 }
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
-  List<String> _allTags = [];
-  List<int> _allTagColors = [];
+  Map<String, int> _allTagsMap = {};
+  // List<String> _allTags = [];
+  // List<int> _allTagColors = [];
   bool editTags = false;
 
   TextEditingController _searchTagController = TextEditingController();
@@ -191,10 +183,12 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   @override
   void initState() {
     super.initState();
-    _allTags = (prefsBox.get('allTags') as List).cast<String>();
-    _allTagColors = (prefsBox.get('tagColors') as List).cast<int>();
+    _allTagsMap = (prefsBox.get('allTagsMap') as Map).cast<String, int>();
+    // _allTags = (prefsBox.get('allTags') as List).cast<String>();
+    // _allTagColors = (prefsBox.get('tagColors') as List).cast<int>();
 
-    _searchList.addAll(_allTags);
+    // _searchList.addAll(_allTags);
+    _searchList.addAll(_allTagsMap.keys);
 
     _searchTagController.addListener(() {
       final text = _searchTagController.text;
@@ -203,7 +197,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
         setState(() {
           _searchList.clear();
 
-          final filterList = _allTags.where((element) => element.toLowerCase().contains(text.toLowerCase())).toList();
+          final filterList = _allTagsMap.keys.toList().where((element) => element.toLowerCase().contains(text.toLowerCase())).toList();
           if (filterList == null) {
             throw Exception('List cannot be null');
           }
@@ -213,7 +207,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
         setState(() {
           _searchList
             ..clear()
-            ..addAll(_allTags);
+            ..addAll(_allTagsMap.keys);
         });
       }
     });
@@ -277,7 +271,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 setState(() {
                   _searchList
                     ..clear()
-                    ..addAll(_allTags);
+                    ..addAll(_allTagsMap.keys);
                 });
 
                 _searchTagController.clear();
@@ -311,11 +305,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 letterSpacing: 0.5,
               ),
 
-              border: Border.all(color: Color(_allTagColors[index]), width: 2),
+              border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
               textActiveColor: Colors.white,
-              textColor: Color(_allTagColors[index]),
+              textColor: Color(_allTagsMap[noteTag]),
               combine: ItemTagsCombine.withTextBefore,
-              activeColor: Color(_allTagColors[index]),
+              activeColor: Color(_allTagsMap[noteTag]),
               //
               //
               // removeButton: ItemTagsRemoveButton(
