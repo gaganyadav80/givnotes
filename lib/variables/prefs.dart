@@ -28,7 +28,7 @@ errorAlert(BuildContext context, dynamic e) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Error sign in!'),
+        title: Text('Error occurred!'),
         content: Text('ERROR: $e'),
         actions: [
           FlatButton(

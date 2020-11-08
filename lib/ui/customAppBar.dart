@@ -95,7 +95,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(15 * wm);
+  Size get preferredSize => Size.fromHeight(13 * wm);
 
   @override
   Widget build(BuildContext context) {
@@ -131,42 +131,23 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
           },
         ),
       ],
-      //TODO maybe remove it
-      title: Text(
-        Var.isTrash ? 'DELETED NOTE' : 'NOTE',
-        style: TextStyle(
-          fontFamily: 'Abril',
-          color: Colors.black,
-          fontSize: 2.8 * hm,
-          fontWeight: FontWeight.w400,
-          wordSpacing: 0.7 * wm,
-        ),
-      ),
+      // // TODO maybe remove it
+      // title: Text(
+      //   Var.isTrash ? 'DELETED NOTE' : 'NOTE',
+      //   style: TextStyle(
+      //     fontFamily: 'Abril',
+      //     color: Colors.black,
+      //     fontSize: 2.8 * hm,
+      //     fontWeight: FontWeight.w400,
+      //     wordSpacing: 0.7 * wm,
+      //   ),
+      // ),
       backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
     );
   }
 }
-
-//!!
-//!!
-
-//   Future<bool> _saveDocument() {
-//     final contents = jsonEncode(widget.zefyrController.document);
-//     widget.file.writeAsString(contents).then(
-//       (_) {
-//         print('file saving name: ${widget.file.path}');
-//         return Future.value(true);
-//       },
-//       onError: (_) {
-//         print('Error saving file: ${widget.file.path}');
-//         return Future.value(false);
-//       },
-//     );
-//     return Future.value(true);
-//   }
-// }
 
 // extends with SingleTickerProviderStateMixin
 //

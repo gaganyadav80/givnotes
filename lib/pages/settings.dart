@@ -72,7 +72,6 @@ class _SettingsPageState extends State<SettingsPage> {
         defaultVal: false,
         ignoreTileTap: false,
         onEnable: () {
-          //TODO switch turn on after cancle on add passcode
           if (!prefsBox.containsKey('passcode')) {
             Navigator.push(
               context,

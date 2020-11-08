@@ -77,6 +77,8 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
     init();
   }
 
+  String storeTextbeforeClear = '';
+
   void init() {
     _searchList = <T>[];
     textController = widget.controller ?? textController;
@@ -87,15 +89,19 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
     _searchList.addAll(_list);
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
-        // textController.clear();
+        // TODO comment
+        storeTextbeforeClear = textController.text;
+        textController.clear();
+        //
         if (overlaySearchList != null) {
           overlaySearchList.remove();
         }
         overlaySearchList = null;
       } else {
-        _searchList
-          ..clear()
-          ..addAll(_list);
+        // _searchList
+        //   ..clear()
+        //   ..addAll(_list);
+        textController.text = storeTextbeforeClear;
         if (overlaySearchList == null) {
           onTextFieldFocus();
         } else {
@@ -117,17 +123,16 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
         } else {
           overlaySearchList.markNeedsBuild();
         }
+      } else {
+        // _searchList
+        //   ..clear()
+        //   ..addAll(_list);
+        if (overlaySearchList == null) {
+          onTextFieldFocus();
+        } else {
+          overlaySearchList.markNeedsBuild();
+        }
       }
-      // } else {
-      //   _searchList
-      //     ..clear()
-      //     ..addAll(_list);
-      //   if (overlaySearchList == null) {
-      //     onTextFieldFocus();
-      //   } else {
-      //     overlaySearchList.markNeedsBuild();
-      //   }
-      // }
     });
   }
 
@@ -227,8 +232,11 @@ class MySingleChoiceSearchState<T> extends State<GFSearchBar<T>> {
       overlaySearchList.remove();
     }
     overlaySearchList = null;
+
+    // TODO commment
     // _focusNode.unfocus();
     // textController.clear();
+    //
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
     setState(() {

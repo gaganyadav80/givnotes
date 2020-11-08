@@ -5,9 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:givnotes/packages/move_to_background.dart';
-import 'package:givnotes/variables/prefs.dart';
 import 'dot_secret_ui.dart';
 import 'circle_input_button.dart';
 

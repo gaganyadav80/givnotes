@@ -228,8 +228,7 @@ class _ZefyrFieldState extends State<ZefyrField> {
     }
 
     return AnimatedBuilder(
-      animation:
-          Listenable.merge(<Listenable>[widget.focusNode, widget.controller]),
+      animation: Listenable.merge(<Listenable>[widget.focusNode, widget.controller]),
       builder: (BuildContext context, Widget child) {
         return InputDecorator(
           decoration: _getEffectiveDecoration(),
@@ -244,9 +243,7 @@ class _ZefyrFieldState extends State<ZefyrField> {
   }
 
   InputDecoration _getEffectiveDecoration() {
-    final effectiveDecoration = (widget.decoration ?? const InputDecoration())
-        .applyDefaults(Theme.of(context).inputDecorationTheme)
-        .copyWith(
+    final effectiveDecoration = (widget.decoration ?? const InputDecoration()).applyDefaults(Theme.of(context).inputDecorationTheme).copyWith(
           enabled: !widget.readOnly,
           hintMaxLines: widget.decoration?.hintMaxLines,
         );

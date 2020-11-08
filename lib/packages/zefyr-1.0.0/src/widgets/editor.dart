@@ -288,7 +288,7 @@ class _ZefyrEditorState extends State<ZefyrEditor> implements EditorTextSelectio
       embedBuilder: widget.embedBuilder,
       // encapsulated fields below
       cursorStyle: CursorStyle(
-        color: cursorColor,
+        color: Colors.black,
         backgroundColor: Colors.grey,
         width: 2.0,
         radius: cursorRadius,
@@ -767,7 +767,7 @@ class RawEditorState extends EditorState
       style: widget.cursorStyle ??
           CursorStyle(
             // TODO: fallback to current theme's accent color
-            color: Colors.blueAccent,
+            color: ThemeData.fallback().accentColor,
             backgroundColor: Colors.grey,
             width: 2.0,
           ),

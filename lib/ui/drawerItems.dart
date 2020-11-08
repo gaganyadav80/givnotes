@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
+import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:toast/toast.dart';
 
 class DrawerItems extends StatefulWidget {
   DrawerItems({Key key, this.rebuildHome}) : super(key: key);
@@ -178,7 +178,7 @@ class EndDrawerItems extends StatelessWidget {
                             //
                           } else if (Var.noteMode == NoteMode.Editing) {
                             await _dbServices.updateNote(
-                              int.parse(note.key),
+                              note.key,
                               NotesModel()
                                 ..title = _title.isNotEmpty ? _title : 'Untitled'
                                 ..text = _note
@@ -218,9 +218,10 @@ class EndDrawerItems extends StatelessWidget {
                     Var.isTrash ? 'Delete note' : 'Trash note',
                     CupertinoIcons.delete,
                     Var.isTrash
-                        ? () {
+                        ? () async {
                             Navigator.pop(context);
-                            _confirmDeleteAlert(context, note, _dbServices);
+                            await _confirmDeleteAlert(context, note, _dbServices);
+                            Navigator.pop(context);
                           }
                         : () async {
                             note.trash = !note.trash;
@@ -291,8 +292,8 @@ class EndDrawerItems extends StatelessWidget {
   }
 }
 
-_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) {
-  showDialog(
+_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
+  await showDialog(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -307,9 +308,9 @@ _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) {
             onPressed: () async {
               _dbServices.deleteNote(note.key);
 
-              final List<String> list = (prefsBox.get('searchList') as List).cast<String>();
-              list.remove(note.title + ' ' + note.text.trim());
-              prefsBox.put('searchList', list);
+              // final List<String> list = (prefsBox.get('searchList') as List).cast<String>();
+              // list.remove(note.title + ' ' + note.text.trim());
+              // prefsBox.put('searchList', list);
 
               Var.noteMode = NoteMode.Adding;
 

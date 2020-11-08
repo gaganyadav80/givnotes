@@ -27,14 +27,12 @@ class NotesCard extends StatefulWidget {
 
 class _NotesCardState extends State<NotesCard> {
   String _created;
-  // String _modified;
   bool compactTags = false;
 
   @override
   void initState() {
     super.initState();
     _created = DateFormat.yMMMd().add_jm().format(widget.note.created);
-    // _modified = DateFormat.yMMMd().format(widget.note.modified);
   }
 
   @override
@@ -42,12 +40,11 @@ class _NotesCardState extends State<NotesCard> {
     return Card(
       elevation: 0,
       color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
-      // shape: RoundedRectangleBorder(
-      //   side: BorderSide(color: Colors.grey[300], width: 1),
-      //   borderRadius: BorderRadius.circular(5),
-      // ),
-      // margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(5),
         onLongPress: () {
           setState(() {
             widget.multiSelectController.toggle(widget.index);
@@ -102,7 +99,7 @@ class _NotesCardState extends State<NotesCard> {
                         scrollDirection: Axis.horizontal,
                         itemCount: widget.note.tags.length,
                         itemBuilder: (context, index) {
-                          String title = widget.note.tags[index];
+                          String tagsTitle = widget.note.tags[index];
                           Color color = Color(widget.note.tagColor[index]);
 
                           return compactTags
@@ -124,8 +121,8 @@ class _NotesCardState extends State<NotesCard> {
                                   ),
                                   child: Center(
                                     child: Text(
-                                      //TODO remove
-                                      title.toUpperCase(),
+                                      //TODO remove uppercase
+                                      tagsTitle.toUpperCase(),
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w700,
@@ -138,7 +135,7 @@ class _NotesCardState extends State<NotesCard> {
                         },
                       ),
                     ),
-              SizedBox(height: 2 * wm),
+              SizedBox(height: wm),
               Text(
                 widget.note.title,
                 style: GoogleFonts.ubuntu(
