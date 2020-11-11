@@ -4,6 +4,7 @@ import 'package:givnotes/packages/multi_select_item.dart';
 import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:givnotes/variables/homeVariables.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
@@ -28,11 +29,13 @@ class NotesCard extends StatefulWidget {
 class _NotesCardState extends State<NotesCard> {
   String _created;
   bool compactTags = false;
+  Map<String, int> _allTagsMap;
 
   @override
   void initState() {
     super.initState();
     _created = DateFormat.yMMMd().add_jm().format(widget.note.created);
+    _allTagsMap = (prefsBox.get('allTagsMap') as Map).cast<String, int>();
   }
 
   @override
@@ -100,7 +103,7 @@ class _NotesCardState extends State<NotesCard> {
                         itemCount: widget.note.tagsMap.length,
                         itemBuilder: (context, index) {
                           String tagsTitle = widget.note.tagsMap.keys.toList()[index];
-                          Color color = Color(widget.note.tagsMap[tagsTitle]);
+                          Color color = Color(_allTagsMap[tagsTitle]);
 
                           return compactTags
                               ? Container(

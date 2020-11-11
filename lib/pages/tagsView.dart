@@ -21,7 +21,7 @@ class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List<NotesModel> _notes = List<NotesModel>();
   String _created;
-  String _modified;
+  // String _modified;
 
   List<String> lst = [];
 
@@ -72,7 +72,7 @@ class _TagsViewState extends State<TagsView> {
                     var note = _notes[index];
 
                     _created = DateFormat.yMMMd().format(note.created);
-                    _modified = DateFormat.yMMMd().format(note.modified);
+                    // _modified = DateFormat.yMMMd().format(note.modified);
 
                     return InkWell(
                       onTap: () {
