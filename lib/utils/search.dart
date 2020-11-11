@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
+import 'package:givnotes/variables/prefs.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
@@ -27,9 +28,13 @@ class _SearchPageState extends State<SearchPage> {
   final FocusNode _focusNode = FocusNode();
   bool isSearchBoxSelected = false;
 
+  Map<String, int> _allTagsMap;
+
   @override
   void initState() {
     super.initState();
+
+    _allTagsMap = (prefsBox.get('allTagsMap') as Map).cast<String, int>();
 
     _textController.addListener(() {
       final text = _textController.text;
@@ -55,27 +60,27 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  // void onSearchListItemLongPress(NotesModel item) {
-  //   // SystemChannels.textInput.invokeMethod('TextInput.hide');
-  //   _focusNode.unfocus();
+  void onSearchListItemLongPress(NotesModel item) {
+    // SystemChannels.textInput.invokeMethod('TextInput.hide');
+    _focusNode.unfocus();
 
-  //   showModalBottomSheet(
-  //     context: context,
-  //     builder: (context) {
-  //       return Container(
-  //         height: 55 * hm,
-  //         padding: EdgeInsets.symmetric(horizontal: 3.5 * wm, vertical: 2.5 * hm),
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [],
-  //         ),
-  //       );
-  //     },
-  //     shape: RoundedRectangleBorder(
-  //       borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-  //     ),
-  //   );
-  // }
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          height: 55 * hm,
+          padding: EdgeInsets.symmetric(horizontal: 3.5 * wm, vertical: 2.5 * hm),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [],
+          ),
+        );
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+    );
+  }
 
   void onSearchListItemSelected(NotesModel item) {
     // _focusNode.unfocus();
@@ -155,7 +160,7 @@ class _SearchPageState extends State<SearchPage> {
                             child: InkWell(
                               borderRadius: BorderRadius.circular(5),
                               onTap: () => onSearchListItemSelected(_searchList[index]),
-                              // onLongPress: () => onSearchListItemLongPress(_searchList[index]),
+                              onLongPress: () => onSearchListItemLongPress(_searchList[index]),
                               child: _textController.text.isNotEmpty
                                   ? Padding(
                                       padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
@@ -185,7 +190,7 @@ class _SearchPageState extends State<SearchPage> {
                                                           itemCount: item.tagsMap.length,
                                                           itemBuilder: (context, index) {
                                                             String title = item.tagsMap.keys.toList()[index];
-                                                            Color color = Color(item.tagsMap[title]);
+                                                            Color color = Color(_allTagsMap[title]);
 
                                                             return compactTags
                                                                 ? Container(
@@ -206,8 +211,7 @@ class _SearchPageState extends State<SearchPage> {
                                                                     ),
                                                                     child: Center(
                                                                       child: Text(
-                                                                        //TODO remove
-                                                                        title.toUpperCase(),
+                                                                        title,
                                                                         style: TextStyle(
                                                                           color: Colors.white,
                                                                           fontWeight: FontWeight.w700,

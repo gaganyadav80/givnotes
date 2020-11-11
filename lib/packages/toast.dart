@@ -80,7 +80,11 @@ class ToastWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Positioned(
-        top: gravity == 2 ? 50 : null,
+        top: gravity == 2
+            ? 50
+            : gravity == 1
+                ? (MediaQuery.of(context).size.height / 2) - 20
+                : null,
         bottom: gravity == 0 ? 50 : null,
         left: MediaQuery.of(context).size.width / 4,
         right: MediaQuery.of(context).size.width / 4,

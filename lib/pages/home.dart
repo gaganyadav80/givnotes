@@ -129,6 +129,7 @@ class HomePageState extends State<HomePage> {
       }
 
       HiveDBServices()?.closeBox();
+      prefsBox?.close();
       if (Platform.isAndroid) SystemNavigator.pop();
       return true;
     }

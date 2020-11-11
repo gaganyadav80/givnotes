@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           // showPerformanceOverlay: true,
           theme: ThemeData(
             fontFamily: 'SFPro',
-            accentColor: Colors.grey[400],
+            // accentColor: Colors.grey[400],
             accentColorBrightness: Brightness.light,
             toggleableActiveColor: Colors.blue,
           ),

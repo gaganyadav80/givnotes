@@ -24,21 +24,18 @@ class HiveDBServices {
     return box.values.where((element) => element.trash = false).toList();
   }
 
-  // ValueListenable<Box<NotesModel>> listenAllNotes() async {
-  //   var box = await givnotesBox();
-  //   return box.listenable();
-  // }
-
-  Future<int> insertNote(NotesModel note) async {
+  Future<NotesModel> insertNote(NotesModel note) async {
     var box = await givnotesBox();
-    if (note != null) return await box.add(note);
+    if (note != null) await box.add(note);
 
-    return -1;
+    return note;
   }
 
-  Future updateNote(dynamic index, NotesModel note) async {
+  Future<NotesModel> updateNote(dynamic index, NotesModel note) async {
     var box = await givnotesBox();
     if (note != null) await box.put(index, note);
+
+    return note;
   }
 
   Future deleteNote(dynamic index) async {

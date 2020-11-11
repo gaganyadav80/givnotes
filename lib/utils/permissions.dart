@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HandlePermission {
@@ -28,28 +26,15 @@ class HandlePermission {
           content: Text('Go to settings to enable storage permission.'),
           actions: [
             FlatButton(
-              child: Text(
-                "Later",
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 2.5 * hm,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              child: Text("Later"),
               onPressed: () => Navigator.pop(context),
             ),
             FlatButton(
-              child: Text(
-                "Sure",
-                style: GoogleFonts.montserrat(
-                  color: Colors.white,
-                  fontSize: 2.5 * hm,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
+              child: Text("Sure"),
               onPressed: () {
-                openAppSettings();
                 Navigator.pop(context);
+
+                openAppSettings();
               },
             )
           ],

@@ -58,6 +58,7 @@ dependencies:
   quiver_hashcode: ^2.0.0
   characters: ^1.0.0
   sa_stateless_animation: ^1.0.3
+  stringprocess: ^1.0.10
   # undo: ^1.3.0+1
 
 dev_dependencies:

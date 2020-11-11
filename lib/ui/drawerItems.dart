@@ -8,9 +8,13 @@ import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
 import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
+import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
+import 'package:morpheus/morpheus.dart';
+import 'package:preferences/preferences.dart';
+import 'package:stringprocess/stringprocess.dart';
 
 class DrawerItems extends StatefulWidget {
   DrawerItems({Key key, this.rebuildHome}) : super(key: key);
@@ -90,155 +94,213 @@ class _DrawerItemsState extends State<DrawerItems> {
 }
 
 // ! End Drawer
-class EndDrawerItems extends StatelessWidget {
+class EndDrawerItems extends StatefulWidget {
   final TextEditingController titleController;
   final ZefyrController zefyrController;
   final Function updateZefyrEditMode;
   final FlareControls controls;
   final NotesModel note;
+  final int noteIndex;
 
   final Map<String, int> noteTagsMap;
-  // List<String> noteTags = <String>[];
-  // List<int> noteTagColors = [];
 
+  EndDrawerItems({this.updateZefyrEditMode, this.titleController, this.zefyrController, this.controls, this.note, this.noteTagsMap, this.noteIndex});
+
+  @override
+  _EndDrawerItemsState createState() => _EndDrawerItemsState();
+}
+
+class _EndDrawerItemsState extends State<EndDrawerItems> {
   final HiveDBServices _dbServices = HiveDBServices();
-
-  EndDrawerItems({
-    this.updateZefyrEditMode,
-    this.titleController,
-    this.zefyrController,
-    this.controls,
-    this.note,
-    this.noteTagsMap,
-  });
+  final StringProcessor _sp = StringProcessor();
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return Container(
+      width: wm * 65,
       child: Drawer(
         elevation: 40,
-        child: Column(
-          children: <Widget>[
-            Container(
-              color: Colors.black,
-              height: 25 * hm,
-              child: Center(
-                child: Text(
-                  "Notes context menu",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 3.5 * hm,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ),
-            ),
-            Var.isTrash == false
-                ? myEndDrawerListTheme(
-                    'Save note',
-                    Icons.check,
-                    () async {
-                      if (Var.isEditing == false) {
+        child: PreferencePage([
+          PreferenceTitle('Options'),
+          Var.isTrash == false
+              ? myEndDrawerListTheme(
+                  'Save note',
+                  Icons.save_alt,
+                  () async {
+                    Navigator.pop(context);
+
+                    if (Var.isEditing == false) {
+                      //
+                      // Var.noteMode = NoteMode.Adding;
+                      // Navigator.pop(context);
+                      //
+                    } else if (Var.isEditing) {
+                      String _title = widget.titleController.text;
+                      String _text = widget.zefyrController.document.toPlainText().trim();
+
+                      if (_title.isEmpty && _text.isEmpty) {
                         //
-                        Var.noteMode = NoteMode.Adding;
+                        FocusScope.of(context).unfocus();
+                        showToast(context, "Can't create empty note");
                         Navigator.pop(context);
+                        Var.isEditing = false;
                         //
-                      } else if (Var.isEditing) {
-                        String _title = titleController.text;
-                        String _note = zefyrController.document.toPlainText().trim();
+                      } else {
+                        //
+                        FocusScope.of(context).unfocus();
+                        widget.controls.play('save');
+                        // controls.play('idle-arrow');
+                        widget.updateZefyrEditMode(false);
 
-                        if (_title.isEmpty && _note.isEmpty) {
+                        if (Var.noteMode == NoteMode.Adding) {
+                          await _dbServices.insertNote(
+                            NotesModel()
+                              ..title = _title.isNotEmpty ? _title : 'Untitled'
+                              ..text = _text
+                              ..znote = jsonEncode(widget.zefyrController.document)
+                              ..created = DateTime.now()
+                              ..modified = DateTime.now()
+                              ..tagsMap = widget.noteTagsMap,
+                            // ..tags = noteTags
+                            // ..tagColor = noteTagColors,
+                          );
+
+                          showToast(context, 'Note saved');
                           //
-                          FocusScope.of(context).unfocus();
-                          showToast(context, "Can't create empty note");
-                          Navigator.pop(context);
-                          Navigator.pop(context);
-                          Var.isEditing = false;
-                          //
-                        } else {
-                          //
-                          FocusScope.of(context).unfocus();
-                          controls.play('save');
-                          // controls.play('idle-arrow');
-                          updateZefyrEditMode(false);
+                        } else if (Var.noteMode == NoteMode.Editing) {
+                          await _dbServices.updateNote(
+                            widget.noteIndex,
+                            NotesModel()
+                              ..title = _title.isNotEmpty ? _title : 'Untitled'
+                              ..text = _text
+                              ..znote = jsonEncode(widget.zefyrController.document)
+                              ..trash = widget.note.trash
+                              ..created = widget.note.created
+                              ..modified = DateTime.now()
+                              ..tagsMap = widget.noteTagsMap,
+                            // ..tags = noteTags
+                            // ..tagColor = noteTagColors,
+                          );
 
-                          if (Var.noteMode == NoteMode.Adding) {
-                            await _dbServices.insertNote(
-                              NotesModel()
-                                ..title = _title.isNotEmpty ? _title : 'Untitled'
-                                ..text = _note
-                                ..znote = jsonEncode(zefyrController.document)
-                                ..created = DateTime.now()
-                                ..modified = DateTime.now()
-                                ..tagsMap = noteTagsMap,
-                              // ..tags = noteTags
-                              // ..tagColor = noteTagColors,
-                            );
-
-                            showToast(context, 'Note saved');
-                            //
-                          } else if (Var.noteMode == NoteMode.Editing) {
-                            await _dbServices.updateNote(
-                              note.key,
-                              NotesModel()
-                                ..title = _title.isNotEmpty ? _title : 'Untitled'
-                                ..text = _note
-                                ..znote = jsonEncode(zefyrController.document)
-                                ..trash = note.trash
-                                ..created = note.created
-                                ..modified = DateTime.now()
-                                ..tagsMap = noteTagsMap,
-                              // ..tags = noteTags
-                              // ..tagColor = noteTagColors,
-                            );
-
-                            showToast(context, 'Note saved');
-                          }
+                          showToast(context, 'Note saved');
                         }
                       }
-                    },
-                    context,
-                  )
-                : myEndDrawerListTheme(
-                    'Restore note',
-                    Icons.arrow_upward,
-                    () async {
-                      note.trash = !note.trash;
-                      await note.save();
+                    }
+                  },
+                  context,
+                )
+              : myEndDrawerListTheme(
+                  'Restore note',
+                  Icons.arrow_upward,
+                  () async {
+                    widget.note.trash = !widget.note.trash;
+                    await widget.note.save();
 
-                      Var.noteMode = NoteMode.Adding;
+                    Var.noteMode = NoteMode.Adding;
 
-                      if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
-                      Navigator.pop(context);
-                    },
-                    context,
-                  ),
+                    if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                  context,
+                ),
 
-            //
-            Var.noteMode == NoteMode.Editing
-                ? myEndDrawerListTheme(
-                    Var.isTrash ? 'Delete note' : 'Trash note',
-                    CupertinoIcons.delete,
-                    Var.isTrash
-                        ? () async {
-                            Navigator.pop(context);
-                            await _confirmDeleteAlert(context, note, _dbServices);
-                            Navigator.pop(context);
-                          }
-                        : () async {
-                            note.trash = !note.trash;
-                            await note.save();
+          myEndDrawerListTheme(
+            'Statistics',
+            CupertinoIcons.info,
+            () async {
+              Navigator.pop(context);
 
-                            Var.noteMode = NoteMode.Adding;
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    insetPadding: EdgeInsets.all(30),
+                    // contentPadding: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    title: Text('Statistics'),
+                    content: Container(
+                      height: 80,
+                      width: (wm * 100) - 60,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Words: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("${_sp.getWordCount(widget.note.text)}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Characters (With Spaces): ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("${widget.note.text.length}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Lines: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("${_sp.getLineCount(widget.note.text)}"),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                'Paragraphs: ',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Text("${widget.note.text.split(".\n\n").length}"),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      FlatButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text('OK'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            context,
+          ),
 
-                            if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
-                            Navigator.pop(context);
-                          },
-                    context,
-                  )
-                : SizedBox.shrink(),
-          ],
-        ),
+          //
+          Var.noteMode == NoteMode.Editing
+              ? myEndDrawerListTheme(
+                  Var.isTrash ? 'Delete note' : 'Trash note',
+                  CupertinoIcons.delete,
+                  Var.isTrash
+                      ? () async {
+                          Navigator.pop(context); //? close the drawer
+                          await _confirmDeleteAlert(context, widget.note, _dbServices);
+                          // Navigator.pop(context); //TODO problem
+                          // Navigator.pop(context);
+                        }
+                      : () async {
+                          widget.note.trash = !widget.note.trash;
+                          await widget.note.save();
+
+                          Var.noteMode = NoteMode.Adding;
+
+                          if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                  context,
+                )
+              : SizedBox.shrink(),
+        ]),
       ),
     );
   }
@@ -253,30 +315,30 @@ class EndDrawerItems extends StatelessWidget {
       onTap: onPressed,
       child: Column(
         children: [
-          SizedBox(height: hm * 2),
+          // SizedBox(height: hm * 2),
           GFListTile(
-            padding: EdgeInsets.zero,
-            margin: EdgeInsets.only(left: 5 * wm, right: 5 * wm),
-            avatar: Icon(
+            padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+            margin: EdgeInsets.zero,
+            icon: Icon(
               icon,
-              size: 2.7 * hm,
+              size: 5 * wm,
             ),
             title: Text(
               title,
               style: TextStyle(
-                fontSize: 2.7 * hm,
+                fontSize: 4.5 * wm,
                 fontWeight: FontWeight.w300,
               ),
             ),
           ),
-          SizedBox(height: hm * 2),
-          Divider(
-            thickness: 0.01 * hm,
-            height: 0.01 * hm,
-            color: Colors.black,
-            indent: 6.5 * wm,
-            endIndent: 4 * wm,
-          ),
+          // SizedBox(height: hm * 2),
+          // Divider(
+          //   thickness: 0.01 * hm,
+          //   height: 0.01 * hm,
+          //   color: Colors.black,
+          //   indent: 6.5 * wm,
+          //   endIndent: 4 * wm,
+          // ),
         ],
       ),
     );
@@ -302,22 +364,22 @@ _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async 
         content: Text('Are you sure you permanently want to delete this note?'),
         actions: [
           FlatButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(context), //? Close the dialog
             child: Text('Cancle'),
           ),
           FlatButton(
             child: Text('Delete'),
             onPressed: () async {
               _dbServices.deleteNote(note.key);
-
-              // final List<String> list = (prefsBox.get('searchList') as List).cast<String>();
-              // list.remove(note.title + ' ' + note.text.trim());
-              // prefsBox.put('searchList', list);
-
               Var.noteMode = NoteMode.Adding;
 
-              Navigator.pop(context);
-              // Navigator.pop(context);
+              Navigator.pop(context); //? close the dialog
+              Navigator.push(
+                context,
+                MorpheusPageRoute(
+                  builder: (context) => HomePage(),
+                ),
+              );
             },
           ),
         ],
