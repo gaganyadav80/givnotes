@@ -260,9 +260,16 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                     String tagName = _newTagTextController.text.trim();
 
                     if (tagName.isEmpty) {
-                      showToast("Tag name is required");
+                      // showToast("Tag name is required");
+                      // zefyrScaffoldKey.currentState.showSnackBar(SnackBar(content: Text('Tag name is required')));
+                      // OneContext().showSnackBar(
+                      //   builder: (_) => SnackBar(content: Text('My awesome snackBar!')),
+                      // );
+                      showFlashToast(context, 'Tag name is required');
+                      //
                     } else if (selectTagColors.length != 1) {
-                      showToast("Please select a color");
+                      // showToast("Please select a color");
+                      showFlashToast(context, 'Please select a color');
                     } else {
                       colorValue = selectTagColors.first;
 
@@ -288,7 +295,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                           else
                             noteTagsMap[tagName] = flag;
                         } else {
-                          showToast("Tag already added");
+                          // showToast("Tag already added");
+                          showFlashToast(context, "Tag already added");
                         }
                       }
 

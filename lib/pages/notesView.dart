@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/packages/unicorndial/speed_dial_controller.dart';
@@ -58,6 +59,13 @@ class NotesViewState extends State<NotesView> {
           return AnimationLimiter(
             child: ListView.builder(
               itemCount: _notes.length,
+              //TODO maybe remove divider in const_notes_view and use separator
+              // separatorBuilder: (context, index) => Divider(
+              //   height: 0.057 * wm,
+              //   color: Colors.black,
+              //   indent: 10,
+              //   endIndent: 10,
+              // ),
               itemBuilder: (context, index) {
                 _animateIndex = index;
                 index = _notes.length - index - 1;
@@ -70,37 +78,43 @@ class NotesViewState extends State<NotesView> {
                   child: SlideAnimation(
                     verticalOffset: 25.0,
                     child: FadeInAnimation(
-                      child: Dismissible(
+                      child: Slidable(
                         key: UniqueKey(),
-                        background: Container(
-                          color: Var.isTrash ? Colors.teal[300] : Color(0xffEC625C),
-                          width: double.infinity,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Icon(
-                                Var.isTrash ? Icons.restore : Icons.delete,
-                                size: 10 * wm,
-                              ),
-                              SizedBox(width: 10 * wm)
-                            ],
-                          ),
+                        actionPane: SlidableBehindActionPane(),
+                        actionExtentRatio: 1.0,
+                        dismissal: SlidableDismissal(
+                          child: SlidableDrawerDismissal(),
+                          onDismissed: (actionType) {
+                            if (!Var.isTrash) {
+                              note.trash = !note.trash;
+                              note.save();
+                              print('moved to Trash');
+                              // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Trash')));
+
+                              _multiSelectController.set(_notes.length);
+                            } else {
+                              note.trash = false;
+                              note.save();
+                              print('moved to Notes');
+                              // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Notes')));
+
+                              _multiSelectController.set(_notes.length);
+                            }
+                          },
                         ),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          if (!Var.isTrash) {
-                            note.trash = !note.trash;
-                            note.save();
-
-                            _multiSelectController.set(_notes.length);
-                          } else {
-                            note.trash = false;
-                            note.save();
-                            print('moved to notes');
-
-                            _multiSelectController.set(_notes.length);
-                          }
-                        },
+                        secondaryActions: <Widget>[
+                          !Var.isTrash
+                              ? iconSlideAction(
+                                  Colors.red,
+                                  Icons.delete,
+                                  'Trash',
+                                )
+                              : iconSlideAction(
+                                  Color(0xff66a9e0),
+                                  Icons.restore,
+                                  'Resotre',
+                                ),
+                        ],
                         child: NotesCard(
                           note: note,
                           index: index,
@@ -118,6 +132,7 @@ class NotesViewState extends State<NotesView> {
       ),
       floatingActionButton: !_multiSelectController.isSelecting && !Var.isTrash
           ? UnicornDialer(
+              parentHeroTag: 'parent',
               parentButton: Icon(
                 CupertinoIcons.add,
                 color: Colors.white,
@@ -169,6 +184,37 @@ class NotesViewState extends State<NotesView> {
                   // ),
                   onPressed: () {},
                 ),
+    );
+  }
+
+  Widget iconSlideAction(Color color, IconData icon, String caption) {
+    return IconSlideAction(
+      // caption: 'Trash',
+      color: color,
+      // icon: Icons.delete,
+      iconWidget: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  icon,
+                  color: Colors.white,
+                ),
+                Text(
+                  caption,
+                  style: TextStyle(color: Colors.white),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
+      onTap: () => Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Trash'))),
     );
   }
 
@@ -291,35 +337,44 @@ class NotesViewState extends State<NotesView> {
   }
 }
 
-class NotesCardTemp extends StatefulWidget {
-  NotesCardTemp({
-    Key key,
-    @required this.index,
-    @required this.note,
-    @required this.multiSelectController,
-    this.notesViewUpdate,
-  }) : super(key: key);
+// Dismissible(
+//   key: UniqueKey(),
+//   background: Container(
+//     color: Var.isTrash ? Colors.teal[300] : Color(0xffEC625C),
+//     width: double.infinity,
+//     child: Row(
+//       mainAxisAlignment: MainAxisAlignment.end,
+//       children: [
+//         Icon(
+//           Var.isTrash ? Icons.restore : Icons.delete,
+//           size: 10 * wm,
+//         ),
+//         SizedBox(width: 10 * wm)
+//       ],
+//     ),
+//   ),
+//   direction: DismissDirection.endToStart,
+//   onDismissed: (direction) {
+//     if (!Var.isTrash) {
+//       note.trash = !note.trash;
+//       note.save();
 
-  final int index;
-  final NotesModel note;
-  final MultiSelectController multiSelectController;
-  final Function notesViewUpdate;
+//       _multiSelectController.set(_notes.length);
+//     } else {
+//       note.trash = false;
+//       note.save();
+//       print('moved to notes');
 
-  @override
-  _NotesCardTempState createState() => _NotesCardTempState();
-}
-
-class _NotesCardTempState extends State<NotesCardTemp> {
-  @override
-  Widget build(BuildContext context) {
-    return NotesCard(
-      note: widget.note,
-      index: widget.index,
-      multiSelectController: widget.multiSelectController,
-      notesViewUpdate: widget.notesViewUpdate,
-    );
-  }
-}
+//       _multiSelectController.set(_notes.length);
+//     }
+//   },
+//   child: NotesCard(
+//     note: note,
+//     index: index,
+//     multiSelectController: _multiSelectController,
+//     notesViewUpdate: refreshNotesView,
+//   ),
+// ),
 
 // return multiSelectController.isSelecting == false
 //     ? OpenContainer(
