@@ -99,12 +99,22 @@ class EndDrawerItems extends StatefulWidget {
   final ZefyrController zefyrController;
   final Function updateZefyrEditMode;
   final FlareControls controls;
+  final Function saveNote;
   final NotesModel note;
   final int noteIndex;
 
   final Map<String, int> noteTagsMap;
 
-  EndDrawerItems({this.updateZefyrEditMode, this.titleController, this.zefyrController, this.controls, this.note, this.noteTagsMap, this.noteIndex});
+  EndDrawerItems({
+    this.updateZefyrEditMode,
+    this.titleController,
+    this.zefyrController,
+    this.controls,
+    this.note,
+    this.noteTagsMap,
+    this.noteIndex,
+    this.saveNote,
+  });
 
   @override
   _EndDrawerItemsState createState() => _EndDrawerItemsState();
@@ -129,63 +139,7 @@ class _EndDrawerItemsState extends State<EndDrawerItems> {
                   () async {
                     Navigator.pop(context);
 
-                    if (Var.isEditing == false) {
-                      //
-                      // Var.noteMode = NoteMode.Adding;
-                      // Navigator.pop(context);
-                      //
-                    } else if (Var.isEditing) {
-                      String _title = widget.titleController.text;
-                      String _text = widget.zefyrController.document.toPlainText().trim();
-
-                      if (_title.isEmpty && _text.isEmpty) {
-                        //
-                        FocusScope.of(context).unfocus();
-                        showToast(context, "Can't create empty note");
-                        Navigator.pop(context);
-                        Var.isEditing = false;
-                        //
-                      } else {
-                        //
-                        FocusScope.of(context).unfocus();
-                        widget.controls.play('save');
-                        // controls.play('idle-arrow');
-                        widget.updateZefyrEditMode(false);
-
-                        if (Var.noteMode == NoteMode.Adding) {
-                          await _dbServices.insertNote(
-                            NotesModel()
-                              ..title = _title.isNotEmpty ? _title : 'Untitled'
-                              ..text = _text
-                              ..znote = jsonEncode(widget.zefyrController.document)
-                              ..created = DateTime.now()
-                              ..modified = DateTime.now()
-                              ..tagsMap = widget.noteTagsMap,
-                            // ..tags = noteTags
-                            // ..tagColor = noteTagColors,
-                          );
-
-                          showToast(context, 'Note saved');
-                          //
-                        } else if (Var.noteMode == NoteMode.Editing) {
-                          await _dbServices.updateNote(
-                            widget.noteIndex,
-                            NotesModel()
-                              ..title = _title.isNotEmpty ? _title : 'Untitled'
-                              ..text = _text
-                              ..znote = jsonEncode(widget.zefyrController.document)
-                              ..trash = widget.note.trash
-                              ..created = widget.note.created
-                              ..modified = DateTime.now()
-                              ..tagsMap = widget.noteTagsMap,
-                            // ..tags = noteTags
-                            // ..tagColor = noteTagColors,
-                          );
-
-                          showToast(context, 'Note saved');
-                        }
-                      }
-                    }
+                    widget.saveNote(true);
                   },
                   context,
                 )

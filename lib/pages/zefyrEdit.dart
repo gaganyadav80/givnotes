@@ -18,6 +18,7 @@ import 'package:intl/intl.dart';
 
 enum NoteMode { Editing, Adding }
 Map<String, int> noteTagsMap = {};
+// final GlobalKey<ScaffoldState> zefyrScaffoldKey = GlobalKey<ScaffoldState>();
 
 class ZefyrEdit extends StatefulWidget {
   ZefyrEdit({this.noteMode, this.note});
@@ -94,6 +95,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
   @override
   void dispose() {
     // prefsBox.put('allTagsMap', _allTagsMap);
+    noteTagsMap = {};
 
     _zefyrController?.dispose();
     _zefyrfocusNode?.dispose();
@@ -156,12 +158,13 @@ class ZefyrEditState extends State<ZefyrEdit> {
     return WillPopScope(
       onWillPop: _onPop,
       child: Scaffold(
+        // key: zefyrScaffoldKey,
         resizeToAvoidBottomInset: true,
         resizeToAvoidBottomPadding: true,
         extendBody: true,
         backgroundColor: Colors.white,
         appBar: ZefyrEditAppBar(
-          saveNote: saveNote,
+          saveNote: _saveNote,
           controls: controls,
         ),
         body: SafeArea(
@@ -288,12 +291,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
           note: _notesModel,
           noteTagsMap: noteTagsMap,
           noteIndex: _noteIndex,
+          saveNote: _saveNote,
         ),
         floatingActionButton: Var.noteMode == NoteMode.Editing && !Var.isEditing
             ? Container(
-                height: 18 * wm,
-                margin: EdgeInsets.only(bottom: 5),
+                // height: 18 * wm,
+                margin: EdgeInsets.only(bottom: 15),
                 child: FloatingActionButton(
+                  heroTag: 'parent',
                   tooltip: 'Edit',
                   backgroundColor: Colors.black,
                   elevation: 5,
@@ -427,7 +432,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
 
       return true;
     } else if (title.isNotEmpty || note.isNotEmpty) {
-      saveNote();
+      _saveNote();
       //
     } else {
       updateEditMode(false);
@@ -435,8 +440,9 @@ class ZefyrEditState extends State<ZefyrEdit> {
     return false;
   }
 
-  void saveNote() async {
-    if (Var.isEditing == false) {
+  void _saveNote({isDrawerSave = false}) async {
+    print('isDrawerSave:  $isDrawerSave');
+    if (Var.isEditing == false && isDrawerSave == false) {
       //
       Var.noteMode = NoteMode.Adding;
       Navigator.pop(context);
