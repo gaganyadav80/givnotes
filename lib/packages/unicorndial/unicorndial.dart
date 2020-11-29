@@ -139,9 +139,9 @@ class _UnicornDialer extends State<UnicornDialer> with TickerProviderStateMixin 
     //       return
 
     var mainFAB = GestureDetector(
-      onLongPress: () {
-        mainActionButtonOnPressed();
-      },
+      // onLongPress: () {
+      //   mainActionButtonOnPressed();
+      // },
       child: FloatingActionButton(
         isExtended: widget.mainFabExtended,
         heroTag: widget.parentHeroTag,

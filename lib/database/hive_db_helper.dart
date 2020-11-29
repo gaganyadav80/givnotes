@@ -3,7 +3,7 @@ import 'package:hive/hive.dart';
 
 class HiveDBServices {
   // String _prefsBoxName = 'prefs';
-  String _givnotesBoxName = 'givnnotes';
+  String _givnotesBoxName = 'givnotes';
 
   /*
   Notes

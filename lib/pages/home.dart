@@ -6,13 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
 import 'package:givnotes/packages/toast.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:route_transitions/route_transitions.dart';
-
-// GlobalKey<HomePageState> _homeScaffoldKey = GlobalKey<HomePageState>();
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -28,6 +27,18 @@ class HomePageState extends State<HomePage> {
     setState(() {});
   }
 
+  void modalSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return NotesModelSheet();
+      },
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -38,7 +49,7 @@ class HomePageState extends State<HomePage> {
         resizeToAvoidBottomPadding: true,
         // extendBody: true,
         backgroundColor: Colors.white,
-        appBar: MyAppBar(Var.setTitle()),
+        appBar: MyAppBar(Var.setTitle(), modalSheet),
         //
         drawer: DrawerItems(
           rebuildHome: _rebuildHome,
@@ -113,6 +124,7 @@ class HomePageState extends State<HomePage> {
       //
     } else if (Var.selectedIndex == 0) {
       //
+
       DateTime now = DateTime.now();
       if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
         currentBackPressTime = now;

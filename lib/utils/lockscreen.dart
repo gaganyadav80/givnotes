@@ -52,8 +52,8 @@ class _LockscreenState extends State<Lockscreen> {
       confirmMode: false,
       digits: 4,
       canCancel: widget.changePassAuth,
-      canBiometric: prefsBox.get('biometric') ?? false,
-      showBiometricFirst: prefsBox.get('biometric') ?? true,
+      canBiometric: prefsBox.get('biometric', defaultValue: false),
+      showBiometricFirst: prefsBox.get('biometric', defaultValue: false),
       biometricAuthenticate: biometrics,
       backgroundColorOpacity: 1,
       onUnlocked: widget.changePassAuth

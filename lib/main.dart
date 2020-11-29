@@ -41,7 +41,7 @@ void main() async {
     AppLock(
       builder: (_) => MyApp(),
       lockScreen: Lockscreen(changePassAuth: false),
-      enabled: prefsBox.get('applock') ?? false,
+      enabled: prefsBox.get('applock', defaultValue: false),
     ),
   );
 }
@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
           // showPerformanceOverlay: true,
           theme: ThemeData(
             fontFamily: 'SFPro',
-            // accentColor: Colors.grey[400],
+            accentColor: Colors.black,
             accentColorBrightness: Brightness.light,
             toggleableActiveColor: Colors.blue,
           ),
@@ -115,36 +115,30 @@ class _CheckLogInState extends State<CheckLogIn> {
   }
 
   void checkKeys() {
-    if (!prefsBox.containsKey('skip')) {
-      prefsBox.put('skip', false);
-    } else {
-      isSkipped = prefsBox.get('skip');
-    }
+    isSkipped = prefsBox.get('skip', defaultValue: false);
+    isFirstLaunch = prefsBox.get('firstLaunch', defaultValue: true);
 
-    if (!prefsBox.containsKey('firstLaunch')) {
-      prefsBox.put('firstLaunch', true);
-    } else {
-      isFirstLaunch = prefsBox.get('firstLaunch');
-    }
-
-    if (!prefsBox.containsKey('applock')) {
-      prefsBox.put('applock', false);
-    }
-    if (!prefsBox.containsKey('biometric')) {
-      prefsBox.put('biometric', false);
-    }
     if (!prefsBox.containsKey('allTagsMap')) {
       prefsBox.put('allTagsMap', {});
-      // prefsBox.put('allTags', []);
-      // prefsBox.put('tagColors', []);
     }
+
+    // if (!prefsBox.containsKey('skip')) {
+    //   prefsBox.put('skip', false);
+    // } else {
+    //   isSkipped = prefsBox.get('skip');
+    // }
+
+    // if (!prefsBox.containsKey('firstLaunch')) {
+    //   prefsBox.put('firstLaunch', true);
+    // } else {
+    //   isFirstLaunch = prefsBox.get('firstLaunch');
+    // }
+
+    // if (!prefsBox.containsKey('applock')) {
+    //   prefsBox.put('applock', false);
+    // }
+    // if (!prefsBox.containsKey('biometric')) {
+    //   prefsBox.put('biometric', false);
+    // }
   }
 }
-
-// getSkip().then((bool skip) {
-//   if (skip == true || skip == false)
-//     isSkipped = skip;
-//   else
-//     isSkipped = false;
-// });
-// _localPath.then((value) => Directory("$value/notes").create());

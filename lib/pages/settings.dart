@@ -29,14 +29,37 @@ class _SettingsPageState extends State<SettingsPage> {
         'Sort notes',
         'sort_notes',
         defaultVal: 'Date created',
-        disabled: true,
         values: ['Date created', 'Date modified', 'A-Z Title', 'Z-A Title'],
-        onChange: ((value) {
+        onChange: ((String value) {
           print(value);
+          if (value == 'Date created')
+            // sortNotes = SortNotes.Created;
+            prefsBox.put('sortNotes', 'created');
+          else if (value == 'Date modified')
+            // sortNotes = SortNotes.Modified;
+            prefsBox.put('sortNotes', 'modified');
+          else if (value == 'A-Z Title')
+            // sortNotes = SortNotes.AZ;
+            prefsBox.put('sortNotes', 'a-z');
+          else
+            // sortNotes = SortNotes.ZA;
+            prefsBox.put('sortNotes', 'z-a');
         }),
       ),
-      PreferenceTitle('Personalization'),
+      SwitchPreference(
+        'Compact Tags',
+        'biometric',
+        desc: 'Enable compact tags in notes view',
+        defaultVal: false,
+        onEnable: () {
+          prefsBox.put('compactTags', true);
+        },
+        onDisable: () {
+          prefsBox.put('compactTags', false);
+        },
+      ),
 
+      PreferenceTitle('Personalization'),
       DropdownPreference(
         'App theme',
         'app_theme',
@@ -101,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
         'biometric',
         desc: 'Enable Fingerprint/Face unlock',
         defaultVal: false,
-        disabled: !prefsBox.get('applock'),
+        disabled: !prefsBox.get('applock', defaultValue: false),
         onEnable: () {
           prefsBox.put('biometric', true);
         },
@@ -171,7 +194,7 @@ HM - WM:  $hm - $wm
 App name:  ${packageInfo.appName}
 Package:   ${packageInfo.packageName}
 Build_no:  ${packageInfo.buildNumber}
-App Release Version:   ${packageInfo.version}
+App Release Version:   ${packageInfo.version}-alpha
 Development Version:   3.0.0
   """,
             overflow: TextOverflow.visible,

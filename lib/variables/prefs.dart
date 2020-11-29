@@ -1,15 +1,19 @@
 import 'package:device_info/device_info.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/packages/zefyr-1.0.0/src/widgets/theme.dart';
 import 'package:hive/hive.dart';
 import 'package:package_info/package_info.dart';
+import 'package:zefyr/zefyr.dart';
 
 // Hive
-// keys = bool skip, bool firstLaunch, Map<String, String> user
+// keys = bool skip, bool firstLaunch, bool applock, bool biometric, bool compactNotes
+// String sortNotes, String passcode, Map<String, String> user = {url, name, email}
+
 Box prefsBox;
 AndroidDeviceInfo androidInfo;
 PackageInfo packageInfo;
+
+// enum SortNotes { Created, Modified, AZ, ZA }
 
 // * Custom Colors
 // final Color lightBlue = Color(0xff91dcf5);
@@ -24,6 +28,10 @@ bool isSkipped = false;
 bool isConnected = false;
 bool isFirstLaunch = true;
 bool isPermanentDisabled = false;
+
+//TODO make persistant
+String sortNotes = 'created';
+bool compactTags = false;
 
 errorAlert(BuildContext context, dynamic e) {
   showDialog(

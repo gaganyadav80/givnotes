@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/packages/toast.dart';
@@ -21,6 +22,7 @@ class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List<NotesModel> _notes = List<NotesModel>();
   String _created;
+  int _animateIndex = 0;
   // String _modified;
 
   List<String> lst = [];
@@ -64,81 +66,93 @@ class _TagsViewState extends State<TagsView> {
                   );
                 }
 
-                return ListView.builder(
-                  itemCount: _notes.length,
-                  itemBuilder: (context, index) {
-                    index = _notes.length - index - 1;
+                return AnimationLimiter(
+                  child: ListView.builder(
+                    itemCount: _notes.length,
+                    itemBuilder: (context, index) {
+                      _animateIndex = index;
+                      index = _notes.length - index - 1;
 
-                    var note = _notes[index];
+                      var note = _notes[index];
 
-                    _created = DateFormat.yMMMd().format(note.created);
-                    // _modified = DateFormat.yMMMd().format(note.modified);
+                      _created = DateFormat.yMMMd().format(note.created);
+                      // _modified = DateFormat.yMMMd().format(note.modified);
 
-                    return InkWell(
-                      onTap: () {
-                        Var.noteMode = NoteMode.Editing;
+                      return AnimationConfiguration.staggeredList(
+                        position: _animateIndex,
+                        duration: const Duration(milliseconds: 375),
+                        child: SlideAnimation(
+                          verticalOffset: 25.0,
+                          child: FadeInAnimation(
+                            child: InkWell(
+                              onTap: () {
+                                Var.noteMode = NoteMode.Editing;
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ZefyrEdit(
-                              noteMode: NoteMode.Editing,
-                              note: note,
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ZefyrEdit(
+                                      noteMode: NoteMode.Editing,
+                                      note: note,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Card(
+                                elevation: 0,
+                                color: Colors.white,
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Divider(
+                                        height: 0.057 * wm,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(height: 2 * wm),
+                                      Text(
+                                        note.title,
+                                        style: GoogleFonts.ubuntu(
+                                          fontSize: 4.4 * wm,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      SizedBox(height: 1 * wm),
+                                      Text(
+                                        note.text,
+                                        style: TextStyle(
+                                          color: Colors.grey[800],
+                                          // fontSize: 3 * wm,
+                                        ),
+                                        maxLines: 5,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(height: wm),
+                                      Text(
+                                        "created  $_created",
+                                        style: GoogleFonts.ubuntu(
+                                          fontWeight: FontWeight.w300,
+                                          color: Colors.grey,
+                                          fontSize: 3 * wm,
+                                          // fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                      SizedBox(height: 1.5 * wm),
+                                      Divider(
+                                        height: 0.057 * wm,
+                                        color: Colors.black,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        );
-                      },
-                      child: Card(
-                        elevation: 0,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Divider(
-                                height: 0.057 * wm,
-                                color: Colors.black,
-                              ),
-                              SizedBox(height: 2 * wm),
-                              Text(
-                                note.title,
-                                style: GoogleFonts.ubuntu(
-                                  fontSize: 4.4 * wm,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 1 * wm),
-                              Text(
-                                note.text,
-                                style: TextStyle(
-                                  color: Colors.grey[800],
-                                  // fontSize: 3 * wm,
-                                ),
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: wm),
-                              Text(
-                                "created  $_created",
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey,
-                                  fontSize: 3 * wm,
-                                  // fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                              SizedBox(height: 1.5 * wm),
-                              Divider(
-                                height: 0.057 * wm,
-                                color: Colors.black,
-                              ),
-                            ],
-                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               },
             ),

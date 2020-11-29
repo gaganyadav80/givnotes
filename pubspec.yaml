@@ -17,7 +17,7 @@ dependencies:
   getwidget: ^1.2.2
   path_provider: ^1.6.11
   intl: ^0.16.1
-  # zefyr: ^1.0.0-dev.1.0
+  zefyr: ^1.0.0-dev.2.0
   quill_delta: ^2.0.0
   lottie: ^0.6.0
   flutter_snake_navigationbar: ^0.4.0+1
@@ -53,7 +53,7 @@ dependencies:
   collection: ^1.14.6
   # url_launcher: ^5.0.0
   # quill_delta: ^2.0.0
-  notus: ^1.0.0-dev
+  notus: ^1.0.0-dev.4.0
   meta: ^1.1.0
   quiver_hashcode: ^2.0.0
   characters: ^1.0.0

@@ -2,19 +2,21 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/components/appbar/gf_appbar.dart';
+import 'package:givnotes/pages/notesView.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
 
 class MyAppBar extends StatefulWidget with PreferredSizeWidget {
-  final String title;
+  const MyAppBar(this.title, this.notesModelSheet, {Key key}) : super(key: key);
 
-  const MyAppBar(this.title, {Key key}) : super(key: key);
+  final String title;
+  final Function notesModelSheet;
 
   @override
   _MyAppBarState createState() => _MyAppBarState();
 
   @override
-  Size get preferredSize => Size.fromHeight(22.7 * wm);
+  Size get preferredSize => Size.fromHeight(90);
 }
 
 class _MyAppBarState extends State<MyAppBar> {
@@ -31,7 +33,19 @@ class _MyAppBarState extends State<MyAppBar> {
               Scaffold.of(context).openDrawer();
             },
           ),
-          // actions: getAppBarActions(),
+          actions: [
+            Var.selectedIndex == 0
+                ? IconButton(
+                    icon: Icon(
+                      Icons.more_vert,
+                      color: Colors.black,
+                    ),
+                    onPressed: () {
+                      widget.notesModelSheet(context);
+                    },
+                  )
+                : SizedBox.shrink(),
+          ],
           backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
@@ -39,7 +53,7 @@ class _MyAppBarState extends State<MyAppBar> {
         Container(
           width: double.infinity,
           color: Colors.white,
-          height: 4 * hm,
+          height: 30,
           child: Padding(
             padding: EdgeInsets.only(left: 3.47 * wm),
             child: Text(
@@ -47,9 +61,9 @@ class _MyAppBarState extends State<MyAppBar> {
               style: TextStyle(
                 fontFamily: 'Abril',
                 color: Colors.black,
-                fontSize: 2.8 * hm,
+                fontSize: 22,
                 fontWeight: FontWeight.w400,
-                wordSpacing: 0.7 * wm,
+                wordSpacing: 3,
               ),
             ),
           ),
@@ -58,31 +72,6 @@ class _MyAppBarState extends State<MyAppBar> {
       ],
     );
   }
-
-  // List<Widget> getAppBarActions() {
-  //   if (multiSelectController.isSelecting && (Var.selectedIndex == 0 || Var.selectedIndex == 4)) {
-  //     if (Var.isTrash) {
-  //       return [
-  //         FlatButton(
-  //           child: Text('Restore'),
-  //           onPressed: () {},
-  //         ),
-  //         FlatButton(
-  //           child: Text('Delete'),
-  //           onPressed: () {},
-  //         )
-  //       ];
-  //     } else {
-  //       return [
-  //         FlatButton(
-  //           child: Text('Trash'),
-  //           onPressed: () {},
-  //         )
-  //       ];
-  //     }
-  //   }
-  //   return [];
-  // }
 }
 
 class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -95,18 +84,19 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(13 * wm);
+  Size get preferredSize => Size.fromHeight(50);
 
   @override
   Widget build(BuildContext context) {
     return GFAppBar(
       leading: Padding(
-        padding: EdgeInsets.only(
-          top: 0.62 * hm,
-          bottom: (0.62 * hm),
-          left: (1.16 * wm) + wm,
-          right: (1.16 * wm) + wm,
-        ),
+        padding: EdgeInsets.fromLTRB(8.5, 4.7, 8.5, 4.7),
+        // padding: EdgeInsets.only(
+        //   top: 0.62 * hm,
+        //   bottom: (0.62 * hm),
+        //   left: (1.16 * wm) + wm,
+        //   right: (1.16 * wm) + wm,
+        // ),
         child: InkWell(
           onTap: () {
             saveNote();

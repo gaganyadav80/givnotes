@@ -14,19 +14,25 @@ import 'package:givnotes/utils/permissions.dart';
 
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:preferences/preferences.dart';
 
-IconData fabIcon = Icons.add;
-String fabLabel = '';
+// IconData fabIcon = Icons.add;
+// String fabLabel = '';
+
+// final GlobalKey<ScaffoldState> notesScaffoldKey = GlobalKey<ScaffoldState>();
 
 class NotesView extends StatefulWidget {
   final bool isTrash;
   NotesView({key, this.isTrash}) : super(key: key);
 
   @override
-  NotesViewState createState() => NotesViewState();
+  _NotesViewState createState() => _NotesViewState();
 }
 
-class NotesViewState extends State<NotesView> {
+//TODO poorly implemented, fix it
+_NotesViewState notesViewState;
+
+class _NotesViewState extends State<NotesView> {
   int _animateIndex = 0;
   List<NotesModel> _notes = List<NotesModel>();
   MultiSelectController _multiSelectController;
@@ -34,6 +40,11 @@ class NotesViewState extends State<NotesView> {
 
   @override
   void initState() {
+    compactTags = prefsBox.get('compactTags', defaultValue: false);
+    sortNotes = prefsBox.get('sortNotes', defaultValue: 'created');
+
+    notesViewState = this;
+
     _multiSelectController = MultiSelectController();
     _speedDialController = SpeedDialController();
     super.initState();
@@ -45,145 +56,189 @@ class NotesViewState extends State<NotesView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: ValueListenableBuilder(
-        valueListenable: Hive.box<NotesModel>('givnnotes').listenable(),
-        builder: (context, Box<NotesModel> box, widget) {
-          _notes = box.values.where((element) => element.trash == Var.isTrash).toList();
+    compactTags = prefsBox.get('compactTags', defaultValue: false);
+    sortNotes = prefsBox.get('sortNotes', defaultValue: 'created');
 
-          if (box.isEmpty || _notes.length == 0) {
-            return NotesEmptyView();
-          }
+    return WillPopScope(
+      onWillPop: _onPop,
+      child: Scaffold(
+        // key: notesScaffoldKey,
+        backgroundColor: Colors.white,
+        body: ValueListenableBuilder(
+          valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
+          builder: (context, Box<NotesModel> box, widget) {
+            _notes = box.values.where((element) => element.trash == Var.isTrash).toList();
 
-          return AnimationLimiter(
-            child: ListView.builder(
-              itemCount: _notes.length,
-              //TODO maybe remove divider in const_notes_view and use separator
-              // separatorBuilder: (context, index) => Divider(
-              //   height: 0.057 * wm,
-              //   color: Colors.black,
-              //   indent: 10,
-              //   endIndent: 10,
-              // ),
-              itemBuilder: (context, index) {
-                _animateIndex = index;
-                index = _notes.length - index - 1;
+            if (sortNotes == 'created')
+              _notes.sort((a, b) => a.created.compareTo(b.created));
+            else if (sortNotes == 'modified')
+              _notes.sort((a, b) => a.modified.compareTo(b.modified));
+            else if (sortNotes == 'a-z')
+              _notes.sort((a, b) => b.title.compareTo(a.title));
+            else if (sortNotes == 'z-a') {
+              _notes.sort((a, b) => a.title.compareTo(b.title));
+            } else
+              _notes.sort((a, b) => a.created.compareTo(b.created));
 
-                var note = _notes[index];
+            if (box.isEmpty || _notes.length == 0) {
+              return NotesEmptyView();
+            }
 
-                return AnimationConfiguration.staggeredList(
-                  position: _animateIndex,
-                  duration: const Duration(milliseconds: 375),
-                  child: SlideAnimation(
-                    verticalOffset: 25.0,
-                    child: FadeInAnimation(
-                      child: Slidable(
-                        key: UniqueKey(),
-                        actionPane: SlidableBehindActionPane(),
-                        actionExtentRatio: 1.0,
-                        dismissal: SlidableDismissal(
-                          child: SlidableDrawerDismissal(),
-                          onDismissed: (actionType) {
-                            if (!Var.isTrash) {
-                              note.trash = !note.trash;
-                              note.save();
-                              print('moved to Trash');
-                              // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Trash')));
+            return AnimationLimiter(
+              child: ListView.builder(
+                itemCount: _notes.length,
+                //TODO maybe remove divider in const_notes_view and use separator
+                // separatorBuilder: (context, index) => Divider(
+                //   height: 0.057 * wm,
+                //   color: Colors.black,
+                //   indent: 10,
+                //   endIndent: 10,
+                // ),
+                itemBuilder: (context, index) {
+                  _animateIndex = index;
+                  index = _notes.length - index - 1;
 
-                              _multiSelectController.set(_notes.length);
-                            } else {
-                              note.trash = false;
-                              note.save();
-                              print('moved to Notes');
-                              // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Notes')));
+                  var note = _notes[index];
 
-                              _multiSelectController.set(_notes.length);
-                            }
-                          },
-                        ),
-                        secondaryActions: <Widget>[
-                          !Var.isTrash
-                              ? iconSlideAction(
-                                  Colors.red,
-                                  Icons.delete,
-                                  'Trash',
-                                )
-                              : iconSlideAction(
-                                  Color(0xff66a9e0),
-                                  Icons.restore,
-                                  'Resotre',
-                                ),
-                        ],
-                        child: NotesCard(
-                          note: note,
-                          index: index,
-                          multiSelectController: _multiSelectController,
-                          notesViewUpdate: refreshNotesView,
+                  return AnimationConfiguration.staggeredList(
+                    position: _animateIndex,
+                    duration: const Duration(milliseconds: 375),
+                    child: SlideAnimation(
+                      verticalOffset: 25.0,
+                      child: FadeInAnimation(
+                        child: Slidable(
+                          key: UniqueKey(),
+                          actionPane: SlidableBehindActionPane(),
+                          actionExtentRatio: 1.0,
+                          dismissal: SlidableDismissal(
+                            child: SlidableDrawerDismissal(),
+                            onDismissed: (actionType) {
+                              _multiSelectController.deselectAll();
+
+                              if (!Var.isTrash) {
+                                note.trash = !note.trash;
+                                note.save();
+                                print('moved to Trash');
+                                // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Trash')));
+
+                                _multiSelectController.set(_notes.length);
+                              } else {
+                                note.trash = false;
+                                note.save();
+                                print('moved to Notes');
+                                // Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Notes')));
+
+                                _multiSelectController.set(_notes.length);
+                              }
+                            },
+                          ),
+                          secondaryActions: <Widget>[
+                            !Var.isTrash
+                                ? iconSlideAction(
+                                    Colors.red,
+                                    Icons.delete,
+                                    'Trash',
+                                  )
+                                : iconSlideAction(
+                                    Color(0xff66a9e0),
+                                    Icons.restore,
+                                    'Resotre',
+                                  ),
+                          ],
+                          child: NotesCard(
+                            note: note,
+                            index: index,
+                            multiSelectController: _multiSelectController,
+                            notesViewUpdate: refreshNotesView,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
-      floatingActionButton: !_multiSelectController.isSelecting && !Var.isTrash
-          ? UnicornDialer(
-              parentHeroTag: 'parent',
-              parentButton: Icon(
-                CupertinoIcons.add,
-                color: Colors.white,
+                  );
+                },
               ),
-              parentButtonBackground: Colors.black,
-              finalButtonIcon: Icon(
-                Icons.close,
-                color: Colors.white,
-              ),
-              hasBackground: true,
-              controller: _speedDialController,
-              childButtons: unicornButton,
-              onMainButtonPressed: () async {
-                await HandlePermission().requestPermission().then((value) {
-                  if (value) {
-                    Var.isEditing = true;
-                    Var.noteMode = NoteMode.Adding;
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
-                      ),
-                    );
-                  } else {
-                    if (isPermanentDisabled) {
-                      HandlePermission().permanentDisabled(context);
-                    }
-                    setState(() => Var.selectedIndex = 0);
-                  }
-                });
-              },
-            )
-          : !_multiSelectController.isSelecting && Var.isTrash
-              ? SizedBox.shrink()
-              : FloatingActionButton(
-                  heroTag: 'parent',
-                  backgroundColor: Colors.black,
-                  splashColor: Colors.black,
-                  elevation: 5,
-                  child: Icon(
-                    fabIcon,
-                    color: Colors.white,
-                  ),
-                  // label: Text(
-                  //   fabLabel,
-                  //   style: TextStyle(
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
-                  onPressed: () {},
+            );
+          },
+        ),
+        floatingActionButton: !Var.isTrash
+            ? UnicornDialer(
+                parentHeroTag: 'parent',
+                parentButton: Icon(
+                  CupertinoIcons.add,
+                  color: Colors.white,
                 ),
+                parentButtonBackground: Colors.black,
+                finalButtonIcon: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                ),
+                hasBackground: true,
+                controller: _speedDialController,
+                // childButtons: Var.isTrash ? trashUnicornButton : unicornButton,
+                childButtons: Var.isTrash
+                    ? [
+                        UnicornButton(
+                          currentButton: FloatingActionButton(
+                            backgroundColor: Colors.black,
+                            splashColor: Colors.black,
+                            elevation: 5,
+                            child: Icon(
+                              Icons.restore,
+                              color: Colors.white,
+                            ),
+                            onPressed: () async {
+                              // print('moved to Notes');
+                              restore();
+                            },
+                          ),
+                        ),
+                      ]
+                    : [
+                        UnicornButton(
+                          currentButton: FloatingActionButton(
+                            backgroundColor: Colors.black,
+                            splashColor: Colors.black,
+                            elevation: 5,
+                            child: Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                            onPressed: () async {
+                              // print('moved to Trash');
+                              trash();
+                            },
+                          ),
+                        ),
+                      ],
+                onMainButtonPressed: () async {
+                  if (_multiSelectController.isSelecting) {
+                    _speedDialController.unfold();
+                  } else {
+                    await HandlePermission().requestPermission().then((value) {
+                      if (value) {
+                        Var.isEditing = true;
+                        Var.noteMode = NoteMode.Adding;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
+                          ),
+                        );
+                      } else {
+                        if (isPermanentDisabled) {
+                          HandlePermission().permanentDisabled(context);
+                        }
+                        setState(() => Var.selectedIndex = 0);
+                      }
+                    });
+                  }
+                },
+              )
+            : Hero(
+                tag: 'parent',
+                child: SizedBox.shrink(),
+              ),
+      ),
     );
   }
 
@@ -214,93 +269,8 @@ class NotesViewState extends State<NotesView> {
           )
         ],
       ),
-      onTap: () => Scaffold.of(context).showSnackBar(SnackBar(content: Text('moved to Trash'))),
+      onTap: () => print('moved to Trash'),
     );
-  }
-
-  List<UnicornButton> unicornButton = [
-    Var.isTrash
-        ? UnicornButton(
-            currentButton: FloatingActionButton(
-              backgroundColor: Colors.black,
-              splashColor: Colors.black,
-              elevation: 5,
-              child: Icon(
-                Icons.restore,
-                color: Colors.white,
-              ),
-              onPressed: () async {},
-            ),
-          )
-        : UnicornButton(
-            currentButton: FloatingActionButton(
-              backgroundColor: Colors.black,
-              splashColor: Colors.black,
-              elevation: 5,
-              child: Icon(
-                Icons.delete,
-                color: Colors.white,
-              ),
-              onPressed: () async {},
-            ),
-          ),
-  ];
-
-  Widget floatingActionButton() {
-    return !_multiSelectController.isSelecting && !Var.isTrash
-        ? FloatingActionButton(
-            heroTag: 'b',
-            tooltip: 'New Note',
-            backgroundColor: Colors.black,
-            splashColor: Colors.black,
-            elevation: 5,
-            child: Icon(Icons.add),
-            onPressed: () async {
-              await HandlePermission().requestPermission().then((value) {
-                if (value) {
-                  Var.isEditing = true;
-                  Var.noteMode = NoteMode.Adding;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
-                    ),
-                  );
-                } else {
-                  if (isPermanentDisabled) {
-                    HandlePermission().permanentDisabled(context);
-                  }
-                  setState(() => Var.selectedIndex = 0);
-                }
-              });
-
-              // if (animatedListKey.currentState != null) animatedListKey.currentState.insertItem(_notes.length);
-              // count++;
-            },
-          )
-        : !_multiSelectController.isSelecting && Var.isTrash
-            ? SizedBox.shrink()
-            : Container(
-                height: 14 * wm,
-                child: FloatingActionButton.extended(
-                  heroTag: 'b',
-                  backgroundColor: Colors.black,
-                  splashColor: Colors.black,
-                  elevation: 5,
-                  icon: Icon(fabIcon),
-                  label: Text(fabLabel),
-                  onPressed: getMultiselectFunction,
-                ),
-              );
-  }
-
-  Function() getMultiselectFunction() {
-    if (!Var.isTrash) {
-      return () => print('call trash');
-    } else if (Var.isTrash) {
-      return () => print('call restore');
-    }
-    return () {};
   }
 
   void delete() {
@@ -310,7 +280,7 @@ class NotesViewState extends State<NotesView> {
 
     // setState(() {
     _multiSelectController.set(_notes.length);
-    fabIcon = Icons.add;
+    // fabIcon = Icons.add;
     // });
   }
 
@@ -319,10 +289,10 @@ class NotesViewState extends State<NotesView> {
       print('trash note');
     });
 
-    // setState(() {
-    _multiSelectController.set(_notes.length);
-    fabIcon = Icons.add;
-    // });
+    setState(() {
+      _multiSelectController.set(_notes.length);
+      // fabIcon = Icons.add;
+    });
   }
 
   void restore() {
@@ -330,51 +300,90 @@ class NotesViewState extends State<NotesView> {
       print('restore note');
     });
 
-    // setState(() {
-    _multiSelectController.set(_notes.length);
-    fabIcon = Icons.add;
-    // });
+    setState(() {
+      _multiSelectController.set(_notes.length);
+      // fabIcon = Icons.add;
+    });
+  }
+
+  Future<bool> _onPop() async {
+    // print(_multiSelectController.isSelecting);
+    if (_multiSelectController.isSelecting) {
+      setState(() {
+        _multiSelectController.deselectAll();
+      });
+
+      return false;
+    }
+    return true;
   }
 }
 
-// Dismissible(
-//   key: UniqueKey(),
-//   background: Container(
-//     color: Var.isTrash ? Colors.teal[300] : Color(0xffEC625C),
-//     width: double.infinity,
-//     child: Row(
-//       mainAxisAlignment: MainAxisAlignment.end,
-//       children: [
-//         Icon(
-//           Var.isTrash ? Icons.restore : Icons.delete,
-//           size: 10 * wm,
-//         ),
-//         SizedBox(width: 10 * wm)
-//       ],
-//     ),
-//   ),
-//   direction: DismissDirection.endToStart,
-//   onDismissed: (direction) {
-//     if (!Var.isTrash) {
-//       note.trash = !note.trash;
-//       note.save();
+class NotesModelSheet extends StatefulWidget {
+  NotesModelSheet({Key key}) : super(key: key);
 
-//       _multiSelectController.set(_notes.length);
-//     } else {
-//       note.trash = false;
-//       note.save();
-//       print('moved to notes');
+  @override
+  _NotesModelSheetState createState() => _NotesModelSheetState();
+}
 
-//       _multiSelectController.set(_notes.length);
-//     }
-//   },
-//   child: NotesCard(
-//     note: note,
-//     index: index,
-//     multiSelectController: _multiSelectController,
-//     notesViewUpdate: refreshNotesView,
-//   ),
-// ),
+class _NotesModelSheetState extends State<NotesModelSheet> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 70 * wm,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(15, 20, 0, 0),
+            child: Text(
+              'Notes Options',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 0.5,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
+          DropdownPreference(
+            'Sort notes',
+            'sort_notes',
+            defaultVal: 'Date created',
+            values: ['Date created', 'Date modified', 'A-Z Title', 'Z-A Title'],
+            onChange: ((String value) {
+              print(value);
+              if (value == 'Date created')
+                prefsBox.put('sortNotes', 'created');
+              else if (value == 'Date modified')
+                prefsBox.put('sortNotes', 'modified');
+              else if (value == 'A-Z Title')
+                prefsBox.put('sortNotes', 'a-z');
+              else
+                prefsBox.put('sortNotes', 'z-a');
+
+              notesViewState.setState(() {});
+            }),
+          ),
+          SwitchPreference(
+            'Compact Tags',
+            'biometric',
+            desc: 'Enable compact tags in notes view',
+            defaultVal: false,
+            onEnable: () {
+              prefsBox.put('compactTags', true);
+              notesViewState.setState(() {});
+            },
+            onDisable: () {
+              prefsBox.put('compactTags', false);
+              notesViewState.setState(() {});
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 // return multiSelectController.isSelecting == false
 //     ? OpenContainer(

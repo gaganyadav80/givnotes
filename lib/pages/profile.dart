@@ -18,7 +18,7 @@ class _MyProfileState extends State<MyProfile> {
   @override
   void initState() {
     setState(() {
-      isSkipped = prefsBox.get('skip') ?? false;
+      isSkipped = prefsBox.get('skip', defaultValue: false);
       // getUserDetails();
     });
     // getSkip().then((bool skip) {

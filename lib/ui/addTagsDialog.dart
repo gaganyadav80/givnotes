@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/pages/zefyrEdit.dart';
-import 'package:givnotes/variables/homeVariables.dart';
+// import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 
 class AddTagsDialog extends StatefulWidget {
@@ -95,21 +95,20 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 70 * wm,
-      width: (wm * 100) - 10,
-      // padding: EdgeInsets.symmetric(horizontal: 3.5 * wm, vertical: 2.5 * hm),
+      height: 250,
+      width: (MediaQuery.of(context).size.width * 0.85),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'New tag',
-            style: TextStyle(
-              fontSize: 2.5 * hm,
-              fontWeight: FontWeight.bold,
-              letterSpacing: 0.5,
-            ),
-          ),
-          SizedBox(height: 20),
+          // Text(
+          //   'New tag',
+          //   style: TextStyle(
+          //     fontSize: 22,
+          //     fontWeight: FontWeight.bold,
+          //     letterSpacing: 0.5,
+          //   ),
+          // ),
+          // SizedBox(height: 20),
           TextField(
             controller: _newTagTextController,
             autocorrect: false,
@@ -128,7 +127,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               focusColor: Colors.grey,
               labelText: 'Tag name',
               labelStyle: TextStyle(
-                fontSize: 4 * wm,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[600],
               ),
@@ -148,77 +147,73 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               ),
             ),
           ),
-          SizedBox(height: 10),
-          Row(
-            children: [
-              Text(
-                'Tag color: ',
-                style: TextStyle(
-                  fontSize: 2.2 * hm,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(width: 5),
-              Container(
-                height: 70,
-                color: Colors.transparent,
-                width: (MediaQuery.of(context).size.width * 0.80) - 65, //! can also be 60
-                // child: MaterialColorPicker(
-                //   onMainColorChange: (color) {
-                //     colorValue = color.value;
-                //   },
-                //   allowShades: false,
-                //   selectedColor: Color(colorValue),
-                // ),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.all(0),
-                  itemCount: selectTagColors.length,
-                  itemBuilder: (context, index) {
-                    Color color = Color(selectTagColors[index]);
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 5),
-                      child: GestureDetector(
-                        onTap: () {
-                          if (selectTagColors.length == 1 && !_allTagsMap.containsKey(_newTagTextController.text.trim())) {
-                            setState(() {
-                              selectTagColors
-                                ..clear()
-                                ..addAll(materialColorValues);
-                            });
-                          } else if (_allTagsMap.containsKey(_newTagTextController.text.trim())) {
-                            showToast("Tag already exists...");
-                          } else {
-                            setState(() {
-                              selectTagColors
-                                ..clear()
-                                ..add(color.value);
-                            });
-                          }
-                        },
-                        child: Material(
-                          elevation: 4.0,
-                          shape: const CircleBorder(),
-                          child: CircleAvatar(
-                            radius: 45 / 2,
-                            backgroundColor: color,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
+          SizedBox(height: 25),
+          Text(
+            'Tag color: ',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.black,
+            ),
           ),
-          SizedBox(height: 20),
+          // SizedBox(width: 5),
+          Container(
+            height: 70,
+            color: Colors.transparent,
+            width: (MediaQuery.of(context).size.width * 0.85),
+            // child: MaterialColorPicker(
+            //   onMainColorChange: (color) {
+            //     colorValue = color.value;
+            //   },
+            //   allowShades: false,
+            //   selectedColor: Color(colorValue),
+            // ),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.all(0),
+              itemCount: selectTagColors.length,
+              itemBuilder: (context, index) {
+                Color color = Color(selectTagColors[index]);
+
+                return Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: GestureDetector(
+                    onTap: () {
+                      if (selectTagColors.length == 1 && !_allTagsMap.containsKey(_newTagTextController.text.trim())) {
+                        setState(() {
+                          selectTagColors
+                            ..clear()
+                            ..addAll(materialColorValues);
+                        });
+                      } else if (_allTagsMap.containsKey(_newTagTextController.text.trim())) {
+                        showToast("Tag already exists...");
+                      } else {
+                        setState(() {
+                          selectTagColors
+                            ..clear()
+                            ..add(color.value);
+                        });
+                      }
+                    },
+                    child: Material(
+                      elevation: 4.0,
+                      shape: const CircleBorder(),
+                      child: CircleAvatar(
+                        radius: 45 / 2,
+                        backgroundColor: color,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                height: 50,
+                height: 45,
                 width: 90,
                 child: RaisedButton(
                   elevation: 0,
@@ -241,11 +236,11 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               ),
               SizedBox(width: 15),
               Container(
-                height: 50,
+                height: 45,
                 width: 90,
                 child: RaisedButton(
                   elevation: 0,
-                  color: Color(0xff1F1F1F),
+                  color: Colors.black,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text(
                     'SAVE',
@@ -299,19 +294,6 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                           showFlashToast(context, "Tag already added");
                         }
                       }
-
-                      // else if (!_noteTagsMap.containsKey(tagName)) {
-                      //   _noteTagsMap[tagName] = colorValue;
-
-                      //   if (!_allTagsMap.containsKey(tagName)) {
-                      //     _allTagsMap[tagName] = colorValue;
-                      //   } else if (_allTagsMap[tagName] != colorValue) {
-                      //     _allTagsMap[tagName] = colorValue;
-                      //   }
-                      //   //
-                      // } else if (_noteTagsMap[tagName] != colorValue) {
-                      //   _noteTagsMap[tagName] = colorValue;
-                      // }
 
                       // setState(() {});
                       widget.setZefyrState(true);

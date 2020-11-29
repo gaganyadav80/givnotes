@@ -8,13 +8,13 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
 import 'package:givnotes/packages/toast.dart';
-import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
 import 'package:givnotes/ui/addTagsDialog.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
 import 'package:givnotes/ui/drawerItems.dart';
 import 'package:givnotes/ui/customAppBar.dart';
 import 'package:intl/intl.dart';
+import 'package:zefyr/zefyr.dart';
 
 enum NoteMode { Editing, Adding }
 Map<String, int> noteTagsMap = {};
@@ -80,6 +80,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
 
     _dbServices = HiveDBServices();
     _zefyrfocusNode.unfocus();
+    // _dbServices.deleteNote(2);
 
     // _allTagsMap = (prefsBox.get('allTagsMap') as Map).cast<String, int>();
   }
@@ -220,6 +221,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                     builder: (BuildContext context) {
                                       return AlertDialog(
                                         insetPadding: EdgeInsets.all(10),
+                                        title: Text('New tag'),
+                                        titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                                        titleTextStyle: TextStyle(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                          letterSpacing: 0.5,
+                                        ),
                                         contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                                         content: AddTagsDialog(
                                           editNoteTag: false,
@@ -401,6 +410,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(10),
+                    title: Text('Edit tag'),
+                    titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
+                    titleTextStyle: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 0.5,
+                    ),
                     contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                     content: AddTagsDialog(
                       editNoteTag: true,
@@ -440,8 +457,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
     return false;
   }
 
-  void _saveNote({isDrawerSave = false}) async {
-    print('isDrawerSave:  $isDrawerSave');
+  void _saveNote({bool isDrawerSave = false}) async {
     if (Var.isEditing == false && isDrawerSave == false) {
       //
       Var.noteMode = NoteMode.Adding;

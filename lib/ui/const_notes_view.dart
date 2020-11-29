@@ -28,8 +28,9 @@ class NotesCard extends StatefulWidget {
 
 class _NotesCardState extends State<NotesCard> {
   String _created;
-  bool compactTags = false;
+  // bool _compactTags = true;
   Map<String, int> _allTagsMap;
+  Color _splashColor;
 
   @override
   void initState() {
@@ -40,8 +41,10 @@ class _NotesCardState extends State<NotesCard> {
 
   @override
   Widget build(BuildContext context) {
+    _splashColor = widget.note.tagsMap.length == 0 ? Colors.black : Color(widget.note.tagsMap.values.last);
+
     return Container(
-      padding: EdgeInsets.all(4.0),
+      // padding: EdgeInsets.fromLTRB(4.0, 0.0, 4.0, 0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
@@ -54,15 +57,14 @@ class _NotesCardState extends State<NotesCard> {
         color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
-          radius: 400,
-          splashColor: Color(widget.note.tagsMap.values.last),
+          radius: 600, //TODO maybe change to 400-500
+          splashColor: _splashColor,
           borderRadius: BorderRadius.circular(8),
           onLongPress: () {
-            print(MediaQuery.of(context).size.width);
             setState(() {
               widget.multiSelectController.toggle(widget.index);
-              fabIcon = Var.isTrash ? Icons.restore : Icons.delete;
-              fabLabel = Var.isTrash ? 'Restore' : 'Trash';
+              // fabIcon = Var.isTrash ? Icons.restore : Icons.delete;
+              // fabLabel = Var.isTrash ? 'Restore' : 'Trash';
             });
             widget.notesViewUpdate();
           },
@@ -71,7 +73,7 @@ class _NotesCardState extends State<NotesCard> {
               setState(() {
                 widget.multiSelectController.toggle(widget.index);
                 if (!widget.multiSelectController.isSelecting) {
-                  fabIcon = Icons.add;
+                  // fabIcon = Icons.add;
                 }
               });
               widget.notesViewUpdate();
@@ -91,7 +93,7 @@ class _NotesCardState extends State<NotesCard> {
             }
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+            padding: EdgeInsets.symmetric(horizontal: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -99,7 +101,7 @@ class _NotesCardState extends State<NotesCard> {
                   height: 0.057 * wm,
                   color: Colors.black,
                 ),
-                // SizedBox(height: 1.5 * wm),
+                SizedBox(height: 4),
                 widget.note.tagsMap.length == 0
                     ? SizedBox(height: wm)
                     : Container(
@@ -176,11 +178,11 @@ class _NotesCardState extends State<NotesCard> {
                     // fontStyle: FontStyle.italic,
                   ),
                 ),
-                SizedBox(height: 1.5 * wm),
-                Divider(
-                  height: 0.057 * wm,
-                  color: Colors.black,
-                ),
+                SizedBox(height: 10),
+                // Divider(
+                //   height: 0.057 * wm,
+                //   color: Colors.black,
+                // ),
               ],
             ),
           ),

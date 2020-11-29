@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 // import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/variables/homeVariables.dart';
@@ -21,7 +22,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   int index = 0;
   String _created;
-  bool compactTags = false;
+  // bool compactTags = false;
   List<NotesModel> _searchList = [];
   List<NotesModel> _notes = [];
   final TextEditingController _textController = TextEditingController();
@@ -29,6 +30,7 @@ class _SearchPageState extends State<SearchPage> {
   bool isSearchBoxSelected = false;
 
   Map<String, int> _allTagsMap;
+  int _animateIndex = 0;
 
   @override
   void initState() {
@@ -146,142 +148,154 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         )
                   : Expanded(
-                      child: ListView.builder(
-                        padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-                        itemCount: _searchList.length,
-                        itemBuilder: (context, index) {
-                          index = _searchList.length - index - 1;
+                      child: AnimationLimiter(
+                        child: ListView.builder(
+                          padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+                          itemCount: _searchList.length,
+                          itemBuilder: (context, index) {
+                            _animateIndex = index;
+                            index = _searchList.length - index - 1;
 
-                          final item = _searchList.elementAt(index);
-                          _created = DateFormat.yMMMd().format(item.created);
+                            final item = _searchList.elementAt(index);
+                            _created = DateFormat.yMMMd().format(item.created);
 
-                          return Card(
-                            elevation: 0,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(5),
-                              onTap: () => onSearchListItemSelected(_searchList[index]),
-                              onLongPress: () => onSearchListItemLongPress(_searchList[index]),
-                              child: _textController.text.isNotEmpty
-                                  ? Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Divider(
-                                            height: 0.057 * wm,
-                                            color: Colors.black,
-                                          ),
-                                          // SizedBox(height: 1.5 * wm),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              item.tagsMap.length == 0
-                                                  ? SizedBox.shrink()
-                                                  : Expanded(
-                                                      flex: 4,
-                                                      child: Container(
-                                                        margin: EdgeInsets.only(top: 1.5 * wm),
-                                                        height: compactTags ? 1 * hm : 2 * hm,
-                                                        decoration: BoxDecoration(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                        ),
-                                                        child: ListView.builder(
-                                                          scrollDirection: Axis.horizontal,
-                                                          itemCount: item.tagsMap.length,
-                                                          itemBuilder: (context, index) {
-                                                            String title = item.tagsMap.keys.toList()[index];
-                                                            Color color = Color(_allTagsMap[title]);
+                            return AnimationConfiguration.staggeredList(
+                              position: _animateIndex,
+                              duration: const Duration(milliseconds: 375),
+                              child: SlideAnimation(
+                                verticalOffset: 25.0,
+                                child: FadeInAnimation(
+                                  child: Card(
+                                    elevation: 0,
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(5),
+                                      onTap: () => onSearchListItemSelected(_searchList[index]),
+                                      onLongPress: () => onSearchListItemLongPress(_searchList[index]),
+                                      child: _textController.text.isNotEmpty
+                                          ? Padding(
+                                              padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: <Widget>[
+                                                  Divider(
+                                                    height: 0.057 * wm,
+                                                    color: Colors.black,
+                                                  ),
+                                                  // SizedBox(height: 1.5 * wm),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      item.tagsMap.length == 0
+                                                          ? SizedBox.shrink()
+                                                          : Expanded(
+                                                              flex: 4,
+                                                              child: Container(
+                                                                margin: EdgeInsets.only(top: 1.5 * wm),
+                                                                height: compactTags ? 1 * hm : 2 * hm,
+                                                                decoration: BoxDecoration(
+                                                                  borderRadius: BorderRadius.circular(5),
+                                                                ),
+                                                                child: ListView.builder(
+                                                                  scrollDirection: Axis.horizontal,
+                                                                  itemCount: item.tagsMap.length,
+                                                                  itemBuilder: (context, index) {
+                                                                    String title = item.tagsMap.keys.toList()[index];
+                                                                    Color color = Color(_allTagsMap[title]);
 
-                                                            return compactTags
-                                                                ? Container(
-                                                                    width: 7.6 * wm,
-                                                                    margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                                                    decoration: BoxDecoration(
-                                                                      color: color,
-                                                                      borderRadius: BorderRadius.circular(5),
-                                                                    ),
-                                                                    child: SizedBox.shrink(),
-                                                                  )
-                                                                : Container(
-                                                                    margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                                                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                                                                    decoration: BoxDecoration(
-                                                                      color: color,
-                                                                      borderRadius: BorderRadius.circular(5),
-                                                                    ),
-                                                                    child: Center(
-                                                                      child: Text(
-                                                                        title,
-                                                                        style: TextStyle(
-                                                                          color: Colors.white,
-                                                                          fontWeight: FontWeight.w700,
-                                                                          letterSpacing: 0.5,
-                                                                          fontSize: 1.2 * hm,
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                          },
+                                                                    return compactTags
+                                                                        ? Container(
+                                                                            width: 7.6 * wm,
+                                                                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                                                            decoration: BoxDecoration(
+                                                                              color: color,
+                                                                              borderRadius: BorderRadius.circular(5),
+                                                                            ),
+                                                                            child: SizedBox.shrink(),
+                                                                          )
+                                                                        : Container(
+                                                                            margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                                                            padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                                                            decoration: BoxDecoration(
+                                                                              color: color,
+                                                                              borderRadius: BorderRadius.circular(5),
+                                                                            ),
+                                                                            child: Center(
+                                                                              child: Text(
+                                                                                title,
+                                                                                style: TextStyle(
+                                                                                  color: Colors.white,
+                                                                                  fontWeight: FontWeight.w700,
+                                                                                  letterSpacing: 0.5,
+                                                                                  fontSize: 1.2 * hm,
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          );
+                                                                  },
+                                                                ),
+                                                              ),
+                                                            ),
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(top: 3),
+                                                          child: Text(
+                                                            item.trash ? 'Deleted' : '',
+                                                            style: GoogleFonts.ubuntu(
+                                                              fontWeight: FontWeight.w300,
+                                                              color: Colors.red,
+                                                              fontSize: 1.6 * hm,
+                                                              fontStyle: FontStyle.italic,
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                              Expanded(
-                                                flex: 1,
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(top: 3),
-                                                  child: Text(
-                                                    item.trash ? 'Deleted' : '',
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: wm),
+                                                  Text(
+                                                    item.title,
                                                     style: GoogleFonts.ubuntu(
-                                                      fontWeight: FontWeight.w300,
-                                                      color: Colors.red,
-                                                      fontSize: 1.6 * hm,
-                                                      fontStyle: FontStyle.italic,
+                                                      fontSize: 4.4 * wm,
+                                                      fontWeight: FontWeight.w600,
                                                     ),
                                                   ),
-                                                ),
+                                                  SizedBox(height: 1 * wm),
+                                                  Text(
+                                                    item.text,
+                                                    style: TextStyle(
+                                                      color: Colors.grey[800],
+                                                      // fontSize: 3 * wm,
+                                                    ),
+                                                    maxLines: 5,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                  SizedBox(height: wm),
+                                                  Text(
+                                                    "created  $_created",
+                                                    style: GoogleFonts.ubuntu(
+                                                      fontWeight: FontWeight.w300,
+                                                      color: Colors.grey,
+                                                      fontSize: 3 * wm,
+                                                      // fontStyle: FontStyle.italic,
+                                                    ),
+                                                  ),
+                                                  SizedBox(height: 1.5 * wm),
+                                                  Divider(
+                                                    height: 0.057 * wm,
+                                                    color: Colors.black,
+                                                  ),
+                                                ],
                                               ),
-                                            ],
-                                          ),
-                                          SizedBox(height: wm),
-                                          Text(
-                                            item.title,
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 4.4 * wm,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          SizedBox(height: 1 * wm),
-                                          Text(
-                                            item.text,
-                                            style: TextStyle(
-                                              color: Colors.grey[800],
-                                              // fontSize: 3 * wm,
-                                            ),
-                                            maxLines: 5,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          SizedBox(height: wm),
-                                          Text(
-                                            "created  $_created",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.grey,
-                                              fontSize: 3 * wm,
-                                              // fontStyle: FontStyle.italic,
-                                            ),
-                                          ),
-                                          SizedBox(height: 1.5 * wm),
-                                          Divider(
-                                            height: 0.057 * wm,
-                                            color: Colors.black,
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : SizedBox.shrink(),
-                            ),
-                          );
-                        },
+                                            )
+                                          : SizedBox.shrink(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
             ],

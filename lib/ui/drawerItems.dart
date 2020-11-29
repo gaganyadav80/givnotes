@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/hive_db_helper.dart';
 import 'package:givnotes/packages/toast.dart';
-import 'package:givnotes/packages/zefyr-1.0.0/zefyr.dart';
 import 'package:givnotes/pages/home.dart';
 import 'package:givnotes/variables/homeVariables.dart';
 import 'package:givnotes/variables/prefs.dart';
@@ -15,6 +12,7 @@ import 'package:givnotes/pages/zefyrEdit.dart';
 import 'package:morpheus/morpheus.dart';
 import 'package:preferences/preferences.dart';
 import 'package:stringprocess/stringprocess.dart';
+import 'package:zefyr/zefyr.dart';
 
 class DrawerItems extends StatefulWidget {
   DrawerItems({Key key, this.rebuildHome}) : super(key: key);
@@ -139,7 +137,7 @@ class _EndDrawerItemsState extends State<EndDrawerItems> {
                   () async {
                     Navigator.pop(context);
 
-                    widget.saveNote(true);
+                    widget.saveNote(isDrawerSave: true);
                   },
                   context,
                 )
