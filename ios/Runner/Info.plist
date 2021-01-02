@@ -41,5 +41,19 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+	<!-- custom entries -->
+	<key>UIBackgroundModes</key>
+	<string>Required for attaching files in user created notes</string>
+	<array>
+   		<string>fetch</string>
+   		<string>remote-notification</string>
+	</array>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Required for attaching audio files inside user created note</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Required for attaching images to the user created note</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>My app implements applock feature</string>
 </dict>
 </plist>

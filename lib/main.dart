@@ -1,144 +1,188 @@
 import 'dart:io';
 
+// import 'package:device_preview/device_preview.dart';
+import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
-import 'package:givnotes/database/HiveDB.dart';
-import 'package:givnotes/variables/homeVariables.dart';
-import 'package:givnotes/variables/prefs.dart';
-import 'package:givnotes/variables/sizeConfig.dart';
-import 'package:givnotes/pages/loginPage.dart';
-import 'package:givnotes/ui/splashscreen.dart';
-import 'package:givnotes/pages/home.dart';
-import 'package:givnotes/utils/lockscreen.dart';
-import 'package:givnotes/utils/login.dart';
-import 'package:hive/hive.dart';
-import 'package:preferences/preference_service.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
+import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
-// TODO: change icons and black/white theme
+import 'bloc/authentication_bloc/authentication_bloc.dart';
+import 'cubit/cubits.dart';
+import 'packages/packages.dart';
+import 'screens/screens.dart';
+import 'services/services.dart';
+
 void main() async {
+  //TODO remove when release
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
     if (kReleaseMode) {
       if (Platform.isAndroid) SystemNavigator.pop();
     }
   };
-  // Hive
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Hive.initFlutter();
-  Hive.registerAdapter<NotesModel>(NotesModelAdapter());
-  // Hive.registerAdapter<PrefsModel>(PrefsModelAdapter());
-
-  await Hive.openBox<NotesModel>('givnnotes');
-
-  prefsBox = await Hive.openBox('prefs');
   //
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  EquatableConfig.stringify = kDebugMode;
+  //TODO comment when done with bloc
+  Bloc.observer = SimpleBlocObserver();
+  // HydratedBloc.storage = await HydratedStorage.build();
+
+  await initHiveDb();
+  await pluginInitializer();
+
   runApp(
     AppLock(
-      builder: (_) => MyApp(),
-      lockScreen: Lockscreen(changePassAuth: false),
-      enabled: prefsBox.get('applock', defaultValue: false),
+      // builder: (_) => DevicePreview(
+      //   enabled: !kReleaseMode,
+      //   builder: (context) => GivnotesApp(),
+      // ),
+      builder: (_) => App(authenticationRepository: AuthenticationRepository()),
+      lockScreen: ShowLockscreen(changePassAuth: false),
+      enabled: prefsBox.applock,
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class App extends StatelessWidget {
+  const App({
+    Key key,
+    @required this.authenticationRepository,
+  })  : assert(authenticationRepository != null),
+        super(key: key);
+
+  final AuthenticationRepository authenticationRepository;
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        SizeConfig().init(constraints);
-
-        // return Provider(
-        // create: (_) => GivnotesDatabase(),
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          // showPerformanceOverlay: true,
-          theme: ThemeData(
-            fontFamily: 'SFPro',
-            accentColor: Colors.black,
-            accentColorBrightness: Brightness.light,
-            toggleableActiveColor: Colors.blue,
+    return RepositoryProvider.value(
+      value: authenticationRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
           ),
-          home: SplashScreen(
-            seconds: 1,
-            navigateAfterSeconds: CheckLogIn(),
-            backgroundColor: Colors.white,
-          ),
-        );
-        // );
-      },
+          BlocProvider(create: (_) => HomeCubit()),
+          // BlocProvider(create: (_) => NoteTrashCubit()),
+          BlocProvider(create: (_) => HydratedPrefsCubit()),
+          BlocProvider(create: (_) => NoteAndSearchCubit()),
+        ],
+        child: GivnotesApp(),
+      ),
     );
   }
 }
 
-class CheckLogIn extends StatefulWidget {
+class GivnotesApp extends StatelessWidget {
+  // final _navigatorKey = GlobalKey<NavigatorState>();
+
+  // NavigatorState get _navigator => _navigatorKey.currentState;
+
   @override
-  _CheckLogInState createState() => _CheckLogInState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      // locale: DevicePreview.locale(context),
+      // builder: DevicePreview.appBuilder,
+      title: 'Givnotes',
+      theme: ThemeData(
+        //maybe switch to google fonts
+        fontFamily: 'Poppins',
+        accentColor: Colors.black,
+        accentColorBrightness: Brightness.light,
+        toggleableActiveColor: Colors.blue,
+      ),
+      builder: (context, widget) => ResponsiveWrapper.builder(
+        BouncingScrollWrapper.builder(context, widget),
+        // BlocListener<AuthenticationBloc, AuthenticationState>(
+        //   child: widget,
+        //   listener: (context, state) {
+        //     switch (state.status) {
+        //       case AuthenticationStatus.authenticated:
+        //         _navigator.pushAndRemoveUntil<void>(
+        //           HomePage.route(),
+        //           (route) => false,
+        //         );
+        //         break;
+        //       case AuthenticationStatus.unauthenticated:
+        //         _navigator.pushAndRemoveUntil<void>(
+        //           MaterialPageRoute(
+        //             builder: (context) => BlocProvider(
+        //               lazy: false,
+        //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
+        //               child: GorgeousLoginPage(),
+        //             ),
+        //           ),
+        //           (route) => false,
+        //         );
+        //         break;
+        //       default:
+        //         break;
+        //     }
+        //   },
+        // ),
+        maxWidth: 1200,
+        minWidth: 300,
+        defaultScale: false,
+        breakpoints: [
+          ResponsiveBreakpoint.resize(300, name: MOBILE),
+          ResponsiveBreakpoint.autoScale(800, name: TABLET),
+          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+        ],
+        background: Container(color: Color(0xFFF5F5F5)),
+      ),
+      // navigatorKey: _navigatorKey,
+      // onGenerateRoute: (_) => HomePage.route(),
+      home: const CheckLogin(),
+    );
+  }
 }
 
-class _CheckLogInState extends State<CheckLogIn> {
-  @override
-  void initState() {
-    Var.selectedIndex = 0;
-    Var.isTrash = false;
+class CheckLogin extends StatelessWidget {
+  const CheckLogin({Key key}) : super(key: key);
 
-    checkKeys();
-    initInfo();
-    PrefService.init(prefix: 'pref_');
-
-    super.initState();
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => CheckLogin());
   }
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (context, AsyncSnapshot<FirebaseUser> snapshot) {
-        if (isSkipped == true) return HomePage();
+    return StreamBuilder<User>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Transform.scale(
+            scale: 2.0,
+            child: const CupertinoActivityIndicator(),
+          );
 
-        if (snapshot.connectionState == ConnectionState.waiting) return Scaffold(backgroundColor: Colors.black);
+        if (prefsBox.isAnonymous) return const HomePage();
 
-        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+        if (!snapshot.hasData || snapshot.data == null)
+          return BlocProvider(
+            lazy: false,
+            create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
+            child: GorgeousLoginPage(),
+          );
 
-        //! Check on profile init state
-        if (snapshot.hasData) currentUser = snapshot.data;
-        getUserDetails();
-
-        return HomePage();
+        return const HomePage();
       },
     );
-  }
-
-  void checkKeys() {
-    isSkipped = prefsBox.get('skip', defaultValue: false);
-    isFirstLaunch = prefsBox.get('firstLaunch', defaultValue: true);
-
-    if (!prefsBox.containsKey('allTagsMap')) {
-      prefsBox.put('allTagsMap', {});
-    }
-
-    // if (!prefsBox.containsKey('skip')) {
-    //   prefsBox.put('skip', false);
-    // } else {
-    //   isSkipped = prefsBox.get('skip');
-    // }
-
-    // if (!prefsBox.containsKey('firstLaunch')) {
-    //   prefsBox.put('firstLaunch', true);
-    // } else {
-    //   isFirstLaunch = prefsBox.get('firstLaunch');
-    // }
-
-    // if (!prefsBox.containsKey('applock')) {
-    //   prefsBox.put('applock', false);
-    // }
-    // if (!prefsBox.containsKey('biometric')) {
-    //   prefsBox.put('biometric', false);
-    // }
   }
 }

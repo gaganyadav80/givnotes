@@ -12,147 +12,6 @@ import 'circle_input_button.dart';
 /// commented out all the Navigator.of(context).pop();
 /// to make it work with AppLock package
 
-// Future showConfirmPasscode({
-//   @required BuildContext context,
-//   String title = 'Please enter passcode.',
-//   String confirmTitle = 'Please enter confirm passcode.',
-//   String cancelText = 'Cancel',
-//   String deleteText = 'Delete',
-//   int digits = 4,
-//   DotSecretConfig dotSecretConfig = const DotSecretConfig(),
-//   void Function(BuildContext, String) onCompleted,
-//   Color backgroundColor = Colors.white,
-//   double backgroundColorOpacity = 0.5,
-//   CircleInputButtonConfig circleInputButtonConfig = const CircleInputButtonConfig(),
-// }) {
-//   return Navigator.of(context).push(
-//     PageRouteBuilder(
-//       opaque: false,
-//       pageBuilder: (
-//         BuildContext context,
-//         Animation<double> animation,
-//         Animation<double> secodaryAnimation,
-//       ) {
-//         return LockScreen(
-//           title: title,
-//           confirmTitle: confirmTitle,
-//           confirmMode: true,
-//           digits: digits,
-//           dotSecretConfig: dotSecretConfig,
-//           onCompleted: onCompleted,
-//           cancelText: cancelText,
-//           deleteText: deleteText,
-//           backgroundColor: backgroundColor,
-//           backgroundColorOpacity: backgroundColorOpacity,
-//           circleInputButtonConfig: circleInputButtonConfig,
-//         );
-//       },
-//       transitionsBuilder: (
-//         BuildContext context,
-//         Animation<double> animation,
-//         Animation<double> secondaryAnimation,
-//         Widget child,
-//       ) {
-//         return SlideTransition(
-//           position: Tween<Offset>(
-//             begin: const Offset(0.0, 2.4),
-//             end: Offset.zero,
-//           ).animate(animation),
-//           child: SlideTransition(
-//             position: Tween<Offset>(
-//               begin: Offset.zero,
-//               end: const Offset(0.0, 2.4),
-//             ).animate(secondaryAnimation),
-//             child: child,
-//           ),
-//         );
-//       },
-//     ),
-//   );
-// }
-
-// Future showLockScreen({
-//   @required BuildContext context,
-//   String correctString,
-//   String title = 'Please enter passcode.',
-//   String cancelText = 'Cancel',
-//   String deleteText = 'Delete',
-//   int digits = 4,
-//   DotSecretConfig dotSecretConfig = const DotSecretConfig(),
-//   bool canCancel = true,
-//   void Function(BuildContext, String) onCompleted,
-//   Widget biometricButton = const Icon(Icons.fingerprint),
-//   bool canBiometric = false,
-//   bool showBiometricFirst = false,
-//   @Deprecated('use biometricAuthenticate.') void Function(BuildContext) biometricFunction,
-//   Future<bool> Function(BuildContext) biometricAuthenticate,
-//   Color backgroundColor = Colors.white,
-//   double backgroundColorOpacity = 0.5,
-//   CircleInputButtonConfig circleInputButtonConfig = const CircleInputButtonConfig(),
-//   void Function() onUnlocked,
-// }) {
-//   return Navigator.of(context).push(
-//     PageRouteBuilder(
-//       opaque: false,
-//       pageBuilder: (
-//         BuildContext context,
-//         Animation<double> animation,
-//         Animation<double> secodaryAnimation,
-//       ) {
-//         var _showBiometricFirstController = StreamController<void>();
-
-//         animation.addStatusListener((status) {
-//           // Calling the biometric on completion of the animation.
-//           if (status == AnimationStatus.completed) {
-//             _showBiometricFirstController.add(null);
-//           }
-//         });
-
-//         return LockScreen(
-//           correctString: correctString,
-//           title: title,
-//           digits: digits,
-//           dotSecretConfig: dotSecretConfig,
-//           onCompleted: onCompleted,
-//           canCancel: canCancel,
-//           cancelText: cancelText,
-//           deleteText: deleteText,
-//           biometricButton: biometricButton,
-//           canBiometric: canBiometric,
-//           showBiometricFirst: showBiometricFirst,
-//           showBiometricFirstController: _showBiometricFirstController,
-//           biometricFunction: biometricFunction,
-//           biometricAuthenticate: biometricAuthenticate,
-//           backgroundColor: backgroundColor,
-//           backgroundColorOpacity: backgroundColorOpacity,
-//           circleInputButtonConfig: circleInputButtonConfig,
-//           onUnlocked: onUnlocked,
-//         );
-//       },
-//       transitionsBuilder: (
-//         BuildContext context,
-//         Animation<double> animation,
-//         Animation<double> secondaryAnimation,
-//         Widget child,
-//       ) {
-//         return SlideTransition(
-//           position: Tween<Offset>(
-//             begin: const Offset(0.0, 2.4),
-//             end: Offset.zero,
-//           ).animate(animation),
-//           child: SlideTransition(
-//             position: Tween<Offset>(
-//               begin: Offset.zero,
-//               end: const Offset(0.0, 2.4),
-//             ).animate(secondaryAnimation),
-//             child: child,
-//           ),
-//         );
-//       },
-//     ),
-//   );
-// }
-
 class LockScreen extends StatefulWidget {
   final String correctString;
   final String title;
@@ -391,7 +250,7 @@ class _LockScreenState extends State<LockScreen> {
               children: <Widget>[
                 SizedBox(height: 5 * _heightMargiz),
                 Image.asset(
-                  'assets/images/lock_black.PNG',
+                  'assets/img/lock_black.PNG',
                   scale: 3,
                 ),
                 SizedBox(height: (_heightLess ? 5.5 : 7) * _heightMargiz),
@@ -639,3 +498,144 @@ class _LockScreenState extends State<LockScreen> {
     super.dispose();
   }
 }
+
+// Future showConfirmPasscode({
+//   @required BuildContext context,
+//   String title = 'Please enter passcode.',
+//   String confirmTitle = 'Please enter confirm passcode.',
+//   String cancelText = 'Cancel',
+//   String deleteText = 'Delete',
+//   int digits = 4,
+//   DotSecretConfig dotSecretConfig = const DotSecretConfig(),
+//   void Function(BuildContext, String) onCompleted,
+//   Color backgroundColor = Colors.white,
+//   double backgroundColorOpacity = 0.5,
+//   CircleInputButtonConfig circleInputButtonConfig = const CircleInputButtonConfig(),
+// }) {
+//   return Navigator.of(context).push(
+//     PageRouteBuilder(
+//       opaque: false,
+//       pageBuilder: (
+//         BuildContext context,
+//         Animation<double> animation,
+//         Animation<double> secodaryAnimation,
+//       ) {
+//         return LockScreen(
+//           title: title,
+//           confirmTitle: confirmTitle,
+//           confirmMode: true,
+//           digits: digits,
+//           dotSecretConfig: dotSecretConfig,
+//           onCompleted: onCompleted,
+//           cancelText: cancelText,
+//           deleteText: deleteText,
+//           backgroundColor: backgroundColor,
+//           backgroundColorOpacity: backgroundColorOpacity,
+//           circleInputButtonConfig: circleInputButtonConfig,
+//         );
+//       },
+//       transitionsBuilder: (
+//         BuildContext context,
+//         Animation<double> animation,
+//         Animation<double> secondaryAnimation,
+//         Widget child,
+//       ) {
+//         return SlideTransition(
+//           position: Tween<Offset>(
+//             begin: const Offset(0.0, 2.4),
+//             end: Offset.zero,
+//           ).animate(animation),
+//           child: SlideTransition(
+//             position: Tween<Offset>(
+//               begin: Offset.zero,
+//               end: const Offset(0.0, 2.4),
+//             ).animate(secondaryAnimation),
+//             child: child,
+//           ),
+//         );
+//       },
+//     ),
+//   );
+// }
+
+// Future showLockScreen({
+//   @required BuildContext context,
+//   String correctString,
+//   String title = 'Please enter passcode.',
+//   String cancelText = 'Cancel',
+//   String deleteText = 'Delete',
+//   int digits = 4,
+//   DotSecretConfig dotSecretConfig = const DotSecretConfig(),
+//   bool canCancel = true,
+//   void Function(BuildContext, String) onCompleted,
+//   Widget biometricButton = const Icon(Icons.fingerprint),
+//   bool canBiometric = false,
+//   bool showBiometricFirst = false,
+//   @Deprecated('use biometricAuthenticate.') void Function(BuildContext) biometricFunction,
+//   Future<bool> Function(BuildContext) biometricAuthenticate,
+//   Color backgroundColor = Colors.white,
+//   double backgroundColorOpacity = 0.5,
+//   CircleInputButtonConfig circleInputButtonConfig = const CircleInputButtonConfig(),
+//   void Function() onUnlocked,
+// }) {
+//   return Navigator.of(context).push(
+//     PageRouteBuilder(
+//       opaque: false,
+//       pageBuilder: (
+//         BuildContext context,
+//         Animation<double> animation,
+//         Animation<double> secodaryAnimation,
+//       ) {
+//         var _showBiometricFirstController = StreamController<void>();
+
+//         animation.addStatusListener((status) {
+//           // Calling the biometric on completion of the animation.
+//           if (status == AnimationStatus.completed) {
+//             _showBiometricFirstController.add(null);
+//           }
+//         });
+
+//         return LockScreen(
+//           correctString: correctString,
+//           title: title,
+//           digits: digits,
+//           dotSecretConfig: dotSecretConfig,
+//           onCompleted: onCompleted,
+//           canCancel: canCancel,
+//           cancelText: cancelText,
+//           deleteText: deleteText,
+//           biometricButton: biometricButton,
+//           canBiometric: canBiometric,
+//           showBiometricFirst: showBiometricFirst,
+//           showBiometricFirstController: _showBiometricFirstController,
+//           biometricFunction: biometricFunction,
+//           biometricAuthenticate: biometricAuthenticate,
+//           backgroundColor: backgroundColor,
+//           backgroundColorOpacity: backgroundColorOpacity,
+//           circleInputButtonConfig: circleInputButtonConfig,
+//           onUnlocked: onUnlocked,
+//         );
+//       },
+//       transitionsBuilder: (
+//         BuildContext context,
+//         Animation<double> animation,
+//         Animation<double> secondaryAnimation,
+//         Widget child,
+//       ) {
+//         return SlideTransition(
+//           position: Tween<Offset>(
+//             begin: const Offset(0.0, 2.4),
+//             end: Offset.zero,
+//           ).animate(animation),
+//           child: SlideTransition(
+//             position: Tween<Offset>(
+//               begin: Offset.zero,
+//               end: const Offset(0.0, 2.4),
+//             ).animate(secondaryAnimation),
+//             child: child,
+//           ),
+//         );
+//       },
+//     ),
+//   );
+// }

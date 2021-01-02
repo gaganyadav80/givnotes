@@ -250,13 +250,15 @@ class _UnicornDialer extends State<UnicornDialer> with TickerProviderStateMixin 
             );
 
       var unicornDialWidget = Container(
-          margin: widget.hasNotch ? EdgeInsets.only(bottom: 15.0) : null,
-          height: double.infinity,
-          child: Stack(
-              //fit: StackFit.expand,
-              alignment: Alignment.bottomCenter,
-              overflow: Overflow.visible,
-              children: childButtonsList.toList()..add(Positioned(right: null, bottom: null, child: mainFloatingButton))));
+        margin: widget.hasNotch ? EdgeInsets.only(bottom: 15.0) : null,
+        height: double.infinity,
+        child: Stack(
+          //fit: StackFit.expand,
+          alignment: Alignment.bottomCenter,
+          // clipBehavior: Clip.antiAlias,
+          children: childButtonsList.toList()..add(Positioned(right: null, bottom: null, child: mainFloatingButton)),
+        ),
+      );
 
       var modal = ScaleTransition(
           scale: CurvedAnimation(
@@ -273,7 +275,14 @@ class _UnicornDialer extends State<UnicornDialer> with TickerProviderStateMixin 
               )));
 
       return widget.hasBackground
-          ? Stack(alignment: Alignment.topCenter, overflow: Overflow.visible, children: [Positioned(right: -16.0, bottom: -16.0, child: modal), unicornDialWidget])
+          ? Stack(
+              alignment: Alignment.topCenter,
+              // clipBehavior: Clip.antiAlias,
+              children: [
+                Positioned(right: -16.0, bottom: -16.0, child: modal),
+                unicornDialWidget,
+              ],
+            )
           : unicornDialWidget;
     }
 

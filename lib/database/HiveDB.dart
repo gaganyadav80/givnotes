@@ -24,42 +24,32 @@ class NotesModel extends HiveObject {
 
   @HiveField(6)
   Map<String, int> tagsMap = {};
-
-  // @HiveField(6)
-  // List<String> tags = [];
-
-  // @HiveField(7)
-  // List<int> tagColor = [];
 }
 
-// @HiveType(typeId: 1)
-// class PrefsModel extends HiveObject {
-//   @HiveField(0)
-//   bool skip;
+@HiveType(typeId: 1)
+class PrefsModel extends HiveObject {
+  @HiveField(0)
+  bool isAnonymous = false;
 
-//   @HiveField(1)
-//   bool firstlaunch;
+  @HiveField(1)
+  bool firstlaunch = false;
 
-//   @HiveField(2)
-//   bool applock;
+  @HiveField(2)
+  bool applock = false;
 
-//   @HiveField(3)
-//   bool biometric;
+  @HiveField(3)
+  bool biometric = false;
 
-//   @HiveField(4)
-//   List<String> searchlist;
+  // @HiveField(4)
+  // bool compactTags = false;
 
-//   @HiveField(5)
-//   Map<String, String> user;
+  // 'created', 'modified', 'a-z', 'z-a'
+  // @HiveField(5)
+  // String sortBy = 'created';
 
-//   Map<String, dynamic> toJson() {
-//     return {
-//       'skip': skip,
-//       'firstlaunch': firstlaunch,
-//       'applock': applock,
-//       'biometric': biometric,
-//       'searchlist': searchlist,
-//       'user': user,
-//     };
-//   }
-// }
+  @HiveField(6)
+  String passcode = '';
+
+  @HiveField(7)
+  Map<String, int> allTagsMap = {};
+}
