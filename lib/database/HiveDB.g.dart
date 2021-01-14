@@ -72,8 +72,8 @@ class PrefsModelAdapter extends TypeAdapter<PrefsModel> {
       ..firstlaunch = fields[1] as bool
       ..applock = fields[2] as bool
       ..biometric = fields[3] as bool
-      ..passcode = fields[6] as String
-      ..allTagsMap = (fields[7] as Map)?.cast<String, int>();
+      ..passcode = fields[4] as String
+      ..allTagsMap = (fields[5] as Map)?.cast<String, int>();
   }
 
   @override
@@ -88,9 +88,9 @@ class PrefsModelAdapter extends TypeAdapter<PrefsModel> {
       ..write(obj.applock)
       ..writeByte(3)
       ..write(obj.biometric)
-      ..writeByte(6)
+      ..writeByte(4)
       ..write(obj.passcode)
-      ..writeByte(7)
+      ..writeByte(5)
       ..write(obj.allTagsMap);
   }
 
@@ -101,6 +101,91 @@ class PrefsModelAdapter extends TypeAdapter<PrefsModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PrefsModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TodoModelAdapter extends TypeAdapter<TodoModel> {
+  @override
+  final int typeId = 2;
+
+  @override
+  TodoModel read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TodoModel()
+      ..uuid = fields[0] as String
+      ..category = fields[1] as String
+      ..color = fields[2] as int
+      ..icon = fields[3] as int
+      ..tasks = (fields[4] as List)?.cast<TaskObject>();
+  }
+
+  @override
+  void write(BinaryWriter writer, TodoModel obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.uuid)
+      ..writeByte(1)
+      ..write(obj.category)
+      ..writeByte(2)
+      ..write(obj.color)
+      ..writeByte(3)
+      ..write(obj.icon)
+      ..writeByte(4)
+      ..write(obj.tasks);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TodoModelAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TaskObjectAdapter extends TypeAdapter<TaskObject> {
+  @override
+  final int typeId = 3;
+
+  @override
+  TaskObject read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return TaskObject(
+      fields[1] as String,
+      fields[0] as DateTime,
+      completed: fields[2] as bool,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, TaskObject obj) {
+    writer
+      ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.date)
+      ..writeByte(1)
+      ..write(obj.task)
+      ..writeByte(2)
+      ..write(obj.completed);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TaskObjectAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

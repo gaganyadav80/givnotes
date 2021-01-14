@@ -86,6 +86,14 @@ class NotesModelSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
+    String def = hydratedPrefsCubit.state.sortBy == 'created'
+        ? 'Date created'
+        : hydratedPrefsCubit.state.sortBy == 'modified'
+            ? 'Date modified'
+            : hydratedPrefsCubit.state.sortBy == 'a-z'
+                ? "Alphabetical (A-Z)"
+                : "Alphabetical (Z-A)";
+
     return Container(
       height: 275,
       // color: Color(0xff171C26),
@@ -104,21 +112,20 @@ class NotesModelSheet extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          //TODO Customize the dropdown
           DropdownPreference(
             'Sort notes',
             'sort_notes',
             titleColor: Colors.white,
             titleGap: 0,
             leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white),
-            defaultVal: 'Date created',
-            values: ['Date created', 'Date modified', 'A-Z Title', 'Z-A Title'],
+            defaultVal: def,
+            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
             onChange: ((String value) {
               if (value == 'Date created')
                 hydratedPrefsCubit.updateSortBy('created');
               else if (value == 'Date modified')
                 hydratedPrefsCubit.updateSortBy('modified');
-              else if (value == 'A-Z Title')
+              else if (value == 'Alphabetical (A-Z)')
                 hydratedPrefsCubit.updateSortBy('a-z');
               else
                 hydratedPrefsCubit.updateSortBy('z-a');
@@ -126,12 +133,12 @@ class NotesModelSheet extends StatelessWidget {
           ),
           SwitchPreference(
             'Compact Tags',
-            'biometric',
+            'compact_tags',
             titleColor: Colors.white,
             titleGap: 0,
             leading: Icon(CupertinoIcons.bars, color: Colors.white),
             desc: 'Enable compact tags in notes view',
-            defaultVal: false,
+            defaultVal: hydratedPrefsCubit.state.compactTags,
             onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
             onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
           ),

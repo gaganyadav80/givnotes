@@ -36,8 +36,8 @@ class HomePage extends StatelessWidget {
                   TodoHome(), //? 1
                   TagsView(), //? 2
                   SettingsPage(), //? 3
-                  // Profile(),
-                  // AboutUs(),
+                  // MyProfile(), //? 4
+                  AboutUs(), //? 5
                 ],
               );
               // return _pageNavigation[state];
@@ -54,8 +54,7 @@ class HomePage extends StatelessWidget {
                 currentIndex: state.index,
                 // elevation: 15.0,
                 snakeShape: SnakeShape.indicator,
-                onTap: (index) =>
-                    BlocProvider.of<HomeCubit>(context).updateIndex(index),
+                onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(

@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/bloc/authentication_bloc/authentication_bloc.dart';
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/TheGorgeousLogin/gorgeous_login_page.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:lottie/lottie.dart';
@@ -17,8 +16,10 @@ class MyProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hm = context.percentHeight;
-    final wm = context.percentWidth;
+    // final hm = context.percentHeight;
+    // final wm = context.percentWidth;
+    final wm = 3.94;
+    final hm = 7.6;
 
     //TODO too much to rebuild... redesign
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(

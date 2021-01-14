@@ -79,7 +79,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                               _animateIndex = index;
                               index = _notes.length - index - 1;
 
-                              var note = _notes[index];
+                              NotesModel note = _notes[index];
 
                               return AnimationConfiguration.staggeredList(
                                 position: _animateIndex,
@@ -155,31 +155,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                     } else {
                       await HandlePermission().requestPermission().then((value) async {
                         if (value) {
-                          // print('Add notes button pressed');
-                          // //TODO flag
-                          // if (prefsBox.allTagsMap.isEmpty) {
-                          //   prefsBox.allTagsMap = {
-                          //     'givnotes': Colors.red.value,
-                          //     'testing': Colors.blue.value,
-                          //     'bloc': Colors.greenAccent.value,
-                          //   };
-                          //   prefsBox.save();
-                          // }
-
-                          // await _hiveDBServices.insertNote(
-                          //   NotesModel()
-                          //     ..title = 'ZYX $noteIndex'
-                          //     ..text = 'Demo note'
-                          //     ..znote = 'jsonEncode(_noteEditStore.zefyrController.document)'
-                          //     ..created = DateTime.now()
-                          //     ..modified = DateTime.now()
-                          //     ..tagsMap = {
-                          //       'givnotes': Colors.red.value,
-                          //       'testing': Colors.blue.value,
-                          //       'bloc': Colors.greenAccent.value,
-                          //     },
-                          // );
-                          // noteIndex++;
                           //TODO flag
                           BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
                           BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
@@ -205,139 +180,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
       ),
     );
   }
-
-  // TabBarView _buildTabView(BuildContext context, HomeState homeStateValue) {
-  //   return TabBarView(
-  //     controller: _tabController,
-  //     children: [
-  //       _buildRecentTab(context, homeStateValue),
-  //       _buildTrashTab(context, homeStateValue),
-  //       _buildGlobal(),
-  //     ],
-  //   );
-  // }
-
-  // ValueListenableBuilder<Box<NotesModel>> _buildRecentTab(BuildContext context, homeState) {
-  //   return ValueListenableBuilder(
-  //     valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
-  //     builder: (BuildContext context, Box<NotesModel> box, Widget widget) {
-  //       _notes = box.values.where((element) => element.trash == false).toList();
-
-  //       if (box.isEmpty || _notes.length == 0) {
-  //         return NotesEmptyView(isTrash: false);
-  //       }
-
-  //       return _buildAnimatedNoteList(homeState);
-  //     },
-  //   );
-  // }
-
-  // ValueListenableBuilder<Box<NotesModel>> _buildTrashTab(BuildContext context, homeState) {
-  //   return ValueListenableBuilder(
-  //     valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
-  //     builder: (BuildContext context, Box<NotesModel> box, Widget widget) {
-  //       _notes = box.values.where((element) => element.trash == true).toList();
-
-  //       if (box.isEmpty || _notes.length == 0) {
-  //         return NotesEmptyView(isTrash: true);
-  //       }
-
-  //       return _buildAnimatedNoteList(homeState);
-  //     },
-  //   );
-  // }
-
-  // Widget _buildGlobal() {
-  //   return Center(child: Container(child: Text("Global")));
-  // }
-
-  // Widget _buildAnimatedNoteList(HomeState homeState) {
-  //   return BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
-  //     builder: (context, prefState) {
-  //       return homeState.global == true
-  //           ? Center(child: Container(child: Text("Global")))
-  //           : AnimationLimiter(
-  //               child: ListView.builder(
-  //                 itemCount: _notes.length,
-  //                 itemBuilder: (context, index) {
-  //                   sortNotes = prefState.sortBy;
-
-  //                   if (sortNotes == 'created')
-  //                     _notes.sort((a, b) => a.created.compareTo(b.created));
-  //                   else if (sortNotes == 'modified')
-  //                     _notes.sort((a, b) => a.modified.compareTo(b.modified));
-  //                   else if (sortNotes == 'a-z')
-  //                     _notes.sort((a, b) => b.title.compareTo(a.title));
-  //                   else if (sortNotes == 'z-a') {
-  //                     _notes.sort((a, b) => a.title.compareTo(b.title));
-  //                   } else
-  //                     _notes.sort((a, b) => a.created.compareTo(b.created));
-
-  //                   _animateIndex = index;
-  //                   index = _notes.length - index - 1;
-
-  //                   var note = _notes[index];
-
-  //                   return AnimationConfiguration.staggeredList(
-  //                     position: _animateIndex,
-  //                     duration: const Duration(milliseconds: 375),
-  //                     child: SlideAnimation(
-  //                       verticalOffset: 25.0,
-  //                       child: FadeInAnimation(
-  //                         child: Slidable(
-  //                           key: UniqueKey(),
-  //                           actionPane: SlidableBehindActionPane(),
-  //                           actionExtentRatio: 1.0,
-  //                           dismissal: SlidableDismissal(
-  //                             child: SlidableDrawerDismissal(),
-  //                             onDismissed: (actionType) {
-  //                               _multiSelectController.deselectAll();
-
-  //                               if (!homeState.trash) {
-  //                                 note.trash = !note.trash;
-  //                                 note.save();
-
-  //                                 ScaffoldMessenger.of(context)
-  //                                   ..removeCurrentSnackBar()
-  //                                   ..showSnackBar(SnackBar(content: Text('moved to trash')));
-
-  //                                 _multiSelectController.set(_notes.length);
-  //                               } else {
-  //                                 note.trash = false;
-  //                                 note.save();
-
-  //                                 ScaffoldMessenger.of(context)
-  //                                   ..removeCurrentSnackBar()
-  //                                   ..showSnackBar(SnackBar(content: Text('moved to notes')));
-
-  //                                 _multiSelectController.set(_notes.length);
-  //                               }
-  //                             },
-  //                           ),
-  //                           secondaryActions: <Widget>[
-  //                             !homeState.trash
-  //                                 ? iconSlideAction(Colors.red, Icons.delete, 'Trash')
-  //                                 : iconSlideAction(
-  //                                     Color(0xff66a9e0),
-  //                                     Icons.restore,
-  //                                     'Resotre',
-  //                                   ),
-  //                           ],
-  //                           child: NotesCard(
-  //                             note: note,
-  //                             index: index,
-  //                             multiSelectController: _multiSelectController,
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   );
-  //                 },
-  //               ),
-  //             );
-  //     },
-  //   );
-  // }
 
   IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
     return IconSlideAction(

@@ -6,7 +6,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -39,6 +39,7 @@ dependencies:
   http: ^0.12.2
   hydrated_bloc: ^6.1.0
   intl: ^0.16.1
+  json_annotation: ^3.1.1
   local_auth: ^0.6.3+4
   lottie: ^0.7.0+1
   morpheus: ^1.2.2+1
@@ -60,7 +61,7 @@ dev_dependencies:
   auto_route_generator: ^0.6.10
   build_runner: ^1.10.6
   hive_generator: ^0.8.2
-  # mobx_codegen: ^1.1.2
+  json_serializable: ^3.5.1
   pedantic: ^1.9.2
 
 flutter:

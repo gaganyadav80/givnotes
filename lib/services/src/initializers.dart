@@ -10,9 +10,12 @@ Future<void> initHiveDb() async {
   await Hive.initFlutter();
   Hive.registerAdapter<NotesModel>(NotesModelAdapter());
   Hive.registerAdapter<PrefsModel>(PrefsModelAdapter());
+  Hive.registerAdapter<TodoModel>(TodoModelAdapter());
+  Hive.registerAdapter<TaskObject>(TaskObjectAdapter());
 
   Box<PrefsModel> box = await Hive.openBox<PrefsModel>('prefs');
   await Hive.openBox<NotesModel>('givnotes');
+  await Hive.openBox<TodoModel>('givtodos');
 
   if (box.isEmpty) {
     await box.add(PrefsModel());

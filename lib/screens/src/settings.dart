@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/services/services.dart';
-
-//TODO redesign with cupertino
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -14,20 +11,28 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
+    String def = _prefsCubit.state.sortBy == 'created'
+        ? 'Date created'
+        : _prefsCubit.state.sortBy == 'modified'
+            ? 'Date modified'
+            : _prefsCubit.state.sortBy == 'a-z'
+                ? "Alphabetical (A-Z)"
+                : "Alphabetical (Z-A)";
+
     return PreferencePage([
       PreferenceTitle('General'),
 
       DropdownPreference(
         'Sort Notes',
         'sort_notes',
-        defaultVal: 'Date Created',
-        values: ['Date Created', 'Date Modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+        defaultVal: def,
+        values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
         onChange: ((String value) {
           String val;
 
-          if (value == 'Date Created')
+          if (value == 'Date created')
             val = 'created';
-          else if (value == 'Date Modified')
+          else if (value == 'Date modified')
             val = 'modified';
           else if (value == 'Alphabetical (A-Z)')
             val = 'a-z';
@@ -43,7 +48,7 @@ class SettingsPage extends StatelessWidget {
         'Compact Tags',
         'compact_tags',
         desc: 'Enable compact tags in notes view',
-        defaultVal: false,
+        defaultVal: _prefsCubit.state.compactTags,
         onEnable: () {
           _prefsCubit.updateCompactTags(true);
           // prefsBox.compactTags = true;

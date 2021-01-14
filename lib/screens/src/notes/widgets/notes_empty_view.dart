@@ -59,8 +59,9 @@ class NotesEmptyView extends StatelessWidget {
             : BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
                 builder: (context, state) {
                   return Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.center,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset(
                           'assets/img/lady-on-phone.png',
