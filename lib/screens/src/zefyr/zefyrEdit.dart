@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:intl/intl.dart';
@@ -49,8 +50,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
   final wm = 3.94;
 
   Future<NotusDocument> _loadDocument() async {
-    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode ==
-        NoteMode.Editing) {
+    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode == NoteMode.Editing) {
       final contents = widget.note.znote;
       return NotusDocument.fromJson(jsonDecode(contents));
     }
@@ -85,8 +85,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode ==
-        NoteMode.Editing) {
+    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode == NoteMode.Editing) {
       _titleController.text = widget.note.title;
     }
   }
@@ -107,7 +106,6 @@ class ZefyrEditState extends State<ZefyrEdit> {
   Widget build(BuildContext context) {
     _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
     // zefyrEditMode = ((_noteEditStore.state.isEditing ?? true) || (_noteEditStore.state.noteMode == NoteMode.Adding));
-    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: _onPop,
       child: Scaffold(
@@ -122,20 +120,19 @@ class ZefyrEditState extends State<ZefyrEdit> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
+                // padding: const EdgeInsets.symmetric(horizontal: 15),
+                padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
                 child: getTitleTextField(),
               ),
               // SizedBox(height: wm),
-              SizedBox(height: 0.00518421053 * size.height),
+              SizedBox(height: 0.00518421053 * screenSize.height),
               _noteEditStore.state.noteMode == NoteMode.Editing
                   ? ValueListenableBuilder(
                       valueListenable: _notesModel,
-                      builder: (BuildContext context, NotesModel value,
-                          Widget child) {
+                      builder: (BuildContext context, NotesModel value, Widget child) {
                         return Padding(
                           // padding: const EdgeInsets.symmetric(horizontal: 15),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 0.038071066 * size.width),
+                          padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
                           child: Text(
                             'modified ${DateFormat.yMMMd().add_Hm().format(value.modified)}',
                             style: TextStyle(
@@ -151,11 +148,10 @@ class ZefyrEditState extends State<ZefyrEdit> {
                     )
                   : SizedBox.shrink(),
               // SizedBox(height: 1 * hm),
-              SizedBox(height: 0.01 * size.height),
+              SizedBox(height: 0.01 * screenSize.height),
               Padding(
                 // padding: EdgeInsets.symmetric(horizontal: 15),
-                padding:
-                    EdgeInsets.symmetric(horizontal: 0.038071066 * size.width),
+                padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
 
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -165,7 +161,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
                       noteTagsMap.length == 0
                           ? SizedBox.shrink()
                           // : SizedBox(width: 10),
-                          : SizedBox(width: 0.0131578947 * size.width),
+                          : SizedBox(width: 0.0131578947 * screenSize.width),
                       BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
                         builder: (context, state) {
                           return state.isEditing
@@ -197,9 +193,9 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                             // titlePadding: EdgeInsets.fromLTRB(
                                             //     15, 15, 15, 0),
                                             titlePadding: EdgeInsets.fromLTRB(
-                                              0.038071066 * size.width,
-                                              0.0197368421 * size.height,
-                                              0.038071066 * size.width,
+                                              0.038071066 * screenSize.width,
+                                              0.0197368421 * screenSize.height,
+                                              0.038071066 * screenSize.width,
                                               0,
                                             ),
                                             titleTextStyle: TextStyle(
@@ -211,14 +207,13 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                             // contentPadding: EdgeInsets.fromLTRB(
                                             //     15, 15, 15, 0),
                                             contentPadding: EdgeInsets.fromLTRB(
-                                              0.038071066 * size.width,
-                                              0.0197368421 * size.height,
-                                              0.038071066 * size.width,
+                                              0.038071066 * screenSize.width,
+                                              0.0197368421 * screenSize.height,
+                                              0.038071066 * screenSize.width,
                                               0,
                                             ),
                                             content: BlocProvider(
-                                              create: (_) =>
-                                                  NoteAndSearchCubit(),
+                                              create: (_) => NoteAndSearchCubit(),
                                               child: AddTagsDialog(
                                                 editNoteTag: false,
                                                 editTagTitle: '',
@@ -238,14 +233,13 @@ class ZefyrEditState extends State<ZefyrEdit> {
                               : noteTagsMap.length == 0
                                   ? Container(
                                       // height: 4 * hm,
-                                      height: 0.04 * size.height,
+                                      height: 0.04 * screenSize.height,
                                       child: Center(
                                         child: Text(
                                           '"no tags added."',
                                           style: TextStyle(
                                             fontFamily: 'ZillaSlab',
-                                            color:
-                                                Colors.black.withOpacity(0.7),
+                                            color: Colors.black.withOpacity(0.7),
                                             fontWeight: FontWeight.w600,
                                             fontSize: 2.5 * hm,
                                           ),
@@ -255,7 +249,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                   : Container(
                                       color: Colors.transparent,
                                       // height: 4.0 * hm,
-                                      height: 0.04 * size.height,
+                                      height: 0.04 * screenSize.height,
                                     );
                         },
                       )
@@ -270,7 +264,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
               //   thickness: 1,
               // ),
               // SizedBox(height: 2 * wm),
-              SizedBox(height: 0.0103684211 * size.height),
+              SizedBox(height: 0.0103684211 * screenSize.height),
               Expanded(
                 child: _editorBody(),
               ),
@@ -293,15 +287,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
           note: _notesModel.value,
           saveNote: _saveNote,
         ),
-        floatingActionButton:
-            BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+        floatingActionButton: BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
           cubit: _noteEditStore,
           builder: (context, state) {
             return state.noteMode == NoteMode.Editing && !state.isEditing
                 ? Container(
                     // height: 18 * wm,
                     // margin: EdgeInsets.only(bottom: 15),
-                    margin: EdgeInsets.only(bottom: 0.0197368421 * size.height),
+                    margin: EdgeInsets.only(bottom: 0.0197368421 * screenSize.height),
 
                     child: FloatingActionButton(
                       heroTag: 'parent',
@@ -327,17 +320,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
   Widget _editorBody() {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
       builder: (context, state) {
-        Size size = MediaQuery.of(context).size;
         return (_zefyrController == null)
             ? Center(child: CupertinoActivityIndicator())
             : ZefyrTheme(
                 data: zefyrThemeData,
                 child: ZefyrField(
                   expands: true,
-                  showCursor:
-                      state.isEditing || state.noteMode == NoteMode.Adding,
-                  readOnly:
-                      !(state.isEditing || state.noteMode == NoteMode.Adding),
+                  showCursor: state.isEditing || state.noteMode == NoteMode.Adding,
+                  readOnly: !(state.isEditing || state.noteMode == NoteMode.Adding),
                   autofocus: false,
                   controller: _zefyrController,
                   focusNode: _zefyrfocusNode,
@@ -345,10 +335,10 @@ class ZefyrEditState extends State<ZefyrEdit> {
                   decoration: InputDecoration(
                     // contentPadding: EdgeInsets.fromLTRB(15, 5, 15, 5),
                     contentPadding: EdgeInsets.fromLTRB(
-                      0.03807166 * size.width,
-                      0.00657894737 * size.height,
-                      0.03807166 * size.width,
-                      0.00657894737 * size.height,
+                      0.03807166 * screenSize.width,
+                      0.00657894737 * screenSize.height,
+                      0.03807166 * screenSize.width,
+                      0.00657894737 * screenSize.height,
                     ),
 
                     hintText: 'Your Note here...',
@@ -443,15 +433,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  Size size = MediaQuery.of(context).size;
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(10),
                     title: Text('Edit tag'),
                     // titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                     titlePadding: EdgeInsets.fromLTRB(
-                      0.038071066 * size.width,
-                      0.0197368421 * size.height,
-                      0.038071066 * size.width,
+                      0.038071066 * screenSize.width,
+                      0.0197368421 * screenSize.height,
+                      0.038071066 * screenSize.width,
                       0,
                     ),
 
@@ -463,15 +452,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
                     ),
                     // contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
                     contentPadding: EdgeInsets.fromLTRB(
-                      0.038071066 * size.width,
-                      0.0197368421 * size.height,
-                      0.038071066 * size.width,
+                      0.038071066 * screenSize.width,
+                      0.0197368421 * screenSize.height,
+                      0.038071066 * screenSize.width,
                       0,
                     ),
 
                     content: BlocProvider(
-                      create: (_) =>
-                          BlocProvider.of<NoteAndSearchCubit>(context),
+                      create: (_) => BlocProvider.of<NoteAndSearchCubit>(context),
                       child: AddTagsDialog(
                         editNoteTag: true,
                         editTagTitle: item.title,

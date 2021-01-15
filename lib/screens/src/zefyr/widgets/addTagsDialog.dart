@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/services/services.dart';
 
 import '../zefyrEdit.dart';
@@ -91,10 +92,9 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
   @override
   Widget build(BuildContext context) {
     final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
-
     return Container(
-      height: 260,
-      width: (MediaQuery.of(context).size.width * 0.85),
+      height: 0.342105263 * screenSize.height, //260
+      width: (screenSize.width * 0.85),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -136,7 +136,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               ),
             ),
           ),
-          SizedBox(height: 25),
+          // SizedBox(height: 25),
+          SizedBox(height: 0.032894737 * screenSize.height),
           Text(
             'Tag color: ',
             style: TextStyle(
@@ -147,7 +148,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
           ),
           // SizedBox(width: 5),
           Container(
-            height: 70,
+            // height: 70,
+            height: 0.092105263 * screenSize.height,
             color: Colors.transparent,
             width: (MediaQuery.of(context).size.width * 0.85),
             child: ListView.builder(
@@ -158,7 +160,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 Color color = Color(selectTagColors[index]);
 
                 return Padding(
-                  padding: const EdgeInsets.only(right: 5),
+                  // padding: const EdgeInsets.only(right: 5),
+                  padding: EdgeInsets.only(right: 0.012690355 * screenSize.width),
                   child: GestureDetector(
                     onTap: () {
                       if (selectTagColors.length == 1 && !_allTagsMap.containsKey(_newTagTextController.text.trim())) {
@@ -190,13 +193,16 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               },
             ),
           ),
-          SizedBox(height: 10),
+          // SizedBox(height: 10),
+          SizedBox(height: 0.013157895 * screenSize.height),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                height: 45,
-                width: 90,
+                // height: 45,
+                // width: 90,
+                height: 0.059210526 * screenSize.height,
+                width: 0.228426396 * screenSize.width,
                 child: RaisedButton(
                   elevation: 0,
                   onPressed: () {
@@ -215,10 +221,13 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                   ),
                 ),
               ),
-              SizedBox(width: 15),
+              // SizedBox(width: 15),
+              SizedBox(width: 0.038071066 * screenSize.width),
               Container(
-                height: 45,
-                width: 90,
+                // height: 45,
+                // width: 90,
+                height: 0.059210526 * screenSize.height,
+                width: 0.228426396 * screenSize.width,
                 child: RaisedButton(
                   elevation: 0,
                   color: Colors.black,

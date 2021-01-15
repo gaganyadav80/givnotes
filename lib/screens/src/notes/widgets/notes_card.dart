@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
@@ -46,7 +47,6 @@ class _NotesCardState extends State<NotesCard> {
     final hm = context.percentHeight;
     final wm = context.percentWidth;
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
@@ -94,7 +94,8 @@ class _NotesCardState extends State<NotesCard> {
             }
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            // padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 0.025380711 * screenSize.width),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -102,7 +103,8 @@ class _NotesCardState extends State<NotesCard> {
                   height: 0.057 * wm,
                   color: Colors.black,
                 ),
-                SizedBox(height: 4),
+                // SizedBox(height: 4),
+                SizedBox(height: 0.005263158 * screenSize.height),
                 widget.note.tagsMap.length == 0
                     ? SizedBox(height: wm)
                     : Container(
@@ -121,7 +123,8 @@ class _NotesCardState extends State<NotesCard> {
                             return prefsCubit.state.compactTags
                                 ? Container(
                                     width: 7.6 * wm,
-                                    margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                    // margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0.012690355 * screenSize.width, 0),
                                     decoration: BoxDecoration(
                                       color: color,
                                       borderRadius: BorderRadius.circular(5),
@@ -129,8 +132,10 @@ class _NotesCardState extends State<NotesCard> {
                                     child: SizedBox.shrink(),
                                   )
                                 : Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                    padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                    // margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                    margin: EdgeInsets.fromLTRB(0, 0, 0.012690355 * screenSize.width, 0),
+                                    // padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                    padding: EdgeInsets.fromLTRB(0.012690355 * screenSize.width, 0.002631579 * screenSize.height, 0.012690355 * screenSize.width, 0.002631579 * screenSize.height),
                                     decoration: BoxDecoration(
                                       color: color,
                                       borderRadius: BorderRadius.circular(5),
@@ -150,7 +155,8 @@ class _NotesCardState extends State<NotesCard> {
                           },
                         ),
                       ),
-                SizedBox(height: wm),
+                // SizedBox(height: wm),
+                SizedBox(height: 0.005184211 * screenSize.height),
                 Text(
                   widget.note.title,
                   style: TextStyle(
@@ -158,7 +164,8 @@ class _NotesCardState extends State<NotesCard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: 1 * wm),
+                // SizedBox(height: wm),
+                SizedBox(height: 0.005184211 * screenSize.height),
                 Text(
                   widget.note.text,
                   style: TextStyle(
@@ -168,7 +175,7 @@ class _NotesCardState extends State<NotesCard> {
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                 ),
-                SizedBox(height: wm),
+                SizedBox(height: 0.005184211 * screenSize.height),
                 Text(
                   "created  $_created",
                   style: TextStyle(
@@ -178,7 +185,8 @@ class _NotesCardState extends State<NotesCard> {
                     // fontStyle: FontStyle.italic,
                   ),
                 ),
-                SizedBox(height: 10),
+                // SizedBox(height: 10),
+                SizedBox(height: 0.013157895 * screenSize.height),
                 // Divider(
                 //   height: 0.057 * wm,
                 //   color: Colors.black,

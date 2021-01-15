@@ -3,6 +3,7 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/services/services.dart';
 
 class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -20,10 +21,10 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
-
     return AppBar(
       leading: Padding(
-        padding: EdgeInsets.fromLTRB(8.5, 4.7, 8.5, 4.7),
+        // padding: EdgeInsets.fromLTRB(8.5, 4.7, 8.5, 4.7),
+        padding: EdgeInsets.fromLTRB(0.021573604 * screenSize.width, 0.006184211 * screenSize.height, 0.021573604 * screenSize.width, 0.006184211 * screenSize.height),
         child: InkWell(
           onTap: () {
             saveNote();

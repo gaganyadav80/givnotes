@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -70,6 +71,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeUtils(context);
+
     return RepositoryProvider.value(
       value: authenticationRepository,
       child: MultiBlocProvider(
