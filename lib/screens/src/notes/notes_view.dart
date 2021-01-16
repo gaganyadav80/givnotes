@@ -41,6 +41,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: NotesAppBar(_tabController),
@@ -186,7 +187,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
     );
   }
 
-  IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
+  IconSlideAction iconSlideAction(Color color, IconData icon, String caption, Size size) {
     return IconSlideAction(
       // caption: 'Trash',
       color: color,
@@ -196,7 +197,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 40),
+            // padding: const EdgeInsets.only(right: 40),
+            padding: EdgeInsets.only(right: 0.101522843 * size.height),
+
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

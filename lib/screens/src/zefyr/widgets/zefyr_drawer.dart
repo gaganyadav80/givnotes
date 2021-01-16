@@ -5,6 +5,7 @@ import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
@@ -32,7 +33,8 @@ class EndDrawerItems extends StatelessWidget {
     final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Container(
-      width: wm * 65,
+      // width: wm * 65,
+      width: 0.65 * screenSize.width,
       child: Drawer(
         elevation: 40,
         child: PreferencePage([
@@ -47,6 +49,7 @@ class EndDrawerItems extends StatelessWidget {
                     saveNote(isDrawerSave: true);
                   },
                   context,
+                  screenSize,
                 )
               : myEndDrawerListTheme(
                   'Restore note',
@@ -57,11 +60,11 @@ class EndDrawerItems extends StatelessWidget {
 
                     _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                    if (Scaffold.of(context).isEndDrawerOpen)
-                      Navigator.pop(context);
+                    if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   context,
+                  screenSize,
                 ),
 
           myEndDrawerListTheme(
@@ -76,12 +79,12 @@ class EndDrawerItems extends StatelessWidget {
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(30),
                     // contentPadding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
                     title: Text('Statistics'),
                     content: Container(
-                      height: 160,
-                      width: (MediaQuery.of(context).size.width * 0.85),
+                      // height: 160,
+                      height: 0.210526316 * screenSize.height,
+                      width: (screenSize.width * 0.85),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -121,20 +124,22 @@ class EndDrawerItems extends StatelessWidget {
                               Text("${note.text.split(".\n\n").length}"),
                             ],
                           ),
-                          SizedBox(height: 10.0),
+                          // SizedBox(height: 10.0),
+                          SizedBox(height: 0.013157895 * screenSize.height),
                           Align(
                             alignment: Alignment.topRight,
                             child: Container(
-                              height: 45.0,
-                              width: 90.0,
+                              // height: 45.0,
+                              // width: 90.0,
+                              height: 0.059210526 * screenSize.height,
+                              width: 0.228426396 * screenSize.width,
                               child: RaisedButton(
                                 elevation: 0,
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
                                 color: Colors.grey[200],
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                 child: Text(
                                   'OKAY',
                                   style: TextStyle(
@@ -160,6 +165,7 @@ class EndDrawerItems extends StatelessWidget {
               );
             },
             context,
+            screenSize,
           ),
 
           //
@@ -180,11 +186,11 @@ class EndDrawerItems extends StatelessWidget {
 
                           _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                          if (Scaffold.of(context).isEndDrawerOpen)
-                            Navigator.pop(context);
+                          if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
                           Navigator.pop(context);
                         },
                   context,
+                  screenSize,
                 )
               : SizedBox.shrink(),
         ]),
@@ -197,6 +203,7 @@ class EndDrawerItems extends StatelessWidget {
     IconData icon,
     Function onPressed,
     BuildContext context,
+    Size screenSize,
   ) {
     return InkWell(
       onTap: onPressed,
@@ -204,7 +211,13 @@ class EndDrawerItems extends StatelessWidget {
         children: [
           // SizedBox(height: hm * 2),
           GFListTile(
-            padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+            // padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
+            padding: EdgeInsets.fromLTRB(
+              0.025380711 * screenSize.width,
+              0.019736842 * screenSize.height,
+              0.050761421 * screenSize.width,
+              0.019736842 * screenSize.height,
+            ),
             margin: EdgeInsets.zero,
             icon: Icon(
               icon,
@@ -228,8 +241,7 @@ class EndDrawerItems extends StatelessWidget {
   }
 }
 
-_confirmDeleteAlert(
-    context, NotesModel note, HiveDBServices _dbServices) async {
+_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -238,7 +250,7 @@ _confirmDeleteAlert(
         actions: [
           FlatButton(
             onPressed: () => Navigator.pop(context), //? Close the dialog
-            child: Text('Cancle'),
+            child: Text('Cancel'),
           ),
           FlatButton(
             child: Text('Delete'),

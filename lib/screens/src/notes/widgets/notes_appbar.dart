@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -20,7 +21,9 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
       child: Container(
         color: Colors.white,
         width: screenSize.width,
-        margin: const EdgeInsets.only(left: 10.0),
+        // margin: const EdgeInsets.only(left: 10.0),
+        margin: EdgeInsets.only(left: 0.025380711 * screenSize.width),
+
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -76,27 +79,20 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 8.0),
-              child: Row(
-                children: [
-                  // IconButton(
-                  //   iconSize: 18.0,
-                  //   icon: Icon(CupertinoIcons.trash),
-                  //   onPressed: () => print('trash pressed'),
-                  // ),
-                  IconButton(
-                    iconSize: 18.0,
-                    icon: Icon(Icons.view_agenda_outlined),
-                    onPressed: () => showModalBottomSheet(
-                      context: context,
-                      builder: (context) {
-                        return NotesModelSheet();
-                      },
-                      backgroundColor: Color(0xff171C26),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                      ),
-                    ),
+              // padding: const EdgeInsets.only(right: 8.0),
+              padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
+
+              child: IconButton(
+                iconSize: 18.0,
+                icon: Icon(Icons.view_agenda_outlined),
+                onPressed: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return NotesModelSheet();
+                  },
+                  backgroundColor: Color(0xff171C26),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   ),
                 ],
               ),
@@ -114,7 +110,7 @@ class NotesModelSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-
+    final Size screenSize = MediaQuery.of(context).size;
     String def = hydratedPrefsCubit.state.sortBy == 'created'
         ? 'Date created'
         : hydratedPrefsCubit.state.sortBy == 'modified'
@@ -124,13 +120,15 @@ class NotesModelSheet extends StatelessWidget {
                 : "Alphabetical (Z-A)";
 
     return Container(
-      height: 275,
+      // height: 275,
+      height: 0.361842105 * screenSize.height,
       // color: Color(0xff171C26),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
+            // padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
+            padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.039473684 * screenSize.height, 0, 0),
             child: Text(
               'Note Options',
               style: TextStyle(
@@ -140,7 +138,8 @@ class NotesModelSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 10),
+          // SizedBox(height: 10),
+          SizedBox(height: 0.013157895 * screenSize.height),
           DropdownPreference(
             'Sort notes',
             'sort_notes',

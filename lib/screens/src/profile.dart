@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/bloc/authentication_bloc/authentication_bloc.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/TheGorgeousLogin/gorgeous_login_page.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -28,19 +29,24 @@ class MyProfile extends StatelessWidget {
         //TODO use computed value for logged out user
         child: state.user.email.isEmptyOrNull == true
             ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4.6 * wm),
+                // padding: EdgeInsets.symmetric(horizontal: 4.6 * wm),
+                padding: EdgeInsets.symmetric(horizontal: 0.046 * screenSize.width),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 48.6 * wm),
+                      // padding: EdgeInsets.only(left: 48.6 * wm),
+                      padding: EdgeInsets.only(left: 0.486 * screenSize.width),
                       child: Lottie.asset(
                         'assets/animations/people-portrait.json',
-                        height: 24.5 * hm,
-                        width: 46.3 * wm,
+                        // height: 24.5 * hm,
+                        // width: 46.3 * wm,
+                        height: 0.245 * screenSize.height,
+                        width: 0.463 * screenSize.width,
                       ),
                     ),
-                    SizedBox(height: 5 * hm),
+                    // SizedBox(height: 5 * hm),
+                    SizedBox(height: 0.05 * screenSize.height),
                     Text(
                       'Oops!',
                       style: TextStyle(
@@ -49,7 +55,8 @@ class MyProfile extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    SizedBox(height: 0.6 * hm),
+                    // SizedBox(height: 0.6 * hm),
+                    SizedBox(height: 0.006 * screenSize.height),
                     Text(
                       'Looks like you are not logged in.',
                       style: TextStyle(
@@ -58,9 +65,11 @@ class MyProfile extends StatelessWidget {
                         fontWeight: FontWeight.w300,
                       ),
                     ),
-                    SizedBox(height: 5 * hm),
+                    // SizedBox(height: 5 * hm),
+                    SizedBox(height: 0.05 * screenSize.height),
                     Container(
-                      height: 8 * hm,
+                      // height:8 * hm,
+                      height: 0.08 * screenSize.height,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: Colors.black,
@@ -69,7 +78,8 @@ class MyProfile extends StatelessWidget {
                       ),
                       child: signInButton(isSignOut: false),
                     ),
-                    SizedBox(height: 5 * hm),
+                    // SizedBox(height: 5 * hm),
+                    SizedBox(height: 0.05 * screenSize.height),
                     Text(
                       'Not much here, yet. Maybe I\'ll add later.',
                       style: TextStyle(
@@ -85,11 +95,13 @@ class MyProfile extends StatelessWidget {
             : Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                    // padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
+                    padding: EdgeInsets.symmetric(horizontal: 0.035 * screenSize.width),
                     child: Stack(
                       children: <Widget>[
                         Card(
-                          margin: EdgeInsets.only(top: 8 * hm),
+                          // margin: EdgeInsets.only(top: 8 * hm),
+                          margin: EdgeInsets.only(top: 0.08 * screenSize.height),
                           elevation: 1 * hm,
                           shadowColor: Colors.grey[300],
                           shape: RoundedRectangleBorder(
@@ -99,9 +111,11 @@ class MyProfile extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              SizedBox(height: 14 * wm),
+                              // SizedBox(height: 14 * wm),
+                              SizedBox(height: 0.072578947 * screenSize.height),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                                // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                                padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
                                 child: Text(
                                   state.user.name,
                                   style: GoogleFonts.arizonia(
@@ -113,7 +127,8 @@ class MyProfile extends StatelessWidget {
                                 ),
                               ),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                                // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
+                                padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
                                 child: Text(
                                   state.user.email,
                                   style: TextStyle(
@@ -124,12 +139,15 @@ class MyProfile extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 5.5 * hm),
+                              // SizedBox(height: 5.5 * hm),
+                              SizedBox(height: 0.055 * screenSize.height),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 3 * wm),
+                                // padding: EdgeInsets.symmetric(horizontal: 3 * wm),
+                                padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
                                 child: signInButton(context: context, isSignOut: true),
                               ),
-                              SizedBox(height: 2 * hm),
+                              // SizedBox(height: 2 * hm),
+                              SizedBox(height: 0.02 * screenSize.height),
                             ],
                           ),
                         ),
@@ -163,7 +181,8 @@ class MyProfile extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    height: 52 * wm,
+                    // height: 52 * wm,
+                    height: 0.269578947 * screenSize.height,
                     width: double.infinity,
                     child: Image.asset('assets/images/profile.png'),
                   ),
@@ -184,7 +203,8 @@ class MyProfile extends StatelessWidget {
           color: Colors.grey[400],
         )
       ]),
-      height: 15 * wm,
+      // height: 15 * wm,
+      height: 0.077763158 * screenSize.height,
       child: GFButton(
         elevation: 2,
         fullWidthButton: true,
@@ -200,7 +220,8 @@ class MyProfile extends StatelessWidget {
               color: Colors.white,
               size: 2.2 * hm,
             ),
-            SizedBox(width: 2.6 * wm),
+            // SizedBox(width: 2.6 * wm),
+            SizedBox(width: 0.026 * screenSize.width),
             Text(
               isSignOut == false ? 'Sign in' : 'Sign out',
               style: TextStyle(

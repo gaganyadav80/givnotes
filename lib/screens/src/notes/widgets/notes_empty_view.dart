@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/utils.dart';
 
 class NotesEmptyView extends StatelessWidget {
   const NotesEmptyView({Key key, @required this.isTrash}) : super(key: key);
@@ -11,7 +12,6 @@ class NotesEmptyView extends StatelessWidget {
   Widget build(BuildContext context) {
     final hm = 7.6;
     final wm = 3.93;
-
     return BlocProvider.of<HomeCubit>(context).state.global == true
         ? Center(child: Container(child: Text("Global")))
         : isTrash
@@ -32,7 +32,8 @@ class NotesEmptyView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 0.5 * hm),
+                      // SizedBox(height: 0.5 * hm),
+                      SizedBox(height: 0.005 * screenSize.height),
                       Center(
                         child: Text(
                           "Create 'em, trash 'em. See them",
@@ -42,13 +43,17 @@ class NotesEmptyView extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(height: 30 * hm),
+                      // SizedBox(height: 30 * hm),
+                      SizedBox(height: 0.3 * screenSize.height),
                       Padding(
-                        padding: EdgeInsets.only(bottom: hm),
+                        // padding: EdgeInsets.only(bottom: hm),
+                        padding: EdgeInsets.only(bottom: 0.01 * screenSize.height),
                         child: Image(
                           image: AssetImage('assets/img/trash.png'),
-                          height: 25 * hm,
-                          width: 45 * wm,
+                          // height: 25 * hm,
+                          // width: 45 * wm,
+                          height: 0.25 * screenSize.height,
+                          width: 0.45 * screenSize.width,
                         ),
                       ),
                     ],
@@ -65,8 +70,8 @@ class NotesEmptyView extends StatelessWidget {
                       children: [
                         Image.asset(
                           'assets/img/lady-on-phone.png',
-                          width: 75 * wm,
-                          height: 65 * wm,
+                          width: 0.75 * screenSize.width,
+                          height: 0.336973684 * screenSize.height,
                         ),
                         Text("Notes sorted by: ${state.sortBy}"),
                         Text("Compact Tags: ${state.compactTags}"),
