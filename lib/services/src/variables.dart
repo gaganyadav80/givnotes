@@ -7,11 +7,10 @@ import 'package:quotes/quotes.dart';
 PrefsModel prefsBox;
 PackageInfo packageInfo;
 final quotesProvider = Quotes.getRandom();
+bool isPermanentDisabled = true;
 
 enum NoteMode { Adding, Editing }
-// GetIt locator = GetIt.instance;
 
-// TODO maybe replace showToast with showFlashToast... snackbar works the same
 void showFlashToast(BuildContext context, String msg) {
   showFlash(
     context: context,

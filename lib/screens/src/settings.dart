@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/services/services.dart';
 
+//TODO change icons with custom colorful icons
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key}) : super(key: key);
 
@@ -27,6 +29,8 @@ class SettingsPage extends StatelessWidget {
         'sort_notes',
         defaultVal: def,
         values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+        leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black),
+        titleGap: 0.0,
         onChange: ((String value) {
           String val;
 
@@ -49,6 +53,8 @@ class SettingsPage extends StatelessWidget {
         'compact_tags',
         desc: 'Enable compact tags in notes view',
         defaultVal: _prefsCubit.state.compactTags,
+        leading: Icon(CupertinoIcons.bars, color: Colors.black),
+        titleGap: 0.0,
         onEnable: () {
           _prefsCubit.updateCompactTags(true);
           // prefsBox.compactTags = true;
@@ -76,6 +82,8 @@ class SettingsPage extends StatelessWidget {
         desc: "Light and dark theme",
         defaultVal: 'Light',
         values: ['Light', 'Dark'],
+        leading: Icon(CupertinoIcons.cloud_moon, color: Colors.black),
+        titleGap: 0.0,
         onChange: ((value) {
           print(value);
         }),
@@ -87,6 +95,8 @@ class SettingsPage extends StatelessWidget {
         desc: "Spice up the theme",
         defaultVal: 'Black',
         values: ['Black', 'Blue', 'Red'],
+        leading: Icon(CupertinoIcons.at, color: Colors.black),
+        titleGap: 0.0,
         onChange: ((value) {
           print(value);
         }),
@@ -95,13 +105,19 @@ class SettingsPage extends StatelessWidget {
       AppLockSwitchPrefs(),
       PreferenceText(
         'Change Passcode',
+        leading: Icon(CupertinoIcons.lock_shield, color: Colors.black87),
+        titleGap: 0.0,
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => ShowLockscreen(changePassAuth: true),
-            ),
-          );
+          // if (prefsBox.passcode != '')
+          if (PrefService.getBool('app_lock') == true)
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ShowLockscreen(changePassAuth: true),
+              ),
+            );
+          else
+            Toast.show("Please enable applock first", context);
         },
       ),
 
@@ -110,8 +126,9 @@ class SettingsPage extends StatelessWidget {
       PreferenceTitle('Details Section'),
       PreferencePageLink(
         'Application',
-        leading: Icon(Icons.settings_applications),
+        leading: Icon(CupertinoIcons.app, color: Colors.black),
         trailing: Icon(Icons.keyboard_arrow_right),
+        titleGap: 0.0,
         page: PreferencePage([
           PreferenceTitle('Device'),
           PreferenceText(
@@ -119,8 +136,8 @@ class SettingsPage extends StatelessWidget {
 App name:  ${packageInfo.appName}
 Package:   ${packageInfo.packageName}
 Build_no:  ${packageInfo.buildNumber}
-App Release Version:   ${packageInfo.version}-beta
-Development Version:   3.0.0
+App Release Version:   v${packageInfo.version}-beta
+Development Version:   v2.0.0
   """,
             overflow: TextOverflow.visible,
           ),
@@ -150,6 +167,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           desc: 'Add 4 digit pin',
           defaultVal: false,
           ignoreTileTap: false,
+          leading: Icon(CupertinoIcons.lock, color: Colors.black),
+          titleGap: 0.0,
           onEnable: () {
             if (prefsBox.passcode == '') {
               Navigator.push(
@@ -185,6 +204,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
+          leading: Icon(Icons.fingerprint_outlined, color: Colors.black),
+          titleGap: 0.0,
           onEnable: () {
             prefsBox.biometric = true;
             prefsBox.save();

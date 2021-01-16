@@ -100,7 +100,6 @@ class _AddLockscreenState extends State<AddLockscreen> {
           AppLock.of(context).enable();
           prefsBox.applock = true;
           prefsBox.save();
-          //TODO uncomment
           // Navigator.push(
           //   context,
           //   MorpheusPageRoute(builder: (context) => HomePage()),

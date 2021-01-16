@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -64,13 +63,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          ConcentricPageRoute(
-                            builder: (context) => SearchPage(),
-                            radius: -1,
-                            //maybe positioned
-                            dy: 60,
-                            dx: 170,
-                          ),
+                          MaterialPageRoute(builder: (context) => SearchPage()),
+                          // ConcentricPageRoute(
+                          //   builder: (context) => SearchPage(),
+                          //   radius: -1,
+                          //   dy: 60,
+                          //   dx: 170,
+                          // ),
                         );
                       },
                     )

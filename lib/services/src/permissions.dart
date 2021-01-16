@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HandlePermission {
@@ -9,8 +10,7 @@ class HandlePermission {
       return true;
     } else {
       if (await Permission.storage.isPermanentlyDenied) {
-        //FIXME wihtout global varibale
-        // isPermanentDisabled = true;
+        isPermanentDisabled = true;
         return false;
       }
       return false;

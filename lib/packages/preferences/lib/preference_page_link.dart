@@ -8,20 +8,25 @@ class PreferencePageLink extends StatelessWidget {
   final PreferencePage page;
   final Widget leading;
   final Widget trailing;
-  PreferencePageLink(this.title,
-      {@required this.page,
-      this.desc,
-      this.pageTitle,
-      this.leading,
-      this.trailing});
+  final double titleGap;
+  PreferencePageLink(
+    this.title, {
+    @required this.page,
+    this.desc,
+    this.pageTitle,
+    this.leading,
+    this.trailing,
+    this.titleGap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      horizontalTitleGap: titleGap,
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => Scaffold(
                 appBar: AppBar(
-		  backgroundColor: Colors.black,
+                  backgroundColor: Colors.black,
                   title: Text(pageTitle ?? title),
                 ),
                 body: page,

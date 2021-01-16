@@ -52,36 +52,26 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: widget.leading,
-      horizontalTitleGap: widget.titleGap,
-      title: Text(
-        widget.title,
-        style: TextStyle(
-          decoration: widget.disabled ? TextDecoration.lineThrough : TextDecoration.none,
-          color: widget.disabled ? Colors.black45 : widget.titleColor,
-        ),
-      ),
-      subtitle: widget.desc == null
-          ? null
-          : Text(
-              widget.desc,
-              style: TextStyle(
-                decoration: widget.disabled ? TextDecoration.lineThrough : TextDecoration.none,
-                color: widget.disabled ? Colors.black38 : widget.titleColor?.withOpacity(0.6),
-                fontWeight: FontWeight.w300,
+    return Opacity(
+      opacity: widget.disabled ? 0.5 : 1.0,
+      child: ListTile(
+        leading: widget.leading,
+        horizontalTitleGap: widget.titleGap,
+        title: Text(widget.title, style: TextStyle(color: widget.titleColor)),
+        subtitle: widget.desc == null
+            ? null
+            : Text(
+                widget.desc,
+                style: TextStyle(color: widget.titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300),
               ),
-            ),
-      trailing: Opacity(
-        opacity: widget.disabled ? 0.5 : 1.0,
-        child: GlowSwitch(
+        trailing: GlowSwitch(
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
           activeColor: widget.switchActiveColor ?? Color(0xFF40D0FD).withOpacity(0.6),
           blurRadius: 8,
           onChanged: widget.disabled ? (_) {} : (val) => val ? onEnable() : onDisable(),
         ),
+        onTap: (widget.disabled || widget.ignoreTileTap) ? null : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
       ),
-      onTap: (widget.disabled || widget.ignoreTileTap) ? null : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
     );
   }
 

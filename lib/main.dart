@@ -1,6 +1,5 @@
 import 'dart:io';
 
-// import 'package:device_preview/device_preview.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -74,11 +73,8 @@ class App extends StatelessWidget {
       value: authenticationRepository,
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
-          ),
+          BlocProvider(create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
           BlocProvider(create: (_) => HomeCubit()),
-          // BlocProvider(create: (_) => NoteTrashCubit()),
           BlocProvider(create: (_) => HydratedPrefsCubit()),
           BlocProvider(create: (_) => NoteAndSearchCubit()),
         ],
@@ -108,33 +104,6 @@ class GivnotesApp extends StatelessWidget {
       ),
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, widget),
-        // BlocListener<AuthenticationBloc, AuthenticationState>(
-        //   child: widget,
-        //   listener: (context, state) {
-        //     switch (state.status) {
-        //       case AuthenticationStatus.authenticated:
-        //         _navigator.pushAndRemoveUntil<void>(
-        //           HomePage.route(),
-        //           (route) => false,
-        //         );
-        //         break;
-        //       case AuthenticationStatus.unauthenticated:
-        //         _navigator.pushAndRemoveUntil<void>(
-        //           MaterialPageRoute(
-        //             builder: (context) => BlocProvider(
-        //               lazy: false,
-        //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
-        //               child: GorgeousLoginPage(),
-        //             ),
-        //           ),
-        //           (route) => false,
-        //         );
-        //         break;
-        //       default:
-        //         break;
-        //     }
-        //   },
-        // ),
         maxWidth: 1200,
         minWidth: 300,
         defaultScale: false,
@@ -147,6 +116,33 @@ class GivnotesApp extends StatelessWidget {
         ],
         background: Container(color: Color(0xFFF5F5F5)),
       ),
+      // builder: (context, widget) => BlocListener<AuthenticationBloc, AuthenticationState>(
+      //   child: widget,
+      //   listener: (context, state) {
+      //     switch (state.status) {
+      //       case AuthenticationStatus.authenticated:
+      //         _navigator.pushAndRemoveUntil<void>(
+      //           HomePage.route(),
+      //           (route) => false,
+      //         );
+      //         break;
+      //       case AuthenticationStatus.unauthenticated:
+      //         _navigator.pushAndRemoveUntil<void>(
+      //           MaterialPageRoute(
+      //             builder: (context) => BlocProvider(
+      //               lazy: false,
+      //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
+      //               child: GorgeousLoginPage(),
+      //             ),
+      //           ),
+      //           (route) => false,
+      //         );
+      //         break;
+      //       default:
+      //         break;
+      //     }
+      //   },
+      // ),
       // navigatorKey: _navigatorKey,
       // onGenerateRoute: (_) => HomePage.route(),
       home: const CheckLogin(),

@@ -7,6 +7,7 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/bloc/authentication_bloc/authentication_bloc.dart';
 import 'package:givnotes/packages/TheGorgeousLogin/gorgeous_login_page.dart';
 import 'package:givnotes/services/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -103,8 +104,7 @@ class MyProfile extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                                 child: Text(
                                   state.user.name,
-                                  //TODO add arizonia font from google
-                                  style: TextStyle(
+                                  style: GoogleFonts.arizonia(
                                     color: Colors.black,
                                     fontSize: 4 * hm,
                                     fontWeight: FontWeight.w700,

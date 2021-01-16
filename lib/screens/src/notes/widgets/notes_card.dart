@@ -79,7 +79,6 @@ class _NotesCardState extends State<NotesCard> {
               widget.notesViewUpdate();
               //
             } else {
-              //TODO flag
               BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
 
               Navigator.push(

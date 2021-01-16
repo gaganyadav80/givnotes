@@ -12,7 +12,6 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:morpheus/morpheus.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key key}) : super(key: key);
@@ -31,8 +30,8 @@ class _SearchPageState extends State<SearchPage> {
   List<NotesModel> _notes = [];
   Map<String, int> _allTagsMap;
 
-  var hm = 7.6;
-  var wm = 3.94;
+  // var hm = 7.6;
+  // var wm = 3.94;
 
   @override
   void initState() {
@@ -113,8 +112,8 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    hm = context.percentHeight;
-    wm = context.percentWidth;
+    // hm = context.percentHeight;
+    // wm = context.percentWidth;
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
@@ -164,19 +163,14 @@ class _SearchPageState extends State<SearchPage> {
                       builder: (context, state) {
                         int searchLength = state.searchList.length;
 
-                        print(searchLength);
-                        //TODO does not rebuild if the state of searchList is same
-                        print(_textController.text.isEmpty);
+                        // print(searchLength);
+                        // print(_textController.text.isEmpty);
                         return searchLength == 0
                             ? _textController.text.isEmpty
                                 ? SliverToBoxAdapter(
                                     child: Center(
                                       child: SingleChildScrollView(
                                         child: Padding(
-                                          // padding: EdgeInsets.only(
-                                          //     left: 5 * wm,
-                                          //     top: 5 * hm,
-                                          //     right: 5 * wm),
                                           padding: EdgeInsets.only(
                                             left: 0.05 * size.width,
                                             top: 0.05 * size.height,
@@ -184,7 +178,6 @@ class _SearchPageState extends State<SearchPage> {
                                           ),
                                           child: Image.asset(
                                             'assets/img/search.png',
-                                            // height: 40 * hm,
                                             height: 0.4 * size.height,
                                           ),
                                         ),
@@ -193,7 +186,6 @@ class _SearchPageState extends State<SearchPage> {
                                   )
                                 : SliverToBoxAdapter(
                                     child: Padding(
-                                      // padding: EdgeInsets.only(top: 3 * hm),
                                       padding: EdgeInsets.only(top: 0.03 * size.height),
                                       child: Text(
                                         'Ops! nothing found',
@@ -201,7 +193,7 @@ class _SearchPageState extends State<SearchPage> {
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 2.8 * hm,
+                                          fontSize: 22,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -335,7 +327,7 @@ class _SearchPageState extends State<SearchPage> {
                                                                       style: TextStyle(
                                                                         fontWeight: FontWeight.w300,
                                                                         // color: Colors.red,
-                                                                        fontSize: 1.6 * hm,
+                                                                        fontSize: 12,
                                                                         fontStyle: FontStyle.italic,
                                                                       ),
                                                                     ),
@@ -349,7 +341,7 @@ class _SearchPageState extends State<SearchPage> {
                                                             Text(
                                                               item.title,
                                                               style: TextStyle(
-                                                                fontSize: 4.4 * wm,
+                                                                fontSize: 18,
                                                                 fontWeight: FontWeight.w600,
                                                               ),
                                                             ),
@@ -368,7 +360,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               style: TextStyle(
                                                                 fontWeight: FontWeight.w300,
                                                                 color: Colors.grey,
-                                                                fontSize: 3 * wm,
+                                                                fontSize: 12,
                                                               ),
                                                             ),
                                                             // SizedBox(

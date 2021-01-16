@@ -27,7 +27,7 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
-    final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+    // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(
       children: [

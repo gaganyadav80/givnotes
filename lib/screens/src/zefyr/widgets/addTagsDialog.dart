@@ -268,8 +268,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                         }
                       }
 
-                      //TODO flag
-                      // _noteEditStore.updateIsEditing(true);
+                      _noteEditStore.updateIsEditing(true);
                       _newTagTextController.clear();
 
                       Navigator.pop(context);

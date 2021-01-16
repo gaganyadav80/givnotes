@@ -6,8 +6,6 @@ import 'package:fluttericon/octicons_icons.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/src/settings.dart';
-import 'package:givnotes/screens/src/tagsView.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
 
 class HomePage extends StatelessWidget {

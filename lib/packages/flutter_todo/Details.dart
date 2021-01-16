@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
 import 'models/CustomCheckboxTile.dart';

@@ -60,72 +60,59 @@ In release mode, the default value ($value) will silently be used.
     }
 
     return GestureDetector(
-      child: ListTile(
-        enabled: !widget.disabled,
-        leading: widget.leading,
-        horizontalTitleGap: widget.titleGap,
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            decoration: widget.disabled ? TextDecoration.lineThrough : TextDecoration.none,
-            color: widget.disabled ? Colors.black45 : widget.titleColor,
-          ),
-        ),
-        subtitle: widget.desc == null
-            ? null
-            : Text(
-                widget.desc,
-                style: TextStyle(
-                  decoration: widget.disabled ? TextDecoration.lineThrough : TextDecoration.none,
-                  color: widget.disabled ? Colors.black45 : widget.titleColor,
-                ),
-              ),
-        // trailing: DropdownButton<T>(
-        //   items: widget.values.map((var val) {
-        //     return DropdownMenuItem<T>(
-        //       value: val,
-        //       child: Text(
-        //         widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
-        //         textAlign: TextAlign.end,
-        //       ),
-        //     );
-        //   }).toList(),
-        //   onChanged: widget.disabled
-        //       ? null
-        //       : (newVal) async {
-        //           onChange(newVal);
-        //         },
-        //   value: value,
-        // ),
-        trailing: Container(
-          width: 200,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 1.5,
-                  right: 2.25,
-                ),
-                child: Text(
-                  "$value",
+      child: Opacity(
+        opacity: widget.disabled ? 0.5 : 1.0,
+        child: ListTile(
+          enabled: !widget.disabled,
+          leading: widget.leading,
+          horizontalTitleGap: widget.titleGap,
+          title: Text(widget.title, style: TextStyle(color: widget.titleColor)),
+          subtitle: widget.desc == null
+              ? null
+              : Text(
+                  widget.desc,
                   style: TextStyle(
-                    decoration: widget.disabled ? TextDecoration.lineThrough : TextDecoration.none,
-                    color: CupertinoColors.systemGrey,
-                    fontSize: 16,
+                    color: widget.titleColor,
+                    fontWeight: FontWeight.w300,
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 0.5, left: 2.25),
-                child: Icon(
+          // trailing: DropdownButton<T>(
+          //   items: widget.values.map((var val) {
+          //     return DropdownMenuItem<T>(
+          //       value: val,
+          //       child: Text(
+          //         widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
+          //         textAlign: TextAlign.end,
+          //       ),
+          //     );
+          //   }).toList(),
+          //   onChanged: widget.disabled
+          //       ? null
+          //       : (newVal) async {
+          //           onChange(newVal);
+          //         },
+          //   value: value,
+          // ),
+          trailing: Container(
+            width: 200,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 5.0),
+                  child: Text(
+                    "$value",
+                    style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 16),
+                  ),
+                ),
+                Icon(
                   CupertinoIcons.forward,
                   size: 21.0,
-                  color: widget.disabled ? Colors.black26 : widget.titleColor.withOpacity(0.6),
+                  color: widget.titleColor.withOpacity(0.6),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
