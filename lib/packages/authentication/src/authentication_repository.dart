@@ -77,8 +77,8 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-    } on Exception {
-      throw LogInWithEmailAndPasswordFailure();
+    } catch (e) {
+      throw e.toString();
     }
   }
 

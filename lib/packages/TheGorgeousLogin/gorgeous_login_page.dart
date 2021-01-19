@@ -226,8 +226,14 @@ class _GorgeousLoginPageState extends State<GorgeousLoginPage> with SingleTicker
   Widget _buildSignIn(BuildContext context) {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
+        print("ERROR ============= ${state.error}");
         if (state.status.isSubmissionFailure) {
-          showInSnackBar(context, "Login Failure");
+          if (state.error.contains('password is invalid'))
+            showInSnackBar(context, "Invalid password");
+          else if (state.error.contains('no user record'))
+            showInSnackBar(context, "Invalid email");
+          else
+            showInSnackBar(context, "Login Failure");
         }
       },
       child: Container(

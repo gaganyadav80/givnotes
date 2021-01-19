@@ -17,6 +17,7 @@ class DropdownPreference<T> extends StatefulWidget {
   final Color titleColor;
   final Widget leading;
   final double titleGap;
+  final Color leadingColor;
 
   DropdownPreference(
     this.title,
@@ -30,6 +31,7 @@ class DropdownPreference<T> extends StatefulWidget {
     this.leading,
     this.titleColor = Colors.black,
     this.titleGap,
+    this.leadingColor,
   });
 
   _DropdownPreferenceState<T> createState() => _DropdownPreferenceState<T>();
@@ -64,9 +66,23 @@ In release mode, the default value ($value) will silently be used.
         opacity: widget.disabled ? 0.5 : 1.0,
         child: ListTile(
           enabled: !widget.disabled,
-          leading: widget.leading,
+          // leading: widget.leading,
+          leading: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: widget.leadingColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                height: 30.0,
+                width: 30.0,
+                child: Center(child: widget.leading),
+              ),
+            ],
+          ),
           horizontalTitleGap: widget.titleGap,
-          title: Text(widget.title, style: TextStyle(color: widget.titleColor)),
+          title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
           subtitle: widget.desc == null
               ? null
               : Text(
@@ -74,6 +90,7 @@ In release mode, the default value ($value) will silently be used.
                   style: TextStyle(
                     color: widget.titleColor,
                     fontWeight: FontWeight.w300,
+                    fontSize: 12.0,
                   ),
                 ),
           // trailing: DropdownButton<T>(

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -35,10 +34,6 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                 onValueChanged: (int value) {
                   if (value == 0) {
                     _homeCubit.updateGlobal(false);
-                    _homeCubit.updateTrash(false);
-                    // } else if (value == 1) {
-                    //   BlocProvider.of<HomeCubit>(context).updateGlobal(false);
-                    //   BlocProvider.of<HomeCubit>(context).updateTrash(true);
                   } else
                     _homeCubit.updateGlobal(true);
                 },
@@ -94,7 +89,7 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   ),
-                ],
+                ),
               ),
             ),
           ],

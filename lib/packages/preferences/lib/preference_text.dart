@@ -15,6 +15,8 @@ class PreferenceText extends StatelessWidget {
 
   final double titleGap;
 
+  final Color leadingColor;
+
   PreferenceText(
     this.text, {
     this.style,
@@ -24,6 +26,7 @@ class PreferenceText extends StatelessWidget {
     this.onTap,
     this.overflow = TextOverflow.ellipsis,
     this.titleGap,
+    this.leadingColor,
   });
 
   @override
@@ -32,7 +35,20 @@ class PreferenceText extends StatelessWidget {
       decoration: decoration,
       child: ListTile(
         horizontalTitleGap: titleGap,
-        leading: leading,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: leadingColor,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              height: 30.0,
+              width: 30.0,
+              child: Center(child: leading),
+            ),
+          ],
+        ),
         onTap: onTap,
         title: Text(
           text,

@@ -187,7 +187,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
     );
   }
 
-  IconSlideAction iconSlideAction(Color color, IconData icon, String caption, Size size) {
+  IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
     return IconSlideAction(
       // caption: 'Trash',
       color: color,
@@ -198,7 +198,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
         children: [
           Padding(
             // padding: const EdgeInsets.only(right: 40),
-            padding: EdgeInsets.only(right: 0.101522843 * size.height),
+            padding: EdgeInsets.only(right: 0.101522843 * MediaQuery.of(context).size.height),
 
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,

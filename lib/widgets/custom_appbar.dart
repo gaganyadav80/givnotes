@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   const CustomAppBar({Key key, this.title, this.icon}) : super(key: key);
@@ -31,8 +31,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       child: Container(
         color: Colors.white,
         child: Padding(
-          // padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-          padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.013157895 * screenSize.height, 0.050761421 * screenSize.width, 0),
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -41,18 +40,20 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       title,
                       style: TextStyle(
                         fontSize: 36,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                         letterSpacing: -0.7,
+                        color: const Color(0xff32343D),
                       ),
                     )
                   : BlocBuilder<HomeCubit, HomeState>(
                       builder: (context, state) {
                         return Text(
                           _appBarTitle[state.index],
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: -0.7,
+                          style: GoogleFonts.sourceSerifPro(
+                            fontSize: 42,
+                            fontWeight: FontWeight.w700,
+                            // letterSpacing: -0.7,s
+                            color: const Color(0xff32343D),
                           ),
                         );
                       },

@@ -11,6 +11,7 @@ class AuthState extends Equatable {
     this.obscureTextLogin = true,
     this.obscureTextSignup = true,
     this.obscureTextSignupConfirm = true,
+    this.error = 'no error',
   });
 
   final Email email;
@@ -21,6 +22,7 @@ class AuthState extends Equatable {
   final bool obscureTextLogin;
   final bool obscureTextSignup;
   final bool obscureTextSignupConfirm;
+  final String error;
 
   @override
   List<Object> get props => [
@@ -32,6 +34,7 @@ class AuthState extends Equatable {
         obscureTextLogin,
         obscureTextSignup,
         obscureTextSignupConfirm,
+        error,
       ];
 
   AuthState copyWith({
@@ -43,6 +46,7 @@ class AuthState extends Equatable {
     bool obscureTextLogin,
     bool obscureTextSignup,
     bool obscureTextSignupConfirm,
+    String error,
   }) {
     return AuthState(
       email: email ?? this.email,
@@ -53,6 +57,7 @@ class AuthState extends Equatable {
       obscureTextLogin: obscureTextLogin ?? this.obscureTextLogin,
       obscureTextSignup: obscureTextSignup ?? this.obscureTextSignup,
       obscureTextSignupConfirm: obscureTextSignupConfirm ?? this.obscureTextSignupConfirm,
+      error: error ?? this.error,
     );
   }
 }

@@ -6,17 +6,23 @@ class PreferencePageLink extends StatelessWidget {
   final String pageTitle;
   final String desc;
   final PreferencePage page;
+  final Widget widgetScaffold;
   final Widget leading;
   final Widget trailing;
   final double titleGap;
+  final TextStyle style;
+  final Color leadingColor;
   PreferencePageLink(
     this.title, {
-    @required this.page,
+    this.page,
     this.desc,
     this.pageTitle,
     this.leading,
     this.trailing,
     this.titleGap,
+    this.style,
+    this.leadingColor,
+    this.widgetScaffold,
   });
 
   @override
@@ -24,16 +30,32 @@ class PreferencePageLink extends StatelessWidget {
     return ListTile(
       horizontalTitleGap: titleGap,
       onTap: () => Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => Scaffold(
+          builder: (context) =>
+              widgetScaffold ??
+              Scaffold(
                 appBar: AppBar(
                   backgroundColor: Colors.black,
                   title: Text(pageTitle ?? title),
                 ),
                 body: page,
               ))),
-      title: Text(title),
+      title: Text(title, style: style),
       subtitle: desc == null ? null : Text(desc),
-      leading: leading,
+      // leading: leading,
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: leadingColor,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            height: 30.0,
+            width: 30.0,
+            child: Center(child: leading),
+          ),
+        ],
+      ),
       trailing: trailing,
     );
   }
