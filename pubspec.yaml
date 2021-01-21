@@ -30,7 +30,7 @@ dependencies:
   flutter_staggered_animations: ^0.1.2
   flutter_tags: ^0.4.9+1
   fluttericon: ^1.0.7
-  formz: ^0.3.2
+  # formz: ^0.3.2
   getwidget: ^1.2.4
   google_fonts: ^1.1.1
   google_sign_in: ^4.5.6
