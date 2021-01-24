@@ -58,7 +58,10 @@ class LoginMainBody extends StatelessWidget {
           if (state is LoginInProgress) {
             showProgress(context);
           }
-          if (state is LoginNeedsVerification) {}
+          if (state is LoginNeedsVerification) {
+            Toast.show("User email is not verified. Please verify your email id", context);
+            Navigator.of(context).pushReplacementNamed('verification_p');
+          }
           if (state is ForgetPasswordSuccess) {}
         },
         builder: (context, state) {

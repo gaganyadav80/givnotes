@@ -5,6 +5,7 @@ import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/toast.dart';
 import 'package:givnotes/screens/src/new_login_page/components/blueButton.dart';
 import 'package:givnotes/screens/src/new_login_page/components/customFormField.dart';
+import 'package:givnotes/screens/src/new_login_page/components/googleButton.dart';
 import 'package:givnotes/screens/src/new_login_page/pages/login_page.dart';
 import 'package:givnotes/screens/src/new_login_page/register_bloc/register_bloc.dart';
 
@@ -39,10 +40,13 @@ class RegisterMainBody extends StatelessWidget {
     }
 
     return SafeArea(
-      child: BlocConsumer(
+      child: BlocConsumer<RegisterBloc, RegisterState>(
         listener: (context, state) {
           if (state is RegisterFailed) {}
-          if (state is RegisterSuccess) {}
+          if (state is RegisterSuccess) {
+            print('...............................homepage');
+            Navigator.of(context).pushReplacementNamed('home_p');
+          }
           if (state is RegisterInProgress) {}
         },
         builder: (context, state) {
@@ -71,6 +75,47 @@ class RegisterMainBody extends StatelessWidget {
                     SizedBox(
                       height: screenHeight * 0.053367217, // 48
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "or register with",
+                          style: Theme.of(context).textTheme.headline4.copyWith(
+                                fontSize: screenHeight * 0.01111817, // 10
+                              ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: screenHeight * 0.053367217, // 48
+                    ),
+                    GoogleButton(
+                      title: "Sign Up with Google",
+                      onPressed: _onGoogleSignUpPressed,
+                    ),
+                    SizedBox(height: screenHeight * 0.140462516),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Already have an account? ",
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                                fontSize: screenHeight * 0.01111817, // 10
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                        GestureDetector(
+                          onTap: _onSignInPressed,
+                          child: Text(
+                            "Sign In",
+                            style: Theme.of(context).textTheme.headline6.copyWith(
+                                  fontSize: screenHeight * 0.01111817, // 10
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.015),
                   ],
                 ),
               ),

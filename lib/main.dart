@@ -15,6 +15,7 @@ import 'package:givnotes/screens/src/new_login_page/login_bloc.dart/login_bloc.d
 import 'package:givnotes/screens/src/new_login_page/pages/login_page.dart';
 import 'package:givnotes/screens/src/new_login_page/pages/registration_page.dart';
 import 'package:givnotes/screens/src/new_login_page/pages/verification_page.dart';
+import 'package:givnotes/screens/src/new_login_page/register_bloc/register_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -84,6 +85,8 @@ class App extends StatelessWidget {
           BlocProvider(create: (_) => HomeCubit()),
           BlocProvider(create: (_) => HydratedPrefsCubit()),
           BlocProvider(create: (_) => NoteAndSearchCubit()),
+          BlocProvider(create: (_) => LoginBloc()),
+          BlocProvider(create: (_) => RegisterBloc()),
         ],
         child: GivnotesApp(),
       ),

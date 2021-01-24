@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (event is LoginButtonPressed) {
         yield (LoginInProgress());
         await signInWithEmailAndPass(email: event.email, password: event.password);
-        final _currentUser = await FirebaseAuth.instance.currentUser;
+        final _currentUser = FirebaseAuth.instance.currentUser;
         if (_currentUser.emailVerified) {
           yield (LoginSuccess());
         } else {
