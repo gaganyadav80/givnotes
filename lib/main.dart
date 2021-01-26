@@ -80,6 +80,8 @@ class App extends StatelessWidget {
           BlocProvider(create: (_) => HomeCubit()),
           BlocProvider(create: (_) => HydratedPrefsCubit()),
           BlocProvider(create: (_) => NoteAndSearchCubit()),
+          BlocProvider(create: (_) => LoginBloc()),
+          BlocProvider(create: (_) => RegisterBloc()),
         ],
         child: GivnotesApp(),
       ),
@@ -95,6 +97,14 @@ class GivnotesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        'login_p': (context) => LoginPage(),
+        'register_p': (context) => RegisterPage(),
+        'verification_p': (context) => VerificationPage(),
+        'home_p': (context) => HomePage(),
+        'settings_p': (context) => SettingsPage(),
+        'search_p': (context) => SearchPage(),
+      },
       // locale: DevicePreview.locale(context),
       // builder: DevicePreview.appBuilder,
       title: 'Givnotes',
@@ -153,6 +163,39 @@ class GivnotesApp extends StatelessWidget {
   }
 }
 
+// class CheckLogin extends StatelessWidget {
+//   const CheckLogin({Key key}) : super(key: key);
+
+//   static Route route() {
+//     return MaterialPageRoute<void>(builder: (_) => CheckLogin());
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return StreamBuilder<User>(
+//       stream: FirebaseAuth.instance.authStateChanges(),
+//       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting)
+//           return Transform.scale(
+//             scale: 2.0,
+//             child: const CupertinoActivityIndicator(),
+//           );
+
+//         if (prefsBox.isAnonymous) return const HomePage();
+
+//         if (!snapshot.hasData || snapshot.data == null)
+//           return BlocProvider(
+//             lazy: false,
+//             create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
+//             child: GorgeousLoginPage(),
+//           );
+
+//         return const HomePage();
+//       },
+//     );
+//   }
+// }
+
 class CheckLogin extends StatelessWidget {
   const CheckLogin({Key key}) : super(key: key);
 
@@ -175,9 +218,8 @@ class CheckLogin extends StatelessWidget {
 
         if (!snapshot.hasData || snapshot.data == null)
           return BlocProvider(
-            lazy: false,
-            create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
-            child: GorgeousLoginPage(),
+            create: (context) => LoginBloc(),
+            child: LoginPage(),
           );
 
         return const HomePage();

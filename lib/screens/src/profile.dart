@@ -234,12 +234,13 @@ class MyProfile extends StatelessWidget {
         ),
         onPressed: isSignOut == false
             ? () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GorgeousLoginPage(),
-                  ),
-                );
+                Navigator.of(context).pushReplacementNamed('login_p');
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => GorgeousLoginPage(),
+                //   ),
+                // );
               }
             : () {
                 _signOutAlert(context);
