@@ -11,11 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/screens/src/new_login_page/login_bloc.dart/login_bloc.dart';
-import 'package:givnotes/screens/src/new_login_page/pages/login_page.dart';
-import 'package:givnotes/screens/src/new_login_page/pages/registration_page.dart';
-import 'package:givnotes/screens/src/new_login_page/pages/verification_page.dart';
-import 'package:givnotes/screens/src/new_login_page/register_bloc/register_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 

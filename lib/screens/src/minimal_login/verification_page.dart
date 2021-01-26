@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/screens/src/new_login_page/components/blueButton.dart';
-import 'package:givnotes/screens/src/new_login_page/components/progressIndicator.dart';
-import 'package:givnotes/screens/src/new_login_page/verification_page/verification_bloc.dart';
+
+import 'components/components.dart';
+import 'verification_bloc/verification_bloc.dart';
 
 class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
+      body: BlocProvider<VerificationBloc>(
         create: (context) => VerificationBloc()..add(VerificationInitiated(isFirstTime: true)),
         child: VerificationMainBody(),
       ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
-import 'package:givnotes/screens/src/new_login_page/components/customFormField.dart';
-import 'package:givnotes/screens/src/new_login_page/constants.dart';
+
+import 'constants.dart';
+import 'customFormField.dart';
 
 class PassResetMailDialog extends StatelessWidget {
   final Function onPressed;

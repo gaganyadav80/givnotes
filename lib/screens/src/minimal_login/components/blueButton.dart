@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/screens/src/new_login_page/constants.dart';
+
+import 'constants.dart';
 
 class BlueButton extends StatelessWidget {
   final Function onPressed;

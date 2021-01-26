@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:givnotes/screens/src/new_login_page/functions/signUp.dart';
+import 'package:givnotes/screens/src/minimal_login/functions/signUp.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 part 'register_event.dart';
 part 'register_state.dart';

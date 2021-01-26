@@ -2,52 +2,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
-import 'package:givnotes/packages/toast.dart';
-import 'package:givnotes/screens/src/new_login_page/components/blueButton.dart';
-import 'package:givnotes/screens/src/new_login_page/components/customFormField.dart';
-import 'package:givnotes/screens/src/new_login_page/components/googleButton.dart';
-import 'package:givnotes/screens/src/new_login_page/pages/login_page.dart';
-import 'package:givnotes/screens/src/new_login_page/register_bloc/register_bloc.dart';
+import 'package:givnotes/packages/packages.dart';
 
-class RegisterPage extends StatelessWidget {
+import 'components/components.dart';
+import 'login_bloc/login_bloc.dart';
+import 'registration_page.dart';
+
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocProvider(
-        create: (context) => RegisterBloc(),
-        child: RegisterMainBody(),
-      ),
+    return BlocProvider<LoginBloc>(
+      create: (context) => LoginBloc(),
+      child: Scaffold(body: LoginMainBody()),
     );
   }
 }
 
-class RegisterMainBody extends StatelessWidget {
+class LoginMainBody extends StatelessWidget {
+  const LoginMainBody({
+    Key key,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    void _onGoogleSignUpPressed() {
-      // if (!_RegisterFormState.acceptTnC) {
-      //   context.showSnackBar("Please accept Terms and Conditions");
-      //   return;
-      // }
-
-      BlocProvider.of<RegisterBloc>(context).add(GoogleSignUpClicked());
+    void _onGoogleSignInPressed() {
+      BlocProvider.of<LoginBloc>(context).add(LoginWithGoogle());
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Google Sign In"),
+      ));
     }
 
-    void _onSignInPressed() {
+    void _onSignUpPressed() {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-        return LoginPage();
+        return RegisterPage();
       }));
     }
 
     return SafeArea(
-      child: BlocConsumer<RegisterBloc, RegisterState>(
-        listener: (context, state) {
-          if (state is RegisterFailed) {}
-          if (state is RegisterSuccess) {
-            print('...............................homepage');
+      child: BlocConsumer<LoginBloc, LoginState>(
+        listener: (context, state) async {
+          if (state is LoginFailure) {
+            Navigator.of(context).pop();
+            Toast.show(state.message, context);
+          }
+          if (state is LoginSuccess) {
+            Navigator.of(context).pop();
+            Toast.show('Login Successful', context);
             Navigator.of(context).pushReplacementNamed('home_p');
           }
-          if (state is RegisterInProgress) {}
+          if (state is LoginInProgress) {
+            showProgress(context);
+          }
+          if (state is LoginNeedsVerification) {
+            Toast.show("User email is not verified. Please verify your email id", context);
+            Navigator.of(context).pushReplacementNamed('verification_p');
+          }
+          if (state is ForgetPasswordSuccess) {}
         },
         builder: (context, state) {
           return ListView(
@@ -56,14 +66,14 @@ class RegisterMainBody extends StatelessWidget {
                 height: screenHeight * 0.142312579, // 128
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
+                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Sign Up",
+                      "Welcome",
                       style: Theme.of(context).textTheme.headline1.copyWith(
                             fontSize: screenHeight * 0.042249047, //38
                           ),
@@ -71,7 +81,7 @@ class RegisterMainBody extends StatelessWidget {
                     SizedBox(
                       height: screenHeight * 0.036689962, //33
                     ),
-                    RegisterForm(),
+                    LoginForm(),
                     SizedBox(
                       height: screenHeight * 0.053367217, // 48
                     ),
@@ -79,7 +89,7 @@ class RegisterMainBody extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "or register with",
+                          "or connect with",
                           style: Theme.of(context).textTheme.headline4.copyWith(
                                 fontSize: screenHeight * 0.01111817, // 10
                               ),
@@ -90,24 +100,24 @@ class RegisterMainBody extends StatelessWidget {
                       height: screenHeight * 0.053367217, // 48
                     ),
                     GoogleButton(
-                      title: "Sign Up with Google",
-                      onPressed: _onGoogleSignUpPressed,
+                      title: "Continue with Google",
+                      onPressed: _onGoogleSignInPressed,
                     ),
-                    SizedBox(height: screenHeight * 0.140462516),
+                    SizedBox(height: screenHeight * 0.180462516), // 183
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Already have an account? ",
+                          "Don't have an account? ",
                           style: Theme.of(context).textTheme.caption.copyWith(
                                 fontSize: screenHeight * 0.01111817, // 10
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
                         GestureDetector(
-                          onTap: _onSignInPressed,
+                          onTap: _onSignUpPressed,
                           child: Text(
-                            "Sign In",
+                            "Sign Up",
                             style: Theme.of(context).textTheme.headline6.copyWith(
                                   fontSize: screenHeight * 0.01111817, // 10
                                 ),
@@ -117,7 +127,7 @@ class RegisterMainBody extends StatelessWidget {
                     ),
                     SizedBox(height: screenHeight * 0.015),
                   ],
-                ),
+                ), // 30
               ),
             ],
           );
@@ -127,33 +137,43 @@ class RegisterMainBody extends StatelessWidget {
   }
 }
 
-class RegisterForm extends StatefulWidget {
+class LoginForm extends StatefulWidget {
   @override
-  _RegisterFormState createState() => _RegisterFormState();
+  _LoginFormState createState() => _LoginFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _LoginFormState extends State<LoginForm> {
   final _emailTextController = TextEditingController();
   final _passtextController = TextEditingController();
   final _emailNode = FocusNode();
   final _passwordNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _validator = Validator();
-  // static bool acceptTnC = false;
   bool _isObscure = true;
 
-  void _onRegisterButtonPressed() {
+  void _onLoginButtonPressed() {
     if (!_formKey.currentState.validate()) return;
-
-    // if (!acceptTnC) {
-    //   //TODO: complete
-    //   // context.showSnackBar("Please accept Terms and Conditions");
-    //   return;
-    // }
-    BlocProvider.of<RegisterBloc>(context).add(
-      RegisterButtonClicked(
+    BlocProvider.of<LoginBloc>(context).add(
+      LoginButtonPressed(
         email: _emailTextController.text,
         password: _passtextController.text,
+      ),
+    );
+  }
+
+  void _onForgetPasswordPressed() {
+    final _emailController = TextEditingController();
+    final _formKey = GlobalKey<FormState>();
+    showDialog(
+      context: context,
+      builder: (context) => PassResetMailDialog(
+        formKey: _formKey,
+        emailController: _emailController,
+        onPressed: () {
+          if (!_formKey.currentState.validate()) return;
+
+          BlocProvider.of<LoginBloc>(context).add(ForgetPassword(email: _emailController.text));
+        },
       ),
     );
   }
@@ -172,11 +192,12 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _emailTextController,
             hintText: 'Email',
-            prefixIcon: Icon(Icons.email_outlined),
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
+            prefixIcon: Icon(Icons.email_outlined),
           ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: screenHeight * 0.024459975),
+          // 22
           CustomTextFormField(
             currentNode: _passwordNode,
             textInputAction: TextInputAction.done,
@@ -190,39 +211,22 @@ class _RegisterFormState extends State<RegisterForm> {
             suffix: _isObscure ? Icon(Icons.visibility_off_outlined) : Icon(Icons.visibility_outlined),
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Checkbox(
-          //       value: acceptTnC,
-          //       onChanged: (newVal) {
-          //         setState(() {
-          //           acceptTnC = newVal;
-          //         });
-          //       },
-          //       visualDensity: VisualDensity.compact,
-          //     ),
-          //     Text(
-          //       "I accept ",
-          //       style: Theme.of(context).textTheme.headline3.copyWith(
-          //             fontSize: screenHeight * 0.01111817, // 10
-          //           ),
-          //     ),
-          //     GestureDetector(
-          //       onTap: () async {
-          //         // launch("https://contri-app.web.app");
-          //       },
-          //       child: Text(
-          //         "Terms and Conditions",
-          //         style: Theme.of(context).textTheme.headline6.copyWith(
-          //               fontSize: screenHeight * 0.01111817, // 10
-          //             ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: _onForgetPasswordPressed,
+                child: Text(
+                  "FORGOT PASWWORD",
+                  style: Theme.of(context).textTheme.headline6.copyWith(
+                        fontSize: screenHeight * 0.01111817, // 10
+                      ),
+                ),
+              ),
+            ],
+          ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlueButton(title: "Sign Up", onPressed: _onRegisterButtonPressed),
+          BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed),
         ],
       ),
     );
