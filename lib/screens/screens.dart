@@ -7,3 +7,4 @@ export 'src/aboutUs.dart';
 export 'src/tagsView.dart';
 export 'src/settings.dart';
 export 'src/todo_timeline/todo_home.dart';
+export 'src/minimal_login/minimal_login.dart';
