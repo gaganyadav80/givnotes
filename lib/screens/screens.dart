@@ -6,3 +6,4 @@ export 'src/profile.dart';
 export 'src/aboutUs.dart';
 export 'src/tagsView.dart';
 export 'src/settings.dart';
+export 'src/todo_timeline/todo_home.dart';

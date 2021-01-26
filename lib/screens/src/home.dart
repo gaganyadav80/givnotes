@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_snake_navigationbar/flutter_snake_navigationbar.dart';
-import 'package:fluttericon/octicons_icons.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
@@ -23,7 +21,7 @@ class HomePage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.white,
           appBar: CustomAppBar(
-            icon: CupertinoIcons.search,
+            trailing: CupertinoIcons.search,
           ),
           body: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
@@ -31,63 +29,63 @@ class HomePage extends StatelessWidget {
                 index: state.index,
                 children: <Widget>[
                   NotesView(), //? 0
-                  TodoHome(), //? 1
+                  // TodoHome(),
+                  TodoTimeline(), //? 1
                   TagsView(), //? 2
                   SettingsPage(), //? 3
                   // MyProfile(), //? 4
-                  AboutUs(), //? 5
+                  // AboutUs(), //? 5
                 ],
               );
-              // return _pageNavigation[state];
             },
           ),
           bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(
             buildWhen: (previous, current) => previous != current,
             builder: (context, state) {
-              return SnakeNavigationBar.color(
-                backgroundColor: Colors.white,
-                selectedItemColor: Colors.black,
-                unselectedItemColor: Colors.black45,
-                snakeViewColor: Colors.black,
-                currentIndex: state.index,
-                // elevation: 15.0,
-                snakeShape: SnakeShape.indicator,
-                onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      CupertinoIcons.book,
-                      size: 32,
+              return Container(
+                height: 60,
+                child: CupertinoTabBar(
+                  backgroundColor: Colors.white,
+                  activeColor: Colors.black,
+                  currentIndex: state.index,
+                  onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(state.index == 0 ? CupertinoIcons.book_fill : CupertinoIcons.book, size: 36),
+                      // label: 'Notes',
                     ),
-                    // label: 'Notes',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      //maybe list_dash
-                      CupertinoIcons.layers,
-                      size: 32,
+                    BottomNavigationBarItem(
+                      icon: Icon(state.index == 1 ? CupertinoIcons.layers_fill : CupertinoIcons.layers, size: 36),
+                      // label: 'Todos',
                     ),
-                    // label: 'Seach',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Transform.rotate(
-                      angle: 1.5708,
-                      child: Icon(
-                        Octicons.tag,
-                        size: 32,
-                      ),
+                    BottomNavigationBarItem(
+                      icon: Icon(state.index == 2 ? CupertinoIcons.tag_fill : CupertinoIcons.tag), //size: 27
+                      // label: 'Tags',
                     ),
-                    // label: 'Tags',
-                  ),
-                  BottomNavigationBarItem(
-                    icon: Icon(
-                      CupertinoIcons.settings,
-                      size: 32,
+                    BottomNavigationBarItem(
+                      icon: Icon(state.index == 3 ? CupertinoIcons.settings_solid : CupertinoIcons.settings, size: 36),
+                      // label: 'Settings',
                     ),
-                    // label: 'Settings',
-                  ),
-                ],
+                  ],
+                ),
               );
+              // return SnakeNavigationBar.color(
+              //   backgroundColor: Colors.white,
+              //   selectedItemColor: Colors.black,
+              //   unselectedItemColor: Colors.black45,
+              //   snakeViewColor: Colors.black,
+              //   currentIndex: state.index,
+              //   snakeShape: SnakeShape.indicator,
+              //   onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
+              //   items: <BottomNavigationBarItem>[
+              //     BottomNavigationBarItem(icon: Icon(CupertinoIcons.book, size: 32), label: 'Home'),
+              //     BottomNavigationBarItem(icon: Icon(CupertinoIcons.layers, size: 32)),
+              //     BottomNavigationBarItem(
+              //       icon: Transform.rotate(angle: 1.5708, child: Icon(Octicons.tag, size: 32)),
+              //     ),
+              //     BottomNavigationBarItem(icon: Icon(CupertinoIcons.settings, size: 32)),
+              //   ],
+              // );
             },
           ),
         ),

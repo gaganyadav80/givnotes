@@ -21,120 +21,122 @@ class SettingsPage extends StatelessWidget {
                 ? "Alphabetical (A-Z)"
                 : "Alphabetical (Z-A)";
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: PreferencePage([
-        PreferenceTitle('General'),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        child: PreferencePage([
+          PreferenceTitle('General'),
 
-        DropdownPreference(
-          'Sort notes',
-          'sort_notes',
-          defaultVal: def,
-          values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-          titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white, size: 20.0),
-          leadingColor: Colors.red,
-          titleGap: 0.0,
-          onChange: ((String value) {
-            String val;
+          DropdownPreference(
+            'Sort notes',
+            'sort_notes',
+            defaultVal: def,
+            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+            titleColor: const Color(0xff32343D),
+            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white, size: 20.0),
+            leadingColor: Colors.red,
+            titleGap: 0.0,
+            onChange: ((String value) {
+              String val;
 
-            if (value == 'Date created')
-              val = 'created';
-            else if (value == 'Date modified')
-              val = 'modified';
-            else if (value == 'Alphabetical (A-Z)')
-              val = 'a-z';
-            else
-              val = 'z-a';
+              if (value == 'Date created')
+                val = 'created';
+              else if (value == 'Date modified')
+                val = 'modified';
+              else if (value == 'Alphabetical (A-Z)')
+                val = 'a-z';
+              else
+                val = 'z-a';
 
-            _prefsCubit.updateSortBy(val);
-          }),
-        ),
-        SwitchPreference(
-          'Compact tags',
-          'compact_tags',
-          desc: 'Enable compact tags in notes view',
-          defaultVal: _prefsCubit.state.compactTags,
-          titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
-          leadingColor: Colors.blue,
-          titleGap: 0.0,
-          onEnable: () => _prefsCubit.updateCompactTags(true),
-          onDisable: () => _prefsCubit.updateCompactTags(false),
-        ),
-
-        PreferenceTitle('Personalization'),
-        PreferenceTitle(
-          '  !! Personalization is yet to be implemented !!',
-          style: TextStyle(
-            color: Colors.grey[500],
-            fontStyle: FontStyle.italic,
+              _prefsCubit.updateSortBy(val);
+            }),
           ),
-        ),
-        SwitchPreference(
-          'Dark mode',
-          'dark_mode',
-          disabled: true,
-          desc: "Switch between light and dark mode",
-          titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
-          leadingColor: Colors.purple,
-          titleGap: 0.0,
-          onChange: ((value) {
-            print(value);
-          }),
-        ),
-        DropdownPreference(
-          'Accent color',
-          'accent_color',
-          disabled: true,
-          desc: "Spice up your theme",
-          defaultVal: 'Black',
-          values: ['Black', 'Blue', 'Red'],
-          titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
-          leadingColor: Colors.pink,
-          titleGap: 0.0,
-          onChange: ((value) {
-            print(value);
-          }),
-        ),
-        PreferenceTitle('Security'),
-        AppLockSwitchPrefs(),
-        PreferenceText(
-          'Change Passcode',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-          leading: Icon(CupertinoIcons.lock_shield, color: Colors.white, size: 20.0),
-          leadingColor: Colors.lightGreen,
-          titleGap: 0.0,
-          onTap: () {
-            // if (prefsBox.passcode != '')
-            if (PrefService.getBool('app_lock') == true)
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ShowLockscreen(changePassAuth: true),
-                ),
-              );
-            else
-              Toast.show("Please enable applock first", context);
-          },
-        ),
+          SwitchPreference(
+            'Compact tags',
+            'compact_tags',
+            desc: 'Enable compact tags in notes view',
+            defaultVal: _prefsCubit.state.compactTags,
+            titleColor: const Color(0xff32343D),
+            leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
+            leadingColor: Colors.blue,
+            titleGap: 0.0,
+            onEnable: () => _prefsCubit.updateCompactTags(true),
+            onDisable: () => _prefsCubit.updateCompactTags(false),
+          ),
 
-        // !! ========================================================
+          PreferenceTitle('Personalization'),
+          PreferenceTitle(
+            '  !! Personalization is yet to be implemented !!',
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontStyle: FontStyle.italic,
+            ),
+          ),
+          SwitchPreference(
+            'Dark mode',
+            'dark_mode',
+            disabled: true,
+            desc: "Switch between light and dark mode",
+            titleColor: const Color(0xff32343D),
+            leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
+            leadingColor: Colors.purple,
+            titleGap: 0.0,
+            onChange: ((value) {
+              print(value);
+            }),
+          ),
+          DropdownPreference(
+            'Accent color',
+            'accent_color',
+            disabled: true,
+            desc: "Spice up your theme",
+            defaultVal: 'Black',
+            values: ['Black', 'Blue', 'Red'],
+            titleColor: const Color(0xff32343D),
+            leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
+            leadingColor: Colors.pink,
+            titleGap: 0.0,
+            onChange: ((value) {
+              print(value);
+            }),
+          ),
+          PreferenceTitle('Security'),
+          AppLockSwitchPrefs(),
+          PreferenceText(
+            'Change Passcode',
+            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.lock_shield, color: Colors.white, size: 20.0),
+            leadingColor: Colors.lightGreen,
+            titleGap: 0.0,
+            onTap: () {
+              // if (prefsBox.passcode != '')
+              if (PrefService.getBool('app_lock') == true)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShowLockscreen(changePassAuth: true),
+                  ),
+                );
+              else
+                Toast.show("Please enable applock first", context);
+            },
+          ),
 
-        PreferenceTitle('Details Section'),
-        PreferencePageLink(
-          'Application',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-          leading: Icon(CupertinoIcons.app, color: Colors.white, size: 20.0),
-          leadingColor: Colors.grey,
-          trailing: Icon(Icons.keyboard_arrow_right),
-          titleGap: 0.0,
-          widgetScaffold: AppDetailSection(),
-        ),
-        //! =============================================
-      ]),
+          // !! ========================================================
+
+          PreferenceTitle('Details Section'),
+          PreferencePageLink(
+            'Application',
+            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.app, color: Colors.white, size: 20.0),
+            leadingColor: Colors.grey,
+            trailing: Icon(Icons.keyboard_arrow_right),
+            titleGap: 0.0,
+            widgetScaffold: AppDetailSection(),
+          ),
+          //! =============================================
+        ]),
+      ),
     );
   }
 }

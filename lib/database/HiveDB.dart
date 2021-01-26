@@ -52,6 +52,21 @@ class TodoModel extends HiveObject {
   @HiveField(0)
   String uuid;
 
+  // @HiveField(1)
+  // String description;
+
+  // @HiveField(2)
+  // DateTime dueDate;
+
+  // @HiveField(3)
+  // Map<String, int> priorityMap;
+
+  // @HiveField(4)
+  // List<String> subTasks;
+
+  // @HiveField(5)
+  // Map<String, int> todoTagsMap = {};
+
   @HiveField(1)
   String category;
 

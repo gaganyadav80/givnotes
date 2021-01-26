@@ -32,9 +32,9 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                 thumbColor: Colors.black,
                 groupValue: _homeCubit.state.global ? 1 : 0,
                 onValueChanged: (int value) {
-                  if (value == 0) {
+                  if (value == 0)
                     _homeCubit.updateGlobal(false);
-                  } else
+                  else
                     _homeCubit.updateGlobal(true);
                 },
                 children: {

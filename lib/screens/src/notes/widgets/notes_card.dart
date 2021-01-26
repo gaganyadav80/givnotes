@@ -118,6 +118,7 @@ class _NotesCardState extends State<NotesCard> {
                           itemBuilder: (context, index) {
                             String tagsTitle = widget.note.tagsMap.keys.toList()[index];
                             Color color = Color(_allTagsMap[tagsTitle]);
+                            // Color color = Color(widget.note.tagsMap[tagsTitle]);
 
                             return prefsCubit.state.compactTags
                                 ? Container(

@@ -15,6 +15,7 @@ dependencies:
   avatar_glow: ^1.2.0
   bloc: ^6.1.1
   cached_network_image: ^2.3.3
+  circular_check_box: ^1.0.4
   cupertino_icons: ^1.0.0
   device_preview: ^0.5.5
   equatable: ^1.2.5
@@ -51,6 +52,7 @@ dependencies:
   responsive_framework: ^0.0.14
   shared_preferences: ^0.5.12+4
   stringprocess: ^1.0.10
+  timelines: ^0.0.2+1
   url_launcher: ^5.7.10
   velocity_x: ^1.0.1
   zefyr: ^1.0.0-dev.2.0

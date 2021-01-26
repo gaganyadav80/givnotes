@@ -23,15 +23,16 @@ class _TagsViewState extends State<TagsView> {
   String _created;
   int _animateIndex = 0;
 
-  final hm = 7.6;
-  final wm = 3.94;
-
   @override
   Widget build(BuildContext context) {
     // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(
       children: [
+        // Text(
+        //   'Search',
+        //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
+        // ),
         Padding(
           // padding: EdgeInsets.fromLTRB(3 * wm, 1.5 * hm, 3 * wm, 0),
           padding: EdgeInsets.fromLTRB(0.025 * screenSize.width, 0.020 * screenSize.height, 0.025 * screenSize.width, 0),
@@ -42,131 +43,132 @@ class _TagsViewState extends State<TagsView> {
          */
         Expanded(
           child: Padding(
-              // padding: EdgeInsets.fromLTRB(1.5 * wm, 0, 1.5 * wm, 0),
-              padding: EdgeInsets.fromLTRB(0.015 * screenSize.width, 0, 0.015 * screenSize.width, 0),
-              child: BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
-                builder: (context, state) {
-                  return ValueListenableBuilder(
-                    valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
-                    builder: (context, Box<NotesModel> box, widget) {
-                      // List<String> lst = [];
+            // padding: EdgeInsets.fromLTRB(1.5 * wm, 0, 1.5 * wm, 0),
+            padding: EdgeInsets.symmetric(horizontal: 0.015 * screenSize.width),
+            child: BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+              builder: (context, state) {
+                return ValueListenableBuilder(
+                  valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
+                  builder: (context, Box<NotesModel> box, widget) {
+                    // List<String> lst = [];
 
-                      // _tagStateKey.currentState.getAllItem.where((a) => a.active == true).forEach((a) => lst.add(a.title));
-                      _notes = box.values.where((element) {
-                        return (element.trash == false) &&
-                            state.selectedTagList.any((title) {
-                              return element.tagsMap.containsKey(title);
-                            });
-                      }).toList();
+                    // _tagStateKey.currentState.getAllItem.where((a) => a.active == true).forEach((a) => lst.add(a.title));
+                    _notes = box.values.where((element) {
+                      return (element.trash == false) &&
+                          state.selectedTagList.any((title) {
+                            return element.tagsMap.containsKey(title);
+                          });
+                    }).toList();
 
-                      if (_notes.length == 0) {
-                        return SingleChildScrollView(
-                          child: Padding(
-                            // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
-                            padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
-                            child: Image.asset('assets/img/tags-view-1.png'),
-                          ),
-                        );
-                      }
+                    if (_notes.length == 0) {
+                      return SingleChildScrollView(
+                        child: Padding(
+                          // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
+                          padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
+                          child: Image.asset('assets/img/tags-view-1.png'),
+                        ),
+                      );
+                    }
 
-                      return AnimationLimiter(
-                        child: ListView.builder(
-                          itemCount: _notes.length,
-                          itemBuilder: (context, index) {
-                            _animateIndex = index;
-                            index = _notes.length - index - 1;
+                    return AnimationLimiter(
+                      child: ListView.builder(
+                        itemCount: _notes.length,
+                        itemBuilder: (context, index) {
+                          _animateIndex = index;
+                          index = _notes.length - index - 1;
 
-                            var note = _notes[index];
+                          var note = _notes[index];
 
-                            _created = DateFormat.yMMMd().format(note.created);
+                          _created = DateFormat.yMMMd().format(note.created);
 
-                            return AnimationConfiguration.staggeredList(
-                              position: _animateIndex,
-                              duration: const Duration(milliseconds: 375),
-                              child: SlideAnimation(
-                                verticalOffset: 25.0,
-                                child: FadeInAnimation(
-                                  child: InkWell(
-                                    onTap: () {
-                                      // _noteEditStore.updateNoteMode(NoteMode.Editing);
+                          return AnimationConfiguration.staggeredList(
+                            position: _animateIndex,
+                            duration: const Duration(milliseconds: 375),
+                            child: SlideAnimation(
+                              verticalOffset: 25.0,
+                              child: FadeInAnimation(
+                                child: InkWell(
+                                  onTap: () {
+                                    // _noteEditStore.updateNoteMode(NoteMode.Editing);
 
-                                      // Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) => ZefyrEdit(
-                                      //       noteMode: NoteMode.Editing,
-                                      //       note: note,
-                                      //     ),
-                                      //   ),
-                                      // );
-                                    },
-                                    child: Card(
-                                      elevation: 0,
-                                      color: Colors.white,
-                                      child: Padding(
-                                        // padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-                                        padding: EdgeInsets.symmetric(horizontal: 0.015 * screenSize.width),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Divider(
-                                              // height: 0.057 * wm,
-                                              height: 0.0002955 * screenSize.height,
-                                              color: Colors.black,
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //     builder: (context) => ZefyrEdit(
+                                    //       noteMode: NoteMode.Editing,
+                                    //       note: note,
+                                    //     ),
+                                    //   ),
+                                    // );
+                                  },
+                                  child: Card(
+                                    elevation: 0,
+                                    color: Colors.white,
+                                    child: Padding(
+                                      // padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
+                                      padding: EdgeInsets.symmetric(horizontal: 0.015 * screenSize.width),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Divider(
+                                            // height: 0.057 * wm,
+                                            height: 0.0002955 * screenSize.height,
+                                            color: Colors.black,
+                                          ),
+                                          // SizedBox(height: 2 * wm),
+                                          SizedBox(height: 0.010368421 * screenSize.height),
+                                          Text(
+                                            note.title,
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                            // SizedBox(height: 2 * wm),
-                                            SizedBox(height: 0.010368421 * screenSize.height),
-                                            Text(
-                                              note.title,
-                                              style: TextStyle(
-                                                fontSize: 4.4 * wm,
-                                                fontWeight: FontWeight.w600,
-                                              ),
+                                          ),
+                                          // SizedBox(height: 1 * wm),
+                                          SizedBox(height: 0.005184211 * screenSize.height),
+                                          Text(
+                                            note.text,
+                                            style: TextStyle(
+                                              color: Colors.grey[800],
+                                              // fontSize: 3 * wm,
                                             ),
-                                            // SizedBox(height: 1 * wm),
-                                            SizedBox(height: 0.005184211 * screenSize.height),
-                                            Text(
-                                              note.text,
-                                              style: TextStyle(
-                                                color: Colors.grey[800],
-                                                // fontSize: 3 * wm,
-                                              ),
-                                              maxLines: 5,
-                                              overflow: TextOverflow.ellipsis,
+                                            maxLines: 5,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                          // SizedBox(height: wm),
+                                          SizedBox(height: 0.005184211 * screenSize.height),
+                                          Text(
+                                            "created  $_created",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.grey,
+                                              fontSize: 12,
+                                              // fontStyle: FontStyle.italic,
                                             ),
-                                            // SizedBox(height: wm),
-                                            SizedBox(height: 0.005184211 * screenSize.height),
-                                            Text(
-                                              "created  $_created",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w300,
-                                                color: Colors.grey,
-                                                fontSize: 3 * wm,
-                                                // fontStyle: FontStyle.italic,
-                                              ),
-                                            ),
-                                            // SizedBox(height: 1.5 * wm),
-                                            SizedBox(height: 0.007776316 * screenSize.height),
-                                            Divider(
-                                              // height: 0.057 * wm,
-                                              height: 0.0002955 * screenSize.height,
-                                              color: Colors.black,
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          // SizedBox(height: 1.5 * wm),
+                                          SizedBox(height: 0.007776316 * screenSize.height),
+                                          Divider(
+                                            // height: 0.057 * wm,
+                                            height: 0.0002955 * screenSize.height,
+                                            color: Colors.black,
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              )),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
         ),
       ],
     );

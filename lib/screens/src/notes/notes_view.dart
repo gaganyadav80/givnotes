@@ -9,6 +9,7 @@ import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/custom_appbar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -29,7 +30,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
   List<NotesModel> _notes = List<NotesModel>();
 
   final MultiSelectController _multiSelectController = MultiSelectController();
-  // final HiveDBServices _hiveDBServices = HiveDBServices();
+  // final HiveDBServices _dbServices = HiveDBServices();
   int noteIndex = 0;
 
   @override
@@ -41,7 +42,8 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: NotesAppBar(_tabController),
@@ -172,6 +174,15 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                               builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
                             ),
                           );
+                          // await _dbServices.insertNote(
+                          //   NotesModel()
+                          //     ..title = 'Untitled'
+                          //     ..text = "_note"
+                          //     ..znote = "jsonEncode(_zefyrController.document)"
+                          //     ..created = DateTime.now()
+                          //     ..modified = DateTime.now()
+                          //     ..tagsMap = <String, int>{'givnotes': Colors.red.value},
+                          // );
                         } else {
                           if (isPermanentDisabled) {
                             HandlePermission().permanentDisabled(context);
