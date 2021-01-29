@@ -34,6 +34,7 @@ class PreferenceText extends StatelessWidget {
     return Container(
       decoration: decoration,
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         horizontalTitleGap: titleGap,
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,

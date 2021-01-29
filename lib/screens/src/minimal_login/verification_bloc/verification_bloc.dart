@@ -39,7 +39,7 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
           ));
         }
       } else if (event is ResendVerificationMail) {
-        yield (VerificationInProgress());
+        yield (ResendVerificationInProgress());
         final _user = FirebaseAuth.instance.currentUser;
         await _user.sendEmailVerification();
         yield (ResendVerification());

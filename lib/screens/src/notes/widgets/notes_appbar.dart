@@ -139,9 +139,11 @@ class NotesModelSheet extends StatelessWidget {
             'Sort notes',
             'sort_notes',
             titleColor: Colors.white,
-            titleGap: 0,
+            titleGap: 0.0,
             leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white),
             defaultVal: def,
+            desc: "Sort your notes on one of the following filters.",
+            showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
             onChange: ((String value) {
               if (value == 'Date created')

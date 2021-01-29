@@ -19,6 +19,14 @@ class LoginNeedsVerification extends LoginState {}
 
 class ForgetPasswordSuccess extends LoginState {}
 
+class LoginObscureState extends LoginState {
+  final bool obscure;
+  LoginObscureState({this.obscure});
+
+  @override
+  List<Object> get props => [obscure];
+}
+
 class LoginFailure extends LoginState {
   final String message;
   LoginFailure({this.message});

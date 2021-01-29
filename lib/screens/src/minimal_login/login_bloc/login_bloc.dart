@@ -20,7 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if (event is LoginButtonPressed) {
         yield (LoginInProgress());
         await signInWithEmailAndPass(email: event.email, password: event.password);
-        final _currentUser = FirebaseAuth.instance.currentUser;
+        final User _currentUser = FirebaseAuth.instance.currentUser;
         if (_currentUser.emailVerified) {
           yield (LoginSuccess());
         } else {
@@ -29,24 +29,23 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else if (event is LoginWithGoogle) {
         yield (LoginInProgress());
 
-        final _googleSignIn = GoogleSignIn();
-        final _googleSigninAccount = await _googleSignIn.signIn();
-        final _googleAuth = await _googleSigninAccount.authentication;
-        // final _authCredentials = GoogleAuthProvider.getCredential(
-        //   idToken: _googleAuth.idToken,
-        //   accessToken: _googleAuth.accessToken,
-        // );
-        final _authCredentials = GoogleAuthProvider.credential(
+        final GoogleSignIn _googleSignIn = GoogleSignIn.standard();
+        final GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
+        final GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
+        final AuthCredential _authCredentials = GoogleAuthProvider.credential(
           idToken: _googleAuth.idToken,
           accessToken: _googleAuth.accessToken,
         );
+
         await FirebaseAuth.instance.signInWithCredential(_authCredentials);
-        final _currentUser = FirebaseAuth.instance.currentUser;
+        // final _currentUser = FirebaseAuth.instance.currentUser;
         yield (LoginSuccess());
       } else if (event is ForgetPassword) {
         yield (LoginInProgress());
         await FirebaseAuth.instance.sendPasswordResetEmail(email: event.email);
         yield (ForgetPasswordSuccess());
+      } else if (event is LoginObscureEvent) {
+        yield (LoginObscureState(obscure: event.obscureLogin));
       }
     } on PlatformException catch (e) {
       yield (LoginFailure(message: "Error: ${e.message}"));

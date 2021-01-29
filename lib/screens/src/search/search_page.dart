@@ -115,7 +115,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     // hm = context.percentHeight;
     // wm = context.percentWidth;
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();

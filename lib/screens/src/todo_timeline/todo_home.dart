@@ -23,9 +23,10 @@ class _TodoTimelineState extends State<TodoTimeline> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        leading: InkWell(
-          child: Icon(CupertinoIcons.back, color: Colors.black),
-          onTap: () => print("move date backward"),
+        leading: IconButton(
+          splashRadius: 25.0,
+          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          onPressed: () => print("move date backward"),
         ),
         centerTitle: true,
         title: Text(
@@ -39,9 +40,10 @@ class _TodoTimelineState extends State<TodoTimeline> {
         actions: [
           ConstrainedBox(
             constraints: BoxConstraints.tightFor(width: 56.0),
-            child: InkWell(
-              child: Icon(CupertinoIcons.forward, color: Colors.black),
-              onTap: () => print("move date forward"),
+            child: IconButton(
+              splashRadius: 25.0,
+              icon: Icon(CupertinoIcons.forward, color: Colors.black),
+              onPressed: () => print("move date forward"),
             ),
           ),
         ],

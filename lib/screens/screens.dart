@@ -4,6 +4,8 @@ export 'src/search/search_page.dart';
 export 'src/zefyr/zefyrEdit.dart';
 export 'src/profile.dart';
 export 'src/aboutUs.dart';
+export 'src/about_us.dart';
+export 'src/contact_us.dart';
 export 'src/tagsView.dart';
 export 'src/settings.dart';
 export 'src/todo_timeline/todo_home.dart';

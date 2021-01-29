@@ -15,6 +15,8 @@ class VerificationSuccess extends VerificationState {}
 
 class ResendVerification extends VerificationState {}
 
+class ResendVerificationInProgress extends VerificationState {}
+
 class VerificationFailed extends VerificationState {
   final String message;
   VerificationFailed({this.message});

@@ -24,6 +24,7 @@ class PassResetMailDialog extends StatelessWidget {
         "Forgot Password",
         style: Theme.of(context).textTheme.headline1.copyWith(
               fontSize: screenHeight * 0.030685206,
+              fontWeight: FontWeight.w300,
             ),
       ),
       content: Container(

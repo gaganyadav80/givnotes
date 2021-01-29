@@ -9,7 +9,6 @@ import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
-import 'package:givnotes/widgets/custom_appbar.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 

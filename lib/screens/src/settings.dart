@@ -1,9 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
+import 'package:lottie/lottie.dart';
 
 //TODO change icons with custom colorful icons
 class SettingsPage extends StatelessWidget {
@@ -25,12 +29,14 @@ class SettingsPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
-          PreferenceTitle('General'),
-
+          ProfileTileSettings(),
+          PreferenceTitle('General', topPadding: 10.0),
           DropdownPreference(
             'Sort notes',
             'sort_notes',
             defaultVal: def,
+            desc: "Sort your notes on one of the following filters.",
+            showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
             titleColor: const Color(0xff32343D),
             leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white, size: 20.0),
@@ -54,7 +60,8 @@ class SettingsPage extends StatelessWidget {
           SwitchPreference(
             'Compact tags',
             'compact_tags',
-            desc: 'Enable compact tags in notes view',
+            // desc: 'Enable compact tags in notes view',
+            desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
             titleColor: const Color(0xff32343D),
             leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
@@ -76,7 +83,8 @@ class SettingsPage extends StatelessWidget {
             'Dark mode',
             'dark_mode',
             disabled: true,
-            desc: "Switch between light and dark mode",
+            // desc: "Switch between light and dark mode",
+            desc: "So now the fun begins.",
             titleColor: const Color(0xff32343D),
             leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
             leadingColor: Colors.purple,
@@ -86,12 +94,12 @@ class SettingsPage extends StatelessWidget {
             }),
           ),
           DropdownPreference(
-            'Accent color',
-            'accent_color',
+            'Dark theme',
+            'dark_theme',
             disabled: true,
             desc: "Spice up your theme",
-            defaultVal: 'Black',
-            values: ['Black', 'Blue', 'Red'],
+            defaultVal: 'Darkish grey',
+            values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
             titleColor: const Color(0xff32343D),
             leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
             leadingColor: Colors.pink,
@@ -99,6 +107,17 @@ class SettingsPage extends StatelessWidget {
             onChange: ((value) {
               print(value);
             }),
+          ),
+          PreferencePageLink(
+            'Extensions',
+            desc: 'Extend your experience.',
+            disabled: true,
+            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.bolt, color: Colors.white, size: 20.0),
+            leadingColor: Colors.brown,
+            trailing: Icon(Icons.keyboard_arrow_right),
+            titleGap: 0.0,
+            widgetScaffold: AboutGivnotes(),
           ),
           PreferenceTitle('Security'),
           AppLockSwitchPrefs(),
@@ -134,8 +153,169 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             widgetScaffold: AppDetailSection(),
           ),
+          PreferencePageLink(
+            'About Us',
+            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.person, color: Colors.white, size: 20.0),
+            leadingColor: Colors.brown,
+            trailing: Icon(Icons.keyboard_arrow_right),
+            titleGap: 0.0,
+            widgetScaffold: AboutGivnotes(),
+          ),
+          PreferencePageLink(
+            'Contact Us',
+            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.white, size: 20.0),
+            leadingColor: Colors.blueGrey,
+            trailing: Icon(Icons.keyboard_arrow_right),
+            titleGap: 0.0,
+            widgetScaffold: ContactGivnotes(),
+          ),
+          SizedBox(height: 10.0),
           //! =============================================
         ]),
+      ),
+    );
+  }
+}
+
+class ProfileTileSettings extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(15.0),
+      onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: StreamBuilder<User>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Container(
+                  height: 40.0,
+                  width: 40.0,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                  ),
+                ),
+              );
+            } else if (snapshot.hasData) {
+              final String photo = snapshot.data.photoURL;
+              String initials = '';
+              "Gagan Yadav".split(" ").forEach((element) {
+                initials = initials + element[0];
+              });
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 35.0,
+                        backgroundColor: Colors.black,
+                        backgroundImage: photo != null ? NetworkImage(snapshot.data.photoURL) : null,
+                        child: photo == null
+                            ? Text(
+                                initials,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  letterSpacing: 1.5,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      ),
+                      SizedBox(width: 20.0),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Gagan Yadav",
+                            style: TextStyle(
+                              color: const Color(0xff32343D).withOpacity(0.85),
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                " ${snapshot.data.email}",
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              SizedBox(width: 5.0),
+                              !snapshot.data.emailVerified
+                                  ? Icon(
+                                      CupertinoIcons.exclamationmark_circle,
+                                      color: Colors.red,
+                                      size: 16.0,
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Icon(CupertinoIcons.forward, color: Colors.grey),
+                ],
+              );
+            } else {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 35.0,
+                        backgroundColor: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: Lottie.asset('assets/animations/people-portrait.json'),
+                        ),
+                      ),
+                      // SizedBox(width: 10.0),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "You are not logged in!",
+                            style: TextStyle(
+                              color: const Color(0xff32343D).withOpacity(0.85),
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            "Click here and login to your account.",
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w300,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Icon(CupertinoIcons.forward, color: Colors.grey),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -154,22 +334,25 @@ class _AppDetailSectionState extends State<AppDetailSection> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: Text("Application"),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text("Application", style: TextStyle(color: Colors.black)),
         elevation: 0.0,
+        leading: IconButton(
+          splashRadius: 25.0,
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+        ),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 80.0),
+          preferredSize: Size(double.infinity, 50.0),
           child: Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 20.0),
+            // color: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             width: double.infinity,
             child: CupertinoSlidingSegmentedControl(
               children: {
                 0: Text("App Info"),
                 1: Text("Logs"),
-                2: Text("Contact"),
               },
               groupValue: selectedIndex,
               onValueChanged: (value) => setState(() => selectedIndex = value),
@@ -177,25 +360,24 @@ class _AppDetailSectionState extends State<AppDetailSection> {
           ),
         ),
       ),
-      body: _bodyWidgets[selectedIndex],
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 50.0),
+        child: _bodyWidgets[selectedIndex],
+      ),
     );
   }
 
   List<Widget> _bodyWidgets = [
-    Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50.0),
-      child: Column(
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("App name: "), Text("${packageInfo.appName}")]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Package: "), Text("${packageInfo.packageName}")]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Build_no: "), Text("${packageInfo.buildNumber}")]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Release version: "), Text("v${packageInfo.version}-beta")]),
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Development version: "), Text("v2.0.0")]),
-        ],
-      ),
+    Column(
+      children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("App name: "), Text("${packageInfo.appName}")]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Package: "), Text("${packageInfo.packageName}")]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Build_no: "), Text("${packageInfo.buildNumber}")]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Release version: "), Text("v${packageInfo.version}-beta")]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Development version: "), Text("v2.0.0")]),
+      ],
     ),
-    Center(child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
-    Center(child: Text("Contact us", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
+    Align(alignment: Alignment.topCenter, child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
   ];
 }
 

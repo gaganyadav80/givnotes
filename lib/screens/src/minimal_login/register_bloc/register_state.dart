@@ -13,6 +13,15 @@ class RegisterInProgress extends RegisterState {}
 
 class RegisterSuccess extends RegisterState {}
 
+class RegisterObscureState extends RegisterState {
+  final bool obscure;
+  final bool obscureConfirm;
+  RegisterObscureState({this.obscure, this.obscureConfirm});
+
+  @override
+  List<Object> get props => [obscure, this.obscureConfirm];
+}
+
 class RegisterFailed extends RegisterState {
   final String message;
   RegisterFailed({this.message});

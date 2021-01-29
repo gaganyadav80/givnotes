@@ -20,7 +20,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if (event is RegisterButtonClicked) {
       try {
         yield (RegisterInProgress());
-        await signUpWithEmailAndPass(email: event.email, password: event.password);
+        await signUpWithEmailAndPass(name: event.name, email: event.email, password: event.password);
         yield (RegisterSuccess());
       } catch (e) {
         yield (RegisterFailed(message: e.toString()));
@@ -29,7 +29,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       try {
         yield (RegisterInProgress());
 
-        final _googleSignIn = GoogleSignIn();
+        final GoogleSignIn _googleSignIn = GoogleSignIn.standard();
         final GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
         final GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
         final AuthCredential _authCredentials = GoogleAuthProvider.credential(
@@ -49,6 +49,8 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       } catch (e) {
         yield (RegisterFailed(message: e.toString()));
       }
+    } else if (event is RegisterObscureEvent) {
+      yield (RegisterObscureState(obscure: event.obscure, obscureConfirm: event.obscureConfirm));
     }
   }
 }

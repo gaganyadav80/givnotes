@@ -26,4 +26,12 @@ class ForgetPassword extends LoginEvent {
   List<Object> get props => [email];
 }
 
+class LoginObscureEvent extends LoginEvent {
+  final bool obscureLogin;
+  LoginObscureEvent({this.obscureLogin});
+
+  @override
+  List<Object> get props => [obscureLogin];
+}
+
 class LoginWithGoogle extends LoginEvent {}

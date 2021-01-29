@@ -16,8 +16,8 @@ class Validator {
   String validatePassword(String password) {
     if (password.isEmpty)
       return "This field cannot be empty";
-    else if (password.length < 8)
-      return "Password length too short";
+    else if (password.length < 6)
+      return "Password length is less than 6";
     else if (password.contains(" "))
       return "Password should not contain spaces";
     else
@@ -25,9 +25,9 @@ class Validator {
   }
 
   String validateConfirmPassword({@required String confirmPassword, @required String newPassword}) {
-    final _normalValidation = validatePassword(confirmPassword);
+    // final _normalValidation = validatePassword(confirmPassword);
 
-    if (_normalValidation != null) return _normalValidation;
+    // if (_normalValidation != null) return _normalValidation;
 
     if (confirmPassword != newPassword)
       return "Passwords do not match";
@@ -39,7 +39,7 @@ class Validator {
     if (name.isEmpty)
       return "This field cannot be empty";
     else if (name.contains(RegExp(r'[0-9]')))
-      return "Enter a valid name";
+      return "Name should not contain numbers";
     else
       return null;
   }

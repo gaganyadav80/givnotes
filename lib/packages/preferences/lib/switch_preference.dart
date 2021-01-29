@@ -56,6 +56,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
     return Opacity(
       opacity: widget.disabled ? 0.5 : 1.0,
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         enableFeedback: true,
         // leading: widget.leading,
         leading: Column(

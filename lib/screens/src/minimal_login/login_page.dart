@@ -1,70 +1,83 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
-import 'package:givnotes/packages/packages.dart';
 
 import 'components/components.dart';
 import 'login_bloc/login_bloc.dart';
 import 'registration_page.dart';
 
 class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<LoginBloc>(
-      create: (context) => LoginBloc(),
-      child: Scaffold(body: LoginMainBody()),
-    );
-  }
-}
+  const LoginPage({Key key}) : super(key: key);
 
-class LoginMainBody extends StatelessWidget {
-  const LoginMainBody({
-    Key key,
-  }) : super(key: key);
+  void showSnackBar(String msg, BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Theme.of(context).primaryColor,
+      content: Text(msg, style: TextStyle(color: Colors.white)),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignInPressed() {
       BlocProvider.of<LoginBloc>(context).add(LoginWithGoogle());
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Google Sign In"),
-      ));
+      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //   content: Text("Google Sign In"),
+      // ));
     }
 
     void _onSignUpPressed() {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+      Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) {
         return RegisterPage();
       }));
     }
 
     return SafeArea(
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) async {
-          if (state is LoginFailure) {
-            Navigator.of(context).pop();
-            Toast.show(state.message, context);
-          }
-          if (state is LoginSuccess) {
-            Navigator.of(context).pop();
-            Toast.show('Login Successful', context);
-            Navigator.of(context).pushReplacementNamed('home_p');
-          }
-          if (state is LoginInProgress) {
-            showProgress(context);
-          }
-          if (state is LoginNeedsVerification) {
-            Toast.show("User email is not verified. Please verify your email id", context);
-            Navigator.of(context).pushReplacementNamed('verification_p');
-          }
-          if (state is ForgetPasswordSuccess) {}
-        },
-        builder: (context, state) {
-          return ListView(
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: IconThemeData(color: Colors.black),
+          leading: ModalRoute.of(context).canPop
+              ? InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.close, color: Colors.black),
+                )
+              : null,
+        ),
+        body: BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) async {
+            if (state is LoginFailure) {
+              print(state.message);
+              if (state.message.contains('password is invalid'))
+                showSnackBar("Invalid password", context);
+              else if (state.message.contains('no user record'))
+                showSnackBar("Invalid email", context);
+              else
+                showSnackBar("Login Failure", context);
+            }
+            if (state is LoginSuccess) {
+              // Navigator.of(context).pop();
+              showSnackBar("Login successfull", context);
+              Navigator.of(context).pushReplacementNamed('home_p');
+            }
+            // if (state is LoginInProgress) {
+            //   showProgress(context);
+            // }
+            if (state is LoginNeedsVerification) {
+              // showSnackBar("User email is not verified. Please verify your email id", context);
+              Navigator.of(context).pushReplacementNamed('verification_p');
+            }
+            if (state is ForgetPasswordSuccess) {}
+          },
+          child: ListView(
+            // physics: NeverScrollableScrollPhysics(),
             children: [
-              SizedBox(
-                height: screenHeight * 0.142312579, // 128
-              ),
+              // SizedBox(
+              //   height: screenHeight * 0.142312579, // 128
+              // ),
+              SizedBox(height: screenHeight * 0.07),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667),
                 child: Column(
@@ -76,62 +89,69 @@ class LoginMainBody extends StatelessWidget {
                       "Welcome",
                       style: Theme.of(context).textTheme.headline1.copyWith(
                             fontSize: screenHeight * 0.042249047, //38
+                            fontWeight: FontWeight.w300,
                           ),
                     ),
                     SizedBox(
                       height: screenHeight * 0.036689962, //33
                     ),
                     LoginForm(),
-                    SizedBox(
-                      height: screenHeight * 0.053367217, // 48
-                    ),
+                    SizedBox(height: screenHeight * 0.081),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "or connect with",
                           style: Theme.of(context).textTheme.headline4.copyWith(
-                                fontSize: screenHeight * 0.01111817, // 10
+                                fontSize: screenHeight * 0.016,
                               ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.053367217, // 48
-                    ),
-                    GoogleButton(
-                      title: "Continue with Google",
-                      onPressed: _onGoogleSignInPressed,
-                    ),
-                    SizedBox(height: screenHeight * 0.180462516), // 183
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Don't have an account? ",
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                                fontSize: screenHeight * 0.01111817, // 10
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        GestureDetector(
-                          onTap: _onSignUpPressed,
-                          child: Text(
-                            "Sign Up",
-                            style: Theme.of(context).textTheme.headline6.copyWith(
-                                  fontSize: screenHeight * 0.01111817, // 10
-                                ),
-                          ),
                         ),
                       ],
                     ),
                     SizedBox(height: screenHeight * 0.015),
+                    GoogleButton(
+                      title: "Continue with Google",
+                      onPressed: _onGoogleSignInPressed,
+                    ),
+                    SizedBox(height: screenHeight * 0.14),
+                    GestureDetector(
+                      onTap: _onSignUpPressed,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // borderRadius: kBorderRadius,
+                          // border: Border.all(width: 1.0, color: Colors.grey[500].withOpacity(0.5)),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: Theme.of(context).textTheme.caption.copyWith(
+                                    fontSize: screenHeight * 0.014,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                            Text(
+                              "Sign Up",
+                              style: Theme.of(context).textTheme.headline6.copyWith(
+                                    fontSize: screenHeight * 0.02,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // SizedBox(height: screenHeight * 0.045),
                   ],
                 ), // 30
               ),
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }
@@ -152,6 +172,7 @@ class _LoginFormState extends State<LoginForm> {
   bool _isObscure = true;
 
   void _onLoginButtonPressed() {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState.validate()) return;
     BlocProvider.of<LoginBloc>(context).add(
       LoginButtonPressed(
@@ -178,6 +199,18 @@ class _LoginFormState extends State<LoginForm> {
     );
   }
 
+  void _onObscurePressed() {
+    _isObscure = !_isObscure;
+    BlocProvider.of<LoginBloc>(context).add(LoginObscureEvent(obscureLogin: _isObscure));
+  }
+
+  @override
+  void dispose() {
+    _emailTextController?.dispose();
+    _passtextController?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -198,17 +231,28 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: screenHeight * 0.024459975),
           // 22
-          CustomTextFormField(
-            currentNode: _passwordNode,
-            textInputAction: TextInputAction.done,
-            maxLines: 1,
-            fieldController: _passtextController,
-            hintText: 'Password',
-            prefixIcon: Icon(Icons.lock_outline),
-            keyboardType: TextInputType.text,
-            validator: _validator.validatePassword,
-            obscureText: _isObscure,
-            suffix: _isObscure ? Icon(Icons.visibility_off_outlined) : Icon(Icons.visibility_outlined),
+          BlocConsumer<LoginBloc, LoginState>(
+            listener: (context, state) {
+              if (state is LoginObscureState) {
+                _isObscure = state.obscure;
+              }
+            },
+            builder: (context, state) {
+              return CustomTextFormField(
+                currentNode: _passwordNode,
+                textInputAction: TextInputAction.done,
+                maxLines: 1,
+                fieldController: _passtextController,
+                hintText: 'Password',
+                prefixIcon: Icon(Icons.lock_outline),
+                keyboardType: TextInputType.text,
+                validator: _validator.validatePassword,
+                obscureText: _isObscure,
+                suffix: _isObscure
+                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
+                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+              );
+            },
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
           Row(
@@ -217,16 +261,30 @@ class _LoginFormState extends State<LoginForm> {
               GestureDetector(
                 onTap: _onForgetPasswordPressed,
                 child: Text(
-                  "FORGOT PASWWORD",
+                  "FORGOT PASSWORD?",
                   style: Theme.of(context).textTheme.headline6.copyWith(
-                        fontSize: screenHeight * 0.01111817, // 10
+                        fontSize: screenHeight * 0.013,
                       ),
                 ),
               ),
             ],
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed),
+          BlocBuilder<LoginBloc, LoginState>(
+            builder: (context, state) {
+              // Theme(
+              //   data: ThemeData(cupertinoOverrideTheme: CupertinoThemeData(brightness: Brightness.dark)),
+              //   child: CupertinoActivityIndicator(),
+              // );
+              return state is LoginInProgress
+                  ? BlueButton(
+                      title: "loading",
+                      onPressed: () {},
+                      isLoading: true,
+                    )
+                  : BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed);
+            },
+          )
         ],
       ),
     );

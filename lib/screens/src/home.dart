@@ -15,6 +15,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // GoogleSignIn.standard().signOut();
+    // FirebaseAuth.instance.signOut();
     return TapTapClose(
       child: DefaultTabController(
         length: 4,

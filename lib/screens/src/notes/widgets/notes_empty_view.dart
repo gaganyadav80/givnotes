@@ -11,7 +11,7 @@ class NotesEmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hm = 7.6;
-    final wm = 3.93;
+    // final wm = 3.93;
     return BlocProvider.of<HomeCubit>(context).state.global == true
         ? Center(child: Container(child: Text("Global")))
         : isTrash

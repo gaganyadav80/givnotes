@@ -1,16 +1,25 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
+import 'package:givnotes/packages/packages.dart';
 
 import 'components/components.dart';
-import 'login_page.dart';
 import 'register_bloc/register_bloc.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+        ),
+      ),
       body: BlocProvider<RegisterBloc>(
         create: (context) => RegisterBloc(),
         child: RegisterMainBody(),
@@ -31,95 +40,70 @@ class RegisterMainBody extends StatelessWidget {
       BlocProvider.of<RegisterBloc>(context).add(GoogleSignUpClicked());
     }
 
-    void _onSignInPressed() {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-        return LoginPage();
-      }));
-    }
+    // void _onSignInPressed() {
+    //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+    //     return LoginPage();
+    //   }));
+    // }
 
     return SafeArea(
-      child: BlocConsumer<RegisterBloc, RegisterState>(
+      child: BlocListener<RegisterBloc, RegisterState>(
         listener: (context, state) {
-          if (state is RegisterFailed) {}
-          if (state is RegisterSuccess) {
-            print('...............................homepage');
-            Navigator.of(context).pushReplacementNamed('home_p');
+          if (state is RegisterFailed) {
+            Toast.show(state.message, context);
           }
-          if (state is RegisterInProgress) {}
+          if (state is RegisterSuccess) {
+            Toast.show("Registration succesfull", context);
+            Navigator.of(context).pushReplacementNamed('verification_p');
+          }
+          // if (state is RegisterInProgress) {
+          //   showProgress(context);
+          // }
         },
-        builder: (context, state) {
-          return ListView(
-            children: [
-              SizedBox(
-                height: screenHeight * 0.142312579, // 128
+        child: ListView(
+          children: [
+            SizedBox(height: screenHeight * 0.07),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Sign Up",
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          fontSize: screenHeight * 0.042249047, //38
+                          fontWeight: FontWeight.w300,
+                        ),
+                  ),
+                  SizedBox(
+                    height: screenHeight * 0.036689962, //33
+                  ),
+                  RegisterForm(),
+                  SizedBox(height: screenHeight * 0.045),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "or register with",
+                        style: Theme.of(context).textTheme.headline4.copyWith(
+                              fontSize: screenHeight * 0.016,
+                            ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  GoogleButton(
+                    title: "Sign Up with Google",
+                    onPressed: _onGoogleSignUpPressed,
+                  ),
+                  SizedBox(height: screenHeight * 0.045),
+                ],
               ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Sign Up",
-                      style: Theme.of(context).textTheme.headline1.copyWith(
-                            fontSize: screenHeight * 0.042249047, //38
-                          ),
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.036689962, //33
-                    ),
-                    RegisterForm(),
-                    SizedBox(
-                      height: screenHeight * 0.053367217, // 48
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "or register with",
-                          style: Theme.of(context).textTheme.headline4.copyWith(
-                                fontSize: screenHeight * 0.01111817, // 10
-                              ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: screenHeight * 0.053367217, // 48
-                    ),
-                    GoogleButton(
-                      title: "Sign Up with Google",
-                      onPressed: _onGoogleSignUpPressed,
-                    ),
-                    SizedBox(height: screenHeight * 0.140462516),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Already have an account? ",
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                                fontSize: screenHeight * 0.01111817, // 10
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                        GestureDetector(
-                          onTap: _onSignInPressed,
-                          child: Text(
-                            "Sign In",
-                            style: Theme.of(context).textTheme.headline6.copyWith(
-                                  fontSize: screenHeight * 0.01111817, // 10
-                                ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.015),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -133,27 +117,77 @@ class RegisterForm extends StatefulWidget {
 class _RegisterFormState extends State<RegisterForm> {
   final _emailTextController = TextEditingController();
   final _passtextController = TextEditingController();
+  final _nametextController = TextEditingController();
+  final _confirmPassTextController = TextEditingController();
+
+  final _nameNode = FocusNode();
+  final _confirmPassNode = FocusNode();
   final _emailNode = FocusNode();
   final _passwordNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _validator = Validator();
   // static bool acceptTnC = false;
   bool _isObscure = true;
+  bool _isConfirmObscure = true;
+
+  ValueNotifier<String> _passwordMatch = ValueNotifier<String>(null);
+
+  @override
+  void dispose() {
+    _emailTextController?.dispose();
+    _passtextController?.dispose();
+    _nametextController?.dispose();
+    _confirmPassTextController?.dispose();
+    super.dispose();
+  }
 
   void _onRegisterButtonPressed() {
-    if (!_formKey.currentState.validate()) return;
+    _passwordMatch.value = _validator.validateConfirmPassword(
+      confirmPassword: _confirmPassTextController.text,
+      newPassword: _passtextController.text,
+    );
+
+    if (!_formKey.currentState.validate()) {
+      print('not validated');
+      return;
+    }
+    if (_passwordMatch.value != null) {
+      print('password do not match');
+      return;
+    }
+
+    // if (_passtextController.text != _confirmPassTextController.text) {
+    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //     backgroundColor: Theme.of(context).primaryColor,
+    //     content: Text('Passwords do not match', style: TextStyle(color: Colors.white)),
+    //   ));
+    //   return;
+    // }
 
     // if (!acceptTnC) {
     //   //TODO: complete
     //   // context.showSnackBar("Please accept Terms and Conditions");
     //   return;
     // }
-    BlocProvider.of<RegisterBloc>(context).add(
-      RegisterButtonClicked(
-        email: _emailTextController.text,
-        password: _passtextController.text,
-      ),
-    );
+
+    print("still validated");
+    // BlocProvider.of<RegisterBloc>(context).add(
+    //   RegisterButtonClicked(
+    //     name: _nametextController.text,
+    //     email: _emailTextController.text,
+    //     password: _passtextController.text,
+    //   ),
+    // );
+  }
+
+  void _onObscurePressed() {
+    _isObscure = !_isObscure;
+    BlocProvider.of<RegisterBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+  }
+
+  void _onConfirmObscurePressed() {
+    _isConfirmObscure = !_isConfirmObscure;
+    BlocProvider.of<RegisterBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   @override
@@ -163,6 +197,18 @@ class _RegisterFormState extends State<RegisterForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          CustomTextFormField(
+            currentNode: _nameNode,
+            nextNode: _emailNode,
+            textInputAction: TextInputAction.next,
+            maxLines: 1,
+            fieldController: _nametextController,
+            hintText: 'Name',
+            prefixIcon: Icon(Icons.person_outline_outlined),
+            keyboardType: TextInputType.name,
+            validator: _validator.validateName,
+          ),
+          SizedBox(height: screenHeight * 0.024459975),
           CustomTextFormField(
             currentNode: _emailNode,
             nextNode: _passwordNode,
@@ -175,19 +221,111 @@ class _RegisterFormState extends State<RegisterForm> {
             validator: _validator.validateEmail,
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          CustomTextFormField(
-            currentNode: _passwordNode,
-            textInputAction: TextInputAction.done,
-            maxLines: 1,
-            fieldController: _passtextController,
-            hintText: 'Password',
-            prefixIcon: Icon(Icons.lock_outline),
-            keyboardType: TextInputType.text,
-            validator: _validator.validatePassword,
-            obscureText: _isObscure,
-            suffix: _isObscure ? Icon(Icons.visibility_off_outlined) : Icon(Icons.visibility_outlined),
+          BlocConsumer<RegisterBloc, RegisterState>(
+            listener: (context, state) {
+              if (state is RegisterObscureState) {
+                _isObscure = state.obscure;
+                // _isConfirmObscure = state.obscureConfirm;
+              }
+            },
+            builder: (context, state) {
+              return CustomTextFormField(
+                currentNode: _passwordNode,
+                nextNode: _confirmPassNode,
+                textInputAction: TextInputAction.done,
+                maxLines: 1,
+                fieldController: _passtextController,
+                hintText: 'Password',
+                prefixIcon: Icon(Icons.lock_outline),
+                keyboardType: TextInputType.text,
+                validator: _validator.validatePassword,
+                obscureText: _isObscure,
+                suffix: _isObscure
+                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
+                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+              );
+            },
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
+          BlocConsumer<RegisterBloc, RegisterState>(
+            listener: (context, state) {
+              if (state is RegisterObscureState) {
+                _isConfirmObscure = state.obscureConfirm;
+              }
+            },
+            builder: (context, state) {
+              return ValueListenableBuilder(
+                valueListenable: _passwordMatch,
+                builder: (context, value, child) {
+                  return Container(
+                    child: TextFormField(
+                      focusNode: _confirmPassNode,
+                      onFieldSubmitted: (value) {
+                        if (_passtextController.text.isNotEmpty) {
+                          return _passwordMatch.value = _validator.validateConfirmPassword(
+                            confirmPassword: value,
+                            newPassword: _passtextController.text,
+                          );
+                        }
+
+                        if (_confirmPassNode != null) {
+                          _confirmPassNode.unfocus();
+                        }
+                      },
+                      onChanged: (value) {
+                        if (_passtextController.text.isNotEmpty) {
+                          return _passwordMatch.value = _validator.validateConfirmPassword(
+                            confirmPassword: value,
+                            newPassword: _passtextController.text,
+                          );
+                        }
+                      },
+                      textInputAction: TextInputAction.done,
+                      maxLines: 1,
+                      controller: _confirmPassTextController,
+                      cursorColor: Theme.of(context).primaryColor,
+                      keyboardType: TextInputType.text,
+                      obscureText: _isConfirmObscure,
+                      textCapitalization: TextCapitalization.none,
+                      textAlignVertical: TextAlignVertical.center,
+                      style: Theme.of(context).textTheme.caption.copyWith(
+                            fontSize: screenHeight * 0.015565438, // 14
+                          ),
+                      decoration: InputDecoration(
+                        suffixIcon: _isConfirmObscure
+                            ? GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_off_outlined))
+                            : GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_outlined)),
+                        border: kInputBorderStyle,
+                        focusedBorder: kInputBorderStyle,
+                        enabledBorder: kInputBorderStyle,
+                        hintStyle: Theme.of(context).textTheme.caption.copyWith(
+                              fontSize: screenHeight * 0.015565438, // 14
+                            ),
+                        contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.036458333, vertical: screenHeight * 0.021124524), // h=15, v=19
+                        hintText: 'Confirm Password',
+                        prefixIcon: Icon(Icons.lock_outline),
+                        errorText: _passwordMatch.value,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
+          //***
+          // CustomTextFormField(
+          //   currentNode: _confirmPassNode,
+          //   textInputAction: TextInputAction.done,
+          //   maxLines: 1,
+          //   fieldController: _confirmPassTextController,
+          //   hintText: 'Confirm Password',
+          //   prefixIcon: Icon(Icons.lock_outline),
+          //   keyboardType: TextInputType.text,
+          //   validator: _validator.validatePassword,
+          //   obscureText: _isObscure,
+          //   suffix: _isObscure ? Icon(Icons.visibility_off_outlined) : Icon(Icons.visibility_outlined),
+          // ),
+          //***
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.end,
           //   children: [
@@ -220,7 +358,17 @@ class _RegisterFormState extends State<RegisterForm> {
           //   ],
           // ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlueButton(title: "Sign Up", onPressed: _onRegisterButtonPressed),
+          BlocBuilder<RegisterBloc, RegisterState>(
+            builder: (context, state) {
+              return state is RegisterInProgress
+                  ? BlueButton(
+                      title: "loading",
+                      onPressed: () {},
+                      isLoading: true,
+                    )
+                  : BlueButton(title: "Sign Up", onPressed: _onRegisterButtonPressed);
+            },
+          )
         ],
       ),
     );

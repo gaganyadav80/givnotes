@@ -18,6 +18,7 @@ class DropdownPreference<T> extends StatefulWidget {
   final Widget leading;
   final double titleGap;
   final Color leadingColor;
+  final bool showDesc;
 
   DropdownPreference(
     this.title,
@@ -32,6 +33,7 @@ class DropdownPreference<T> extends StatefulWidget {
     this.titleColor = Colors.black,
     this.titleGap,
     this.leadingColor,
+    this.showDesc = true,
   });
 
   _DropdownPreferenceState<T> createState() => _DropdownPreferenceState<T>();
@@ -61,102 +63,103 @@ In release mode, the default value ($value) will silently be used.
       }());
     }
 
-    return GestureDetector(
-      child: Opacity(
-        opacity: widget.disabled ? 0.5 : 1.0,
-        child: ListTile(
-          enabled: !widget.disabled,
-          // leading: widget.leading,
-          leading: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: widget.leadingColor,
-                  borderRadius: BorderRadius.circular(8.0),
+    return Opacity(
+      opacity: widget.disabled ? 0.5 : 1.0,
+      child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        enabled: !widget.disabled,
+        // leading: widget.leading,
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                color: widget.leadingColor,
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              height: 30.0,
+              width: 30.0,
+              child: Center(child: widget.leading),
+            ),
+          ],
+        ),
+        horizontalTitleGap: widget.titleGap,
+        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
+        subtitle: widget.desc == null || !widget.showDesc
+            ? null
+            : Text(
+                widget.desc,
+                style: TextStyle(
+                  color: widget.titleColor,
+                  fontWeight: FontWeight.w300,
+                  fontSize: 12.0,
                 ),
-                height: 30.0,
-                width: 30.0,
-                child: Center(child: widget.leading),
+              ),
+        // trailing: DropdownButton<T>(
+        //   items: widget.values.map((var val) {
+        //     return DropdownMenuItem<T>(
+        //       value: val,
+        //       child: Text(
+        //         widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
+        //         textAlign: TextAlign.end,
+        //       ),
+        //     );
+        //   }).toList(),
+        //   onChanged: widget.disabled
+        //       ? null
+        //       : (newVal) async {
+        //           onChange(newVal);
+        //         },
+        //   value: value,
+        // ),
+        trailing: Container(
+          width: 200,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 5.0),
+                child: Text(
+                  "$value",
+                  style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 16),
+                ),
+              ),
+              Icon(
+                CupertinoIcons.forward,
+                size: 21.0,
+                color: widget.titleColor.withOpacity(0.6),
               ),
             ],
           ),
-          horizontalTitleGap: widget.titleGap,
-          title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
-          subtitle: widget.desc == null
-              ? null
-              : Text(
-                  widget.desc,
-                  style: TextStyle(
-                    color: widget.titleColor,
-                    fontWeight: FontWeight.w300,
-                    fontSize: 12.0,
-                  ),
-                ),
-          // trailing: DropdownButton<T>(
-          //   items: widget.values.map((var val) {
-          //     return DropdownMenuItem<T>(
-          //       value: val,
-          //       child: Text(
-          //         widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
-          //         textAlign: TextAlign.end,
-          //       ),
-          //     );
-          //   }).toList(),
-          //   onChanged: widget.disabled
-          //       ? null
-          //       : (newVal) async {
-          //           onChange(newVal);
-          //         },
-          //   value: value,
-          // ),
-          trailing: Container(
-            width: 200,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 5.0),
-                  child: Text(
-                    "$value",
-                    style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 16),
-                  ),
-                ),
-                Icon(
-                  CupertinoIcons.forward,
-                  size: 21.0,
-                  color: widget.titleColor.withOpacity(0.6),
-                ),
-              ],
-            ),
-          ),
         ),
-      ),
-      onTap: () => widget.disabled
-          ? null
-          : showCupertinoModalPopup(
-              context: context,
-              builder: (ctx) => CupertinoActionSheet(
-                actions: widget.values.map((val) {
-                  return CupertinoActionSheetAction(
-                    onPressed: () {
-                      onChange(val);
-                      Navigator.of(context, rootNavigator: true).pop(val);
-                    },
-                    child: Text(
-                      widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
-                      textAlign: TextAlign.end,
-                    ),
-                  );
-                }).toList(),
-                cancelButton: CupertinoActionSheetAction(
-                  child: Text('Cancle'),
-                  onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
-                  isDestructiveAction: true,
+        onTap: () => widget.disabled
+            ? null
+            : showCupertinoModalPopup(
+                context: context,
+                builder: (ctx) => CupertinoActionSheet(
+                  title: Text(widget.title.toUpperCase()),
+                  message: Text(widget.desc),
+                  actions: widget.values.map((val) {
+                    return CupertinoActionSheetAction(
+                      onPressed: () {
+                        onChange(val);
+                        Navigator.of(context, rootNavigator: true).pop(val);
+                      },
+                      child: Text(
+                        widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
+                        textAlign: TextAlign.end,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    );
+                  }).toList(),
+                  cancelButton: CupertinoActionSheetAction(
+                    child: Text('Cancle', style: TextStyle(color: Colors.black)),
+                    onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
+                  ),
                 ),
               ),
-            ),
+      ),
     );
   }
 

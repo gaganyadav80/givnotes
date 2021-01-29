@@ -214,9 +214,10 @@ class CheckLogin extends StatelessWidget {
             child: const CupertinoActivityIndicator(),
           );
 
-        if (prefsBox.isAnonymous) return const HomePage();
+        // if (prefsBox.isAnonymous) return const HomePage();
 
-        if (!snapshot.hasData || snapshot.data == null)
+        //TODO remove check for email verify here
+        if (!snapshot.hasData || snapshot.data == null || !snapshot.data.emailVerified)
           return BlocProvider(
             create: (context) => LoginBloc(),
             child: LoginPage(),
