@@ -35,6 +35,7 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
             controller: controls,
             alignment: Alignment.center,
             fit: BoxFit.contain,
+            color: Theme.of(context).iconTheme.color,
           ),
         ),
       ),
@@ -42,14 +43,14 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.more_vert,
-            color: Colors.black,
+            color: Theme.of(context).iconTheme.color,
           ),
           onPressed: () {
             Scaffold.of(context).openEndDrawer();
           },
         ),
       ],
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
       centerTitle: true,
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -8,6 +9,7 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -42,7 +44,11 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: NotesAppBar(_tabController),

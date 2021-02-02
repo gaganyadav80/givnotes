@@ -109,6 +109,7 @@ class GivnotesApp extends StatelessWidget {
             'settings_p': (context) => SettingsPage(),
             'search_p': (context) => SearchPage(),
           },
+
           // locale: DevicePreview.locale(context),
           // builder: DevicePreview.appBuilder,
           title: 'Givnotes',

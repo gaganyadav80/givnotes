@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -14,7 +16,11 @@ class AboutUs extends StatelessWidget {
   Widget build(BuildContext context) {
     final hm = context.percentHeight;
     final wm = context.percentWidth;
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,

@@ -7,6 +7,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -25,6 +26,11 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(

@@ -8,14 +8,14 @@ final ZefyrThemeData zefyrThemeData = ZefyrThemeData(
     style: TextStyle(
       fontSize: 16,
       height: 1.3,
-      color: Colors.black,
+      // color: Colors.black,
     ),
     spacing: VerticalSpacing(top: 3),
   ),
   heading1: TextBlockTheme(
     style: TextStyle(
       fontSize: 34.0,
-      color: Colors.black.withOpacity(0.7),
+      // color: Colors.black.withOpacity(0.7),
       height: 1.15,
       fontWeight: FontWeight.w300,
     ),
@@ -24,7 +24,7 @@ final ZefyrThemeData zefyrThemeData = ZefyrThemeData(
   heading2: TextBlockTheme(
     style: TextStyle(
       fontSize: 24.0,
-      color: Colors.black.withOpacity(0.7),
+      // color: Colors.black.withOpacity(0.7),
       height: 1.15,
       fontWeight: FontWeight.normal,
     ),
@@ -34,7 +34,7 @@ final ZefyrThemeData zefyrThemeData = ZefyrThemeData(
     style: TextStyle(
       fontFamily: 'SFMono',
       fontSize: 20.0,
-      color: Colors.black.withOpacity(0.7),
+      // color: Colors.black.withOpacity(0.7),
       height: 1.25,
       fontWeight: FontWeight.w700,
     ),
@@ -49,7 +49,7 @@ final ZefyrThemeData zefyrThemeData = ZefyrThemeData(
     ),
     spacing: VerticalSpacing(top: 0.0),
     decoration: BoxDecoration(
-      color: Colors.grey[800].withOpacity(1),
+      // color: Colors.grey[800].withOpacity(1),
       borderRadius: BorderRadius.circular(2),
     ),
   ),

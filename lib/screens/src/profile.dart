@@ -2,10 +2,12 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
@@ -26,7 +28,11 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     hm = MediaQuery.of(context).size.height / 100;
     wm = MediaQuery.of(context).size.width / 100;
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     //TODO too much to rebuild... redesign
     return Scaffold(
       appBar: AppBar(

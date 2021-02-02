@@ -57,7 +57,7 @@ class _NotesCardState extends State<NotesCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.black.withOpacity(0.7),
+        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Theme.of(context).scaffoldBackgroundColor,
         margin: EdgeInsets.zero,
         child: InkWell(
           radius: 600, //maybe change to 400-500

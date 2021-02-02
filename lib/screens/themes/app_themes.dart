@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 enum AppTheme {
   Dark,
@@ -86,7 +87,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     /// Red Font (you owe)
     subtitle1: TextStyle(
       fontFamily: 'OpenSans',
-      color: Colors.red,
+      color: Colors.white,
       fontWeight: FontWeight.w600,
     ),
 
@@ -140,6 +141,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     backgroundColor: Colors.blue,
     splashColor: Color(0xff4460FF),
   ),
+
   dividerColor: Colors.grey,
   brightness: Brightness.dark,
   primaryColorLight: Color(0xff3359ee),
@@ -167,8 +169,8 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   colorScheme: ColorScheme.light().copyWith(
     primaryVariant: Color(0xff0addaa),
     primary: Color(0xFf1adfbb),
-    secondary: Color(0xFFff5a5a),
-    secondaryVariant: Color(0xFFff555d),
+    // secondary: Color(0xFFff5a5a),
+    // secondaryVariant: Color(0xFFff555d),
     onSurface: Colors.white,
     surface: Color(0xFF181532).withAlpha(200),
     background: Color(0xFF181532),
@@ -200,7 +202,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     /// Main body text
     bodyText1: TextStyle(
       fontFamily: 'OpenSans',
-      color: Colors.white24,
+      color: Colors.white,
       fontWeight: FontWeight.w600,
     ),
 
@@ -221,7 +223,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     /// Red Font (you owe)
     subtitle1: TextStyle(
       fontFamily: 'OpenSans',
-      color: Color(0xFFff555d),
+      color: Colors.white10,
       fontWeight: FontWeight.w600,
     ),
 
@@ -259,3 +261,14 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
     ),
   ),
 );
+
+Color GiveStatusBarColor(BuildContext context) {
+  if (Theme.of(context).brightness == Brightness.dark)
+    return Colors.grey[900];
+  else
+    return Colors.white;
+}
+
+bool isBrightnessDark(BuildContext context) {
+  return Theme.of(context).brightness == Brightness.dark;
+}

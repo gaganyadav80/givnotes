@@ -1,11 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:lottie/lottie.dart';
 
@@ -24,7 +26,11 @@ class SettingsPage extends StatelessWidget {
             : _prefsCubit.state.sortBy == 'a-z'
                 ? "Alphabetical (A-Z)"
                 : "Alphabetical (Z-A)";
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.0),

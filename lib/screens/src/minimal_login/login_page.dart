@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 import 'components/components.dart';
 import 'login_bloc/login_bloc.dart';
@@ -33,6 +35,11 @@ class LoginPage extends StatelessWidget {
       }));
     }
 
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(

@@ -37,12 +37,18 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 children: [
                   Text(
                     _appBarTitle[state.index],
-                    style: GoogleFonts.sourceSerifPro(
+                    style: TextStyle(
                       fontSize: 42,
-                      fontWeight: FontWeight.w700,
+                      fontWeight: FontWeight.w500,
                       // letterSpacing: -0.7,s
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
+                    // style: GoogleFonts.sourceSerifPro(
+                    //   fontSize: 42,
+                    //   fontWeight: FontWeight.w700,
+                    //   // letterSpacing: -0.7,s
+                    //   color: Theme.of(context).textTheme.bodyText1.color,
+                    // ),
                   ),
                   state.index == 0
                       ? IconButton(

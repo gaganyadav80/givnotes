@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 import 'components/components.dart';
 import 'register_bloc/register_bloc.dart';
@@ -11,6 +13,11 @@ import 'register_bloc/register_bloc.dart';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 
 import '../zefyrEdit.dart';
@@ -101,6 +102,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
           TextField(
             controller: _newTagTextController,
             autocorrect: false,
+            cursorColor: isBrightnessDark(context) ? Colors.white : Colors.black,
             textCapitalization: TextCapitalization.characters,
             inputFormatters: [
               TextInputFormatter.withFunction(
@@ -110,9 +112,12 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 ),
               ),
             ],
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey[200],
+              fillColor: isBrightnessDark(context) ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
               focusColor: Colors.grey,
               labelText: 'Tag name',
               labelStyle: TextStyle(
@@ -143,7 +148,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyText2.color,
             ),
           ),
           // SizedBox(width: 5),
@@ -230,7 +235,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 width: 0.228426396 * screenSize.width,
                 child: RaisedButton(
                   elevation: 0,
-                  color: Colors.black,
+                  color: Theme.of(context).primaryColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text(
                     'SAVE',

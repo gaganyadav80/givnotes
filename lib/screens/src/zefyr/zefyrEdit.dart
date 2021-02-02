@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:intl/intl.dart';
 import 'package:zefyr/zefyr.dart';
@@ -105,12 +107,17 @@ class ZefyrEditState extends State<ZefyrEdit> {
   @override
   Widget build(BuildContext context) {
     _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     // zefyrEditMode = ((_noteEditStore.state.isEditing ?? true) || (_noteEditStore.state.noteMode == NoteMode.Adding));
     return WillPopScope(
       onWillPop: _onPop,
       child: Scaffold(
         key: _zefyrScaffoldKey,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: ZefyrEditAppBar(
           saveNote: _saveNote,
           controls: controls,
@@ -137,7 +144,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
                             'modified ${DateFormat.yMMMd().add_Hm().format(value.modified)}',
                             style: TextStyle(
                               fontFamily: 'ZillaSlab',
-                              color: Colors.black.withOpacity(0.7),
+                              color: Theme.of(context).textTheme.bodyText2.color,
                               fontWeight: FontWeight.w400,
                               fontSize: 2 * hm,
                               fontStyle: FontStyle.italic,
@@ -188,8 +195,14 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
+                                            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                                             insetPadding: EdgeInsets.all(10),
-                                            title: Text('New tag'),
+                                            title: Text(
+                                              'New tag',
+                                              style: TextStyle(
+                                                color: Theme.of(context).textTheme.bodyText1.color,
+                                              ),
+                                            ),
                                             // titlePadding: EdgeInsets.fromLTRB(
                                             //     15, 15, 15, 0),
                                             titlePadding: EdgeInsets.fromLTRB(
@@ -201,7 +214,6 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                             titleTextStyle: TextStyle(
                                               fontSize: 22,
                                               fontWeight: FontWeight.bold,
-                                              color: Colors.black,
                                               letterSpacing: 0.5,
                                             ),
                                             // contentPadding: EdgeInsets.fromLTRB(
@@ -225,7 +237,6 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                     },
                                     child: Icon(
                                       Icons.add,
-                                      color: Colors.blueGrey,
                                       size: 2 * hm,
                                     ),
                                   ),
@@ -239,7 +250,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
                                           '"no tags added."',
                                           style: TextStyle(
                                             fontFamily: 'ZillaSlab',
-                                            color: Colors.black.withOpacity(0.7),
+                                            color: Theme.of(context).textTheme.bodyText2.color,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 2.5 * hm,
                                           ),
@@ -373,6 +384,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
             hintStyle: TextStyle(
               fontFamily: 'ZillaSlab',
               fontSize: 4.5 * hm,
+              color: Theme.of(context).textTheme.bodyText1.color,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -380,6 +392,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
             fontFamily: 'ZillaSlab',
             fontSize: 4.5 * hm,
             fontWeight: FontWeight.w600,
+            color: Theme.of(context).textTheme.bodyText1.color,
           ),
           textInputAction: TextInputAction.next,
           onEditingComplete: () {
@@ -434,6 +447,7 @@ class ZefyrEditState extends State<ZefyrEdit> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                     insetPadding: EdgeInsets.all(10),
                     title: Text('Edit tag'),
                     // titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 0),

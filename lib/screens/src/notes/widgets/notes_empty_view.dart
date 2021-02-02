@@ -68,11 +68,11 @@ class NotesEmptyView extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          'assets/img/lady-on-phone.png',
-                          width: 0.75 * screenSize.width,
-                          height: 0.336973684 * screenSize.height,
-                        ),
+                        // Image.asset(
+                        //   'assets/img/lady-on-phone.png',
+                        //   width: 0.75 * screenSize.width,
+                        //   height: 0.336973684 * screenSize.height,
+                        // ),
                         Text("Notes sorted by: ${state.sortBy}"),
                         Text("Compact Tags: ${state.compactTags}"),
                       ],

@@ -8,6 +8,7 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -116,13 +117,18 @@ class _SearchPageState extends State<SearchPage> {
     // hm = context.percentHeight;
     // wm = context.percentWidth;
     // Size size = MediaQuery.of(context).size;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return WillPopScope(
       onWillPop: () async {
         BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[
@@ -130,20 +136,25 @@ class _SearchPageState extends State<SearchPage> {
                 pinned: true,
                 leading: IconButton(
                   icon: Icon(CupertinoIcons.arrow_left),
-                  color: Colors.black,
+                  color: Theme.of(context).iconTheme.color,
                   onPressed: () {
                     BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
                     Navigator.pop(context);
                   },
                 ),
                 elevation: 0.0,
-                backgroundColor: Colors.white,
-                expandedHeight: 0.131052632 * screenSize.height,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                expandedHeight: 0.121052632 * screenSize.height,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
                     'Search',
-                    style: TextStyle(height: 0.0, fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(
+                      height: 0.0,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                 ),
               ),
@@ -151,7 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                 automaticallyImplyLeading: false,
                 pinned: true,
                 elevation: 0.0,
-                backgroundColor: Colors.white,
+                backgroundColor: Theme.of(context).textTheme.bodyText1.color,
                 title: searchNoteTextField(),
                 titleSpacing: 10.0,
               ),
@@ -177,10 +188,13 @@ class _SearchPageState extends State<SearchPage> {
                                             top: 0.05 * screenSize.height,
                                             right: 0.05 * screenSize.width,
                                           ),
-                                          child: Image.asset(
-                                            'assets/img/search.png',
-                                            // height: 40 * hm,
-                                            height: 0.4 * screenSize.height,
+                                          // child: Image.asset(
+                                          //   'assets/img/search.png',
+                                          //   // height: 40 * hm,
+                                          //   height: 0.4 * screenSize.height,
+                                          // ),
+                                          child: Center(
+                                            child: Text('Search for your notes according to Tags'),
                                           ),
                                         ),
                                       ),
@@ -404,7 +418,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget searchNoteTextField() {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
       builder: (context, state) => Container(
-        color: Colors.white,
+        // color: Theme.of(context).scaffoldBackgroundColor,
         height: 0.0492105263 * screenSize.height,
         child: CupertinoTextField(
           controller: _textController,
@@ -425,21 +439,21 @@ class _SearchPageState extends State<SearchPage> {
           toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
           decoration: BoxDecoration(
             color: CupertinoDynamicColor.withBrightness(
-              color: CupertinoColors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               darkColor: CupertinoColors.black,
             ),
             // border: _kDefaultRoundedBorder,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            border: Border.all(
-              color: CupertinoDynamicColor.withBrightness(
-                // color: Color(0x33000000),
-                // darkColor: Color(0x33FFFFFF),
-                darkColor: Colors.white,
-                color: Colors.black,
-              ),
-              style: BorderStyle.solid,
-              width: 1.0, // default 0 for cupertino
-            ),
+            // borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            // border: Border.all(
+            //   color: CupertinoDynamicColor.withBrightness(
+            //     // color: Color(0x33000000),
+            //     // darkColor: Color(0x33FFFFFF),
+            //     darkColor: Theme.of(context).scaffoldBackgroundColor,
+            //     color: Colors.black,
+            //   ),
+            //   style: BorderStyle.solid,
+            //   width: 1.0, // default 0 for cupertino
+            // ),
           ),
           // decoration: InputDecoration(
           //   fillColor: Colors.white,
