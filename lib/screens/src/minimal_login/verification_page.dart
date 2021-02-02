@@ -28,7 +28,10 @@ class VerificationPage extends StatelessWidget {
                 children: [
                   Text("Do it later?", style: TextStyle(color: Colors.black, fontSize: 16)),
                   SizedBox(width: 5.0),
-                  Icon(Icons.fast_forward, color: Colors.black),
+                  Icon(
+                    Icons.fast_forward,
+                    color: Theme.of(context).splashColor,
+                  ),
                 ],
               ),
             ),

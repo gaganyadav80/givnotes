@@ -17,7 +17,7 @@ class RegisterPage extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+          child: Icon(CupertinoIcons.arrow_left, color: Theme.of(context).primaryIconTheme.color),
         ),
       ),
       body: BlocProvider<RegisterBloc>(
@@ -81,7 +81,7 @@ class RegisterMainBody extends StatelessWidget {
                     height: screenHeight * 0.036689962, //33
                   ),
                   RegisterForm(),
-                  SizedBox(height: screenHeight * 0.045),
+                  SizedBox(height: screenHeight * 0.035),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -204,7 +204,10 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _nametextController,
             hintText: 'Name',
-            prefixIcon: Icon(Icons.person_outline_outlined),
+            prefixIcon: Icon(
+              Icons.person_outline_outlined,
+              color: Theme.of(context).splashColor,
+            ),
             keyboardType: TextInputType.name,
             validator: _validator.validateName,
           ),
@@ -216,7 +219,10 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _emailTextController,
             hintText: 'Email',
-            prefixIcon: Icon(Icons.email_outlined),
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: Theme.of(context).splashColor,
+            ),
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
           ),
@@ -236,13 +242,26 @@ class _RegisterFormState extends State<RegisterForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: Icon(Icons.lock_outline),
+                prefixIcon: Icon(
+                  Icons.lock_outline,
+                  color: Theme.of(context).splashColor,
+                ),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure
-                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+                    ? GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: Icon(
+                          Icons.visibility_off_outlined,
+                          color: Theme.of(context).splashColor,
+                        ))
+                    : GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: Icon(
+                          Icons.visibility_outlined,
+                          color: Theme.of(context).splashColor,
+                        )),
               );
             },
           ),
@@ -293,8 +312,18 @@ class _RegisterFormState extends State<RegisterForm> {
                           ),
                       decoration: InputDecoration(
                         suffixIcon: _isConfirmObscure
-                            ? GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                            : GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_outlined)),
+                            ? GestureDetector(
+                                onTap: _onConfirmObscurePressed,
+                                child: Icon(
+                                  Icons.visibility_off_outlined,
+                                  color: Theme.of(context).splashColor,
+                                ))
+                            : GestureDetector(
+                                onTap: _onConfirmObscurePressed,
+                                child: Icon(
+                                  Icons.visibility_outlined,
+                                  color: Theme.of(context).splashColor,
+                                )),
                         border: kInputBorderStyle,
                         focusedBorder: kInputBorderStyle,
                         enabledBorder: kInputBorderStyle,
@@ -303,7 +332,10 @@ class _RegisterFormState extends State<RegisterForm> {
                             ),
                         contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.036458333, vertical: screenHeight * 0.021124524), // h=15, v=19
                         hintText: 'Confirm Password',
-                        prefixIcon: Icon(Icons.lock_outline),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: Theme.of(context).splashColor,
+                        ),
                         errorText: _passwordMatch.value,
                       ),
                     ),

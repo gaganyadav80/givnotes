@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
 
     return SafeArea(
       child: Container(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
           child: BlocBuilder<HomeCubit, HomeState>(
@@ -41,7 +41,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                       fontSize: 42,
                       fontWeight: FontWeight.w700,
                       // letterSpacing: -0.7,s
-                      color: const Color(0xff32343D),
+                      color: Theme.of(context).textTheme.bodyText1.color,
                     ),
                   ),
                   state.index == 0

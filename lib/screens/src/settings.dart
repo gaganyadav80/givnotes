@@ -27,7 +27,7 @@ class SettingsPage extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.0),
@@ -38,8 +38,12 @@ class SettingsPage extends StatelessWidget {
             desc: "Sort your notes on one of the following filters.",
             showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-            titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white, size: 20.0),
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            leading: Icon(
+              CupertinoIcons.sort_down_circle,
+              color: Theme.of(context).textTheme.bodyText1.color,
+              size: 20.0,
+            ),
             leadingColor: Colors.red,
             titleGap: 0.0,
             onChange: ((String value) {
@@ -63,7 +67,7 @@ class SettingsPage extends StatelessWidget {
             // desc: 'Enable compact tags in notes view',
             desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
-            titleColor: const Color(0xff32343D),
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
             leadingColor: Colors.blue,
             titleGap: 0.0,
@@ -85,7 +89,7 @@ class SettingsPage extends StatelessWidget {
             disabled: true,
             // desc: "Switch between light and dark mode",
             desc: "So now the fun begins.",
-            titleColor: const Color(0xff32343D),
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
             leadingColor: Colors.purple,
             titleGap: 0.0,
@@ -100,7 +104,7 @@ class SettingsPage extends StatelessWidget {
             desc: "Spice up your theme",
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
-            titleColor: const Color(0xff32343D),
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
             leadingColor: Colors.pink,
             titleGap: 0.0,
@@ -112,6 +116,7 @@ class SettingsPage extends StatelessWidget {
             'Extensions',
             desc: 'Extend your experience.',
             disabled: true,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.bolt, color: Colors.white, size: 20.0),
             leadingColor: Colors.brown,
@@ -123,7 +128,7 @@ class SettingsPage extends StatelessWidget {
           AppLockSwitchPrefs(),
           PreferenceText(
             'Change Passcode',
-            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.lock_shield, color: Colors.white, size: 20.0),
             leadingColor: Colors.lightGreen,
             titleGap: 0.0,
@@ -146,27 +151,30 @@ class SettingsPage extends StatelessWidget {
           PreferenceTitle('Details Section'),
           PreferencePageLink(
             'Application',
-            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.app, color: Colors.white, size: 20.0),
             leadingColor: Colors.grey,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AppDetailSection(),
           ),
           PreferencePageLink(
             'About Us',
-            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.person, color: Colors.white, size: 20.0),
             leadingColor: Colors.brown,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
           ),
           PreferencePageLink(
             'Contact Us',
-            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
+            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.chat_bubble, color: Colors.white, size: 20.0),
             leadingColor: Colors.blueGrey,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: ContactGivnotes(),
@@ -216,7 +224,7 @@ class ProfileTileSettings extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 35.0,
-                        backgroundColor: Colors.black,
+                        backgroundColor: Colors.orange,
                         backgroundImage: photo != null ? NetworkImage(snapshot.data.photoURL) : null,
                         child: photo == null
                             ? Text(
@@ -238,7 +246,7 @@ class ProfileTileSettings extends StatelessWidget {
                           Text(
                             "Gagan Yadav",
                             style: TextStyle(
-                              color: const Color(0xff32343D).withOpacity(0.85),
+                              color: Theme.of(context).textTheme.bodyText1.color,
                               fontSize: 24.0,
                               fontWeight: FontWeight.w600,
                             ),
@@ -252,7 +260,7 @@ class ProfileTileSettings extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   fontWeight: FontWeight.w300,
-                                  color: Colors.black54,
+                                  color: Theme.of(context).textTheme.bodyText2.color,
                                 ),
                               ),
                               SizedBox(width: 5.0),
@@ -280,7 +288,7 @@ class ProfileTileSettings extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 35.0,
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.orange,
                         child: Padding(
                           padding: EdgeInsets.only(bottom: 10.0),
                           child: Lottie.asset('assets/animations/people-portrait.json'),
@@ -293,7 +301,7 @@ class ProfileTileSettings extends StatelessWidget {
                           Text(
                             "You are not logged in!",
                             style: TextStyle(
-                              color: const Color(0xff32343D).withOpacity(0.85),
+                              color: Theme.of(context).textTheme.bodyText1.color,
                               fontSize: 18.0,
                               fontWeight: FontWeight.w600,
                             ),
@@ -303,7 +311,7 @@ class ProfileTileSettings extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 13.0,
                               fontWeight: FontWeight.w300,
-                              color: Colors.black54,
+                              color: Theme.of(context).textTheme.bodyText1.color,
                             ),
                           ),
                         ],
@@ -336,12 +344,20 @@ class _AppDetailSectionState extends State<AppDetailSection> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text("Application", style: TextStyle(color: Colors.black)),
+        title: Text(
+          "Application",
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
+        ),
         elevation: 0.0,
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+          icon: Icon(
+            CupertinoIcons.arrow_left,
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
         ),
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 50.0),
@@ -351,8 +367,18 @@ class _AppDetailSectionState extends State<AppDetailSection> {
             width: double.infinity,
             child: CupertinoSlidingSegmentedControl(
               children: {
-                0: Text("App Info"),
-                1: Text("Logs"),
+                0: Text(
+                  "App Info",
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1.color,
+                  ),
+                ),
+                1: Text(
+                  "Logs",
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyText1.color,
+                  ),
+                ),
               },
               groupValue: selectedIndex,
               onValueChanged: (value) => setState(() => selectedIndex = value),
@@ -398,6 +424,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           'app_lock',
           desc: 'Add 4 digit pin',
           defaultVal: false,
+          titleColor: Theme.of(context).textTheme.bodyText1.color,
           ignoreTileTap: false,
           leading: Icon(CupertinoIcons.lock, color: Colors.white, size: 20.0),
           leadingColor: Colors.orangeAccent,
@@ -437,6 +464,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
+          titleColor: Theme.of(context).textTheme.bodyText1.color,
           leading: Icon(Icons.fingerprint_outlined, color: Colors.white, size: 20.0),
           leadingColor: Colors.teal,
           titleGap: 0.0,

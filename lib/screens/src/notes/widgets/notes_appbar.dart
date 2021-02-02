@@ -18,7 +18,7 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
 
     return SafeArea(
       child: Container(
-        color: Colors.white,
+        // color: Theme.of(context).scaffoldBackgroundColor,
         width: screenSize.width,
         // margin: const EdgeInsets.only(left: 10.0),
         margin: EdgeInsets.only(left: 0.025380711 * screenSize.width),
@@ -29,7 +29,8 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
             Container(
               width: 250.0,
               child: CupertinoSlidingSegmentedControl(
-                thumbColor: Colors.black,
+                // backgroundColor: Theme.of(context).dividerColor,
+                thumbColor: Theme.of(context).splashColor,
                 groupValue: _homeCubit.state.global ? 1 : 0,
                 onValueChanged: (int value) {
                   if (value == 0)
@@ -38,8 +39,8 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                     _homeCubit.updateGlobal(true);
                 },
                 children: {
-                  0: Text('Recent', style: TextStyle(color: _homeCubit.state.global ? Colors.black : Colors.white)),
-                  1: Text('Global', style: TextStyle(color: _homeCubit.state.global ? Colors.white : Colors.black)),
+                  0: Text('Recent', style: TextStyle(color: _homeCubit.state.global ? Theme.of(context).textTheme.bodyText2.color : Theme.of(context).cardColor)),
+                  1: Text('Global', style: TextStyle(color: _homeCubit.state.global ? Theme.of(context).cardColor : Theme.of(context).textTheme.bodyText2.color)),
                 },
                 // physics: NeverScrollableScrollPhysics(),
                 // isScrollable: true,
@@ -85,7 +86,8 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                   builder: (context) {
                     return NotesModelSheet();
                   },
-                  backgroundColor: Color(0xff171C26),
+                  // backgroundColor: Color(0xff171C26),
+                  backgroundColor: Theme.of(context).cardColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                   ),
@@ -129,7 +131,7 @@ class NotesModelSheet extends StatelessWidget {
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyText1.color,
               ),
             ),
           ),
@@ -138,9 +140,9 @@ class NotesModelSheet extends StatelessWidget {
           DropdownPreference(
             'Sort notes',
             'sort_notes',
-            titleColor: Colors.white,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             titleGap: 0.0,
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white),
+            leading: Icon(CupertinoIcons.sort_down_circle, color: Theme.of(context).primaryColor),
             defaultVal: def,
             desc: "Sort your notes on one of the following filters.",
             showDesc: false,
@@ -159,20 +161,20 @@ class NotesModelSheet extends StatelessWidget {
           SwitchPreference(
             'Compact Tags',
             'compact_tags',
-            titleColor: Colors.white,
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
             titleGap: 0,
-            leading: Icon(CupertinoIcons.bars, color: Colors.white),
+            leading: Icon(CupertinoIcons.bars, color: Theme.of(context).textTheme.bodyText1.color),
             desc: 'Enable compact tags in notes view',
             defaultVal: hydratedPrefsCubit.state.compactTags,
             onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
             onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
           ),
           ListTile(
-            leading: Icon(CupertinoIcons.trash, color: Colors.white, size: 20.0),
+            leading: Icon(CupertinoIcons.trash, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
             horizontalTitleGap: 0,
-            title: Text("Trash", style: TextStyle(color: Colors.white)),
+            title: Text("Trash", style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color)),
             // subtitle: Text("Check your trashed notes", style: TextStyle(color: Colors.black.withOpacity(0.6), fontWeight: FontWeight.w300)),
-            trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Colors.white60),
+            trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Theme.of(context).textTheme.bodyText2.color),
             onTap: () => print('trash pressed'),
           ),
         ],

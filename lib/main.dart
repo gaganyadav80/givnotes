@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -82,6 +83,7 @@ class App extends StatelessWidget {
           BlocProvider(create: (_) => NoteAndSearchCubit()),
           BlocProvider(create: (_) => LoginBloc()),
           BlocProvider(create: (_) => RegisterBloc()),
+          BlocProvider(create: (_) => ThemeBloc()),
         ],
         child: GivnotesApp(),
       ),
@@ -96,69 +98,74 @@ class GivnotesApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        'login_p': (context) => LoginPage(),
-        'register_p': (context) => RegisterPage(),
-        'verification_p': (context) => VerificationPage(),
-        'home_p': (context) => HomePage(),
-        'settings_p': (context) => SettingsPage(),
-        'search_p': (context) => SearchPage(),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp(
+          routes: {
+            'login_p': (context) => LoginPage(),
+            'register_p': (context) => RegisterPage(),
+            'verification_p': (context) => VerificationPage(),
+            'home_p': (context) => HomePage(),
+            'settings_p': (context) => SettingsPage(),
+            'search_p': (context) => SearchPage(),
+          },
+          // locale: DevicePreview.locale(context),
+          // builder: DevicePreview.appBuilder,
+          title: 'Givnotes',
+          theme: state.appThemeData,
+          // theme: ThemeData(
+          //   //maybe switch to google fonts
+          //   fontFamily: 'Poppins',
+          //   accentColor: Colors.black,
+          //   accentColorBrightness: Brightness.light,
+          //   toggleableActiveColor: Colors.blue,
+          // ),
+          builder: (context, widget) => ResponsiveWrapper.builder(
+            BouncingScrollWrapper.builder(context, widget),
+            maxWidth: 1200,
+            minWidth: 300,
+            defaultScale: false,
+            breakpoints: [
+              ResponsiveBreakpoint.resize(300, name: MOBILE),
+              ResponsiveBreakpoint.autoScale(800, name: TABLET),
+              ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+              ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+              ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+            ],
+            background: Container(color: Color(0xFFF5F5F5)),
+          ),
+          // builder: (context, widget) => BlocListener<AuthenticationBloc, AuthenticationState>(
+          //   child: widget,
+          //   listener: (context, state) {
+          //     switch (state.status) {
+          //       case AuthenticationStatus.authenticated:
+          //         _navigator.pushAndRemoveUntil<void>(
+          //           HomePage.route(),
+          //           (route) => false,
+          //         );
+          //         break;
+          //       case AuthenticationStatus.unauthenticated:
+          //         _navigator.pushAndRemoveUntil<void>(
+          //           MaterialPageRoute(
+          //             builder: (context) => BlocProvider(
+          //               lazy: false,
+          //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
+          //               child: GorgeousLoginPage(),
+          //             ),
+          //           ),
+          //           (route) => false,
+          //         );
+          //         break;
+          //       default:
+          //         break;
+          //     }
+          //   },
+          // ),
+          // navigatorKey: _navigatorKey,
+          // onGenerateRoute: (_) => HomePage.route(),
+          home: const CheckLogin(),
+        );
       },
-      // locale: DevicePreview.locale(context),
-      // builder: DevicePreview.appBuilder,
-      title: 'Givnotes',
-      theme: ThemeData(
-        //maybe switch to google fonts
-        fontFamily: 'Poppins',
-        accentColor: Colors.black,
-        accentColorBrightness: Brightness.light,
-        toggleableActiveColor: Colors.blue,
-      ),
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        BouncingScrollWrapper.builder(context, widget),
-        maxWidth: 1200,
-        minWidth: 300,
-        defaultScale: false,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(300, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-        ],
-        background: Container(color: Color(0xFFF5F5F5)),
-      ),
-      // builder: (context, widget) => BlocListener<AuthenticationBloc, AuthenticationState>(
-      //   child: widget,
-      //   listener: (context, state) {
-      //     switch (state.status) {
-      //       case AuthenticationStatus.authenticated:
-      //         _navigator.pushAndRemoveUntil<void>(
-      //           HomePage.route(),
-      //           (route) => false,
-      //         );
-      //         break;
-      //       case AuthenticationStatus.unauthenticated:
-      //         _navigator.pushAndRemoveUntil<void>(
-      //           MaterialPageRoute(
-      //             builder: (context) => BlocProvider(
-      //               lazy: false,
-      //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
-      //               child: GorgeousLoginPage(),
-      //             ),
-      //           ),
-      //           (route) => false,
-      //         );
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //   },
-      // ),
-      // navigatorKey: _navigatorKey,
-      // onGenerateRoute: (_) => HomePage.route(),
-      home: const CheckLogin(),
     );
   }
 }

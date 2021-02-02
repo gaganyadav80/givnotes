@@ -96,7 +96,7 @@ class LoginPage extends StatelessWidget {
                       height: screenHeight * 0.036689962, //33
                     ),
                     LoginForm(),
-                    SizedBox(height: screenHeight * 0.081),
+                    SizedBox(height: screenHeight * 0.051),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -138,7 +138,7 @@ class LoginPage extends StatelessWidget {
                               "Sign Up",
                               style: Theme.of(context).textTheme.headline6.copyWith(
                                     fontSize: screenHeight * 0.02,
-                                    color: Theme.of(context).primaryColor,
+                                    color: Theme.of(context).splashColor,
                                   ),
                             ),
                           ],
@@ -227,7 +227,10 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
-            prefixIcon: Icon(Icons.email_outlined),
+            prefixIcon: Icon(
+              Icons.email_outlined,
+              color: Theme.of(context).splashColor,
+            ),
           ),
           SizedBox(height: screenHeight * 0.024459975),
           // 22
@@ -244,13 +247,26 @@ class _LoginFormState extends State<LoginForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: Icon(Icons.lock_outline),
+                prefixIcon: Icon(
+                  Icons.lock_outline,
+                  color: Theme.of(context).splashColor,
+                ),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure
-                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+                    ? GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: Icon(
+                          Icons.visibility_off_outlined,
+                          color: Theme.of(context).splashColor,
+                        ))
+                    : GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: Icon(
+                          Icons.visibility_outlined,
+                          color: Theme.of(context).splashColor,
+                        )),
               );
             },
           ),
@@ -261,9 +277,10 @@ class _LoginFormState extends State<LoginForm> {
               GestureDetector(
                 onTap: _onForgetPasswordPressed,
                 child: Text(
-                  "FORGOT PASSWORD?",
+                  "Forgot Password?",
                   style: Theme.of(context).textTheme.headline6.copyWith(
                         fontSize: screenHeight * 0.013,
+                        color: Theme.of(context).iconTheme.color,
                       ),
                 ),
               ),

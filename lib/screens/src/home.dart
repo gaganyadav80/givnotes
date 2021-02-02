@@ -21,7 +21,7 @@ class HomePage extends StatelessWidget {
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: CustomAppBar(
             trailing: CupertinoIcons.search,
           ),
@@ -47,8 +47,8 @@ class HomePage extends StatelessWidget {
               return Container(
                 height: 60,
                 child: CupertinoTabBar(
-                  backgroundColor: Colors.white,
-                  activeColor: Colors.black,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  activeColor: Theme.of(context).primaryColor,
                   currentIndex: state.index,
                   onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                   items: <BottomNavigationBarItem>[

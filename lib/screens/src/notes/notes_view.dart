@@ -44,7 +44,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
     // Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: NotesAppBar(_tabController),
       body: BlocBuilder<HomeCubit, HomeState>(
         builder: (BuildContext context, HomeState homeState) {
@@ -124,9 +124,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                         ),
                                         secondaryActions: <Widget>[
                                           !homeState.trash
-                                              ? iconSlideAction(Colors.red, Icons.delete, 'Trash')
+                                              ? iconSlideAction(Theme.of(context).colorScheme.secondary, Icons.delete, 'Trash')
                                               : iconSlideAction(
-                                                  Color(0xff66a9e0),
+                                                  Theme.of(context).splashColor,
                                                   Icons.restore,
                                                   'Resotre',
                                                 ),
@@ -156,8 +156,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
           return state.trash == false
               ? FloatingActionButton(
                   heroTag: 'fab',
-                  child: Icon(CupertinoIcons.add, color: Colors.white),
-                  backgroundColor: Colors.black,
+                  backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                  child: Icon(CupertinoIcons.add, color: Theme.of(context).scaffoldBackgroundColor),
+                  // backgroundColor: Theme.of(context).primaryColor,
                   onPressed: () async {
                     if (_multiSelectController.isSelecting) {
                       //TODO flag
