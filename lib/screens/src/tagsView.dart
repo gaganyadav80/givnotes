@@ -71,7 +71,13 @@ class _TagsViewState extends State<TagsView> {
                         child: Padding(
                           // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
                           padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
-                          child: Image.asset('assets/img/tags-view-1.png'),
+                          // child: Image.asset('assets/img/tags-view-1.png'),
+                          child: Text(
+                            'Search according the tags here',
+                            style: TextStyle(
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       );
                     }
@@ -238,8 +244,12 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           focusNode: _searchTagFocus,
           controller: _searchTagController,
           autocorrect: false,
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+          cursorColor: Theme.of(context).textTheme.bodyText2.color,
+          style: TextStyle(
+            fontSize: 16,
+            // color: Colors.grey[800],
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
           textCapitalization: TextCapitalization.characters,
           inputFormatters: [
             TextInputFormatter.withFunction(
@@ -253,7 +263,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             _searchTagFocus.unfocus();
           },
           decoration: InputDecoration(
-            enabledBorder: const OutlineInputBorder(
+            enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(
                 color: Colors.black,
               ),
@@ -281,17 +291,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               fontSize: 14,
               fontStyle: FontStyle.italic,
             ),
-            // contentPadding: const EdgeInsets.only(
-            //   left: 16,
-            //   right: 20,
-            //   top: 14,
-            //   bottom: 14,
-            // ),
             contentPadding: EdgeInsets.only(
-              left: 0.030609137 * screenSize.width,
-              right: 0.040761421 * screenSize.width,
-              top: 0.008421053 * screenSize.height,
-              bottom: 0.008421053 * screenSize.height,
+              left: 0.030609137 * screenSize.width, //16
+              right: 0.040761421 * screenSize.width, //20
+              top: 0.008421053 * screenSize.height, //14
+              bottom: 0.008421053 * screenSize.height, //14
             ),
           ),
         ),
@@ -304,6 +308,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               final noteTag = state.tagSearchList[index];
 
               return ItemTags(
+                color: Colors.blue,
                 key: Key(index.toString()),
                 elevation: 2,
                 index: index,
@@ -320,6 +325,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   fontSize: 1.8 * hm,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
+                  color: Colors.white,
                 ),
 
                 border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),

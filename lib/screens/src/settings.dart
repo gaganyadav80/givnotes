@@ -45,12 +45,18 @@ class SettingsPage extends StatelessWidget {
             showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
             titleColor: Theme.of(context).textTheme.bodyText1.color,
+            // leading: Icon(
+            //   CupertinoIcons.sort_down_circle,
+            //   color: Theme.of(context).textTheme.bodyText1.color,
+            //   size: 20.0,
+            // ),
+            // leadingColor: Colors.red,
             leading: Icon(
-              CupertinoIcons.sort_down_circle,
+              Icons.sort_rounded,
               color: Theme.of(context).textTheme.bodyText1.color,
               size: 20.0,
             ),
-            leadingColor: Colors.red,
+            // leadingColor: Colors.red,
             titleGap: 0.0,
             onChange: ((String value) {
               String val;
@@ -74,8 +80,14 @@ class SettingsPage extends StatelessWidget {
             desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
-            leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
-            leadingColor: Colors.blue,
+            // leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
+            // leadingColor: Colors.blue,
+            leading: Icon(
+              CupertinoIcons.bars,
+              color: Theme.of(context).textTheme.bodyText1.color,
+              size: 20.0,
+            ),
+            // leadingColor: Colors.blue,
             titleGap: 0.0,
             onEnable: () => _prefsCubit.updateCompactTags(true),
             onDisable: () => _prefsCubit.updateCompactTags(false),
@@ -96,8 +108,13 @@ class SettingsPage extends StatelessWidget {
             // desc: "Switch between light and dark mode",
             desc: "So now the fun begins.",
             titleColor: Theme.of(context).textTheme.bodyText1.color,
-            leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
-            leadingColor: Colors.purple,
+            // leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
+            // leadingColor: Colors.purple,
+            leading: Icon(
+              CupertinoIcons.moon,
+              color: Theme.of(context).textTheme.bodyText1.color,
+              size: 20.0,
+            ),
             titleGap: 0.0,
             onChange: ((value) {
               print(value);
@@ -111,8 +128,13 @@ class SettingsPage extends StatelessWidget {
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
             titleColor: Theme.of(context).textTheme.bodyText1.color,
-            leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
-            leadingColor: Colors.pink,
+            // leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
+            // leadingColor: Colors.pink,
+            leading: Icon(
+              CupertinoIcons.at,
+              color: Theme.of(context).textTheme.bodyText1.color,
+              size: 20.0,
+            ),
             titleGap: 0.0,
             onChange: ((value) {
               print(value);
@@ -124,8 +146,8 @@ class SettingsPage extends StatelessWidget {
             disabled: true,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.bolt, color: Colors.white, size: 20.0),
-            leadingColor: Colors.brown,
+            leading: Icon(CupertinoIcons.bolt, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
@@ -135,8 +157,8 @@ class SettingsPage extends StatelessWidget {
           PreferenceText(
             'Change Passcode',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.lock_shield, color: Colors.white, size: 20.0),
-            leadingColor: Colors.lightGreen,
+            leading: Icon(CupertinoIcons.lock_shield, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
               // if (prefsBox.passcode != '')
@@ -158,8 +180,8 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Application',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.app, color: Colors.white, size: 20.0),
-            leadingColor: Colors.grey,
+            leading: Icon(CupertinoIcons.app, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            // leadingColor: Colors.grey,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
@@ -168,8 +190,8 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'About Us',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.person, color: Colors.white, size: 20.0),
-            leadingColor: Colors.brown,
+            leading: Icon(CupertinoIcons.person, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            // leadingColor: Colors.brown,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
@@ -178,14 +200,14 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Contact Us',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.white, size: 20.0),
-            leadingColor: Colors.blueGrey,
+            leading: Icon(CupertinoIcons.chat_bubble, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            // leadingColor: Colors.blueGrey,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: ContactGivnotes(),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: (10 / 760) * screenHeight),
           //! =============================================
         ]),
       ),
@@ -200,19 +222,19 @@ class ProfileTileSettings extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        margin: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: EdgeInsets.symmetric(vertical: (10.0 / 760) * screenHeight),
+        margin: EdgeInsets.symmetric(horizontal: (20.0 / 394) * screenWidth),
         child: StreamBuilder<User>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
                 child: Container(
-                  height: 40.0,
-                  width: 40.0,
+                  height: (40.0 / 760) * screenHeight,
+                  width: (40.0 / 394) * screenWidth,
                   child: CircularProgressIndicator(
                     strokeWidth: 1.0,
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                   ),
                 ),
               );
@@ -228,23 +250,23 @@ class ProfileTileSettings extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: Colors.orange,
-                        backgroundImage: photo != null ? NetworkImage(snapshot.data.photoURL) : null,
-                        child: photo == null
-                            ? Text(
-                                initials,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 24.0,
-                                  letterSpacing: 1.5,
-                                ),
-                              )
-                            : SizedBox.shrink(),
-                      ),
-                      SizedBox(width: 20.0),
+                      // CircleAvatar(
+                      //   radius: 35.0,
+                      //   backgroundColor: Colors.orange,
+                      //   backgroundImage: photo != null ? NetworkImage(snapshot.data.photoURL) : null,
+                      //   child: photo == null
+                      //       ? Text(
+                      //           initials,
+                      //           style: TextStyle(
+                      //             fontWeight: FontWeight.bold,
+                      //             color: Colors.white,
+                      //             fontSize: 24.0,
+                      //             letterSpacing: 1.5,
+                      //           ),
+                      //         )
+                      //       : SizedBox.shrink(),
+                      // ),
+                      // SizedBox(width: (20 / 394) * screenWidth),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -296,7 +318,7 @@ class ProfileTileSettings extends StatelessWidget {
                         radius: 35.0,
                         backgroundColor: Colors.orange,
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 10.0),
+                          padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
                           child: Lottie.asset('assets/animations/people-portrait.json'),
                         ),
                       ),
@@ -366,10 +388,10 @@ class _AppDetailSectionState extends State<AppDetailSection> {
           ),
         ),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 50.0),
+          preferredSize: Size(double.infinity, (50 / 760) * screenHeight),
           child: Container(
             // color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: (30.0 / 394) * screenWidth),
             width: double.infinity,
             child: CupertinoSlidingSegmentedControl(
               children: {
@@ -393,7 +415,12 @@ class _AppDetailSectionState extends State<AppDetailSection> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 50.0),
+        padding: EdgeInsets.fromLTRB(
+          (30.0 / 394) * screenWidth,
+          (30 / 760) * screenHeight,
+          (30.0 / 394) * screenWidth,
+          (50 / 760) * screenHeight,
+        ),
         child: _bodyWidgets[selectedIndex],
       ),
     );
@@ -432,8 +459,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           defaultVal: false,
           titleColor: Theme.of(context).textTheme.bodyText1.color,
           ignoreTileTap: false,
-          leading: Icon(CupertinoIcons.lock, color: Colors.white, size: 20.0),
-          leadingColor: Colors.orangeAccent,
+          leading: Icon(CupertinoIcons.lock, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+          // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
             if (prefsBox.passcode == '') {
@@ -471,8 +498,12 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           defaultVal: false,
           disabled: !prefsBox.applock,
           titleColor: Theme.of(context).textTheme.bodyText1.color,
-          leading: Icon(Icons.fingerprint_outlined, color: Colors.white, size: 20.0),
-          leadingColor: Colors.teal,
+          leading: Icon(
+            Icons.fingerprint_outlined,
+            color: Theme.of(context).textTheme.bodyText1.color,
+            size: 20.0,
+          ),
+          // leadingColor: Colors.teal,
           titleGap: 0.0,
           onEnable: () {
             prefsBox.biometric = true;

@@ -26,8 +26,8 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    hm = MediaQuery.of(context).size.height / 100;
-    wm = MediaQuery.of(context).size.width / 100;
+    // hm = MediaQuery.of(context).size.height / 100;
+    // wm = MediaQuery.of(context).size.width / 100;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: GiveStatusBarColor(context),
@@ -84,7 +84,7 @@ class _MyProfileState extends State<MyProfile> {
                               child: Text(
                                 user.displayName ?? "Gagan Yadav",
                                 style: GoogleFonts.arizonia(
-                                  color: Colors.black,
+                                  color: Theme.of(context).textTheme.bodyText1.color,
                                   fontSize: 4.5 * hm,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.12 * wm,
@@ -93,18 +93,19 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             Padding(
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
-                              padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
+                              padding: EdgeInsets.symmetric(horizontal: 0.08 * screenSize.width),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     user.email,
                                     style: TextStyle(
-                                      color: Colors.black54,
+                                      color: Theme.of(context).textTheme.bodyText1.color,
                                       fontSize: 2.5 * hm,
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
+                                  SizedBox(height: (10 / 760) * screenHeight),
                                   !user.emailVerified
                                       ? Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,7 +113,7 @@ class _MyProfileState extends State<MyProfile> {
                                             Text(
                                               'Email is not verified. ',
                                               style: TextStyle(
-                                                color: Colors.black54,
+                                                color: Theme.of(context).textTheme.bodyText1.color,
                                                 // fontSize: 2.2 * hm,
                                                 fontWeight: FontWeight.w400,
                                                 fontStyle: FontStyle.italic,
