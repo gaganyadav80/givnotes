@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:givnotes/database/HiveDB.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/global/variables.dart';
 
 part 'note_search_state.dart';
 

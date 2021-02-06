@@ -2,15 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:morpheus/morpheus.dart';
+import 'package:stringprocess/stringprocess.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/services/services.dart';
-import 'package:morpheus/morpheus.dart';
-import 'package:stringprocess/stringprocess.dart';
 
 class EndDrawerItems extends StatelessWidget {
   final Function saveNote;

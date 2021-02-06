@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/global/variables.dart';
 
 class TodoAlert extends StatelessWidget {
   const TodoAlert({Key key}) : super(key: key);

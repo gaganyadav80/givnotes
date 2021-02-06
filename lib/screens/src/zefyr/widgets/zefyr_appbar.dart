@@ -3,8 +3,8 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/global/variables.dart';
 
 class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
   final Function saveNote;

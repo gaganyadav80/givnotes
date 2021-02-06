@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/global/size_utils.dart';
 
 import 'constants.dart';
 

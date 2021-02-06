@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/global/size_utils.dart';
 
 import 'components/components.dart';
 import 'verification_bloc/verification_bloc.dart';

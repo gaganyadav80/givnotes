@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/global/size_utils.dart';
 
 class NotesEmptyView extends StatelessWidget {
   const NotesEmptyView({Key key, @required this.isTrash}) : super(key: key);

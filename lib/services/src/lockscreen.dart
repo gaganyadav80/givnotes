@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
-
-import 'variables.dart';
 
 class ShowLockscreen extends StatefulWidget {
   ShowLockscreen({

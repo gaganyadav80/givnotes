@@ -2,12 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
-import 'package:lottie/lottie.dart';
 
 //TODO change icons with custom colorful icons
 class SettingsPage extends StatelessWidget {

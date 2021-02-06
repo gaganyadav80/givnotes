@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HandlePermission {

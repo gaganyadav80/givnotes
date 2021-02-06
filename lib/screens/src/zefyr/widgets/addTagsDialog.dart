@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/global/variables.dart';
 
 import '../zefyrEdit.dart';
 

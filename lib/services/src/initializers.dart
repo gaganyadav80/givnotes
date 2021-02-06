@@ -1,10 +1,9 @@
 import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
-
-import 'variables.dart';
 
 Future<void> initHiveDb() async {
   await Hive.initFlutter();

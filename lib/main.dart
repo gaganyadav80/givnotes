@@ -8,14 +8,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/global/utils.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
+import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
+import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/global/size_utils.dart';
+
 import 'bloc/authentication_bloc/authentication_bloc.dart';
 import 'cubit/cubits.dart';
+import 'global/variables.dart';
 import 'packages/packages.dart';
 import 'screens/screens.dart';
 import 'services/services.dart';
