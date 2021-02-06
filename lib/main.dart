@@ -216,8 +216,8 @@ class CheckLogin extends StatelessWidget {
 
         // if (prefsBox.isAnonymous) return const HomePage();
 
-        //TODO remove check for email verify here
-        if (!snapshot.hasData || snapshot.data == null || !snapshot.data.emailVerified)
+        //  || !snapshot.data.emailVerified
+        if (!snapshot.hasData || snapshot.data == null)
           return BlocProvider(
             create: (context) => LoginBloc(),
             child: LoginPage(),

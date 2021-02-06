@@ -117,26 +117,35 @@ class TodoModelAdapter extends TypeAdapter<TodoModel> {
     };
     return TodoModel()
       ..uuid = fields[0] as String
-      ..category = fields[1] as String
-      ..color = fields[2] as int
-      ..icon = fields[3] as int
-      ..tasks = (fields[4] as List)?.cast<TaskObject>();
+      ..title = fields[1] as String
+      ..description = fields[2] as String
+      ..completed = fields[3] as bool
+      ..dueDate = fields[4] as DateTime
+      ..priority = fields[5] as String
+      ..subTask = (fields[6] as List)?.cast<SubTaskModel>()
+      ..category = (fields[7] as Map)?.cast<String, int>();
   }
 
   @override
   void write(BinaryWriter writer, TodoModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.uuid)
       ..writeByte(1)
-      ..write(obj.category)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.color)
+      ..write(obj.description)
       ..writeByte(3)
-      ..write(obj.icon)
+      ..write(obj.completed)
       ..writeByte(4)
-      ..write(obj.tasks);
+      ..write(obj.dueDate)
+      ..writeByte(5)
+      ..write(obj.priority)
+      ..writeByte(6)
+      ..write(obj.subTask)
+      ..writeByte(7)
+      ..write(obj.category);
   }
 
   @override
@@ -150,32 +159,29 @@ class TodoModelAdapter extends TypeAdapter<TodoModel> {
           typeId == other.typeId;
 }
 
-class TaskObjectAdapter extends TypeAdapter<TaskObject> {
+class SubTaskModelAdapter extends TypeAdapter<SubTaskModel> {
   @override
   final int typeId = 3;
 
   @override
-  TaskObject read(BinaryReader reader) {
+  SubTaskModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return TaskObject(
-      fields[1] as String,
-      fields[0] as DateTime,
-      completed: fields[2] as bool,
+    return SubTaskModel(
+      fields[0] as String,
+      completed: fields[1] as bool,
     );
   }
 
   @override
-  void write(BinaryWriter writer, TaskObject obj) {
+  void write(BinaryWriter writer, SubTaskModel obj) {
     writer
-      ..writeByte(3)
-      ..writeByte(0)
-      ..write(obj.date)
-      ..writeByte(1)
-      ..write(obj.task)
       ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.subTask)
+      ..writeByte(1)
       ..write(obj.completed);
   }
 
@@ -185,7 +191,7 @@ class TaskObjectAdapter extends TypeAdapter<TaskObject> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TaskObjectAdapter &&
+      other is SubTaskModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -1,10 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/octicons_icons.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
+import 'package:hive/hive.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
@@ -17,6 +22,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // GoogleSignIn.standard().signOut();
     // FirebaseAuth.instance.signOut();
+    // Hive.deleteBoxFromDisk("givtodos");
     return TapTapClose(
       child: DefaultTabController(
         length: 4,
@@ -52,21 +58,22 @@ class HomePage extends StatelessWidget {
                   currentIndex: state.index,
                   onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                   items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(icon: Icon(state.index == 0 ? CupertinoIcons.book_fill : CupertinoIcons.book, size: 36)),
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 0 ? CupertinoIcons.book_fill : CupertinoIcons.book, size: 36),
-                      // label: 'Notes',
+                      icon: GFIconBadge(
+                        counterChild: GFBadge(
+                          color: state.index == 1 || Hive.box<TodoModel>('givtodos').length == 0 ? Colors.transparent : Colors.black,
+                          text: state.index == 1 || Hive.box<TodoModel>('givtodos').length == 0 ? null : "${Hive.box<TodoModel>('givtodos').length}",
+                        ),
+                        child: Icon(state.index == 1 ? CupertinoIcons.layers_fill : CupertinoIcons.layers, size: 36),
+                      ),
                     ),
+                    BottomNavigationBarItem(icon: Icon(state.index == 2 ? CupertinoIcons.tag_fill : CupertinoIcons.tag)),
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 1 ? CupertinoIcons.layers_fill : CupertinoIcons.layers, size: 36),
-                      // label: 'Todos',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(state.index == 2 ? CupertinoIcons.tag_fill : CupertinoIcons.tag), //size: 27
-                      // label: 'Tags',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: Icon(state.index == 3 ? CupertinoIcons.settings_solid : CupertinoIcons.settings, size: 36),
-                      // label: 'Settings',
+                      icon: GFIconBadge(
+                        child: Icon(CupertinoIcons.settings, size: 36),
+                        counterChild: FirebaseAuth.instance.currentUser.emailVerified ? GFBadge(color: Colors.transparent) : GFBadge(text: "!"),
+                      ),
                     ),
                   ],
                 ),

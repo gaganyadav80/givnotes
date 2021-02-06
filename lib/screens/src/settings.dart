@@ -186,23 +186,25 @@ class ProfileTileSettings extends StatelessWidget {
       borderRadius: BorderRadius.circular(15.0),
       onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
       child: Container(
+        height: 90.0,
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         margin: const EdgeInsets.symmetric(horizontal: 20.0),
         child: StreamBuilder<User>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Container(
-                  height: 40.0,
-                  width: 40.0,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1.0,
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
-                  ),
-                ),
-              );
-            } else if (snapshot.hasData) {
+            // if (snapshot.connectionState == ConnectionState.waiting) {
+            //   return Center(
+            //     child: Container(
+            //       height: 40.0,
+            //       width: 40.0,
+            //       child: CircularProgressIndicator(
+            //         strokeWidth: 1.0,
+            //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+            //       ),
+            //     ),
+            //   );
+            // } else
+            if (snapshot.hasData) {
               final String photo = snapshot.data.photoURL;
               String initials = '';
               "Gagan Yadav".split(" ").forEach((element) {

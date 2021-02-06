@@ -52,62 +52,68 @@ class TodoModel extends HiveObject {
   @HiveField(0)
   String uuid;
 
-  // @HiveField(1)
-  // String description;
-
-  // @HiveField(2)
-  // DateTime dueDate;
-
-  // @HiveField(3)
-  // Map<String, int> priorityMap;
-
-  // @HiveField(4)
-  // List<String> subTasks;
-
-  // @HiveField(5)
-  // Map<String, int> todoTagsMap = {};
-
   @HiveField(1)
-  String category;
+  String title;
 
   @HiveField(2)
-  int color;
+  String description;
 
   @HiveField(3)
-  int icon;
+  bool completed;
 
   @HiveField(4)
-  List<TaskObject> tasks;
+  DateTime dueDate;
 
-  int taskAmount() => tasks.length;
+  @HiveField(5)
+  String priority;
 
-  double percentComplete() {
-    if (tasks.isEmpty) {
-      return 1.0;
-    }
-    int completed = 0;
-    int amount = tasks.length;
-    tasks.forEach((element) {
-      if (element.isCompleted()) {
-        completed++;
-      }
-    });
-    return completed / amount;
-  }
+  @HiveField(6)
+  List<SubTaskModel> subTask = <SubTaskModel>[];
+
+  @HiveField(7)
+  Map<String, int> category;
+
+  // @HiveField(7)
+  // Map<String, int> todoTagsMap = {};
+
+  // @HiveField(1)
+  // String category;
+
+  // @HiveField(2)
+  // int color;
+
+  // @HiveField(3)
+  // int icon;
+
+  // @HiveField(4)
+  // List<TaskObject> tasks;
+
+  // int taskAmount() => tasks.length;
+
+  // double percentComplete() {
+  //   if (tasks.isEmpty) {
+  //     return 1.0;
+  //   }
+  //   int completed = 0;
+  //   int amount = tasks.length;
+  //   tasks.forEach((element) {
+  //     if (element.isCompleted()) {
+  //       completed++;
+  //     }
+  //   });
+  //   return completed / amount;
+  // }
 }
 
 @HiveType(typeId: 3)
-class TaskObject extends HiveObject {
+class SubTaskModel extends HiveObject {
   @HiveField(0)
-  final DateTime date;
+  final String subTask;
 
   @HiveField(1)
-  final String task;
-
-  @HiveField(2)
   bool completed;
 
-  TaskObject(this.task, this.date, {this.completed = false});
+  SubTaskModel(this.subTask, {this.completed = false});
 
   void setComplete(bool value) {
     completed = value;

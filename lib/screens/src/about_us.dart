@@ -27,15 +27,6 @@ class AboutGivnotes extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
             icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
           ),
-          // title: Text(
-          //   "About Us",
-          //   style: TextStyle(
-          //     fontSize: 26.0,
-          //     fontWeight: FontWeight.w600,
-          //     color: Colors.black,
-          //   ),
-          // ),
-          // centerTitle: true,
           elevation: 0.0,
           backgroundColor: Colors.white,
         ),
@@ -111,6 +102,34 @@ class AboutGivnotes extends StatelessWidget {
                     "You can either use our servers which obviously encryptes your data before "
                     "handing it over to us, or you can use your choice of online cloud storage provider "
                     "which too will be encrypted, to sync and backup your notes.",
+                  ),
+                  SizedBox(height: 30.0),
+                  GestureDetector(
+                    onTap: () => showLicensePage(
+                      context: context,
+                      applicationIcon: SvgPicture.asset(
+                        'assets/logo/givnotes_logo.svg',
+                        alignment: Alignment.center,
+                        fit: BoxFit.contain,
+                        height: 120,
+                        width: 120,
+                      ),
+                      applicationName: "Givnotes",
+                      applicationVersion: "v0.0.1-beta",
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "License",
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        Icon(CupertinoIcons.forward, color: Colors.blue),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 30.0),
                   BlueButton(

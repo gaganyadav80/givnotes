@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/services/services.dart';
 
@@ -294,25 +295,3 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
 }
 
 List<int> selectTagColors = [];
-
-final List<int> materialColorValues = <int>[
-  Colors.red.value,
-  Colors.pink.value,
-  Colors.purple.value,
-  Colors.deepPurple.value,
-  Colors.indigo.value,
-  Colors.blue.value,
-  Colors.lightBlue.value,
-  Colors.cyan.value,
-  Colors.teal.value,
-  Colors.green.value,
-  Colors.lightGreen.value,
-  Colors.lime.value,
-  Colors.yellow.value,
-  Colors.amber.value,
-  Colors.orange.value,
-  Colors.deepOrange.value,
-  Colors.brown.value,
-  Colors.grey.value,
-  Colors.blueGrey.value,
-];

@@ -73,21 +73,24 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                 // },
               ),
             ),
-            Padding(
-              // padding: const EdgeInsets.only(right: 8.0),
-              padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
-
-              child: IconButton(
-                iconSize: 18.0,
-                icon: Icon(Icons.view_agenda_outlined),
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return NotesModelSheet();
-                  },
-                  backgroundColor: Color(0xff171C26),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            Material(
+              type: MaterialType.transparency,
+              child: Padding(
+                // padding: const EdgeInsets.only(right: 8.0),
+                padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
+                child: IconButton(
+                  splashRadius: 25.0,
+                  iconSize: 18.0,
+                  icon: Icon(Icons.view_agenda_outlined),
+                  onPressed: () => showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return NotesModelSheet();
+                    },
+                    backgroundColor: Color(0xff171C26),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                    ),
                   ),
                 ),
               ),

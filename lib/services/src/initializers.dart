@@ -11,7 +11,7 @@ Future<void> initHiveDb() async {
   Hive.registerAdapter<NotesModel>(NotesModelAdapter());
   Hive.registerAdapter<PrefsModel>(PrefsModelAdapter());
   Hive.registerAdapter<TodoModel>(TodoModelAdapter());
-  Hive.registerAdapter<TaskObject>(TaskObjectAdapter());
+  Hive.registerAdapter<SubTaskModel>(SubTaskModelAdapter());
 
   Box<PrefsModel> box = await Hive.openBox<PrefsModel>('prefs');
   await Hive.openBox<NotesModel>('givnotes');
