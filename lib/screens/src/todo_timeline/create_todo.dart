@@ -61,13 +61,14 @@ class _CreateTodoState extends State<CreateTodo> {
   String _priority;
   List<SubTaskModel> _subTasks = <SubTaskModel>[];
   List<int> _selectCategoryColors = <int>[];
-  bool categoryAdded = false;
+  bool _categoryAdded = false;
+  DateTime _dueDate = DateTime.now();
 
   @override
   void initState() {
     super.initState();
     if (widget.editTodo) {
-      categoryAdded = true;
+      _categoryAdded = true;
 
       _titleController.text = widget.title;
       _detailsController.text = widget.description;
@@ -79,6 +80,7 @@ class _CreateTodoState extends State<CreateTodo> {
       _subTasks
         ..clear()
         ..addAll(widget.subTask);
+      _dueDate = widget.dueDate;
     } else {
       _selectCategoryColors.addAll(materialColorValues);
     }
@@ -95,8 +97,7 @@ class _CreateTodoState extends State<CreateTodo> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.title);
-    print(_titleController.text);
+    print(_dueDate);
 
     return WillPopScope(
       onWillPop: () async {
@@ -143,12 +144,12 @@ class _CreateTodoState extends State<CreateTodo> {
                     Icon(
                       CupertinoIcons.tag_solid,
                       size: 24.0,
-                      color: _selectCategoryColors.length == 1 && categoryAdded ? Color(_selectCategoryColors.first) : null,
+                      color: _selectCategoryColors.length == 1 && _categoryAdded ? Color(_selectCategoryColors.first) : null,
                     ),
                   ],
                 ),
-                enabled: !categoryAdded,
-                trailing: categoryAdded
+                enabled: !_categoryAdded,
+                trailing: _categoryAdded
                     ? GestureDetector(
                         onTap: () {
                           _categoryController.clear();
@@ -156,16 +157,16 @@ class _CreateTodoState extends State<CreateTodo> {
                             ..clear()
                             ..addAll(materialColorValues);
                           setState(() {
-                            categoryAdded = false;
+                            _categoryAdded = false;
                           });
                         },
                         child: Icon(CupertinoIcons.xmark_circle))
                     : SizedBox.shrink(),
                 title: Text(
-                  _categoryController.text.isNotEmpty && categoryAdded ? _categoryController.text : "Category",
+                  _categoryController.text.isNotEmpty && _categoryAdded ? _categoryController.text : "Category",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: _selectCategoryColors.length == 1 && categoryAdded ? Color(_selectCategoryColors.first) : Colors.black,
+                    color: _selectCategoryColors.length == 1 && _categoryAdded ? Color(_selectCategoryColors.first) : Colors.black,
                   ),
                 ),
                 horizontalTitleGap: 0.0,
@@ -185,9 +186,9 @@ class _CreateTodoState extends State<CreateTodo> {
                 ).then((value) {
                   if (value == null) value = false;
                   if (value && value != null)
-                    categoryAdded = value;
+                    _categoryAdded = value;
                   else {
-                    categoryAdded = false;
+                    _categoryAdded = false;
                     _selectCategoryColors
                       ..clear()
                       ..addAll(materialColorValues);
@@ -203,30 +204,44 @@ class _CreateTodoState extends State<CreateTodo> {
                 title: Row(
                   children: [
                     GFButton(
-                      onPressed: () => showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        lastDate: DateTime(DateTime.now().year + 1),
-                        firstDate: DateTime(DateTime.now().year - 1),
-                      ),
+                      onPressed: () async {
+                        await showDatePicker(
+                          context: context,
+                          initialDate: _dueDate,
+                          lastDate: DateTime(DateTime.now().year + 1),
+                          firstDate: DateTime(DateTime.now().year - 1),
+                        ).then((value) {
+                          if (value != null)
+                            setState(() {
+                              _dueDate = DateTime(value.year, value.month, value.day, _dueDate.hour, _dueDate.minute);
+                            });
+                        });
+                      },
                       color: Colors.black,
                       padding: EdgeInsets.symmetric(horizontal: 20.0),
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(DateFormat("EEE, dd MMM").format(DateTime.now()), style: TextStyle(fontSize: 16.0)),
+                      child: Text(DateFormat("EEE, dd MMM").format(_dueDate), style: TextStyle(fontSize: 16.0)),
                     ),
                     SizedBox(width: 10.0),
                     GFButton(
-                      onPressed: () => showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      ),
+                      onPressed: () async {
+                        await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                        ).then((value) {
+                          if (value != null)
+                            setState(() {
+                              _dueDate = DateTime(_dueDate.year, _dueDate.month, _dueDate.day, value.hour, value.minute);
+                            });
+                        });
+                      },
                       color: Colors.black,
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(TimeOfDay.now().format(context), style: TextStyle(fontSize: 16.0)),
+                      child: Text(DateFormat("HH:mm").format(_dueDate), style: TextStyle(fontSize: 16.0)),
                     ),
                   ],
                 ),
@@ -454,8 +469,7 @@ class _CreateTodoState extends State<CreateTodo> {
                   ..title = _titleController.text
                   ..description = _detailsController.text
                   ..completed = false
-                  //TODO flag
-                  ..dueDate = DateTime.now()
+                  ..dueDate = _dueDate
                   ..subTask = _subTasks
                   ..category = {_categoryController.text: _selectCategoryColors.first}
                   ..uuid = Uuid().v1()
@@ -470,8 +484,7 @@ class _CreateTodoState extends State<CreateTodo> {
                   ..title = _titleController.text
                   ..description = _detailsController.text
                   ..completed = widget.completed
-                  //TODO flag
-                  ..dueDate = DateTime.now()
+                  ..dueDate = _dueDate
                   ..subTask = _subTasks
                   ..category = {_categoryController.text: _selectCategoryColors.first}
                   ..uuid = widget.uuid

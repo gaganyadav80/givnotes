@@ -75,7 +75,6 @@ class VerificationMainBody extends StatelessWidget {
         //   showProgress(context);
         // }
         // if (state is ResendVerification) {
-        //   //TODO: check below statement
         //   BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
         // }
       },

@@ -6,7 +6,6 @@ export 'multi_select_item.dart';
 export 'tap_tap_close.dart';
 export 'toast.dart';
 
-export 'authentication/authentication.dart';
 export 'concentric_transition-0.1.1/concentric_transition.dart';
 export 'flutter_todo/todo_home.dart';
 export 'lock_screen/circle_input_button.dart';

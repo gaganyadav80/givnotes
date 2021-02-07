@@ -2,14 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttericon/octicons_icons.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:hive/hive.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
-import 'package:hive/hive.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
   NotesAppBar(this.tabController);
@@ -17,87 +19,100 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
     final HomeCubit _homeCubit = BlocProvider.of<HomeCubit>(context);
 
     return SafeArea(
-      child: Container(
-        color: Colors.white,
-        width: screenSize.width,
-        // margin: const EdgeInsets.only(left: 10.0),
-        margin: EdgeInsets.only(left: 0.025380711 * screenSize.width),
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              width: 250.0,
-              child: CupertinoSlidingSegmentedControl(
-                thumbColor: Colors.black,
-                groupValue: _homeCubit.state.global ? 1 : 0,
-                onValueChanged: (int value) {
-                  if (value == 0)
-                    _homeCubit.updateGlobal(false);
-                  else
-                    _homeCubit.updateGlobal(true);
+      child: _homeCubit.state.trash
+          ? AppBar(
+              elevation: 0.0,
+              backgroundColor: Colors.white,
+              title: "Trash".text.size(24.0).black.bold.make(),
+              leading: InkWell(
+                onTap: () async {
+                  _homeCubit.updateTrash(false);
+                  Navigator.pop(context);
                 },
-                children: {
-                  0: Text('Recent', style: TextStyle(color: _homeCubit.state.global ? Colors.black : Colors.white)),
-                  1: Text('Global', style: TextStyle(color: _homeCubit.state.global ? Colors.white : Colors.black)),
-                },
-                // physics: NeverScrollableScrollPhysics(),
-                // isScrollable: true,
-                // indicatorSize: TabBarIndicatorSize.tab,
-                // labelPadding: const EdgeInsets.symmetric(horizontal: 15),
-                // labelColor: Colors.black,
-                // unselectedLabelColor: Colors.grey,
-                // labelStyle: TextStyle(
-                //   fontSize: 16,
-                //   fontWeight: FontWeight.w700,
-                // ),
-                // unselectedLabelStyle: TextStyle(
-                //   fontSize: 14,
-                //   fontWeight: FontWeight.w600,
-                // ),
-                // tabs: <Tab>[
-                //   const Tab(text: "Recent"),
-                //   // const Tab(text: "Trash"),
-                //   const Tab(text: "Global (Upcoming)"),
-                // ],
-                // controller: tabController,
-                // onTap: (int value) {
-                //   if (value == 0) {
-                //     BlocProvider.of<HomeCubit>(context).updateGlobal(false);
-                //     BlocProvider.of<HomeCubit>(context).updateTrash(false);
-                //     // } else if (value == 1) {
-                //     //   BlocProvider.of<HomeCubit>(context).updateGlobal(false);
-                //     //   BlocProvider.of<HomeCubit>(context).updateTrash(true);
-                //   } else
-                //     BlocProvider.of<HomeCubit>(context).updateGlobal(true);
-                // },
+                child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
               ),
-            ),
-            Material(
-              type: MaterialType.transparency,
-              child: Padding(
-                // padding: const EdgeInsets.only(right: 8.0),
-                padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
-                child: IconButton(
-                  splashRadius: 25.0,
-                  iconSize: 18.0,
-                  icon: Icon(Icons.view_agenda_outlined),
-                  onPressed: () => showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return NotesModelSheet();
-                    },
-                    backgroundColor: Color(0xff171C26),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            )
+          : Container(
+              color: Colors.white,
+              width: screenSize.width,
+              // margin: const EdgeInsets.only(left: 10.0),
+              margin: EdgeInsets.only(left: 0.025380711 * screenSize.width),
+
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 250.0,
+                    child: CupertinoSlidingSegmentedControl(
+                      thumbColor: Colors.black,
+                      groupValue: _homeCubit.state.global ? 1 : 0,
+                      onValueChanged: (int value) {
+                        if (value == 0)
+                          _homeCubit.updateGlobal(false);
+                        else
+                          _homeCubit.updateGlobal(true);
+                      },
+                      children: {
+                        0: Text('Recent', style: TextStyle(color: _homeCubit.state.global ? Colors.black : Colors.white)),
+                        1: Text('Global', style: TextStyle(color: _homeCubit.state.global ? Colors.white : Colors.black)),
+                      },
+                      // physics: NeverScrollableScrollPhysics(),
+                      // isScrollable: true,
+                      // indicatorSize: TabBarIndicatorSize.tab,
+                      // labelPadding: const EdgeInsets.symmetric(horizontal: 15),
+                      // labelColor: Colors.black,
+                      // unselectedLabelColor: Colors.grey,
+                      // labelStyle: TextStyle(
+                      //   fontSize: 16,
+                      //   fontWeight: FontWeight.w700,
+                      // ),
+                      // unselectedLabelStyle: TextStyle(
+                      //   fontSize: 14,
+                      //   fontWeight: FontWeight.w600,
+                      // ),
+                      // tabs: <Tab>[
+                      //   const Tab(text: "Recent"),
+                      //   // const Tab(text: "Trash"),
+                      //   const Tab(text: "Global (Upcoming)"),
+                      // ],
+                      // controller: tabController,
+                      // onTap: (int value) {
+                      //   if (value == 0) {
+                      //     BlocProvider.of<HomeCubit>(context).updateGlobal(false);
+                      //     BlocProvider.of<HomeCubit>(context).updateTrash(false);
+                      //     // } else if (value == 1) {
+                      //     //   BlocProvider.of<HomeCubit>(context).updateGlobal(false);
+                      //     //   BlocProvider.of<HomeCubit>(context).updateTrash(true);
+                      //   } else
+                      //     BlocProvider.of<HomeCubit>(context).updateGlobal(true);
+                      // },
                     ),
                   ),
-                ),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: Padding(
+                      // padding: const EdgeInsets.only(right: 8.0),
+                      padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
+                      child: IconButton(
+                        splashRadius: 25.0,
+                        iconSize: 18.0,
+                        icon: Icon(Icons.view_agenda_outlined),
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return NotesModelSheet();
+                          },
+                          backgroundColor: Color(0xff171C26),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -174,9 +189,12 @@ class NotesModelSheet extends StatelessWidget {
             leading: Icon(CupertinoIcons.trash, color: Colors.white, size: 20.0),
             horizontalTitleGap: 0,
             title: Text("Trash", style: TextStyle(color: Colors.white)),
-            // subtitle: Text("Check your trashed notes", style: TextStyle(color: Colors.black.withOpacity(0.6), fontWeight: FontWeight.w300)),
             trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Colors.white60),
-            onTap: () => print('trash pressed'),
+            onTap: () {
+              BlocProvider.of<HomeCubit>(context).updateTrash(true);
+              Navigator.pop(context);
+              Navigator.push(context, NotesView().materialRoute());
+            },
           ),
         ],
       ),
