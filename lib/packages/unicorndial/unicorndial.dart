@@ -185,7 +185,7 @@ class _UnicornDialer extends State<UnicornDialer> with TickerProviderStateMixin 
           });
 
       var childButtonsList = widget.childButtons == null || widget.childButtons.length == 0
-          ? List<Widget>()
+          ? <Widget>[]
           : List.generate(
               widget.childButtons.length,
               (index) {

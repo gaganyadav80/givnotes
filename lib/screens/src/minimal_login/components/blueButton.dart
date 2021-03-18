@@ -19,10 +19,19 @@ class BlueButton extends StatelessWidget {
       shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
       child: Container(
         height: 60.0,
-        child: RaisedButton(
-          splashColor: Theme.of(context).splashColor,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            onPrimary: Theme.of(context).splashColor,
+            elevation: 0.0,
+            shape: RoundedRectangleBorder(
+              borderRadius: kBorderRadius,
+            ),
+            padding: EdgeInsets.symmetric(
+              vertical: screenHeight * 0.018900889, // 17
+            ),
+            primary: Theme.of(context).primaryColor,
+          ),
           onPressed: onPressed,
-          color: Theme.of(context).primaryColor,
           child: Center(
             child: isLoading
                 ? Container(
@@ -41,13 +50,6 @@ class BlueButton extends StatelessWidget {
                           color: Colors.white,
                         ),
                   ),
-          ),
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: kBorderRadius,
-          ),
-          padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.018900889, // 17
           ),
         ),
       ),

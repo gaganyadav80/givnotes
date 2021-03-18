@@ -13,8 +13,8 @@ class NoteAndSearchCubit extends Cubit<NoteAndSearchState> {
   void updateIsEditing(bool value) => emit(state.copyWith(isEditing: value));
   // void updateNoteModified(DateTime value) => emit(state.copyWith(noteModified: value));
 
-  void clearSearchList() => emit(state.copyWith(searchList: List<NotesModel>()));
-  void clearTagSearchList() => emit(state.copyWith(tagSearchList: List<String>()));
+  void clearSearchList() => emit(state.copyWith(searchList: <NotesModel>[]));
+  void clearTagSearchList() => emit(state.copyWith(tagSearchList: <String>[]));
 
   void updateSearchList(List<NotesModel> value) => emit(state.copyWith(searchList: value));
   void updateTagSearchList(List<String> list) => emit(state.copyWith(tagSearchList: list));
@@ -33,5 +33,5 @@ class NoteAndSearchCubit extends Cubit<NoteAndSearchState> {
     emit(state.copyWith(selectedTagList: temp));
   }
 
-  void clearSelectedTagSearchList() => emit(state.copyWith(selectedTagList: List<String>()));
+  void clearSelectedTagSearchList() => emit(state.copyWith(selectedTagList: <String>[]));
 }

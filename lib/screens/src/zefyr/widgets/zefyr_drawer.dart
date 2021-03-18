@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:morpheus/morpheus.dart';
 import 'package:stringprocess/stringprocess.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -134,13 +133,15 @@ class EndDrawerItems extends StatelessWidget {
                               // width: 90.0,
                               height: 0.059210526 * screenSize.height,
                               width: 0.228426396 * screenSize.width,
-                              child: RaisedButton(
-                                elevation: 0,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.0,
+                                  primary: Colors.grey[200],
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                ),
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                color: Colors.grey[200],
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                 child: Text(
                                   'OKAY',
                                   style: TextStyle(
@@ -249,11 +250,11 @@ _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async 
       return AlertDialog(
         content: Text('Are you sure you permanently want to delete this note?'),
         actions: [
-          FlatButton(
+          TextButton(
             onPressed: () => Navigator.pop(context), //? Close the dialog
             child: Text('Cancel'),
           ),
-          FlatButton(
+          TextButton(
             child: Text('Delete'),
             onPressed: () async {
               final _noteEditStore = context.read<NoteAndSearchCubit>();
@@ -265,7 +266,7 @@ _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async 
               Navigator.pop(context); //? close the dialog
               Navigator.push(
                 context,
-                MorpheusPageRoute(
+                MaterialPageRoute(
                   builder: (context) => HomePage(),
                 ),
               );

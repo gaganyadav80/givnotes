@@ -379,8 +379,17 @@ class _LockScreenState extends State<LockScreen> {
   Widget _biometricButton() {
     if (!widget.canBiometric) return Container();
 
-    return FlatButton(
-      padding: EdgeInsets.all(0.0),
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.all(0.0),
+        shape: CircleBorder(
+          side: BorderSide(
+            color: Colors.transparent,
+            style: BorderStyle.solid,
+          ),
+        ),
+        primary: Colors.transparent,
+      ),
       child: widget.biometricButton,
       onPressed: () {
         // Maintain compatibility
@@ -404,19 +413,21 @@ class _LockScreenState extends State<LockScreen> {
           }
         }
       },
-      shape: CircleBorder(
-        side: BorderSide(
-          color: Colors.transparent,
-          style: BorderStyle.solid,
-        ),
-      ),
-      color: Colors.transparent,
     );
   }
 
   Widget _cancleSideButton() {
-    return FlatButton(
-      padding: EdgeInsets.all(0),
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(0),
+        shape: CircleBorder(
+          side: BorderSide(
+            color: Colors.transparent,
+            style: BorderStyle.solid,
+          ),
+        ),
+        primary: Colors.transparent,
+      ),
       child: Text(
         widget.cancelText,
         style: TextStyle(
@@ -429,13 +440,6 @@ class _LockScreenState extends State<LockScreen> {
       onPressed: () {
         Navigator.of(context).pop(false);
       },
-      shape: CircleBorder(
-        side: BorderSide(
-          color: Colors.transparent,
-          style: BorderStyle.solid,
-        ),
-      ),
-      color: Colors.transparent,
     );
   }
 
@@ -445,8 +449,17 @@ class _LockScreenState extends State<LockScreen> {
     return StreamBuilder<int>(
         stream: enteredLengthStream.stream,
         builder: (context, snapshot) {
-          return FlatButton(
-            padding: EdgeInsets.all(0),
+          return TextButton(
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.all(0),
+              shape: CircleBorder(
+                side: BorderSide(
+                  color: Colors.transparent,
+                  style: BorderStyle.solid,
+                ),
+              ),
+              primary: Colors.transparent,
+            ),
             child: Text(
               widget.deleteText,
               style: TextStyle(
@@ -466,13 +479,6 @@ class _LockScreenState extends State<LockScreen> {
                 // }
               }
             },
-            shape: CircleBorder(
-              side: BorderSide(
-                color: Colors.transparent,
-                style: BorderStyle.solid,
-              ),
-            ),
-            color: Colors.transparent,
           );
         });
   }

@@ -128,7 +128,7 @@ passChangeAlert(BuildContext context) {
         return AlertDialog(
           content: Text('Passcode changed successfully!'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('OK'),
               onPressed: () => Navigator.pop(context),
             ),

@@ -36,7 +36,7 @@ class CircleInputButton extends StatelessWidget {
           fontWeight: FontWeight.w400,
         );
 
-    return RaisedButton(
+    return ElevatedButton(
       child: Text(
         text,
         style: textStyle,
@@ -44,16 +44,18 @@ class CircleInputButton extends StatelessWidget {
       onPressed: () {
         enteredSink.add(text);
       },
-      shape: config.shape ??
-          CircleBorder(
-            side: BorderSide(
-              color: Colors.transparent,
-              width: 0,
-              style: BorderStyle.solid,
+      style: ElevatedButton.styleFrom(
+        shape: config.shape ??
+            CircleBorder(
+              side: BorderSide(
+                color: Colors.transparent,
+                width: 0,
+                style: BorderStyle.solid,
+              ),
             ),
-          ),
-      color: config.backgroundColor.withOpacity(config.backgroundOpacity),
-      elevation: 0,
+        primary: config.backgroundColor.withOpacity(config.backgroundOpacity),
+        elevation: 0,
+      ),
     );
   }
 }

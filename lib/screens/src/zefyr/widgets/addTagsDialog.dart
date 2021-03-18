@@ -204,14 +204,16 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 // width: 90,
                 height: 0.059210526 * screenSize.height,
                 width: 0.228426396 * screenSize.width,
-                child: RaisedButton(
-                  elevation: 0,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0.0,
+                    primary: Colors.grey[200],
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                     _newTagTextController.clear();
                   },
-                  color: Colors.grey[200],
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                   child: Text(
                     'CANCEL',
                     style: TextStyle(
@@ -229,10 +231,12 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 // width: 90,
                 height: 0.059210526 * screenSize.height,
                 width: 0.228426396 * screenSize.width,
-                child: RaisedButton(
-                  elevation: 0,
-                  color: Colors.black,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0.0,
+                    primary: Colors.black,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                  ),
                   child: Text(
                     'SAVE',
                     style: TextStyle(

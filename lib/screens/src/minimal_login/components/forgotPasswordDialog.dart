@@ -70,13 +70,13 @@ class PassResetMailDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
           child: Text("CANCEL"),
         ),
-        FlatButton(
+        TextButton(
           onPressed: onPressed,
           child: Text("CONFIRM"),
         ),

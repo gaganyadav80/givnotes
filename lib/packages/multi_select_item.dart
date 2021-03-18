@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 //TODO rewrite your custom multiselect to work with hive.
 
 class MultiSelectController {
-  List<int> selectedIndexes = new List();
+  List<int> selectedIndexes = new List.empty(growable: true);
   bool isSelecting = false;
   bool disableEditingWhenNoneSelected = true;
   int listLength = 0;

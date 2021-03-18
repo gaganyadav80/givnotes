@@ -2,7 +2,7 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/screens/screens.dart';
@@ -259,8 +259,8 @@ class _MyProfileState extends State<MyProfile> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            FaIcon(
-              FontAwesomeIcons.google,
+            Icon(
+              FontAwesome5.google,
               color: Colors.white,
               size: 5 * wm,
             ),
@@ -300,11 +300,11 @@ class _MyProfileState extends State<MyProfile> {
         return AlertDialog(
           content: Text('Please confirm your sign out.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('Cancle'),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text("Confirm"),
               onPressed: () async {
                 FirebaseAuth.instance.signOut();

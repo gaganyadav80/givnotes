@@ -25,11 +25,11 @@ class HandlePermission {
           // title: Text('Open Settings?'),
           content: Text('Go to settings to enable storage permission.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text("Later"),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text("Sure"),
               onPressed: () {
                 Navigator.pop(context);

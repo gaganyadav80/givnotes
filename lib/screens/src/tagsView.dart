@@ -20,7 +20,7 @@ class TagsView extends StatefulWidget {
 
 class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-  List<NotesModel> _notes = List<NotesModel>();
+  List<NotesModel> _notes = <NotesModel>[];
   String _created;
   int _animateIndex = 0;
 

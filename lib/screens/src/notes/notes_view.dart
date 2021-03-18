@@ -28,7 +28,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
   int _animateIndex = 0;
   String sortNotes;
-  List<NotesModel> _notes = List<NotesModel>();
+  List<NotesModel> _notes = <NotesModel>[];
 
   final MultiSelectController _multiSelectController = MultiSelectController();
   // final HiveDBServices _dbServices = HiveDBServices();

@@ -119,7 +119,7 @@ class _CreateTodoState extends State<CreateTodo> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset: false,
         appBar: CreateTodoAppBar(controller: _titleController, prevTitle: widget.title, editTodo: widget.editTodo),
         floatingActionButton: _buildFab(),
         body: Padding(

@@ -11,13 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  auto_route: ^0.6.9
   avatar_glow: ^1.2.0
   bloc: ^6.1.1
   cached_network_image: ^2.3.3
   circular_check_box: ^1.0.4
   cupertino_icons: ^1.0.0
-  device_preview: ^0.5.5
   equatable: ^1.2.5
   file_picker: ^2.1.0
   firebase_auth: ^0.18.3+1
@@ -29,9 +27,9 @@ dependencies:
   flutter_slidable: ^0.5.7
   flutter_snake_navigationbar: ^0.4.2
   flutter_staggered_animations: ^0.1.2
+  flutter_svg: ^0.19.3
   flutter_tags: ^0.4.9+1
   fluttericon: ^1.0.7
-  # formz: ^0.3.2
   getwidget: ^1.2.4
   google_fonts: ^1.1.1
   google_sign_in: ^4.5.6
@@ -43,13 +41,10 @@ dependencies:
   json_annotation: ^3.1.1
   local_auth: ^0.6.3+4
   lottie: ^0.7.0+1
-  morpheus: ^1.2.2+1
   package_info: ^0.4.3+2
   path: ^1.7.0
   path_provider: ^1.6.24
   permission_handler: ^5.0.1+1
-  quotes: ^0.0.2
-  responsive_framework: ^0.0.14
   shared_preferences: ^0.5.12+4
   stringprocess: ^1.0.10
   timelines: ^0.0.2+1

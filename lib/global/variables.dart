@@ -2,11 +2,10 @@ import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:package_info/package_info.dart';
-import 'package:quotes/quotes.dart';
 
 PrefsModel prefsBox;
 PackageInfo packageInfo;
-final quotesProvider = Quotes.getRandom();
+// final quotesProvider = Quotes.getRandom();
 bool isPermanentDisabled = true;
 
 enum NoteMode { Adding, Editing }

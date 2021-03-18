@@ -14,11 +14,11 @@ class TodoAlert extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
       content: Text("Unsaved changes. Sure exit?"),
       actions: [
-        FlatButton(
+        TextButton(
           child: Text("No"),
           onPressed: () => Navigator.pop(context, false),
         ),
-        FlatButton(
+        TextButton(
           child: Text("Yes"),
           onPressed: () => Navigator.pop(context, true),
         ),

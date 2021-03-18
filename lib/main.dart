@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
@@ -115,20 +114,20 @@ class GivnotesApp extends StatelessWidget {
         accentColorBrightness: Brightness.light,
         toggleableActiveColor: Colors.blue,
       ),
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        BouncingScrollWrapper.builder(context, widget),
-        maxWidth: 1200,
-        minWidth: 300,
-        defaultScale: false,
-        breakpoints: [
-          ResponsiveBreakpoint.resize(300, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-          ResponsiveBreakpoint.resize(1200, name: DESKTOP),
-          ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-        ],
-        background: Container(color: Color(0xFFF5F5F5)),
-      ),
+      // builder: (context, widget) => ResponsiveWrapper.builder(
+      //   BouncingScrollWrapper.builder(context, widget),
+      //   maxWidth: 1200,
+      //   minWidth: 300,
+      //   defaultScale: false,
+      //   breakpoints: [
+      //     ResponsiveBreakpoint.resize(300, name: MOBILE),
+      //     ResponsiveBreakpoint.autoScale(800, name: TABLET),
+      //     ResponsiveBreakpoint.autoScale(1000, name: TABLET),
+      //     ResponsiveBreakpoint.resize(1200, name: DESKTOP),
+      //     ResponsiveBreakpoint.autoScale(2460, name: "4K"),
+      //   ],
+      //   background: Container(color: Color(0xFFF5F5F5)),
+      // ),
       // builder: (context, widget) => BlocListener<AuthenticationBloc, AuthenticationState>(
       //   child: widget,
       //   listener: (context, state) {
