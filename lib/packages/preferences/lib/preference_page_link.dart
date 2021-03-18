@@ -39,16 +39,19 @@ class PreferencePageLink extends StatelessWidget {
         enabled: !disabled,
         onTap: () => disabled
             ? null
-            : Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) =>
-                    widgetScaffold ??
-                    Scaffold(
-                      appBar: AppBar(
-                        backgroundColor: Colors.black,
-                        title: Text(pageTitle ?? title),
+            : Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) =>
+                      widgetScaffold ??
+                      Scaffold(
+                        appBar: AppBar(
+                          backgroundColor: Colors.black,
+                          title: Text(pageTitle ?? title),
+                        ),
+                        body: page,
                       ),
-                      body: page,
-                    ))),
+                ),
+              ),
         title: Text(title, style: style),
         subtitle: desc == null
             ? null

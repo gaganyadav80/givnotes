@@ -178,18 +178,19 @@ class NotesModelSheet extends StatelessWidget {
             'Compact Tags',
             'compact_tags',
             titleColor: Colors.white,
-            titleGap: 0,
+            titleGap: 0.0,
             leading: Icon(CupertinoIcons.bars, color: Colors.white),
             desc: 'Enable compact tags in notes view',
             defaultVal: hydratedPrefsCubit.state.compactTags,
             onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
             onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
           ),
-          ListTile(
-            leading: Icon(CupertinoIcons.trash, color: Colors.white, size: 20.0),
-            horizontalTitleGap: 0,
-            title: Text("Trash", style: TextStyle(color: Colors.white)),
+          PreferenceText(
+            "Trash",
+            style: TextStyle(color: Colors.white),
+            leading: Icon(CupertinoIcons.delete, color: Colors.white, size: 20.0),
             trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Colors.white60),
+            titleGap: 0.0,
             onTap: () {
               BlocProvider.of<HomeCubit>(context).updateTrash(true);
               Navigator.pop(context);

@@ -230,6 +230,12 @@ class _CreateTodoState extends State<CreateTodo> {
                         await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
+                          builder: (BuildContext context, Widget child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                              child: child,
+                            );
+                          },
                         ).then((value) {
                           if (value != null)
                             setState(() {

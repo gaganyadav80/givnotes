@@ -15,9 +15,9 @@ class PreferenceTitle extends StatelessWidget {
         title,
         style: style ??
             TextStyle(
-              color: Theme.of(context).accentColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 16.0,
+              color: Theme.of(context).accentColor.withOpacity(0.7),
+              fontWeight: FontWeight.w600,
+              fontSize: 14.0,
             ),
       ),
     );

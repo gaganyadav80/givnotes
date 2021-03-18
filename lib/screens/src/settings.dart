@@ -10,7 +10,6 @@ import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
 
-//TODO change icons with custom colorful icons
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key}) : super(key: key);
 
@@ -40,8 +39,8 @@ class SettingsPage extends StatelessWidget {
             showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white, size: 20.0),
-            leadingColor: Colors.red,
+            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.red,
             titleGap: 0.0,
             onChange: ((String value) {
               String val;
@@ -61,12 +60,11 @@ class SettingsPage extends StatelessWidget {
           SwitchPreference(
             'Compact tags',
             'compact_tags',
-            // desc: 'Enable compact tags in notes view',
-            desc: "For the minimalistic.",
+            // desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
-            leadingColor: Colors.blue,
+            leading: Icon(CupertinoIcons.bars, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.blue,
             titleGap: 0.0,
             onEnable: () => _prefsCubit.updateCompactTags(true),
             onDisable: () => _prefsCubit.updateCompactTags(false),
@@ -84,11 +82,10 @@ class SettingsPage extends StatelessWidget {
             'Dark mode',
             'dark_mode',
             disabled: true,
-            // desc: "Switch between light and dark mode",
-            desc: "So now the fun begins.",
+            // desc: "So now the fun begins.",
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
-            leadingColor: Colors.purple,
+            leading: Icon(CupertinoIcons.moon, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.purple,
             titleGap: 0.0,
             onChange: ((value) {
               print(value);
@@ -98,12 +95,12 @@ class SettingsPage extends StatelessWidget {
             'Dark theme',
             'dark_theme',
             disabled: true,
-            desc: "Spice up your theme",
+            // desc: "Spice up your theme",
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
-            leadingColor: Colors.pink,
+            leading: Icon(CupertinoIcons.at, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.pink,
             titleGap: 0.0,
             onChange: ((value) {
               print(value);
@@ -111,11 +108,11 @@ class SettingsPage extends StatelessWidget {
           ),
           PreferencePageLink(
             'Extensions',
-            desc: 'Extend your experience.',
+            // desc: 'Extend your experience.',
             disabled: true,
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.bolt, color: Colors.white, size: 20.0),
-            leadingColor: Colors.brown,
+            leading: Icon(CupertinoIcons.bolt, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
@@ -125,8 +122,8 @@ class SettingsPage extends StatelessWidget {
           PreferenceText(
             'Change Passcode',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.lock_shield, color: Colors.white, size: 20.0),
-            leadingColor: Colors.lightGreen,
+            leading: Icon(CupertinoIcons.lock_shield, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
               // if (prefsBox.passcode != '')
@@ -148,8 +145,8 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Application',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.app, color: Colors.white, size: 20.0),
-            leadingColor: Colors.grey,
+            leading: Icon(CupertinoIcons.app, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.grey,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AppDetailSection(),
@@ -157,8 +154,8 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'About Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.person, color: Colors.white, size: 20.0),
-            leadingColor: Colors.brown,
+            leading: Icon(CupertinoIcons.person, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
@@ -166,8 +163,8 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Contact Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.white, size: 20.0),
-            leadingColor: Colors.blueGrey,
+            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.blueGrey,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: ContactGivnotes(),
@@ -399,11 +396,11 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
         SwitchPreference(
           'Enable app lock',
           'app_lock',
-          desc: 'Add 4 digit pin',
+          // desc: 'Add 4 digit pin',
           defaultVal: false,
           ignoreTileTap: false,
-          leading: Icon(CupertinoIcons.lock, color: Colors.white, size: 20.0),
-          leadingColor: Colors.orangeAccent,
+          leading: Icon(CupertinoIcons.lock, color: Colors.black, size: 26.0),
+          // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
             if (prefsBox.passcode == '') {
@@ -437,11 +434,11 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
         SwitchPreference(
           'Biometric authentication',
           'biometric',
-          desc: 'Enable Fingerprint/Face unlock',
+          // desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
-          leading: Icon(Icons.fingerprint_outlined, color: Colors.white, size: 20.0),
-          leadingColor: Colors.teal,
+          leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: 26.0),
+          // leadingColor: Colors.teal,
           titleGap: 0.0,
           onEnable: () {
             prefsBox.biometric = true;

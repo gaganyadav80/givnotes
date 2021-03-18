@@ -16,6 +16,7 @@ class PreferenceText extends StatelessWidget {
   final double titleGap;
 
   final Color leadingColor;
+  final Widget trailing;
 
   PreferenceText(
     this.text, {
@@ -27,6 +28,7 @@ class PreferenceText extends StatelessWidget {
     this.overflow = TextOverflow.ellipsis,
     this.titleGap,
     this.leadingColor,
+    this.trailing,
   });
 
   @override
@@ -57,6 +59,7 @@ class PreferenceText extends StatelessWidget {
           overflow: overflow,
         ),
         subtitle: subtitle,
+        trailing: trailing,
       ),
     );
   }

@@ -76,7 +76,7 @@ class _MyProfileState extends State<MyProfile> {
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                               padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
                               child: Text(
-                                user.displayName ?? "Gagan Yadav",
+                                "Gagan Yadav",
                                 style: GoogleFonts.arizonia(
                                   color: Colors.black,
                                   fontSize: 4.5 * hm,
