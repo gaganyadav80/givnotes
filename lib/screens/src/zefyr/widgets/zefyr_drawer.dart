@@ -38,7 +38,7 @@ class EndDrawerItems extends StatelessWidget {
       child: Drawer(
         elevation: 40,
         child: PreferencePage([
-          PreferenceTitle('Options'),
+          // PreferenceTitle('Options'),
           _homeVarStore.state.trash == false
               ? myEndDrawerListTheme(
                   'Save note',
@@ -133,13 +133,16 @@ class EndDrawerItems extends StatelessWidget {
                               // width: 90.0,
                               height: 0.059210526 * screenSize.height,
                               width: 0.228426396 * screenSize.width,
-                              child: RaisedButton(
-                                elevation: 0,
+                              child: ElevatedButton(
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
-                                color: Colors.grey[200],
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.0,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
                                 child: Text(
                                   'OKAY',
                                   style: TextStyle(

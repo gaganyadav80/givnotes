@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,7 +14,6 @@ import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'bloc/authentication_bloc/authentication_bloc.dart';
 import 'cubit/cubits.dart';
 import 'packages/packages.dart';
@@ -101,6 +100,7 @@ class GivnotesApp extends StatelessWidget {
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           routes: {
             'login_p': (context) => LoginPage(),
             'register_p': (context) => RegisterPage(),

@@ -31,12 +31,91 @@ class SettingsPage extends StatelessWidget {
         statusBarColor: GiveStatusBarColor(context),
       ),
     );
+    // return MainSettingsPage();
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
-          ProfileTileSettings(),
-          PreferenceTitle('General', topPadding: 10.0),
+          // ProfileTileSettings(),
+          // PreferenceTitle('General', topPadding: 10.0),
+          ListTile(
+              title: Text(
+            'General',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+          )),
+          StreamBuilder<User>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Card(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                final String photo = snapshot.data.photoURL;
+                String initials = '';
+                "Gagan Yadav".split(" ").forEach((element) {
+                  initials = initials + element[0];
+                });
+                return ListTile(
+                  onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+                  title: Text(
+                    'Gagan Yadav',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Row(
+                    children: [
+                      Text(
+                        " ${snapshot.data.email}",
+                        style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w300,
+                          color: Theme.of(context).textTheme.bodyText2.color,
+                        ),
+                      ),
+                      SizedBox(width: 5.0),
+                      !snapshot.data.emailVerified
+                          ? Icon(
+                              CupertinoIcons.exclamationmark_circle,
+                              color: Colors.red,
+                              size: 16.0,
+                            )
+                          : SizedBox.shrink(),
+                    ],
+                  ),
+                  leading: Icon(Icons.person_outline),
+                  trailing: Icon(CupertinoIcons.forward, color: Colors.grey),
+                );
+              } else {
+                return ListTile(
+                  onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+                  leading: Lottie.asset('assets/animations/people-portrait.json'),
+                  title: Text(
+                    "You are not logged in!",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  subtitle: Text(
+                    "Click here and login to your account.",
+                    style: TextStyle(
+                      fontSize: 13.0,
+                      fontWeight: FontWeight.w300,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
+                  ),
+                  trailing: Icon(CupertinoIcons.forward, color: Colors.grey),
+                );
+              }
+            },
+          ),
           DropdownPreference(
             'Sort notes',
             'sort_notes',
@@ -50,7 +129,7 @@ class SettingsPage extends StatelessWidget {
             //   color: Theme.of(context).textTheme.bodyText1.color,
             //   size: 20.0,
             // ),
-            leadingColor: Colors.red,
+            // leadingColor: Colors.red,
             leading: Icon(
               Icons.sort_rounded,
               color: Theme.of(context).textTheme.bodyText1.color,
@@ -76,11 +155,11 @@ class SettingsPage extends StatelessWidget {
             'Compact tags',
             'compact_tags',
             // desc: 'Enable compact tags in notes view',
-            desc: "For the minimalistic.",
+            // desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             // leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
-            leadingColor: Colors.blue,
+            // leadingColor: Colors.blue,
             leading: Icon(
               CupertinoIcons.bars,
               color: Theme.of(context).textTheme.bodyText1.color,
@@ -91,23 +170,31 @@ class SettingsPage extends StatelessWidget {
             onDisable: () => _prefsCubit.updateCompactTags(false),
           ),
 
-          PreferenceTitle('Personalization'),
-          PreferenceTitle(
-            '  !! Personalization is yet to be implemented !!',
+          // PreferenceTitle('Personalization'),
+          ListTile(
+              title: Text(
+            'Personalization',
             style: TextStyle(
-              color: Colors.grey[500],
-              fontStyle: FontStyle.italic,
+              color: Theme.of(context).textTheme.bodyText1.color,
             ),
-          ),
+          )),
+
+          // PreferenceTitle(
+          //   '  !! Personalization is yet to be implemented !!',
+          //   style: TextStyle(
+          //     color: Colors.grey[500],
+          //     fontStyle: FontStyle.italic,
+          //   ),
+          // ),
           SwitchPreference(
             'Dark mode',
             'dark_mode',
             disabled: true,
             // desc: "Switch between light and dark mode",
-            desc: "So now the fun begins.",
+            // desc: "So now the fun begins.",
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             // leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
-            leadingColor: Colors.purple,
+            // leadingColor: Colors.purple,
             leading: Icon(
               CupertinoIcons.moon,
               color: Theme.of(context).textTheme.bodyText1.color,
@@ -122,12 +209,12 @@ class SettingsPage extends StatelessWidget {
             'Dark theme',
             'dark_theme',
             disabled: true,
-            desc: "Spice up your theme",
+            // desc: "Spice up your theme",
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             // leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
-            leadingColor: Colors.pink,
+            // leadingColor: Colors.pink,
 
             leading: Icon(
               CupertinoIcons.at,
@@ -141,23 +228,31 @@ class SettingsPage extends StatelessWidget {
           ),
           PreferencePageLink(
             'Extensions',
-            desc: 'Extend your experience.',
+            // desc: 'Extend your experience.',
             disabled: true,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.bolt, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            leadingColor: Colors.brown,
+            // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
           ),
-          PreferenceTitle('Security'),
+          // PreferenceTitle('Security'),
+
+          ListTile(
+              title: Text(
+            'Security',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+          )),
           AppLockSwitchPrefs(),
           PreferenceText(
             'Change Passcode',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.lock_shield, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            leadingColor: Colors.lightGreen,
+            // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
               // if (prefsBox.passcode != '')
@@ -175,12 +270,20 @@ class SettingsPage extends StatelessWidget {
 
           // !! ========================================================
 
-          PreferenceTitle('Details Section'),
+          // PreferenceTitle('Details Section'),
+          ListTile(
+              title: Text(
+            'Details Section',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+          )),
+
           PreferencePageLink(
             'Application',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.app, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            leadingColor: Colors.grey,
+            // leadingColor: Colors.grey,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
@@ -190,7 +293,7 @@ class SettingsPage extends StatelessWidget {
             'About Us',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.person, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            leadingColor: Colors.brown,
+            // leadingColor: Colors.brown,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
@@ -200,7 +303,7 @@ class SettingsPage extends StatelessWidget {
             'Contact Us',
             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
             leading: Icon(CupertinoIcons.chat_bubble, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            leadingColor: Colors.blueGrey,
+            // leadingColor: Colors.blueGrey,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
@@ -257,7 +360,7 @@ class ProfileTileSettings extends StatelessWidget {
                             "Gagan Yadav",
                             style: TextStyle(
                               color: Theme.of(context).textTheme.bodyText1.color,
-                              fontSize: 24.0,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -437,12 +540,12 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
         SwitchPreference(
           'Enable app lock',
           'app_lock',
-          desc: 'Add 4 digit pin',
+          // desc: 'Add 4 digit pin',
           defaultVal: false,
           titleColor: Theme.of(context).textTheme.bodyText1.color,
           ignoreTileTap: false,
           leading: Icon(CupertinoIcons.lock, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-          leadingColor: Colors.orangeAccent,
+          // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
             if (prefsBox.passcode == '') {
@@ -476,7 +579,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
         SwitchPreference(
           'Biometric authentication',
           'biometric',
-          desc: 'Enable Fingerprint/Face unlock',
+          // desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
           titleColor: Theme.of(context).textTheme.bodyText1.color,
@@ -485,7 +588,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             color: Theme.of(context).textTheme.bodyText1.color,
             size: 20.0,
           ),
-          leadingColor: Colors.teal,
+          // leadingColor: Colors.teal,
           titleGap: 0.0,
           onEnable: () {
             prefsBox.biometric = true;
@@ -538,3 +641,63 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 //           ),
 //         ]),
 //       ),
+
+class MainSettingsPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
+
+    String def = _prefsCubit.state.sortBy == 'created'
+        ? 'Date created'
+        : _prefsCubit.state.sortBy == 'modified'
+            ? 'Date modified'
+            : _prefsCubit.state.sortBy == 'a-z'
+                ? "Alphabetical (A-Z)"
+                : "Alphabetical (Z-A)";
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
+    return SafeArea(
+      child: PreferencePage([
+        // ProfileTileSettings(),
+        DropdownPreference(
+          'Sort notes',
+          'sort_notes',
+          defaultVal: def,
+          desc: "Sort your notes on one of the following filters.",
+          showDesc: false,
+          values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+          titleColor: Theme.of(context).textTheme.bodyText1.color,
+          // leading: Icon(
+          //   CupertinoIcons.sort_down_circle,
+          //   color: Theme.of(context).textTheme.bodyText1.color,
+          //   size: 20.0,
+          // ),
+          // leadingColor: Colors.red,
+          leading: Icon(
+            Icons.sort_rounded,
+            color: Theme.of(context).textTheme.bodyText1.color,
+            size: 20.0,
+          ),
+          titleGap: 0.0,
+          onChange: ((String value) {
+            String val;
+
+            if (value == 'Date created')
+              val = 'created';
+            else if (value == 'Date modified')
+              val = 'modified';
+            else if (value == 'Alphabetical (A-Z)')
+              val = 'a-z';
+            else
+              val = 'z-a';
+
+            _prefsCubit.updateSortBy(val);
+          }),
+        ),
+      ]),
+    );
+  }
+}

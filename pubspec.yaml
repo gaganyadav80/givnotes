@@ -17,7 +17,7 @@ dependencies:
   cached_network_image: ^2.3.3
   circular_check_box: ^1.0.4
   cupertino_icons: ^1.0.0
-  device_preview: ^0.5.5
+  # device_preview: ^0.5.5
   equatable: ^1.2.5
   file_picker: ^2.1.0
   firebase_auth: ^0.18.3+1
@@ -56,7 +56,13 @@ dependencies:
   url_launcher: ^5.7.10
   velocity_x: ^1.0.1
   zefyr: ^1.0.0-dev.2.0
+  # zefyr:
+  #   git:
+  #     url: https://github.com/memspace/zefyr.git
+  #     path: packages/zefyr
   modal_bottom_sheet: ^1.0.0+1
+  flutter_svg: ^0.19.3
+  font_awesome_flutter: ^9.0.0
 
 dev_dependencies:
   flutter_test:

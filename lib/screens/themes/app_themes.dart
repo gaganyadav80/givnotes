@@ -160,7 +160,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   backgroundColor: Color(0xFF181545),
   primaryIconTheme: IconThemeData().copyWith(
     //For Icons
-    color: Colors.white,
+    color: Colors.blue,
   ),
   iconTheme: IconThemeData().copyWith(
     color: Colors.white,
