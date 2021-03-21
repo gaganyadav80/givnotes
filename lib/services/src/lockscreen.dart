@@ -22,8 +22,9 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
     bool authenticated = false;
 
     try {
-      authenticated = await auth.authenticateWithBiometrics(
+      authenticated = await auth.authenticate(
         // localizedReason: 'Authenticate to unlock givnotes',
+        biometricOnly: true,
         localizedReason: '',
         useErrorDialogs: true,
         stickyAuth: false,

@@ -12,7 +12,7 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/screens/screens.dart';
+// import 'package:givnotes/screens/screens.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key key}) : super(key: key);
@@ -92,16 +92,16 @@ class _SearchPageState extends State<SearchPage> {
   void onSearchListItemSelected(NotesModel item) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-    BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ZefyrEdit(
-          noteMode: NoteMode.Editing,
-          note: item,
-        ),
-      ),
-    );
+    // BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ZefyrEdit(
+    //       noteMode: NoteMode.Editing,
+    //       note: item,
+    //     ),
+    //   ),
+    // );
   }
 
   @override

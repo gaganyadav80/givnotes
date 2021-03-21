@@ -4,12 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+// import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/screens/screens.dart';
+// import 'package:givnotes/screens/screens.dart';
 
 class NotesCard extends StatefulWidget {
   NotesCard({
@@ -80,17 +80,17 @@ class _NotesCardState extends State<NotesCard> {
               widget.notesViewUpdate();
               //
             } else {
-              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
+              // BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ZefyrEdit(
-                    noteMode: NoteMode.Editing,
-                    note: widget.note,
-                  ),
-                ),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => ZefyrEdit(
+              //       noteMode: NoteMode.Editing,
+              //       note: widget.note,
+              //     ),
+              //   ),
+              // );
             }
           },
           child: Padding(

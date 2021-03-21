@@ -7,7 +7,6 @@ import 'package:uuid/uuid.dart';
 
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:givnotes/database/HiveDB_helper.dart';
-import 'package:givnotes/packages/packages.dart';
 
 import 'todo_widgets.dart';
 
@@ -315,17 +314,27 @@ class _CreateTodoState extends State<CreateTodo> {
                   itemCount: _subTasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      leading: CircularCheckBox(
-                        value: _subTasks[index].isCompleted(),
-                        radius: 10.0,
-                        width: 12.0,
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        activeColor: Colors.blue,
-                        inactiveColor: Colors.blue,
-                        onChanged: (bool x) {
+                      leading: GFCheckbox(
+                        size: GFSize.SMALL,
+                        activeBgColor: GFColors.DANGER,
+                        type: GFCheckboxType.circle,
+                        onChanged: (_) {
                           _subTasks[index].setComplete(!_subTasks[index].completed);
                         },
+                        value: _subTasks[index].isCompleted(),
+                        inactiveIcon: null,
                       ),
+                      // trailing: CircularCheckBox(
+                      //   value: _subTasks[index].isCompleted(),
+                      //   radius: 10.0,
+                      //   width: 12.0,
+                      //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      //   activeColor: Colors.blue,
+                      //   inactiveColor: Colors.blue,
+                      //   onChanged: (bool x) {
+                      //     _subTasks[index].setComplete(!_subTasks[index].completed);
+                      //   },
+                      // ),
                       title: Text(_subTasks[index].subTask),
                     );
                   },

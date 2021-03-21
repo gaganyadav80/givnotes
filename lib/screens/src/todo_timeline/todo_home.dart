@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:givnotes/packages/packages.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -163,17 +163,28 @@ class _TodoTimelineState extends State<TodoTimeline> {
                               return DotIndicator(
                                 size: 30.0,
                                 color: Colors.transparent,
-                                child: CircularCheckBox(
-                                  value: _todosBox[index].completed,
-                                  radius: 13.0,
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  activeColor: Colors.blue,
-                                  inactiveColor: Colors.blue,
-                                  onChanged: (bool x) {
+                                child: GFCheckbox(
+                                  size: GFSize.SMALL,
+                                  activeBgColor: GFColors.DANGER,
+                                  type: GFCheckboxType.circle,
+                                  onChanged: (_) {
                                     _todosBox[index].completed = !_todosBox[index].completed;
                                     _dbServices.updateTodo(_todosBox[index].key, _todosBox[index]);
                                   },
+                                  value: _todosBox[index].completed,
+                                  inactiveIcon: null,
                                 ),
+                                // child: CircularCheckBox(
+                                //   value: _todosBox[index].completed,
+                                //   radius: 13.0,
+                                //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                //   activeColor: Colors.blue,
+                                //   inactiveColor: Colors.blue,
+                                //   onChanged: (bool x) {
+                                //     _todosBox[index].completed = !_todosBox[index].completed;
+                                //     _dbServices.updateTodo(_todosBox[index].key, _todosBox[index]);
+                                //   },
+                                // ),
                               );
                             },
                             connectorBuilder: (_, index, ___) => SolidLineConnector(indent: 5.0, endIndent: 5.0),
@@ -227,18 +238,29 @@ class _TodoTimelineState extends State<TodoTimeline> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0,
           color: Colors.transparent,
-          child: CircularCheckBox(
-            value: _todo.subTask[subCheckIndex].completed,
-            radius: 10.0,
-            width: 12.0,
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            activeColor: Colors.blue,
-            inactiveColor: Colors.blue,
-            onChanged: (bool x) {
+          child: GFCheckbox(
+            size: GFSize.SMALL,
+            activeBgColor: GFColors.DANGER,
+            type: GFCheckboxType.circle,
+            onChanged: (_) {
               _todo.subTask[subCheckIndex].setComplete(!_todo.subTask[subCheckIndex].completed);
               _dbServices.updateTodo(_todo.key, _todo);
             },
+            value: _todo.subTask[subCheckIndex].completed,
+            inactiveIcon: null,
           ),
+          // child: CircularCheckBox(
+          //   value: _todo.subTask[subCheckIndex].completed,
+          //   radius: 10.0,
+          //   width: 12.0,
+          //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          //   activeColor: Colors.blue,
+          //   inactiveColor: Colors.blue,
+          //   onChanged: (bool x) {
+          //     _todo.subTask[subCheckIndex].setComplete(!_todo.subTask[subCheckIndex].completed);
+          //     _dbServices.updateTodo(_todo.key, _todo);
+          //   },
+          // ),
         ),
         connectorBuilder: (_, index, ___) => SolidLineConnector(endIndent: 8.0),
       ),

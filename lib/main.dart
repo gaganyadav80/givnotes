@@ -13,6 +13,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/size_utils.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'cubit/cubits.dart';
 import 'global/variables.dart';
@@ -41,7 +42,7 @@ void main() async {
   EquatableConfig.stringify = kDebugMode;
   //TODO comment when done with bloc
   Bloc.observer = SimpleBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build();
+  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
   await initHiveDb();
   await pluginInitializer();
