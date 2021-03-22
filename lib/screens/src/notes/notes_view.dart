@@ -216,6 +216,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                             //     builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
                             //   ),
                             // );
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Zefyr text editor removed. Replacement will be added soon."),
+                            ));
                             //*** Zefyr is removed
                             // await _dbServices.insertNote(
                             //   NotesModel()

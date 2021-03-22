@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
+import 'package:givnotes/widgets/circular_checkbox.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -83,79 +84,89 @@ class _TodoTimelineState extends State<TodoTimeline> {
 
                               return Padding(
                                 padding: EdgeInsets.only(left: 5.0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        CreateTodo(
-                                          editTodo: true,
-                                          category: _todosBox[index].category,
-                                          completed: _todosBox[index].completed,
-                                          description: _todosBox[index].description,
-                                          dueDate: _todosBox[index].dueDate,
-                                          index: _todosBox[index].key,
-                                          priority: _todosBox[index].priority,
-                                          subTask: _todosBox[index].subTask,
-                                          title: _todosBox[index].title,
-                                          uuid: _todosBox[index].uuid,
-                                        ).materialRoute());
-                                  },
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          _todosBox[index].title,
-                                          style: TextStyle(
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: "Roboto",
-                                          ),
-                                        ),
-                                        Row(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            CreateTodo(
+                                              editTodo: true,
+                                              category: _todosBox[index].category,
+                                              completed: _todosBox[index].completed,
+                                              description: _todosBox[index].description,
+                                              dueDate: _todosBox[index].dueDate,
+                                              index: _todosBox[index].key,
+                                              priority: _todosBox[index].priority,
+                                              subTask: _todosBox[index].subTask,
+                                              title: _todosBox[index].title,
+                                              uuid: _todosBox[index].uuid,
+                                            ).materialRoute());
+                                      },
+                                      borderRadius: BorderRadius.circular(15.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisSize: MainAxisSize.min,
                                           children: [
-                                            Text("\u{1F525} ${_todosBox[index].priority ?? "None"}"),
-                                            SizedBox(width: 10.0),
-                                            Icon(Icons.check_circle_outline_outlined, size: 16.0),
-                                            SizedBox(width: 5.0),
-                                            Text("$taskCompleted/${_todosBox[index].subTask.length}"),
-                                            SizedBox(width: 10.0),
-                                            Icon(Icons.access_time_outlined, size: 16.0),
-                                            SizedBox(width: 5.0),
-                                            Text(DateFormat("HH:mm").format(_todosBox[index].dueDate)),
-                                          ],
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.fromLTRB(0, 8, 5, 0),
-                                          padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                                          decoration: BoxDecoration(
-                                            color: _todosBox[index].category.values.first == null ? Colors.pink : Color(_todosBox[index].category.values.first),
-                                            borderRadius: BorderRadius.circular(5),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              _todosBox[index].category.keys.first ?? "",
+                                            Text(
+                                              _todosBox[index].title,
                                               style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 12,
+                                                fontSize: 18.0,
+                                                fontWeight: FontWeight.bold,
+                                                fontFamily: "Roboto",
                                               ),
                                             ),
-                                          ),
+                                            Row(
+                                              children: [
+                                                Text("\u{1F525} ${_todosBox[index].priority ?? "None"}"),
+                                                SizedBox(width: 10.0),
+                                                Icon(Icons.check_circle_outline_outlined, size: 16.0),
+                                                SizedBox(width: 5.0),
+                                                Text("$taskCompleted/${_todosBox[index].subTask.length}"),
+                                                SizedBox(width: 10.0),
+                                                Icon(Icons.access_time_outlined, size: 16.0),
+                                                SizedBox(width: 5.0),
+                                                Text(DateFormat("HH:mm").format(_todosBox[index].dueDate)),
+                                              ],
+                                            ),
+                                            Container(
+                                              margin: EdgeInsets.fromLTRB(0, 8, 5, 0),
+                                              padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                              decoration: BoxDecoration(
+                                                color: _todosBox[index].category.values.first == null ? Colors.pink : Color(_todosBox[index].category.values.first),
+                                                borderRadius: BorderRadius.circular(5),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  _todosBox[index].category.keys.first ?? "",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 12,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(height: 10.0),
+                                            if (_todosBox[index].description.isNotBlank)
+                                              Text(
+                                                _todosBox[index].description,
+                                              ),
+                                          ],
                                         ),
-                                        SizedBox(height: 10.0),
-                                        Text(
-                                          _todosBox[index].description,
-                                        ),
-                                        SizedBox(height: 10.0),
-                                        _buildSubTaskTimeline(_todosBox[index]),
-                                        SizedBox(height: 20.0),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+                                    SizedBox(height: 10.0),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                      child: _buildSubTaskTimeline(_todosBox[index]),
+                                    ),
+                                    SizedBox(height: 20.0),
+                                  ],
                                 ),
                               );
                             },
@@ -163,16 +174,15 @@ class _TodoTimelineState extends State<TodoTimeline> {
                               return DotIndicator(
                                 size: 30.0,
                                 color: Colors.transparent,
-                                child: GFCheckbox(
-                                  size: GFSize.SMALL,
-                                  activeBgColor: GFColors.DANGER,
-                                  type: GFCheckboxType.circle,
+                                child: CustomCheckbox(
+                                  value: _todosBox[index].completed,
                                   onChanged: (_) {
                                     _todosBox[index].completed = !_todosBox[index].completed;
                                     _dbServices.updateTodo(_todosBox[index].key, _todosBox[index]);
                                   },
-                                  value: _todosBox[index].completed,
-                                  inactiveIcon: null,
+                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                  width: 30.0,
                                 ),
                                 // child: CircularCheckBox(
                                 //   value: _todosBox[index].completed,
@@ -238,16 +248,15 @@ class _TodoTimelineState extends State<TodoTimeline> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0,
           color: Colors.transparent,
-          child: GFCheckbox(
-            size: GFSize.SMALL,
-            activeBgColor: GFColors.DANGER,
-            type: GFCheckboxType.circle,
+          child: CustomCheckbox(
+            value: _todo.subTask[subCheckIndex].completed,
             onChanged: (_) {
               _todo.subTask[subCheckIndex].setComplete(!_todo.subTask[subCheckIndex].completed);
               _dbServices.updateTodo(_todo.key, _todo);
             },
-            value: _todo.subTask[subCheckIndex].completed,
-            inactiveIcon: null,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+            width: 25.0,
           ),
           // child: CircularCheckBox(
           //   value: _todo.subTask[subCheckIndex].completed,

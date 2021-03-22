@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/global/material_colors.dart';
+import 'package:givnotes/widgets/circular_checkbox.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -314,15 +315,13 @@ class _CreateTodoState extends State<CreateTodo> {
                   itemCount: _subTasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      leading: GFCheckbox(
-                        size: GFSize.SMALL,
-                        activeBgColor: GFColors.DANGER,
-                        type: GFCheckboxType.circle,
+                      leading: CustomCheckbox(
                         onChanged: (_) {
                           _subTasks[index].setComplete(!_subTasks[index].completed);
                         },
                         value: _subTasks[index].isCompleted(),
-                        inactiveIcon: null,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                        width: 30.0,
                       ),
                       // trailing: CircularCheckBox(
                       //   value: _subTasks[index].isCompleted(),
