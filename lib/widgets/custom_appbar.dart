@@ -24,6 +24,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         return AppBar(
+          elevation: 0.0,
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           foregroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: Text(

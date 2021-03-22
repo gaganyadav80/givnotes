@@ -8,6 +8,7 @@ import 'package:givnotes/global/utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
+import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:lottie/lottie.dart';
 
@@ -31,20 +32,13 @@ class SettingsPage extends StatelessWidget {
         statusBarColor: GiveStatusBarColor(context),
       ),
     );
-    // return MainSettingsPage();
+
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
           // ProfileTileSettings(),
-          // PreferenceTitle('General', topPadding: 10.0),
-          ListTile(
-              title: Text(
-            'General',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
-          )),
+          mainTitle('General', context),
           StreamBuilder<User>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
@@ -59,11 +53,10 @@ class SettingsPage extends StatelessWidget {
                   initials = initials + element[0];
                 });
                 return ListTile(
-                  onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+                  // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile())),
                   title: Text(
                     'Gagan Yadav',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyText1.color,
+                    style: mainTextStyle(context).copyWith(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
                     ),
@@ -72,10 +65,9 @@ class SettingsPage extends StatelessWidget {
                     children: [
                       Text(
                         " ${snapshot.data.email}",
-                        style: TextStyle(
+                        style: mainTextStyle(context).copyWith(
                           fontSize: 13.0,
                           fontWeight: FontWeight.w300,
-                          color: Theme.of(context).textTheme.bodyText2.color,
                         ),
                       ),
                       SizedBox(width: 5.0),
@@ -93,22 +85,20 @@ class SettingsPage extends StatelessWidget {
                 );
               } else {
                 return ListTile(
-                  onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+                  // onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
                   leading: Lottie.asset('assets/animations/people-portrait.json'),
                   title: Text(
                     "You are not logged in!",
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyText1.color,
+                    style: mainTextStyle(context).copyWith(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     "Click here and login to your account.",
-                    style: TextStyle(
+                    style: mainTextStyle(context).copyWith(
                       fontSize: 13.0,
                       fontWeight: FontWeight.w300,
-                      color: Theme.of(context).textTheme.bodyText1.color,
                     ),
                   ),
                   trailing: Icon(CupertinoIcons.forward, color: Colors.grey),
@@ -123,22 +113,15 @@ class SettingsPage extends StatelessWidget {
             desc: "Sort your notes on one of the following filters.",
             showDesc: false,
             values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
-            // leading: Icon(
-            //   CupertinoIcons.sort_down_circle,
-            //   color: Theme.of(context).textTheme.bodyText1.color,
-            //   size: 20.0,
-            // ),
-            // leadingColor: Colors.red,
+            titleColor: mainTextStyle(context).color,
             leading: Icon(
               Icons.sort_rounded,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: mainTextStyle(context).color,
               size: 20.0,
             ),
             titleGap: 0.0,
             onChange: ((String value) {
               String val;
-
               if (value == 'Date created')
                 val = 'created';
               else if (value == 'Date modified')
@@ -157,68 +140,53 @@ class SettingsPage extends StatelessWidget {
             // desc: 'Enable compact tags in notes view',
             // desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            titleColor: mainTextStyle(context).color,
             // leading: Icon(CupertinoIcons.bars, color: Colors.white, size: 20.0),
             // leadingColor: Colors.blue,
             leading: Icon(
               CupertinoIcons.bars,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: mainTextStyle(context).color,
               size: 20.0,
             ),
             titleGap: 0.0,
             onEnable: () => _prefsCubit.updateCompactTags(true),
             onDisable: () => _prefsCubit.updateCompactTags(false),
           ),
-
-          // PreferenceTitle('Personalization'),
-          ListTile(
-              title: Text(
-            'Personalization',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
-          )),
-
-          // PreferenceTitle(
-          //   '  !! Personalization is yet to be implemented !!',
-          //   style: TextStyle(
-          //     color: Colors.grey[500],
-          //     fontStyle: FontStyle.italic,
-          //   ),
-          // ),
+          mainTitle('Personalization', context),
+          //TODO: DARK MODE IS NOT WORKING
           SwitchPreference(
             'Dark mode',
             'dark_mode',
-            disabled: true,
+            disabled: false,
             // desc: "Switch between light and dark mode",
             // desc: "So now the fun begins.",
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            titleColor: mainTextStyle(context).color,
             // leading: Icon(CupertinoIcons.moon, color: Colors.white, size: 20.0),
             // leadingColor: Colors.purple,
+            defaultVal: Theme.of(context).brightness == Brightness.dark ? true : false,
             leading: Icon(
               CupertinoIcons.moon,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: mainTextStyle(context).color,
               size: 20.0,
             ),
             titleGap: 0.0,
+            onEnable: () => BlocProvider.of<ThemeBloc>(context).add(ThemeChanged(appTheme: AppTheme.Dark)),
+            onDisable: () => BlocProvider.of<ThemeBloc>(context).add(ThemeChanged(appTheme: AppTheme.Light)),
             onChange: ((value) {
               print(value);
             }),
           ),
+
           DropdownPreference(
             'Dark theme',
             'dark_theme',
             disabled: true,
-            // desc: "Spice up your theme",
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
-            // leading: Icon(CupertinoIcons.at, color: Colors.white, size: 20.0),
-            // leadingColor: Colors.pink,
-
+            titleColor: mainTextStyle(context).color,
             leading: Icon(
               CupertinoIcons.at,
-              color: Theme.of(context).textTheme.bodyText1.color,
+              color: mainTextStyle(context).color,
               size: 20.0,
             ),
             titleGap: 0.0,
@@ -228,30 +196,21 @@ class SettingsPage extends StatelessWidget {
           ),
           PreferencePageLink(
             'Extensions',
-            // desc: 'Extend your experience.',
             disabled: true,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
-            style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.bolt, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            style: mainTextStyle(context).copyWith(fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.bolt, color: mainTextStyle(context).color, size: 20.0),
             // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
           ),
-          // PreferenceTitle('Security'),
-
-          ListTile(
-              title: Text(
-            'Security',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
-          )),
-          AppLockSwitchPrefs(),
+          mainTitle('Security', context),
+          AppLockSwitchPrefs(textStyle: mainTextStyle(context)),
           PreferenceText(
             'Change Passcode',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.lock_shield, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            style: mainTextStyle(context).copyWith(fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.lock_shield, color: mainTextStyle(context).color, size: 20.0),
             // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
@@ -267,42 +226,31 @@ class SettingsPage extends StatelessWidget {
                 Toast.show("Please enable applock first", context);
             },
           ),
-
-          // !! ========================================================
-
-          // PreferenceTitle('Details Section'),
-          ListTile(
-              title: Text(
-            'Details Section',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyText1.color,
-            ),
-          )),
-
+          mainTitle('Details Section', context),
           PreferencePageLink(
             'Application',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.app, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            style: mainTextStyle(context).copyWith(fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.app, color: mainTextStyle(context).color, size: 20.0),
             // leadingColor: Colors.grey,
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            titleColor: mainTextStyle(context).color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
-            widgetScaffold: AppDetailSection(),
+            widgetScaffold: AppDetailSection(textStyle: mainTextStyle(context)),
           ),
           PreferencePageLink(
             'About Us',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.person, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            style: mainTextStyle(context).copyWith(fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.person, color: mainTextStyle(context).color, size: 20.0),
             // leadingColor: Colors.brown,
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            titleColor: mainTextStyle(context).color,
             trailing: Icon(Icons.keyboard_arrow_right),
             titleGap: 0.0,
             widgetScaffold: AboutGivnotes(),
           ),
           PreferencePageLink(
             'Contact Us',
-            style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color, fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.chat_bubble, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+            style: mainTextStyle(context).copyWith(fontWeight: FontWeight.w600),
+            leading: Icon(CupertinoIcons.chat_bubble, color: mainTextStyle(context).color, size: 20.0),
             // leadingColor: Colors.blueGrey,
             titleColor: Theme.of(context).textTheme.bodyText1.color,
             trailing: Icon(Icons.keyboard_arrow_right),
@@ -310,147 +258,201 @@ class SettingsPage extends StatelessWidget {
             widgetScaffold: ContactGivnotes(),
           ),
           SizedBox(height: (10 / 760) * screenHeight),
-          //! =============================================
+          mainTitle('Others', context),
+          StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              User user;
+              if (snapshot.hasData) {
+                user = snapshot.data;
+                final String photo = snapshot.data.photoURL;
+                String initials = '';
+                "Gagan Yadav".split(" ").forEach((element) {
+                  initials = initials + element[0];
+                });
+                return ListTile(
+                  leading: Icon(Icons.logout),
+                  title: Text(
+                    'Logout',
+                    style: mainTextStyle(context),
+                  ),
+                  onTap: () {},
+                );
+              } else {
+                return ListTile(
+                  leading: Icon(
+                    Icons.login_outlined,
+                  ),
+                  title: Text(
+                    'Logout',
+                    style: mainTextStyle(context),
+                  ),
+                  onTap: () {},
+                );
+              }
+            },
+          ),
         ]),
       ),
     );
   }
-}
 
-class ProfileTileSettings extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(15.0),
-      onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: (10.0 / 760) * screenHeight),
-        margin: EdgeInsets.symmetric(horizontal: (20.0 / 394) * screenWidth),
-        child: StreamBuilder<User>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: Container(
-                  height: (40.0 / 760) * screenHeight,
-                  width: (40.0 / 394) * screenWidth,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-                  ),
-                ),
-              );
-            } else if (snapshot.hasData) {
-              final String photo = snapshot.data.photoURL;
-              String initials = '';
-              "Gagan Yadav".split(" ").forEach((element) {
-                initials = initials + element[0];
-              });
-
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Gagan Yadav",
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText1.color,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                " ${snapshot.data.email}",
-                                style: TextStyle(
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.w300,
-                                  color: Theme.of(context).textTheme.bodyText2.color,
-                                ),
-                              ),
-                              SizedBox(width: 5.0),
-                              !snapshot.data.emailVerified
-                                  ? Icon(
-                                      CupertinoIcons.exclamationmark_circle,
-                                      color: Colors.red,
-                                      size: 16.0,
-                                    )
-                                  : SizedBox.shrink(),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Icon(CupertinoIcons.forward, color: Colors.grey),
-                ],
-              );
-            } else {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: Colors.orange,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
-                          child: Lottie.asset('assets/animations/people-portrait.json'),
-                        ),
-                      ),
-                      // SizedBox(width: 10.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "You are not logged in!",
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText1.color,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            "Click here and login to your account.",
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w300,
-                              color: Theme.of(context).textTheme.bodyText1.color,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Icon(CupertinoIcons.forward, color: Colors.grey),
-                ],
-              );
-            }
-          },
-        ),
-      ),
+  TextStyle mainTextStyle(BuildContext context) {
+    return TextStyle(
+      color: Theme.of(context).textTheme.bodyText1.color,
     );
+  }
+
+  ListTile mainTitle(String title, BuildContext context) {
+    return ListTile(
+        title: Text(
+      title,
+      style: mainTextStyle(context),
+    ));
   }
 }
 
-class AppDetailSection extends StatefulWidget {
-  AppDetailSection({Key key}) : super(key: key);
+// class ProfileTileSettings extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return InkWell(
+//       borderRadius: BorderRadius.circular(15.0),
+//       // onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+//       child: Container(
+//         padding: EdgeInsets.symmetric(vertical: (10.0 / 760) * screenHeight),
+//         margin: EdgeInsets.symmetric(horizontal: (20.0 / 394) * screenWidth),
+//         child: StreamBuilder<User>(
+//           stream: FirebaseAuth.instance.authStateChanges(),
+//           builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+//             if (snapshot.connectionState == ConnectionState.waiting) {
+//               return Center(
+//                 child: Container(
+//                   height: (40.0 / 760) * screenHeight,
+//                   width: (40.0 / 394) * screenWidth,
+//                   child: CircularProgressIndicator(
+//                     strokeWidth: 1.0,
+//                     valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+//                   ),
+//                 ),
+//               );
+//             } else if (snapshot.hasData) {
+//               final String photo = snapshot.data.photoURL;
+//               String initials = '';
+//               "Gagan Yadav".split(" ").forEach((element) {
+//                 initials = initials + element[0];
+//               });
 
+//               return Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                             "Gagan Yadav",
+//                             style: TextStyle(
+//                               color: Theme.of(context).textTheme.bodyText1.color,
+//                               fontSize: 18.0,
+//                               fontWeight: FontWeight.w600,
+//                             ),
+//                           ),
+//                           Row(
+//                             mainAxisAlignment: MainAxisAlignment.start,
+//                             crossAxisAlignment: CrossAxisAlignment.center,
+//                             children: [
+//                               Text(
+//                                 " ${snapshot.data.email}",
+//                                 style: TextStyle(
+//                                   fontSize: 13.0,
+//                                   fontWeight: FontWeight.w300,
+//                                   color: Theme.of(context).textTheme.bodyText2.color,
+//                                 ),
+//                               ),
+//                               SizedBox(width: 5.0),
+//                               !snapshot.data.emailVerified
+//                                   ? Icon(
+//                                       CupertinoIcons.exclamationmark_circle,
+//                                       color: Colors.red,
+//                                       size: 16.0,
+//                                     )
+//                                   : SizedBox.shrink(),
+//                             ],
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                   Icon(CupertinoIcons.forward, color: Colors.grey),
+//                 ],
+//               );
+//             } else {
+//               return Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       CircleAvatar(
+//                         radius: 35.0,
+//                         backgroundColor: Colors.orange,
+//                         child: Padding(
+//                           padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
+//                           child: Lottie.asset('assets/animations/people-portrait.json'),
+//                         ),
+//                       ),
+//                       // SizedBox(width: 10.0),
+//                       Column(
+//                         mainAxisAlignment: MainAxisAlignment.center,
+//                         children: [
+//                           Text(
+//                             "You are not logged in!",
+//                             style: TextStyle(
+//                               color: Theme.of(context).textTheme.bodyText1.color,
+//                               fontSize: 18.0,
+//                               fontWeight: FontWeight.w600,
+//                             ),
+//                           ),
+//                           Text(
+//                             "Click here and login to your account.",
+//                             style: TextStyle(
+//                               fontSize: 13.0,
+//                               fontWeight: FontWeight.w300,
+//                               color: Theme.of(context).textTheme.bodyText1.color,
+//                             ),
+//                           ),
+//                         ],
+//                       ),
+//                     ],
+//                   ),
+//                   Icon(CupertinoIcons.forward, color: Colors.grey),
+//                 ],
+//               );
+//             }
+//           },
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class AppDetailSection extends StatefulWidget {
+  final TextStyle textStyle;
+
+  AppDetailSection({Key key, @required this.textStyle}) : super(key: key);
   @override
   _AppDetailSectionState createState() => _AppDetailSectionState();
 }
 
 class _AppDetailSectionState extends State<AppDetailSection> {
   int selectedIndex = 0;
+  TextStyle mainTextStyle = TextStyle();
+  @override
+  void initState() {
+    super.initState();
+    mainTextStyle = widget.textStyle;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -459,9 +461,7 @@ class _AppDetailSectionState extends State<AppDetailSection> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: Text(
           "Application",
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodyText1.color,
-          ),
+          style: mainTextStyle,
         ),
         elevation: 0.0,
         leading: IconButton(
@@ -482,15 +482,11 @@ class _AppDetailSectionState extends State<AppDetailSection> {
               children: {
                 0: Text(
                   "App Info",
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                  ),
+                  style: mainTextStyle,
                 ),
                 1: Text(
                   "Logs",
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                  ),
+                  style: mainTextStyle,
                 ),
               },
               groupValue: selectedIndex,
@@ -521,18 +517,35 @@ class _AppDetailSectionState extends State<AppDetailSection> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Development version: "), Text("v2.0.0")]),
       ],
     ),
-    Align(alignment: Alignment.topCenter, child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
+    Align(
+      alignment: Alignment.topCenter,
+      child: Text(
+        "Logs",
+        style: TextStyle(
+          fontSize: 24.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
   ];
 }
 
 class AppLockSwitchPrefs extends StatefulWidget {
-  AppLockSwitchPrefs({Key key}) : super(key: key);
+  final TextStyle textStyle;
+  AppLockSwitchPrefs({Key key, @required this.textStyle}) : super(key: key);
 
   @override
   _AppLockSwitchPrefsState createState() => _AppLockSwitchPrefsState();
 }
 
 class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
+  TextStyle mainTextStyle = TextStyle();
+  @override
+  void initState() {
+    mainTextStyle = widget.textStyle;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -542,7 +555,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           'app_lock',
           // desc: 'Add 4 digit pin',
           defaultVal: false,
-          titleColor: Theme.of(context).textTheme.bodyText1.color,
+          titleColor: mainTextStyle.color,
           ignoreTileTap: false,
           leading: Icon(CupertinoIcons.lock, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
           // leadingColor: Colors.orangeAccent,
@@ -582,7 +595,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
-          titleColor: Theme.of(context).textTheme.bodyText1.color,
+          titleColor: mainTextStyle.color,
           leading: Icon(
             Icons.fingerprint_outlined,
             color: Theme.of(context).textTheme.bodyText1.color,
@@ -610,7 +623,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 //         leading: Icon(Icons.phone_iphone),
 //         trailing: Icon(Icons.keyboard_arrow_right),
 //         page: PreferencePage([
-//           PreferenceTitle('Device'),
+//           ('Device'),
 //           PreferenceText(
 //             """
 // Brand:   ${_pluginInitializer.androidInfo.manufacturer}
@@ -619,7 +632,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 //   """,
 //             overflow: TextOverflow.visible,
 //           ),
-//           PreferenceTitle('Software'),
+//           ('Software'),
 //           PreferenceText(
 //             """
 // Host distro:  ${_pluginInitializer.androidInfo.host}
@@ -628,7 +641,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 //   """,
 //             overflow: TextOverflow.visible,
 //           ),
-//           PreferenceTitle('Hardware'),
+//           ('Hardware'),
 //           PreferenceText(
 //             """
 // Architecture:  ${_pluginInitializer.androidInfo.supported64BitAbis}

@@ -246,7 +246,8 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           autocorrect: false,
           cursorColor: Theme.of(context).textTheme.bodyText2.color,
           style: TextStyle(
-            fontSize: 16,
+            fontSize: 13,
+            letterSpacing: 1.05,
             // color: Colors.grey[800],
             color: Theme.of(context).textTheme.bodyText1.color,
           ),
@@ -263,15 +264,23 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             _searchTagFocus.unfocus();
           },
           decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.black,
             enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
               ),
             ),
             focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
               ),
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: Colors.blue,
             ),
             suffixIcon: InkWell(
               onTap: () {
@@ -281,7 +290,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 _searchTagController.clear();
                 _searchTagFocus.unfocus();
               },
-              child: Icon(Icons.close, size: 22, color: Colors.black),
+              child: Icon(
+                Icons.close,
+                size: 22,
+                color: Theme.of(context).textTheme.bodyText2.color,
+              ),
             ),
             border: InputBorder.none,
             hintText: 'Search Tags',
@@ -289,7 +302,6 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               fontWeight: FontWeight.w300,
               color: Colors.grey,
               fontSize: 14,
-              fontStyle: FontStyle.italic,
             ),
             contentPadding: EdgeInsets.only(
               left: 0.030609137 * screenSize.width, //16

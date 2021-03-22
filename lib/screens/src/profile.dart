@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/global/utils.dart';
@@ -26,13 +27,14 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    // hm = MediaQuery.of(context).size.height / 100;
-    // wm = MediaQuery.of(context).size.width / 100;
+    hm = MediaQuery.of(context).size.height / 100;
+    wm = MediaQuery.of(context).size.width / 100;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: GiveStatusBarColor(context),
       ),
     );
+    // return MainProfilePage();
     //TODO too much to rebuild... redesign
     return Scaffold(
       appBar: AppBar(
@@ -307,11 +309,11 @@ class _MyProfileState extends State<MyProfile> {
         return AlertDialog(
           content: Text('Please confirm your sign out.'),
           actions: [
-            FlatButton(
+            TextButton(
               child: Text('Cancle'),
               onPressed: () => Navigator.pop(context),
             ),
-            FlatButton(
+            TextButton(
               child: Text("Confirm"),
               onPressed: () async {
                 FirebaseAuth.instance.signOut();

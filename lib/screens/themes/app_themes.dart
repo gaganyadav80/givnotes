@@ -127,7 +127,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
 );
 
 final ThemeData darkTheme = ThemeData.dark().copyWith(
-  accentColor: Colors.green,
+  accentColor: Colors.lightBlueAccent,
   visualDensity: VisualDensity.adaptivePlatformDensity,
   primaryColor: Colors.blue,
   scaffoldBackgroundColor: Colors.grey[900],
@@ -167,8 +167,8 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
   canvasColor: Color(0xFF181532),
   colorScheme: ColorScheme.light().copyWith(
-    primaryVariant: Color(0xff0addaa),
-    primary: Color(0xFf1adfbb),
+    primaryVariant: Colors.blueAccent,
+    primary: Colors.blueAccent,
     // secondary: Color(0xFFff5a5a),
     // secondaryVariant: Color(0xFFff555d),
     onSurface: Colors.white,

@@ -137,11 +137,14 @@ In release mode, the default value ($value) will silently be used.
         onTap: () => widget.disabled
             ? null
             : showMaterialModalBottomSheet(
+                expand: false,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 context: context,
                 builder: (ctx) => Container(
                   child: Column(
                     children: [
                       ListView(
+                        shrinkWrap: true,
                         children: widget.values.map((val) {
                           return ListTile(
                             onTap: () {
@@ -153,12 +156,16 @@ In release mode, the default value ($value) will silently be used.
                                   ? Text(
                                       val.toString(),
                                       textAlign: TextAlign.end,
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
                                     )
                                   : Text(
                                       widget.displayValues[widget.values.indexOf(val)],
                                       textAlign: TextAlign.end,
-                                      style: TextStyle(color: Colors.black),
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
                                     ),
                             ),
                           );
@@ -167,7 +174,10 @@ In release mode, the default value ($value) will silently be used.
                       ListTile(
                         onTap: () => Navigator.of(context, rootNavigator: true).pop("Cancel"),
                         title: Center(
-                          child: Text('Cancel', style: TextStyle(color: Colors.black)),
+                          child: Text('Cancel',
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.bodyText1.color,
+                              )),
                         ),
                       ),
                     ],
@@ -188,12 +198,12 @@ In release mode, the default value ($value) will silently be used.
         //           child: Text(
         //             widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
         //             textAlign: TextAlign.end,
-        //             style: TextStyle(color: Colors.black),
+        //             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color,),
         //           ),
         //         );
         //       }).toList(),
         //       cancelButton: CupertinoActionSheetAction(
-        //         child: Text('Cancle', style: TextStyle(color: Colors.black)),
+        //         child: Text('Cancle', style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color,)),
         //         onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
         //       ),
         //     ),
