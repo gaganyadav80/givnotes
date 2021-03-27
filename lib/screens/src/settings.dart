@@ -43,9 +43,7 @@ class SettingsPage extends StatelessWidget {
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return Card(
-                  child: CircularProgressIndicator(),
-                );
+                return CircularProgressIndicator();
               } else if (snapshot.hasData) {
                 final String photo = snapshot.data.photoURL;
                 String initials = '';
@@ -287,7 +285,9 @@ class SettingsPage extends StatelessWidget {
                     'Logout',
                     style: mainTextStyle(context),
                   ),
-                  onTap: () {},
+                  onTap: () async {
+                    //TODO: implement
+                  },
                 );
               }
             },

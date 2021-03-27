@@ -118,66 +118,68 @@ class NotesModelSheet extends StatelessWidget {
 
     return Container(
       // height: 275,
-      height: 0.361842105 * screenSize.height,
+      height: 0.401842105 * screenSize.height,
       // color: Color(0xff171C26),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            // padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
-            padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.039473684 * screenSize.height, 0, 0),
-            child: Text(
-              'Note Options',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).textTheme.bodyText1.color,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              // padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
+              padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.039473684 * screenSize.height, 0, 0),
+              child: Text(
+                'Note Options',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
               ),
             ),
-          ),
-          // SizedBox(height: 10),
-          SizedBox(height: 0.013157895 * screenSize.height),
-          DropdownPreference(
-            'Sort notes',
-            'sort_notes',
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
-            titleGap: 0.0,
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Theme.of(context).primaryColor),
-            defaultVal: def,
-            desc: "Sort your notes on one of the following filters.",
-            showDesc: false,
-            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-            onChange: ((String value) {
-              if (value == 'Date created')
-                hydratedPrefsCubit.updateSortBy('created');
-              else if (value == 'Date modified')
-                hydratedPrefsCubit.updateSortBy('modified');
-              else if (value == 'Alphabetical (A-Z)')
-                hydratedPrefsCubit.updateSortBy('a-z');
-              else
-                hydratedPrefsCubit.updateSortBy('z-a');
-            }),
-          ),
-          SwitchPreference(
-            'Compact Tags',
-            'compact_tags',
-            titleColor: Theme.of(context).textTheme.bodyText1.color,
-            titleGap: 0,
-            leading: Icon(CupertinoIcons.bars, color: Theme.of(context).textTheme.bodyText1.color),
-            desc: 'Enable compact tags in notes view',
-            defaultVal: hydratedPrefsCubit.state.compactTags,
-            onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
-            onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
-          ),
-          ListTile(
-            leading: Icon(CupertinoIcons.trash, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
-            horizontalTitleGap: 0,
-            title: Text("Trash", style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color)),
-            // subtitle: Text("Check your trashed notes", style: TextStyle(color: Colors.black.withOpacity(0.6), fontWeight: FontWeight.w300)),
-            trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Theme.of(context).textTheme.bodyText2.color),
-            onTap: () => print('trash pressed'),
-          ),
-        ],
+            // SizedBox(height: 10),
+            SizedBox(height: 0.013157895 * screenSize.height),
+            DropdownPreference(
+              'Sort notes',
+              'sort_notes',
+              titleColor: Theme.of(context).textTheme.bodyText1.color,
+              titleGap: 0.0,
+              leading: Icon(CupertinoIcons.sort_down_circle, color: Theme.of(context).primaryColor),
+              defaultVal: def,
+              desc: "Sort your notes on one of the following filters.",
+              showDesc: false,
+              values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+              onChange: ((String value) {
+                if (value == 'Date created')
+                  hydratedPrefsCubit.updateSortBy('created');
+                else if (value == 'Date modified')
+                  hydratedPrefsCubit.updateSortBy('modified');
+                else if (value == 'Alphabetical (A-Z)')
+                  hydratedPrefsCubit.updateSortBy('a-z');
+                else
+                  hydratedPrefsCubit.updateSortBy('z-a');
+              }),
+            ),
+            SwitchPreference(
+              'Compact Tags',
+              'compact_tags',
+              titleColor: Theme.of(context).textTheme.bodyText1.color,
+              titleGap: 0,
+              leading: Icon(CupertinoIcons.bars, color: Theme.of(context).textTheme.bodyText1.color),
+              desc: 'Enable compact tags in notes view',
+              defaultVal: hydratedPrefsCubit.state.compactTags,
+              onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
+              onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
+            ),
+            ListTile(
+              leading: Icon(CupertinoIcons.trash, color: Theme.of(context).textTheme.bodyText1.color, size: 20.0),
+              horizontalTitleGap: 0,
+              title: Text("Trash", style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color)),
+              // subtitle: Text("Check your trashed notes", style: TextStyle(color: Colors.black.withOpacity(0.6), fontWeight: FontWeight.w300)),
+              trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Theme.of(context).textTheme.bodyText2.color),
+              onTap: () => print('trash pressed'),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -114,9 +114,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    // hm = context.percentHeight;
-    // wm = context.percentWidth;
-    // Size size = MediaQuery.of(context).size;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: GiveStatusBarColor(context),
@@ -144,14 +142,14 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 elevation: 0.0,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                expandedHeight: 0.121052632 * screenSize.height,
+                expandedHeight: 0.081052632 * screenSize.height,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
                     'Search',
                     style: TextStyle(
                       height: 0.0,
-                      fontSize: 30,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).textTheme.bodyText1.color,
                     ),
@@ -162,7 +160,7 @@ class _SearchPageState extends State<SearchPage> {
                 automaticallyImplyLeading: false,
                 pinned: true,
                 elevation: 0.0,
-                backgroundColor: Theme.of(context).textTheme.bodyText1.color,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: searchNoteTextField(),
                 titleSpacing: 10.0,
               ),
@@ -189,8 +187,9 @@ class _SearchPageState extends State<SearchPage> {
                                             right: 0.05 * screenSize.width,
                                           ),
                                           // child: Image.asset(
-                                          //   'assets/img/search.png',
+                                          //   isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
                                           //   // height: 40 * hm,
+
                                           //   height: 0.4 * screenSize.height,
                                           // ),
                                           child: Center(
@@ -417,82 +416,110 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget searchNoteTextField() {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
-      builder: (context, state) => Container(
-        // color: Theme.of(context).scaffoldBackgroundColor,
-        height: 0.0492105263 * screenSize.height,
-        child: CupertinoTextField(
-          controller: _textController,
-          focusNode: _focusNode,
-          cursorColor: Colors.black,
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w500,
-          ),
-          onEditingComplete: () {
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-          },
-          clearButtonMode: OverlayVisibilityMode.editing,
-          placeholder: ' \u{1F50D}  Search for notes',
-          // padding: EdgeInsets.only(left: 10.0),
-          padding: EdgeInsets.only(left: 0.0253807107 * screenSize.width),
-          toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
-          decoration: BoxDecoration(
-            color: CupertinoDynamicColor.withBrightness(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              darkColor: CupertinoColors.black,
+      builder: (context, state) => TextField(
+        controller: _textController,
+        focusNode: _focusNode,
+        cursorColor: Colors.black,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.grey[800],
+          fontWeight: FontWeight.w500,
+        ),
+        onEditingComplete: () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        // clearButtonMode: OverlayVisibilityMode.editing,
+        // placeholder: ' \u{1F50D}  Search for notes',
+        // padding: EdgeInsets.only(left: 10.0),
+        // padding: EdgeInsets.only(left: 0.0253807107 * screenSize.width),
+        toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
+        textCapitalization: TextCapitalization.characters,
+        inputFormatters: [
+          TextInputFormatter.withFunction(
+            (oldValue, newValue) => TextEditingValue(
+              text: newValue.text?.toUpperCase(),
+              selection: newValue.selection,
             ),
-            // border: _kDefaultRoundedBorder,
-            // borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            // border: Border.all(
-            //   color: CupertinoDynamicColor.withBrightness(
-            //     // color: Color(0x33000000),
-            //     // darkColor: Color(0x33FFFFFF),
-            //     darkColor: Theme.of(context).scaffoldBackgroundColor,
-            //     color: Colors.black,
-            //   ),
-            //   style: BorderStyle.solid,
-            //   width: 1.0, // default 0 for cupertino
-            // ),
           ),
-          // decoration: InputDecoration(
-          //   fillColor: Colors.white,
-          //   enabledBorder: const OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   focusedBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   suffixIcon: state.isSearchBoxSelected
-          //       ? InkWell(
-          //           child: Icon(Icons.close, size: 22, color: Colors.black),
-          //           onTap: () {
-          //             _focusNode.unfocus();
-          //             _textController.clear();
-          //             BlocProvider.of<NoteAndSearchCubit>(context).updateBoxSelected(false);
-          //           },
-          //         )
-          //       : Icon(Icons.search, color: Colors.black),
-          //   border: InputBorder.none,
-          //   hintText: 'Search for notes',
-          //   hintStyle: TextStyle(
-          //     fontWeight: FontWeight.w300,
-          //     color: Colors.grey,
-          //     fontSize: 14,
-          //     fontStyle: FontStyle.italic,
-          //   ),
-          //   contentPadding: const EdgeInsets.only(
-          //     left: 16,
-          //     right: 20,
-          //     top: 14,
-          //     bottom: 14,
+        ],
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.black,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: Colors.blue,
+          ),
+          // suffixIcon: InkWell(
+          //   onTap: () {},
+          //   child: Icon(
+          //     Icons.close,
+          //     size: 22,
+          //     color: Theme.of(context).textTheme.bodyText2.color,
           //   ),
           // ),
+          border: InputBorder.none,
+          hintText: 'Search Tags',
+          hintStyle: TextStyle(
+            fontWeight: FontWeight.w300,
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+          contentPadding: EdgeInsets.only(
+            left: 0.030609137 * screenSize.width, //16
+            right: 0.040761421 * screenSize.width, //20
+            top: 0.008421053 * screenSize.height, //14
+            bottom: 0.008421053 * screenSize.height, //14
+          ),
         ),
+        // decoration: InputDecoration(
+        //   fillColor: Colors.white,
+        //   enabledBorder: const OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //   focusedBorder: OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //   suffixIcon: state.isSearchBoxSelected
+        //       ? InkWell(
+        //           child: Icon(Icons.close, size: 22, color: Colors.black),
+        //           onTap: () {
+        //             _focusNode.unfocus();
+        //             _textController.clear();
+        //             BlocProvider.of<NoteAndSearchCubit>(context).updateBoxSelected(false);
+        //           },
+        //         )
+        //       : Icon(Icons.search, color: Colors.black),
+        //   border: InputBorder.none,
+        //   hintText: 'Search for notes',
+        //   hintStyle: TextStyle(
+        //     fontWeight: FontWeight.w300,
+        //     color: Colors.grey,
+        //     fontSize: 14,
+        //     fontStyle: FontStyle.italic,
+        //   ),
+        //   contentPadding: const EdgeInsets.only(
+        //     left: 16,
+        //     right: 20,
+        //     top: 14,
+        //     bottom: 14,
+        //   ),
+        // ),
       ),
     );
   }
