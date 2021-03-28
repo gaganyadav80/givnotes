@@ -11,6 +11,7 @@ class NotesEmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hm = 7.6;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     // final wm = 3.93;
     return BlocProvider.of<HomeCubit>(context).state.global == true
         ? Center(child: Container(child: Text("Global")))
@@ -49,7 +50,7 @@ class NotesEmptyView extends StatelessWidget {
                         // padding: EdgeInsets.only(bottom: hm),
                         padding: EdgeInsets.only(bottom: 0.01 * screenSize.height),
                         child: Image(
-                          image: AssetImage('assets/img/trash.png'),
+                          image: isDark ? AssetImage('assets/giv_img/empty_trash_dark.png') : AssetImage('assets/giv_img/empty_trash_light.png'),
                           // height: 25 * hm,
                           // width: 45 * wm,
                           height: 0.25 * screenSize.height,
@@ -68,11 +69,11 @@ class NotesEmptyView extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Image.asset(
-                        //   'assets/img/lady-on-phone.png',
-                        //   width: 0.75 * screenSize.width,
-                        //   height: 0.336973684 * screenSize.height,
-                        // ),
+                        Image.asset(
+                          isDark ? 'assets/giv_img/empty_notes_dark.png' : 'assets/giv_img/empty_notes_light.png',
+                          width: 0.75 * screenSize.width,
+                          height: 0.336973684 * screenSize.height,
+                        ),
                         Text("Notes sorted by: ${state.sortBy}"),
                         Text("Compact Tags: ${state.compactTags}"),
                       ],

@@ -2,19 +2,25 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
 
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
   }
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     // GoogleSignIn.standard().signOut();
@@ -60,19 +66,19 @@ class HomePage extends StatelessWidget {
                   onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 0 ? CupertinoIcons.book_fill : CupertinoIcons.book, size: 36),
+                      icon: Icon(state.index == 0 ? Icons.book : Icons.book_outlined, size: 33),
                       // label: 'Notes',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 1 ? CupertinoIcons.layers_fill : CupertinoIcons.layers, size: 36),
+                      icon: Icon(state.index == 1 ? Icons.layers : Icons.layers_outlined, size: 33),
                       // label: 'Todos',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 2 ? CupertinoIcons.tag_fill : CupertinoIcons.tag), //size: 27
+                      icon: Icon(state.index == 2 ? CupertinoIcons.tags_solid : CupertinoIcons.tags, size: 33), //size: 27
                       // label: 'Tags',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(state.index == 3 ? CupertinoIcons.settings_solid : CupertinoIcons.settings, size: 36),
+                      icon: Icon(state.index == 3 ? Icons.settings : Icons.settings_outlined, size: 33),
                       // label: 'Settings',
                     ),
                   ],

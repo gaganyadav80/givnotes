@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -133,7 +134,9 @@ class _GivnotesAppState extends State<GivnotesApp> {
       // locale: DevicePreview.locale(context),
       // builder: DevicePreview.appBuilder,
       title: 'Givnotes',
-      theme: widget.state.appThemeData,
+      // theme: widget.state.appThemeData,
+      theme: lightTheme,
+
       // theme: ThemeData(
       //   //maybe switch to google fonts
       //   fontFamily: 'Poppins',

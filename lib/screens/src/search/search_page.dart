@@ -134,7 +134,7 @@ class _SearchPageState extends State<SearchPage> {
                 pinned: true,
                 leading: IconButton(
                   icon: Icon(CupertinoIcons.arrow_left),
-                  color: Theme.of(context).iconTheme.color,
+                  color: isDark ? Theme.of(context).iconTheme.color : Colors.black,
                   onPressed: () {
                     BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
                     Navigator.pop(context);
@@ -161,7 +161,7 @@ class _SearchPageState extends State<SearchPage> {
                 pinned: true,
                 elevation: 0.0,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                title: searchNoteTextField(),
+                title: searchNoteTextField(isDark: isDark),
                 titleSpacing: 10.0,
               ),
               ValueListenableBuilder(
@@ -414,12 +414,12 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget searchNoteTextField() {
+  Widget searchNoteTextField({@required bool isDark}) {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
       builder: (context, state) => TextField(
         controller: _textController,
         focusNode: _focusNode,
-        cursorColor: Colors.black,
+        cursorColor: Theme.of(context).textTheme.bodyText1.color,
         style: TextStyle(
           fontSize: 18,
           color: Colors.grey[800],
@@ -447,15 +447,9 @@ class _SearchPageState extends State<SearchPage> {
           fillColor: Colors.black,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: Colors.black,
-            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: Colors.black,
-            ),
           ),
           prefixIcon: Icon(
             Icons.search_rounded,
@@ -470,7 +464,7 @@ class _SearchPageState extends State<SearchPage> {
           //   ),
           // ),
           border: InputBorder.none,
-          hintText: 'Search Tags',
+          hintText: 'Search here',
           hintStyle: TextStyle(
             fontWeight: FontWeight.w300,
             color: Colors.grey,

@@ -31,7 +31,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   primaryColorDark: Colors.black,
   cardColor: Colors.white,
   primaryIconTheme: IconThemeData().copyWith(color: Color(0xff3389FF)),
-  iconTheme: IconThemeData().copyWith(color: Colors.white),
+  iconTheme: IconThemeData(),
   canvasColor: Colors.white,
   colorScheme: ColorScheme.light().copyWith(
     primary: Color(0xFF41d480),
@@ -73,7 +73,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     /// Bottom nav-bar and top-card (you are owed/ you owe) text
     bodyText2: TextStyle(
       fontFamily: 'OpenSans',
-      color: Color(0xFFFFFFFF),
+      color: Colors.black,
       fontSize: 10,
     ),
 
