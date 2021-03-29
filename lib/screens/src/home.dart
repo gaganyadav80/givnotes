@@ -11,6 +11,8 @@ import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
 
+import 'todo_timeline/todo_home_bloc.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
 
@@ -38,7 +40,7 @@ class HomePage extends StatelessWidget {
                 children: <Widget>[
                   NotesView(), //? 0
                   // TodoHome(),
-                  TodoTimeline(), //? 1
+                  TodoTimelineBloc(), //? 1
                   TagsView(), //? 2
                   SettingsPage(), //? 3
                   // MyProfile(), //? 4

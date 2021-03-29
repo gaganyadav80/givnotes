@@ -14,7 +14,7 @@ dependencies:
   avatar_glow: ^2.0.1
   bloc: ^7.0.0
   cached_network_image: ^3.0.0-nullsafety
-  # circular_check_box: ^1.0.4
+  cloud_firestore: ^1.0.2
   cupertino_icons: ^1.0.0
   equatable: ^2.0.0
   file_picker: ^3.0.0
@@ -45,12 +45,12 @@ dependencies:
   path: ^1.8.0
   path_provider: ^2.0.1
   permission_handler: ^6.1.1
+  rxdart: ^0.26.0
   shared_preferences: ^2.0.5
   stringprocess: ^1.0.10
   timelines: ^0.0.2+1
   url_launcher: ^5.0.0
   velocity_x: ^2.6.0
-  # zefyr: ^1.0.0-dev.2.0
 
 dev_dependencies:
   flutter_test:

@@ -19,18 +19,12 @@ import 'cubit/cubits.dart';
 import 'global/variables.dart';
 import 'packages/packages.dart';
 import 'screens/screens.dart';
+import 'screens/src/todo_timeline/bloc/todo_bloc.dart';
+import 'screens/src/todo_timeline/bloc/todo_event.dart';
+import 'screens/src/todo_timeline/src/firebase_todo_repository.dart';
 import 'services/services.dart';
 
 void main() async {
-  //TODO remove when release
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.dumpErrorToConsole(details);
-    if (kReleaseMode) {
-      if (Platform.isAndroid) SystemNavigator.pop();
-    }
-  };
-  //
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -78,11 +72,16 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         // BlocProvider(create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
-        BlocProvider(create: (_) => HomeCubit()),
-        BlocProvider(create: (_) => HydratedPrefsCubit()),
-        BlocProvider(create: (_) => NoteAndSearchCubit()),
-        BlocProvider(create: (_) => LoginBloc()),
-        BlocProvider(create: (_) => RegisterBloc()),
+        BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
+        BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
+        BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
+        BlocProvider<LoginBloc>(create: (_) => LoginBloc()),
+        BlocProvider<RegisterBloc>(create: (_) => RegisterBloc()),
+        BlocProvider<TodosBloc>(
+          create: (context) => TodosBloc(
+            todosRepository: FirebaseTodosRepository(),
+          )..add(LoadTodos()),
+        )
       ],
       child: GivnotesApp(),
     );
@@ -90,13 +89,10 @@ class App extends StatelessWidget {
 }
 
 class GivnotesApp extends StatelessWidget {
-  // final _navigatorKey = GlobalKey<NavigatorState>();
-
-  // NavigatorState get _navigator => _navigatorKey.currentState;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       routes: {
         'login_p': (context) => LoginPage(),
         'register_p': (context) => RegisterPage(),
@@ -113,35 +109,6 @@ class GivnotesApp extends StatelessWidget {
         accentColorBrightness: Brightness.light,
         toggleableActiveColor: Colors.blue,
       ),
-      // builder: (context, widget) => BlocListener<AuthenticationBloc, AuthenticationState>(
-      //   child: widget,
-      //   listener: (context, state) {
-      //     switch (state.status) {
-      //       case AuthenticationStatus.authenticated:
-      //         _navigator.pushAndRemoveUntil<void>(
-      //           HomePage.route(),
-      //           (route) => false,
-      //         );
-      //         break;
-      //       case AuthenticationStatus.unauthenticated:
-      //         _navigator.pushAndRemoveUntil<void>(
-      //           MaterialPageRoute(
-      //             builder: (context) => BlocProvider(
-      //               lazy: false,
-      //               create: (_) => AuthCubit(context.read<AuthenticationRepository>()),
-      //               child: GorgeousLoginPage(),
-      //             ),
-      //           ),
-      //           (route) => false,
-      //         );
-      //         break;
-      //       default:
-      //         break;
-      //     }
-      //   },
-      // ),
-      // navigatorKey: _navigatorKey,
-      // onGenerateRoute: (_) => HomePage.route(),
       home: const CheckLogin(),
     );
   }

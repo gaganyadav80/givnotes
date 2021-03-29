@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
+import 'package:givnotes/screens/src/todo_timeline/create_todo_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -97,7 +98,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                 child: InkWell(
                                   child: Icon(CupertinoIcons.pencil_ellipsis_rectangle, size: 28.0),
                                   // splashRadius: 25.0,
-                                  onTap: () => Navigator.push(context, CreateTodo().materialRoute()),
+                                  onTap: () => Navigator.push(context, CreateTodoBloc().materialRoute()),
                                 ),
                               ),
                             )
