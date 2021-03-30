@@ -155,7 +155,7 @@ class SettingsPage extends StatelessWidget {
           SwitchPreference(
             'Dark mode',
             'dark_mode',
-            disabled: false,
+            disabled: true,
             // desc: "Switch between light and dark mode",
             // desc: "So now the fun begins.",
             titleColor: mainTextStyle(context).color,

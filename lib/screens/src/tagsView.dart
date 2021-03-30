@@ -26,6 +26,8 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: GiveStatusBarColor(context),
@@ -71,12 +73,21 @@ class _TagsViewState extends State<TagsView> {
                         child: Padding(
                           // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
                           padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
-                          // child: Image.asset('assets/img/tags-view-1.png'),
-                          child: Text(
-                            'Search according the tags here',
-                            style: TextStyle(
-                              fontSize: 12,
-                            ),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                // height: 40 * hm,
+
+                                height: 0.2 * screenSize.height,
+                              ),
+                              Text(
+                                'Search according the tags here',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       );

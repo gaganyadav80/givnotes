@@ -180,20 +180,25 @@ class _SearchPageState extends State<SearchPage> {
                                 ? SliverToBoxAdapter(
                                     child: Center(
                                       child: SingleChildScrollView(
+                                        physics: null,
                                         child: Padding(
                                           padding: EdgeInsets.only(
                                             left: 0.05 * screenSize.width,
                                             top: 0.05 * screenSize.height,
                                             right: 0.05 * screenSize.width,
                                           ),
-                                          // child: Image.asset(
-                                          //   isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                          //   // height: 40 * hm,
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                                // height: 40 * hm,
 
-                                          //   height: 0.4 * screenSize.height,
-                                          // ),
-                                          child: Center(
-                                            child: Text('Search for your notes according to Tags'),
+                                                height: 0.2 * screenSize.height,
+                                              ),
+                                              Center(
+                                                child: Text('Search for your notes according to Tags'),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
