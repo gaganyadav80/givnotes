@@ -2,10 +2,13 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
@@ -26,7 +29,12 @@ class _MyProfileState extends State<MyProfile> {
   Widget build(BuildContext context) {
     hm = MediaQuery.of(context).size.height / 100;
     wm = MediaQuery.of(context).size.width / 100;
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
+    // return MainProfilePage();
     //TODO too much to rebuild... redesign
     return Scaffold(
       appBar: AppBar(
@@ -78,7 +86,7 @@ class _MyProfileState extends State<MyProfile> {
                               child: Text(
                                 "Gagan Yadav",
                                 style: GoogleFonts.arizonia(
-                                  color: Colors.black,
+                                  color: Theme.of(context).textTheme.bodyText1.color,
                                   fontSize: 4.5 * hm,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: 0.12 * wm,
@@ -87,18 +95,19 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             Padding(
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
-                              padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
+                              padding: EdgeInsets.symmetric(horizontal: 0.08 * screenSize.width),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     user.email,
                                     style: TextStyle(
-                                      color: Colors.black54,
+                                      color: Theme.of(context).textTheme.bodyText1.color,
                                       fontSize: 2.5 * hm,
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
+                                  SizedBox(height: (10 / 760) * screenHeight),
                                   !user.emailVerified
                                       ? Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -106,7 +115,7 @@ class _MyProfileState extends State<MyProfile> {
                                             Text(
                                               'Email is not verified. ',
                                               style: TextStyle(
-                                                color: Colors.black54,
+                                                color: Theme.of(context).textTheme.bodyText1.color,
                                                 // fontSize: 2.2 * hm,
                                                 fontWeight: FontWeight.w400,
                                                 fontStyle: FontStyle.italic,

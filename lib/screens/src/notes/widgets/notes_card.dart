@@ -51,14 +51,14 @@ class _NotesCardState extends State<NotesCard> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        color: Colors.white,
+        // color: Colors.white,
       ),
       child: Card(
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
+        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Theme.of(context).scaffoldBackgroundColor,
         margin: EdgeInsets.zero,
         child: InkWell(
           radius: 600, //maybe change to 400-500
@@ -99,10 +99,7 @@ class _NotesCardState extends State<NotesCard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Divider(
-                  height: 0.057 * wm,
-                  color: Colors.black,
-                ),
+                Divider(height: 0.057 * wm),
                 // SizedBox(height: 4),
                 SizedBox(height: 0.005263158 * screenSize.height),
                 widget.note.tagsMap.length == 0
@@ -112,6 +109,7 @@ class _NotesCardState extends State<NotesCard> {
                         height: prefsCubit.state.compactTags ? 1 * hm : 2.3 * hm,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
+                          color: Theme.of(context).cardColor,
                         ),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -138,7 +136,7 @@ class _NotesCardState extends State<NotesCard> {
                                     // padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                                     padding: EdgeInsets.fromLTRB(0.012690355 * screenSize.width, 0.002631579 * screenSize.height, 0.012690355 * screenSize.width, 0.002631579 * screenSize.height),
                                     decoration: BoxDecoration(
-                                      color: color,
+                                      color: Colors.red,
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Center(

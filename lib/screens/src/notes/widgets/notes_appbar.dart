@@ -134,20 +134,22 @@ class NotesModelSheet extends StatelessWidget {
 
     return Container(
       // height: 275,
-      height: 0.361842105 * screenSize.height,
+      height: 0.401842105 * screenSize.height,
       // color: Color(0xff171C26),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            // padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
-            padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.039473684 * screenSize.height, 0, 0),
-            child: Text(
-              'Note Options',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              // padding: EdgeInsets.fromLTRB(20, 30, 0, 0),
+              padding: EdgeInsets.fromLTRB(0.050761421 * screenSize.width, 0.039473684 * screenSize.height, 0, 0),
+              child: Text(
+                'Note Options',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
               ),
             ),
           ),

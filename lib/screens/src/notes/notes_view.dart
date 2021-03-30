@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -11,7 +12,8 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-// import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 
 import 'widgets/notes_widgets.dart';
@@ -44,7 +46,11 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // Size size = MediaQuery.of(context).size;
-
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return WillPopScope(
       onWillPop: () async {
         if (BlocProvider.of<HomeCubit>(context).state.trash) {

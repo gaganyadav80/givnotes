@@ -51,6 +51,8 @@ dependencies:
   timelines: ^0.0.2+1
   url_launcher: ^5.0.0
   velocity_x: ^2.6.0
+  modal_bottom_sheet: ^1.0.0+1
+  flutter_svg: ^0.19.3
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +71,7 @@ flutter:
     - assets/logo/
     - assets/animations/
     - assets/fonts/
+    - assets/giv_img/
 
   fonts:
     - family: Abril

@@ -3,6 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -113,16 +120,19 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    // hm = context.percentHeight;
-    // wm = context.percentWidth;
-    // Size size = MediaQuery.of(context).size;
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return WillPopScope(
       onWillPop: () async {
         BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
         return true;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[
@@ -130,20 +140,25 @@ class _SearchPageState extends State<SearchPage> {
                 pinned: true,
                 leading: IconButton(
                   icon: Icon(CupertinoIcons.arrow_left),
-                  color: Colors.black,
+                  color: isDark ? Theme.of(context).iconTheme.color : Colors.black,
                   onPressed: () {
                     BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
                     Navigator.pop(context);
                   },
                 ),
                 elevation: 0.0,
-                backgroundColor: Colors.white,
-                expandedHeight: 0.131052632 * screenSize.height,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                expandedHeight: 0.081052632 * screenSize.height,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
                     'Search',
-                    style: TextStyle(height: 0.0, fontSize: 30, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(
+                      height: 0.0,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                    ),
                   ),
                 ),
               ),
@@ -151,8 +166,8 @@ class _SearchPageState extends State<SearchPage> {
                 automaticallyImplyLeading: false,
                 pinned: true,
                 elevation: 0.0,
-                backgroundColor: Colors.white,
-                title: searchNoteTextField(),
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                title: searchNoteTextField(isDark: isDark),
                 titleSpacing: 10.0,
               ),
               ValueListenableBuilder(
@@ -171,16 +186,25 @@ class _SearchPageState extends State<SearchPage> {
                                 ? SliverToBoxAdapter(
                                     child: Center(
                                       child: SingleChildScrollView(
+                                        physics: null,
                                         child: Padding(
                                           padding: EdgeInsets.only(
                                             left: 0.05 * screenSize.width,
                                             top: 0.05 * screenSize.height,
                                             right: 0.05 * screenSize.width,
                                           ),
-                                          child: Image.asset(
-                                            'assets/img/search.png',
-                                            // height: 40 * hm,
-                                            height: 0.4 * screenSize.height,
+                                          child: Column(
+                                            children: [
+                                              Image.asset(
+                                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                                // height: 40 * hm,
+
+                                                height: 0.2 * screenSize.height,
+                                              ),
+                                              Center(
+                                                child: Text('Search for your notes according to Tags'),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
@@ -401,84 +425,106 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget searchNoteTextField() {
+  Widget searchNoteTextField({@required bool isDark}) {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
-      builder: (context, state) => Container(
-        color: Colors.white,
-        height: 0.0492105263 * screenSize.height,
-        child: CupertinoTextField(
-          controller: _textController,
-          focusNode: _focusNode,
-          cursorColor: Colors.black,
-          style: TextStyle(
-            fontSize: 18,
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w500,
-          ),
-          onEditingComplete: () {
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-          },
-          clearButtonMode: OverlayVisibilityMode.editing,
-          placeholder: ' \u{1F50D}  Search for notes',
-          // padding: EdgeInsets.only(left: 10.0),
-          padding: EdgeInsets.only(left: 0.0253807107 * screenSize.width),
-          toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
-          decoration: BoxDecoration(
-            color: CupertinoDynamicColor.withBrightness(
-              color: CupertinoColors.white,
-              darkColor: CupertinoColors.black,
-            ),
-            // border: _kDefaultRoundedBorder,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            border: Border.all(
-              color: CupertinoDynamicColor.withBrightness(
-                // color: Color(0x33000000),
-                // darkColor: Color(0x33FFFFFF),
-                darkColor: Colors.white,
-                color: Colors.black,
-              ),
-              style: BorderStyle.solid,
-              width: 1.0, // default 0 for cupertino
+      builder: (context, state) => TextField(
+        controller: _textController,
+        focusNode: _focusNode,
+        cursorColor: Theme.of(context).textTheme.bodyText1.color,
+        style: TextStyle(
+          fontSize: 18,
+          color: Colors.grey[800],
+          fontWeight: FontWeight.w500,
+        ),
+        onEditingComplete: () {
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
+        },
+        // clearButtonMode: OverlayVisibilityMode.editing,
+        // placeholder: ' \u{1F50D}  Search for notes',
+        // padding: EdgeInsets.only(left: 10.0),
+        // padding: EdgeInsets.only(left: 0.0253807107 * screenSize.width),
+        toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
+        textCapitalization: TextCapitalization.characters,
+        inputFormatters: [
+          TextInputFormatter.withFunction(
+            (oldValue, newValue) => TextEditingValue(
+              text: newValue.text?.toUpperCase(),
+              selection: newValue.selection,
             ),
           ),
-          // decoration: InputDecoration(
-          //   fillColor: Colors.white,
-          //   enabledBorder: const OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   focusedBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   suffixIcon: state.isSearchBoxSelected
-          //       ? InkWell(
-          //           child: Icon(Icons.close, size: 22, color: Colors.black),
-          //           onTap: () {
-          //             _focusNode.unfocus();
-          //             _textController.clear();
-          //             BlocProvider.of<NoteAndSearchCubit>(context).updateBoxSelected(false);
-          //           },
-          //         )
-          //       : Icon(Icons.search, color: Colors.black),
-          //   border: InputBorder.none,
-          //   hintText: 'Search for notes',
-          //   hintStyle: TextStyle(
-          //     fontWeight: FontWeight.w300,
-          //     color: Colors.grey,
-          //     fontSize: 14,
-          //     fontStyle: FontStyle.italic,
-          //   ),
-          //   contentPadding: const EdgeInsets.only(
-          //     left: 16,
-          //     right: 20,
-          //     top: 14,
-          //     bottom: 14,
+        ],
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.black,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          prefixIcon: Icon(
+            Icons.search_rounded,
+            color: Colors.blue,
+          ),
+          // suffixIcon: InkWell(
+          //   onTap: () {},
+          //   child: Icon(
+          //     Icons.close,
+          //     size: 22,
+          //     color: Theme.of(context).textTheme.bodyText2.color,
           //   ),
           // ),
+          border: InputBorder.none,
+          hintText: 'Search here',
+          hintStyle: TextStyle(
+            fontWeight: FontWeight.w300,
+            color: Colors.grey,
+            fontSize: 14,
+          ),
+          contentPadding: EdgeInsets.only(
+            left: 0.030609137 * screenSize.width, //16
+            right: 0.040761421 * screenSize.width, //20
+            top: 0.008421053 * screenSize.height, //14
+            bottom: 0.008421053 * screenSize.height, //14
+          ),
         ),
+        // decoration: InputDecoration(
+        //   fillColor: Colors.white,
+        //   enabledBorder: const OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //   focusedBorder: OutlineInputBorder(
+        //     borderSide: BorderSide(
+        //       color: Colors.black,
+        //     ),
+        //   ),
+        //   suffixIcon: state.isSearchBoxSelected
+        //       ? InkWell(
+        //           child: Icon(Icons.close, size: 22, color: Colors.black),
+        //           onTap: () {
+        //             _focusNode.unfocus();
+        //             _textController.clear();
+        //             BlocProvider.of<NoteAndSearchCubit>(context).updateBoxSelected(false);
+        //           },
+        //         )
+        //       : Icon(Icons.search, color: Colors.black),
+        //   border: InputBorder.none,
+        //   hintText: 'Search for notes',
+        //   hintStyle: TextStyle(
+        //     fontWeight: FontWeight.w300,
+        //     color: Colors.grey,
+        //     fontSize: 14,
+        //     fontStyle: FontStyle.italic,
+        //   ),
+        //   contentPadding: const EdgeInsets.only(
+        //     left: 16,
+        //     right: 20,
+        //     top: 14,
+        //     bottom: 14,
+        //   ),
+        // ),
       ),
     );
   }

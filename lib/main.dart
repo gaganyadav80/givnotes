@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,9 +12,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
+import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
+import 'package:givnotes/global/utils.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'cubit/cubits.dart';
 import 'global/variables.dart';
 import 'packages/packages.dart';
@@ -82,13 +83,41 @@ class App extends StatelessWidget {
             todosRepository: FirebaseTodosRepository(),
           )..add(LoadTodos()),
         )
-      ],
-      child: GivnotesApp(),
+          BlocProvider(create: (_) => ThemeBloc()),
+        ],
+        child: MainAppWithTheme(),
+      ),
     );
   }
 }
 
-class GivnotesApp extends StatelessWidget {
+class MainAppWithTheme extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ThemeBloc(),
+      child: BlocBuilder<ThemeBloc, ThemeState>(
+        builder: (context, state) => GivnotesApp(context: context, state: state),
+      ),
+    );
+  }
+}
+
+class GivnotesApp extends StatefulWidget {
+  // final _navigatorKey = GlobalKey<NavigatorState>();
+
+  // NavigatorState get _navigator => _navigatorKey.currentState;
+
+  final BuildContext context;
+  final ThemeState state;
+
+  const GivnotesApp({Key key, @required this.context, @required this.state}) : super(key: key);
+
+  @override
+  _GivnotesAppState createState() => _GivnotesAppState();
+}
+
+class _GivnotesAppState extends State<GivnotesApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,13 +131,14 @@ class GivnotesApp extends StatelessWidget {
         'search_p': (context) => SearchPage(),
       },
       title: 'Givnotes',
-      theme: ThemeData(
-        //maybe switch to google fonts
-        fontFamily: 'Poppins',
-        accentColor: Colors.black,
-        accentColorBrightness: Brightness.light,
-        toggleableActiveColor: Colors.blue,
-      ),
+      theme: lightTheme,
+      // theme: ThemeData(
+      //   //maybe switch to google fonts
+      //   fontFamily: 'Poppins',
+      //   accentColor: Colors.black,
+      //   accentColorBrightness: Brightness.light,
+      //   toggleableActiveColor: Colors.blue,
+      // ),
       home: const CheckLogin(),
     );
   }

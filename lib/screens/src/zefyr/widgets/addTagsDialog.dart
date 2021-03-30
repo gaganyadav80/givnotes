@@ -102,6 +102,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
           TextField(
             controller: _newTagTextController,
             autocorrect: false,
+            cursorColor: isBrightnessDark(context) ? Colors.white : Colors.black,
             textCapitalization: TextCapitalization.characters,
             inputFormatters: [
               TextInputFormatter.withFunction(
@@ -111,9 +112,12 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 ),
               ),
             ],
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: Colors.grey[200],
+              fillColor: isBrightnessDark(context) ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
               focusColor: Colors.grey,
               labelText: 'Tag name',
               labelStyle: TextStyle(
@@ -144,7 +148,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyText2.color,
             ),
           ),
           // SizedBox(width: 5),

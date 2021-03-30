@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'preference_service.dart';
 
@@ -135,30 +136,78 @@ In release mode, the default value ($value) will silently be used.
         ),
         onTap: () => widget.disabled
             ? null
-            : showCupertinoModalPopup(
+            : showMaterialModalBottomSheet(
+                expand: false,
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 context: context,
-                builder: (ctx) => CupertinoActionSheet(
-                  title: Text(widget.title.toUpperCase()),
-                  message: Text(widget.desc),
-                  actions: widget.values.map((val) {
-                    return CupertinoActionSheetAction(
-                      onPressed: () {
-                        onChange(val);
-                        Navigator.of(context, rootNavigator: true).pop(val);
-                      },
-                      child: Text(
-                        widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
-                        textAlign: TextAlign.end,
-                        style: TextStyle(color: Colors.black),
+                builder: (ctx) => Container(
+                  child: Column(
+                    children: [
+                      ListView(
+                        shrinkWrap: true,
+                        children: widget.values.map((val) {
+                          return ListTile(
+                            onTap: () {
+                              onChange(val);
+                              Navigator.of(context, rootNavigator: true).pop(val);
+                            },
+                            title: Center(
+                              child: widget.displayValues == null
+                                  ? Text(
+                                      val.toString(),
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
+                                    )
+                                  : Text(
+                                      widget.displayValues[widget.values.indexOf(val)],
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: Theme.of(context).textTheme.bodyText1.color,
+                                      ),
+                                    ),
+                            ),
+                          );
+                        }).toList(),
                       ),
-                    );
-                  }).toList(),
-                  cancelButton: CupertinoActionSheetAction(
-                    child: Text('Cancle', style: TextStyle(color: Colors.black)),
-                    onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
+                      ListTile(
+                        onTap: () => Navigator.of(context, rootNavigator: true).pop("Cancel"),
+                        title: Center(
+                          child: Text('Cancel',
+                              style: TextStyle(
+                                color: Theme.of(context).textTheme.bodyText1.color,
+                              )),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+        // : showCupertinoModalPopup(
+        //     context: context,
+        //     builder: (ctx) => CupertinoActionSheet(
+        //       title: Text(widget.title.toUpperCase()),
+        //       message: Text(widget.desc),
+        //       actions: widget.values.map((val) {
+        //         return CupertinoActionSheetAction(
+        //           onPressed: () {
+        //             onChange(val);
+        //             Navigator.of(context, rootNavigator: true).pop(val);
+        //           },
+        //           child: Text(
+        //             widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
+        //             textAlign: TextAlign.end,
+        //             style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color,),
+        //           ),
+        //         );
+        //       }).toList(),
+        //       cancelButton: CupertinoActionSheetAction(
+        //         child: Text('Cancle', style: TextStyle(color: Theme.of(context).textTheme.bodyText1.color,)),
+        //         onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
+        //       ),
+        //     ),
+        //   ),
       ),
     );
   }

@@ -38,7 +38,7 @@ class EndDrawerItems extends StatelessWidget {
       child: Drawer(
         elevation: 40,
         child: PreferencePage([
-          PreferenceTitle('Options'),
+          // PreferenceTitle('Options'),
           _homeVarStore.state.trash == false
               ? myEndDrawerListTheme(
                   'Save note',

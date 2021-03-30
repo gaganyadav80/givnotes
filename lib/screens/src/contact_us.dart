@@ -1,12 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttericon/brandico_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 class ContactGivnotes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

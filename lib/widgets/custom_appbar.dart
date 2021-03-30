@@ -8,10 +8,9 @@ import 'package:givnotes/screens/src/todo_timeline/create_todo_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  const CustomAppBar({Key key, this.trailing}) : super(key: key);
-
   final IconData trailing;
 
+  const CustomAppBar({Key key, this.trailing}) : super(key: key);
   @override
   Size get preferredSize => Size.fromHeight(65.0);
 
@@ -109,8 +108,30 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               );
             },
           ),
-        ),
-      ),
+          actions: [
+            state.index == 0
+                ? IconButton(
+                    icon: Icon(trailing, size: 28),
+                    splashColor: Colors.grey[300],
+                    splashRadius: 25.0,
+                    key: key,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SearchPage()),
+                        // ConcentricPageRoute(
+                        //   builder: (context) => SearchPage(),
+                        //   radius: -1,
+                        //   dy: 60,
+                        //   dx: 170,
+                        // ),
+                      );
+                    },
+                  )
+                : SizedBox.shrink(),
+          ],
+        );
+      },
     );
   }
 }

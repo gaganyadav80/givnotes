@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:hive/hive.dart';
@@ -9,6 +10,7 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
 
 import 'todo_timeline/todo_home_bloc.dart';
@@ -21,15 +23,24 @@ class HomePage extends StatelessWidget {
   }
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     // GoogleSignIn.standard().signOut();
     // FirebaseAuth.instance.signOut();
-    // Hive.deleteBoxFromDisk("givtodos");
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return TapTapClose(
       child: DefaultTabController(
         length: 4,
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: CustomAppBar(
             trailing: CupertinoIcons.search,
           ),
@@ -55,8 +66,8 @@ class HomePage extends StatelessWidget {
               return Container(
                 height: 60,
                 child: CupertinoTabBar(
-                  backgroundColor: Colors.white,
-                  activeColor: Colors.black,
+                  backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                  activeColor: Theme.of(context).primaryColor,
                   currentIndex: state.index,
                   onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                   items: <BottomNavigationBarItem>[

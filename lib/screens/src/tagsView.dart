@@ -4,6 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
+import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/utils.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +31,13 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
+
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(
@@ -66,7 +78,22 @@ class _TagsViewState extends State<TagsView> {
                         child: Padding(
                           // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
                           padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
-                          child: Image.asset('assets/img/tags-view-1.png'),
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                // height: 40 * hm,
+
+                                height: 0.2 * screenSize.height,
+                              ),
+                              Text(
+                                'Search according the tags here',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }
@@ -233,8 +260,13 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           focusNode: _searchTagFocus,
           controller: _searchTagController,
           autocorrect: false,
-          cursorColor: Colors.black,
-          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+          cursorColor: Theme.of(context).textTheme.bodyText2.color,
+          style: TextStyle(
+            fontSize: 13,
+            letterSpacing: 1.05,
+            // color: Colors.grey[800],
+            color: Theme.of(context).textTheme.bodyText1.color,
+          ),
           textCapitalization: TextCapitalization.characters,
           inputFormatters: [
             TextInputFormatter.withFunction(
@@ -248,15 +280,23 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             _searchTagFocus.unfocus();
           },
           decoration: InputDecoration(
-            enabledBorder: const OutlineInputBorder(
+            filled: true,
+            fillColor: Colors.black,
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
               ),
             ),
             focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
               ),
+            ),
+            prefixIcon: Icon(
+              Icons.search_rounded,
+              color: Colors.blue,
             ),
             suffixIcon: InkWell(
               onTap: () {
@@ -266,7 +306,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 _searchTagController.clear();
                 _searchTagFocus.unfocus();
               },
-              child: Icon(Icons.close, size: 22, color: Colors.black),
+              child: Icon(
+                Icons.close,
+                size: 22,
+                color: Theme.of(context).textTheme.bodyText2.color,
+              ),
             ),
             border: InputBorder.none,
             hintText: 'Search Tags',
@@ -274,19 +318,12 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               fontWeight: FontWeight.w300,
               color: Colors.grey,
               fontSize: 14,
-              fontStyle: FontStyle.italic,
             ),
-            // contentPadding: const EdgeInsets.only(
-            //   left: 16,
-            //   right: 20,
-            //   top: 14,
-            //   bottom: 14,
-            // ),
             contentPadding: EdgeInsets.only(
-              left: 0.030609137 * screenSize.width,
-              right: 0.040761421 * screenSize.width,
-              top: 0.008421053 * screenSize.height,
-              bottom: 0.008421053 * screenSize.height,
+              left: 0.030609137 * screenSize.width, //16
+              right: 0.040761421 * screenSize.width, //20
+              top: 0.008421053 * screenSize.height, //14
+              bottom: 0.008421053 * screenSize.height, //14
             ),
           ),
         ),
@@ -299,6 +336,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               final noteTag = state.tagSearchList[index];
 
               return ItemTags(
+                color: Colors.blue,
                 key: Key(index.toString()),
                 elevation: 2,
                 index: index,
@@ -315,6 +353,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   fontSize: 1.8 * hm,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
+                  color: Colors.white,
                 ),
 
                 border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),

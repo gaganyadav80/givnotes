@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/minimal_login/components/blueButton.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 //TODO add privacy policy and other legal documents
 class AboutGivnotes extends StatelessWidget {
@@ -18,6 +20,11 @@ class AboutGivnotes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: GiveStatusBarColor(context),
+      ),
+    );
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,

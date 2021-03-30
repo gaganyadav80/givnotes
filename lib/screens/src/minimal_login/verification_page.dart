@@ -14,7 +14,7 @@ class VerificationPage extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0.0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: 30.0),
@@ -26,9 +26,18 @@ class VerificationPage extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text("Do it later?", style: TextStyle(color: Colors.black, fontSize: 16)),
+                  Text(
+                    "Do it later?",
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontSize: 16,
+                    ),
+                  ),
                   SizedBox(width: 5.0),
-                  Icon(Icons.fast_forward, color: Colors.black),
+                  Icon(
+                    Icons.fast_forward,
+                    color: Theme.of(context).splashColor,
+                  ),
                 ],
               ),
             ),
@@ -53,6 +62,7 @@ class VerificationMainBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).brightness == Brightness.dark;
     void _onConfirmButtonPressed() {
       BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
     }
@@ -78,59 +88,62 @@ class VerificationMainBody extends StatelessWidget {
         //   BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
         // }
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
-        child: SingleChildScrollView(
-          physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: screenHeight * 0.05),
-              Center(
-                  child: Image.asset(
-                "assets/img/login-verify.png",
-                height: 180,
-                width: 180,
-              )),
-              SizedBox(height: screenHeight * 0.044472681), // 40
-              Text(
-                "Waiting for Verification",
-                style: Theme.of(context).textTheme.headline1.copyWith(
-                      fontSize: screenHeight * 0.03001906, // 27
-                      fontWeight: FontWeight.w300,
-                    ),
-              ),
-              SizedBox(height: screenHeight * 0.03001906), // 27
-              Text(
-                "A verification email has been sent to your email",
-                style: Theme.of(context).textTheme.caption.copyWith(
-                      fontSize: screenHeight * 0.015565438, // 14
-                    ),
-              ),
-              Text(
-                "Verify by clicking on the link provided",
-                style: Theme.of(context).textTheme.caption.copyWith(
-                      fontSize: screenHeight * 0.015565438, // 14
-                    ),
-              ),
-              SizedBox(height: screenHeight * 0.050031766), // 45
-              BlocBuilder<VerificationBloc, VerificationState>(
-                builder: (context, state) {
-                  return state is VerificationInProgress
-                      ? BlueButton(title: "loading", onPressed: () {}, isLoading: true)
-                      : BlueButton(title: "Confirm Verification", onPressed: _onConfirmButtonPressed);
-                },
-              ),
-              SizedBox(height: screenHeight * 0.025031766), // 45
-              BlocBuilder<VerificationBloc, VerificationState>(
-                builder: (context, state) {
-                  return state is ResendVerificationInProgress
-                      ? BlueButton(title: "loading", onPressed: () {}, isLoading: true)
-                      : BlueButton(title: "Resend Verification Link", onPressed: _onResendButtonPressed);
-                },
-              ),
-            ],
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: screenHeight * 0.05),
+                Center(
+                    child: Image.asset(
+                  isDark ? "assets/giv_img/lock_dark.png" : "assets/giv_img/lock_light.png",
+                  height: 180,
+                  width: 180,
+                )),
+                SizedBox(height: screenHeight * 0.044472681), // 40
+                Text(
+                  "Waiting for Verification",
+                  style: Theme.of(context).textTheme.headline1.copyWith(
+                        fontSize: screenHeight * 0.02801906, // 27
+                        fontWeight: FontWeight.w300,
+                      ),
+                ),
+                SizedBox(height: screenHeight * 0.03001906), // 27
+                Text(
+                  "A verification email has been sent to your email",
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                        fontSize: screenHeight * 0.015565438, // 14
+                      ),
+                ),
+                Text(
+                  "Verify by clicking on the link provided",
+                  style: Theme.of(context).textTheme.caption.copyWith(
+                        fontSize: screenHeight * 0.015565438, // 14
+                      ),
+                ),
+                SizedBox(height: screenHeight * 0.050031766), // 45
+                BlocBuilder<VerificationBloc, VerificationState>(
+                  builder: (context, state) {
+                    return state is VerificationInProgress
+                        ? BlueButton(title: "loading", onPressed: () {}, isLoading: true)
+                        : BlueButton(title: "Confirm Verification", onPressed: _onConfirmButtonPressed);
+                  },
+                ),
+                SizedBox(height: screenHeight * 0.025031766), // 45
+                BlocBuilder<VerificationBloc, VerificationState>(
+                  builder: (context, state) {
+                    return state is ResendVerificationInProgress
+                        ? BlueButton(title: "loading", onPressed: () {}, isLoading: true)
+                        : BlueButton(title: "Resend Verification Link", onPressed: _onResendButtonPressed);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
