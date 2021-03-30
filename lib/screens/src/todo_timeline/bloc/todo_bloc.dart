@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:givnotes/screens/src/todo_timeline/src/todo_model.dart';
 import 'package:givnotes/screens/src/todo_timeline/src/todo_repository.dart';
 import 'package:meta/meta.dart';
 

@@ -4,11 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/utils.dart';
-import 'package:givnotes/screens/themes/app_themes.dart';
-import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -17,6 +12,7 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 class TagsView extends StatefulWidget {
   @override
@@ -35,7 +31,7 @@ class _TagsViewState extends State<TagsView> {
 
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
     // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);

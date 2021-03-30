@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,9 +13,9 @@ import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
-import 'package:givnotes/global/utils.dart';
 import 'package:path_provider/path_provider.dart';
 import 'cubit/cubits.dart';
+import 'global/size_utils.dart';
 import 'global/variables.dart';
 import 'packages/packages.dart';
 import 'screens/screens.dart';
@@ -82,11 +81,10 @@ class App extends StatelessWidget {
           create: (context) => TodosBloc(
             todosRepository: FirebaseTodosRepository(),
           )..add(LoadTodos()),
-        )
-          BlocProvider(create: (_) => ThemeBloc()),
-        ],
-        child: MainAppWithTheme(),
-      ),
+        ),
+        BlocProvider(create: (_) => ThemeBloc()),
+      ],
+      child: MainAppWithTheme(),
     );
   }
 }

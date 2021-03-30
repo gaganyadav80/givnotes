@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo_bloc.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -108,30 +107,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
               );
             },
           ),
-          actions: [
-            state.index == 0
-                ? IconButton(
-                    icon: Icon(trailing, size: 28),
-                    splashColor: Colors.grey[300],
-                    splashRadius: 25.0,
-                    key: key,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => SearchPage()),
-                        // ConcentricPageRoute(
-                        //   builder: (context) => SearchPage(),
-                        //   radius: -1,
-                        //   dy: 60,
-                        //   dx: 170,
-                        // ),
-                      );
-                    },
-                  )
-                : SizedBox.shrink(),
-          ],
-        );
-      },
+        ),
+      ),
     );
   }
 }

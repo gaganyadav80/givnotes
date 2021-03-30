@@ -262,7 +262,7 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
   ),
 );
 
-Color GiveStatusBarColor(BuildContext context) {
+Color giveStatusBarColor(BuildContext context) {
   if (Theme.of(context).brightness == Brightness.dark)
     return Colors.grey[900];
   else

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:givnotes/widgets/circular_checkbox.dart';
 import 'package:hive/hive.dart';
@@ -30,7 +29,6 @@ class _TodoTimelineState extends State<TodoTimeline> {
       appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 10.0),
-        //TODO don't use valueListenable... use hydratedBloc
         child: ValueListenableBuilder(
           valueListenable: Hive.box<TodoModel>('givtodos').listenable(),
           builder: (BuildContext context, Box<TodoModel> box, Widget child) {

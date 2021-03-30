@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/global/size_utils.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -29,7 +30,7 @@ class SettingsPage extends StatelessWidget {
                 : "Alphabetical (Z-A)";
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
 
@@ -45,7 +46,7 @@ class SettingsPage extends StatelessWidget {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return CircularProgressIndicator();
               } else if (snapshot.hasData) {
-                final String photo = snapshot.data.photoURL;
+                // final String photo = snapshot.data.photoURL;
                 String initials = '';
                 "Gagan Yadav".split(" ").forEach((element) {
                   initials = initials + element[0];
@@ -256,10 +257,10 @@ class SettingsPage extends StatelessWidget {
           StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              User user;
+              // User user;
               if (snapshot.hasData) {
-                user = snapshot.data;
-                final String photo = snapshot.data.photoURL;
+                // user = snapshot.data;
+                // final String photo = snapshot.data.photoURL;
                 String initials = '';
                 "Gagan Yadav".split(" ").forEach((element) {
                   initials = initials + element[0];
@@ -665,7 +666,7 @@ class MainSettingsPage extends StatelessWidget {
                 : "Alphabetical (Z-A)";
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
     return SafeArea(

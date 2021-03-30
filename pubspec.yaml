@@ -41,6 +41,7 @@ dependencies:
   json_annotation: ^3.1.1
   local_auth: ^1.1.0
   lottie: ^1.0.1
+  modal_bottom_sheet: ^2.0.0
   package_info: ^2.0.0
   path: ^1.8.0
   path_provider: ^2.0.1
@@ -51,8 +52,6 @@ dependencies:
   timelines: ^0.0.2+1
   url_launcher: ^5.0.0
   velocity_x: ^2.6.0
-  modal_bottom_sheet: ^1.0.0+1
-  flutter_svg: ^0.19.3
 
 dev_dependencies:
   flutter_test:

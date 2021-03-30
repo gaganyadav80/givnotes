@@ -15,7 +15,7 @@ import 'package:givnotes/widgets/custom_appbar.dart';
 
 import 'todo_timeline/todo_home_bloc.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
 
   static Route route() {
@@ -29,11 +29,9 @@ class HomePage extends StatelessWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    // GoogleSignIn.standard().signOut();
-    // FirebaseAuth.instance.signOut();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
     return TapTapClose(

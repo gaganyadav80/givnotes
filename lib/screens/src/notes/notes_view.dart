@@ -8,11 +8,9 @@ import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-// import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/services/services.dart';
 
@@ -48,7 +46,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
     // Size size = MediaQuery.of(context).size;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
     return WillPopScope(

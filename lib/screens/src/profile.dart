@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:givnotes/global/size_utils.dart';
-import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
+
+import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 class MyProfile extends StatefulWidget {
   // bool isAnonymous;
@@ -31,7 +31,7 @@ class _MyProfileState extends State<MyProfile> {
     wm = MediaQuery.of(context).size.width / 100;
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: GiveStatusBarColor(context),
+        statusBarColor: giveStatusBarColor(context),
       ),
     );
     // return MainProfilePage();

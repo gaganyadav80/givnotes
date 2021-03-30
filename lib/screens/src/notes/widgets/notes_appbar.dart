@@ -152,54 +152,54 @@ class NotesModelSheet extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          // SizedBox(height: 10),
-          SizedBox(height: 0.013157895 * screenSize.height),
-          DropdownPreference(
-            'Sort notes',
-            'sort_notes',
-            titleColor: Colors.white,
-            titleGap: 0.0,
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white),
-            defaultVal: def,
-            desc: "Sort your notes on one of the following filters.",
-            showDesc: false,
-            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-            onChange: ((String value) {
-              if (value == 'Date created')
-                hydratedPrefsCubit.updateSortBy('created');
-              else if (value == 'Date modified')
-                hydratedPrefsCubit.updateSortBy('modified');
-              else if (value == 'Alphabetical (A-Z)')
-                hydratedPrefsCubit.updateSortBy('a-z');
-              else
-                hydratedPrefsCubit.updateSortBy('z-a');
-            }),
-          ),
-          SwitchPreference(
-            'Compact Tags',
-            'compact_tags',
-            titleColor: Colors.white,
-            titleGap: 0.0,
-            leading: Icon(CupertinoIcons.bars, color: Colors.white),
-            desc: 'Enable compact tags in notes view',
-            defaultVal: hydratedPrefsCubit.state.compactTags,
-            onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
-            onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
-          ),
-          PreferenceText(
-            "Trash",
-            style: TextStyle(color: Colors.white),
-            leading: Icon(CupertinoIcons.delete, color: Colors.white, size: 20.0),
-            trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Colors.white60),
-            titleGap: 0.0,
-            onTap: () {
-              BlocProvider.of<HomeCubit>(context).updateTrash(true);
-              Navigator.pop(context);
-              Navigator.push(context, NotesView().materialRoute());
-            },
-          ),
-        ],
+            // SizedBox(height: 10),
+            SizedBox(height: 0.013157895 * screenSize.height),
+            DropdownPreference(
+              'Sort notes',
+              'sort_notes',
+              titleColor: Colors.white,
+              titleGap: 0.0,
+              leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.white),
+              defaultVal: def,
+              desc: "Sort your notes on one of the following filters.",
+              showDesc: false,
+              values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+              onChange: ((String value) {
+                if (value == 'Date created')
+                  hydratedPrefsCubit.updateSortBy('created');
+                else if (value == 'Date modified')
+                  hydratedPrefsCubit.updateSortBy('modified');
+                else if (value == 'Alphabetical (A-Z)')
+                  hydratedPrefsCubit.updateSortBy('a-z');
+                else
+                  hydratedPrefsCubit.updateSortBy('z-a');
+              }),
+            ),
+            SwitchPreference(
+              'Compact Tags',
+              'compact_tags',
+              titleColor: Colors.white,
+              titleGap: 0.0,
+              leading: Icon(CupertinoIcons.bars, color: Colors.white),
+              desc: 'Enable compact tags in notes view',
+              defaultVal: hydratedPrefsCubit.state.compactTags,
+              onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
+              onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
+            ),
+            PreferenceText(
+              "Trash",
+              style: TextStyle(color: Colors.white),
+              leading: Icon(CupertinoIcons.delete, color: Colors.white, size: 20.0),
+              trailing: Icon(CupertinoIcons.forward, size: 21.0, color: Colors.white60),
+              titleGap: 0.0,
+              onTap: () {
+                BlocProvider.of<HomeCubit>(context).updateTrash(true);
+                Navigator.pop(context);
+                Navigator.push(context, NotesView().materialRoute());
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

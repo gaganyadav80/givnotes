@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-
-import '../zefyrEdit.dart';
+import 'package:givnotes/screens/src/zefyr/zefyrEdit.dart';
+import 'package:givnotes/screens/themes/app_themes.dart';
 
 class AddTagsDialog extends StatefulWidget {
   AddTagsDialog({

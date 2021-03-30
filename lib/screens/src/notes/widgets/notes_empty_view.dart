@@ -9,7 +9,7 @@ class NotesEmptyView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final hm = 7.6;
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    // bool isDark = Theme.of(context).brightness == Brightness.dark;
     // final wm = 3.93;
     return isTrash
         ? SafeArea(
