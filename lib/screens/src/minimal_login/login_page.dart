@@ -95,22 +95,22 @@ class LoginPage extends StatelessWidget {
                     Text(
                       "Welcome",
                       style: Theme.of(context).textTheme.headline1.copyWith(
-                            fontSize: screenHeight * 0.042249047, //38
+                            fontSize: screenWidth * 0.0964467005, //38
                             fontWeight: FontWeight.w300,
                           ),
                     ),
                     SizedBox(
-                      height: screenHeight * 0.036689962, //33
+                      height: screenWidth * 0.08375634517, //33
                     ),
                     LoginForm(),
-                    SizedBox(height: screenHeight * 0.051),
+                    SizedBox(height: screenWidth * 0.051),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           "or connect with",
                           style: Theme.of(context).textTheme.headline4.copyWith(
-                                fontSize: screenHeight * 0.016,
+                                fontSize: screenWidth * 0.0308629,
                               ),
                         ),
                       ],
@@ -137,14 +137,14 @@ class LoginPage extends StatelessWidget {
                             Text(
                               "Don't have an account? ",
                               style: Theme.of(context).textTheme.caption.copyWith(
-                                    fontSize: screenHeight * 0.014,
+                                    fontSize: screenWidth * 0.014,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),
                             Text(
                               "Sign Up",
                               style: Theme.of(context).textTheme.headline6.copyWith(
-                                    fontSize: screenHeight * 0.02,
+                                    fontSize: screenWidth * 0.0385786,
                                     color: Theme.of(context).splashColor,
                                   ),
                             ),
@@ -286,7 +286,7 @@ class _LoginFormState extends State<LoginForm> {
                 child: Text(
                   "Forgot Password?",
                   style: Theme.of(context).textTheme.headline6.copyWith(
-                        fontSize: screenHeight * 0.013,
+                        fontSize: screenWidth * 0.025076,
                         color: Theme.of(context).iconTheme.color,
                       ),
                 ),

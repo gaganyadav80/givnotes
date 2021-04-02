@@ -30,7 +30,7 @@ class VerificationPage extends StatelessWidget {
                     "Do it later?",
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyText1.color,
-                      fontSize: 16,
+                      fontSize: screenWidth * 0.040609, //16,
                     ),
                   ),
                   SizedBox(width: 5.0),
@@ -109,7 +109,7 @@ class VerificationMainBody extends StatelessWidget {
                 Text(
                   "Waiting for Verification",
                   style: Theme.of(context).textTheme.headline1.copyWith(
-                        fontSize: screenHeight * 0.02801906, // 27
+                        fontSize: screenWidth * 0.06852791, // 27
                         fontWeight: FontWeight.w300,
                       ),
                 ),
@@ -117,13 +117,13 @@ class VerificationMainBody extends StatelessWidget {
                 Text(
                   "A verification email has been sent to your email",
                   style: Theme.of(context).textTheme.caption.copyWith(
-                        fontSize: screenHeight * 0.015565438, // 14
+                        fontSize: screenWidth * 0.035532994, // 14
                       ),
                 ),
                 Text(
                   "Verify by clicking on the link provided",
                   style: Theme.of(context).textTheme.caption.copyWith(
-                        fontSize: screenHeight * 0.015565438, // 14
+                        fontSize: screenWidth * 0.035532994, // 14
                       ),
                 ),
                 SizedBox(height: screenHeight * 0.050031766), // 45

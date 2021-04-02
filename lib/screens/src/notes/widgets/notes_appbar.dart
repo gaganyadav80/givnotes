@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -53,8 +54,20 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                           _homeCubit.updateGlobal(true);
                       },
                       children: {
-                        0: Text('Recent', style: TextStyle(color: _homeCubit.state.global ? Colors.black : Colors.white)),
-                        1: Text('Global', style: TextStyle(color: _homeCubit.state.global ? Colors.white : Colors.black)),
+                        0: Text(
+                          'Recent',
+                          style: TextStyle(
+                            color: _homeCubit.state.global ? Colors.black : Colors.white,
+                            fontSize: screenWidth * 0.03553299492, //14,
+                          ),
+                        ),
+                        1: Text(
+                          'Global',
+                          style: TextStyle(
+                            color: _homeCubit.state.global ? Colors.white : Colors.black,
+                            fontSize: screenWidth * 0.03553299492, //14,
+                          ),
+                        ),
                       },
                       // physics: NeverScrollableScrollPhysics(),
                       // isScrollable: true,
@@ -146,7 +159,7 @@ class NotesModelSheet extends StatelessWidget {
               child: Text(
                 'Note Options',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: screenWidth * 0.05583756, //22,
                   fontWeight: FontWeight.bold,
                   color: Theme.of(context).textTheme.bodyText1.color,
                 ),
