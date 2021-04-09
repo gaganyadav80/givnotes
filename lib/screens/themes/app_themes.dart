@@ -32,7 +32,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   cardColor: Colors.white,
   primaryIconTheme: IconThemeData().copyWith(color: Color(0xff3389FF)),
   iconTheme: IconThemeData(),
-  canvasColor: Colors.white,
+  canvasColor: Colors.grey[700],
   colorScheme: ColorScheme.light().copyWith(
     primary: Color(0xFF41d480),
     primaryVariant: Color(0xFF42f2ab),
@@ -51,7 +51,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     /// title of blue buttons
     button: TextStyle(
       fontFamily: 'OpenSans',
-      color: Color(0xFFFFFFFF),
+      color: Colors.black,
       fontWeight: FontWeight.w300,
     ),
 
@@ -80,14 +80,14 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     /// top card text
     headline2: TextStyle(
       fontFamily: 'OpenSans',
-      color: Color(0xFFFFFFFF),
+      color: Colors.black,
       fontWeight: FontWeight.w600,
     ),
 
     /// Red Font (you owe)
     subtitle1: TextStyle(
       fontFamily: 'OpenSans',
-      color: Colors.white,
+      color: Colors.black,
       fontWeight: FontWeight.w600,
     ),
 
