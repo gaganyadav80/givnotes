@@ -110,7 +110,7 @@ class LoginPage extends StatelessWidget {
                         Text(
                           "or connect with",
                           style: Theme.of(context).textTheme.headline4.copyWith(
-                                fontSize: screenWidth * 0.0308629,
+                                fontSize: screenWidth * 0.0328629,
                               ),
                         ),
                       ],
@@ -137,7 +137,7 @@ class LoginPage extends StatelessWidget {
                             Text(
                               "Don't have an account? ",
                               style: Theme.of(context).textTheme.caption.copyWith(
-                                    fontSize: screenWidth * 0.014,
+                                    fontSize: screenWidth * 0.034,
                                     fontWeight: FontWeight.w600,
                                   ),
                             ),

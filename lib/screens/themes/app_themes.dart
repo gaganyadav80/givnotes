@@ -14,7 +14,7 @@ final appThemeData = {
 final ThemeData lightTheme = ThemeData.light().copyWith(
   visualDensity: VisualDensity.adaptivePlatformDensity,
   primaryColor: Color(0xff3389FF),
-  scaffoldBackgroundColor: Colors.white,
+  // scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
     elevation: 0.0,
     color: Colors.white,
@@ -22,11 +22,11 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
   backgroundColor: Colors.grey[100],
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Colors.blue,
-    splashColor: Colors.green,
+    // splashColor: Colors.green,
   ),
   brightness: Brightness.light,
   primaryColorLight: Color(0xff3359ee),
-  splashColor: Colors.blue[600],
+  // splashColor: Colors.blue[600],
   highlightColor: Color(0xff3369FF).withOpacity(0.25),
   primaryColorDark: Colors.black,
   cardColor: Colors.white,
@@ -139,14 +139,14 @@ final ThemeData darkTheme = ThemeData.dark().copyWith(
 
   floatingActionButtonTheme: FloatingActionButtonThemeData(
     backgroundColor: Colors.blue,
-    splashColor: Color(0xff4460FF),
+    // splashColor: Color(0xff4460FF),
   ),
 
   dividerColor: Colors.grey,
   brightness: Brightness.dark,
   primaryColorLight: Color(0xff3359ee),
   //splashColor - for login , signup button
-  splashColor: Colors.blue,
+  // splashColor: Colors.blue,
   // splashColor: Color(0xff5468FF).withOpacity(0.5),
   highlightColor: Color(0xff5468FF).withOpacity(0.25),
   primaryColorDark: Colors.black,
