@@ -80,7 +80,7 @@ class RegisterMainBody extends StatelessWidget {
                   Text(
                     "Sign Up",
                     style: Theme.of(context).textTheme.headline1.copyWith(
-                          fontSize: screenHeight * 0.042249047, //38
+                          fontSize: screenWidth * 0.0964467005, //38
                           fontWeight: FontWeight.w300,
                         ),
                   ),
@@ -95,7 +95,7 @@ class RegisterMainBody extends StatelessWidget {
                       Text(
                         "or register with",
                         style: Theme.of(context).textTheme.headline4.copyWith(
-                              fontSize: screenHeight * 0.016,
+                              fontSize: screenWidth * 0.0308629,
                             ),
                       ),
                     ],
@@ -315,7 +315,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       textCapitalization: TextCapitalization.none,
                       textAlignVertical: TextAlignVertical.center,
                       style: Theme.of(context).textTheme.caption.copyWith(
-                            fontSize: screenHeight * 0.015565438, // 14
+                            fontSize: screenWidth * 0.03553299, // 14
                           ),
                       decoration: InputDecoration(
                         suffixIcon: _isConfirmObscure
@@ -335,7 +335,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         focusedBorder: kInputBorderStyle,
                         enabledBorder: kInputBorderStyle,
                         hintStyle: Theme.of(context).textTheme.caption.copyWith(
-                              fontSize: screenHeight * 0.015565438, // 14
+                              fontSize: screenWidth * 0.03553299, // 14
                             ),
                         contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.036458333, vertical: screenHeight * 0.021124524), // h=15, v=19
                         hintText: 'Confirm Password',

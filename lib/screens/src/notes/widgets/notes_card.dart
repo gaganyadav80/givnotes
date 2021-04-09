@@ -146,7 +146,7 @@ class _NotesCardState extends State<NotesCard> {
                                           color: Colors.white,
                                           fontWeight: FontWeight.w700,
                                           letterSpacing: 0.5,
-                                          fontSize: 8,
+                                          fontSize: screenWidth * 0.02030456852, //8,
                                         ),
                                       ),
                                     ),

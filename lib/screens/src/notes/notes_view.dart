@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:givnotes/global/size_utils.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -90,6 +91,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                   Text(
                                     "Global is coming later in future updates!\nStay tuned. But till then you can check out the features.",
                                     textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 0.038071065 * screenWidth, //15,
+                                    ),
                                   ),
                                   SizedBox(height: 20.0),
                                   GestureDetector(
@@ -103,7 +107,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                           "Explore",
                                           style: TextStyle(
                                             color: Colors.blue,
-                                            fontSize: 18.0,
+                                            fontSize: screenWidth * 0.0456852, //18.0,
                                           ),
                                         ),
                                         Icon(CupertinoIcons.forward, color: Colors.blue),

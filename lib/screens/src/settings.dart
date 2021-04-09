@@ -56,7 +56,7 @@ class SettingsPage extends StatelessWidget {
                   title: Text(
                     'Gagan Yadav',
                     style: mainTextStyle(context).copyWith(
-                      fontSize: 18.0,
+                      fontSize: screenWidth * 0.0456852,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -65,7 +65,7 @@ class SettingsPage extends StatelessWidget {
                       Text(
                         " ${snapshot.data.email}",
                         style: mainTextStyle(context).copyWith(
-                          fontSize: 13.0,
+                          fontSize: screenWidth * 0.03299492,
                           fontWeight: FontWeight.w300,
                         ),
                       ),
@@ -89,14 +89,14 @@ class SettingsPage extends StatelessWidget {
                   title: Text(
                     "You are not logged in!",
                     style: mainTextStyle(context).copyWith(
-                      fontSize: 18.0,
+                      fontSize: screenWidth * 0.04568527918, //18,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   subtitle: Text(
                     "Click here and login to your account.",
                     style: mainTextStyle(context).copyWith(
-                      fontSize: 13.0,
+                      fontSize: screenWidth * 0.0329942, //13.0,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -519,7 +519,7 @@ class _AppDetailSectionState extends State<AppDetailSection> {
       child: Text(
         "Logs",
         style: TextStyle(
-          fontSize: 24.0,
+          fontSize: screenWidth * 0.0609137,
           fontWeight: FontWeight.bold,
         ),
       ),

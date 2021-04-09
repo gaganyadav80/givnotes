@@ -164,7 +164,7 @@ class _MyProfileState extends State<MyProfile> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                      fontSize: 24.0,
+                                      fontSize: 0.0609137 * screenWidth,
                                       letterSpacing: 1.5,
                                     ),
                                   )
