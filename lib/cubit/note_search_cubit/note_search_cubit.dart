@@ -5,7 +5,6 @@ import 'package:givnotes/global/variables.dart';
 
 part 'note_search_state.dart';
 
-//TODO use replay cubit for zefyrController (undo and redo) --> LATER
 class NoteAndSearchCubit extends Cubit<NoteAndSearchState> {
   NoteAndSearchCubit() : super(NoteAndSearchState());
 

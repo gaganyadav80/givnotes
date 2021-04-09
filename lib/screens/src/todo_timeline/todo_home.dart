@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
-import 'package:givnotes/widgets/circular_checkbox.dart';
+import 'package:givnotes/widgets/circular_checkbox_beta.dart';
+import 'package:givnotes/widgets/circular_checkbox_stable.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -172,14 +173,15 @@ class _TodoTimelineState extends State<TodoTimeline> {
                               return DotIndicator(
                                 size: 30.0,
                                 color: Colors.transparent,
-                                child: CustomCheckbox(
+                                child: CircularCheckBoxStable(
                                   value: _todosBox[index].completed,
                                   onChanged: (_) {
                                     _todosBox[index].completed = !_todosBox[index].completed;
                                     _dbServices.updateTodo(_todosBox[index].key, _todosBox[index]);
                                   },
                                   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                  // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                  radius: Radius.circular(50.0),
                                   width: 30.0,
                                 ),
                                 // child: CircularCheckBox(
@@ -246,14 +248,15 @@ class _TodoTimelineState extends State<TodoTimeline> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0,
           color: Colors.transparent,
-          child: CustomCheckbox(
+          child: CircularCheckBoxStable(
             value: _todo.subTask[subCheckIndex].completed,
             onChanged: (_) {
               _todo.subTask[subCheckIndex].setComplete(!_todo.subTask[subCheckIndex].completed);
               _dbServices.updateTodo(_todo.key, _todo);
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+            radius: Radius.circular(50.0),
             width: 25.0,
           ),
           // child: CircularCheckBox(

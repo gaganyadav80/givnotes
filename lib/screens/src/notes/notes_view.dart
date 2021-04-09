@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
@@ -216,29 +218,13 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                       } else {
                         await HandlePermission().requestPermission().then((value) async {
                           if (value) {
-                            // BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                            // BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(
-                            //     builder: (context) => ZefyrEdit(noteMode: NoteMode.Adding),
-                            //   ),
-                            // );
-                            ScaffoldMessenger.of(context)
-                              ..removeCurrentSnackBar()
-                              ..showSnackBar(SnackBar(
-                                content: Text("Zefyr text editor removed. Replacement will be added soon."),
-                              ));
-                            //*** Zefyr is removed
-                            // await _dbServices.insertNote(
-                            //   NotesModel()
-                            //     ..title = 'Untitled'
-                            //     ..text = "_note"
-                            //     ..znote = "jsonEncode(_zefyrController.document)"
-                            //     ..created = DateTime.now()
-                            //     ..modified = DateTime.now()
-                            //     ..tagsMap = <String, int>{'givnotes': Colors.red.value},
-                            // );
+                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
+                            BlocProvider.of<NoteAndSearchCubit>(context)
+                                .updateNoteMode(NoteMode.Adding);
+                            Navigator.push(
+                              context,
+                              EditorScreen(noteMode: NoteMode.Adding).materialRoute(),
+                            );
                           } else {
                             if (isPermanentDisabled) {
                               HandlePermission().permanentDisabled(context);

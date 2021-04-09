@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo_bloc.dart';
+import 'package:givnotes/widgets/circular_checkbox_stable.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/widgets/circular_checkbox.dart';
+import 'package:givnotes/widgets/circular_checkbox_beta.dart';
 
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
@@ -242,7 +243,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                 return DotIndicator(
                                   size: 35.0,
                                   color: Colors.transparent,
-                                  child: CustomCheckbox(
+                                  child: CircularCheckBoxStable(
                                     value: checkTodo.completed,
                                     onChanged: (_) {
                                       BlocProvider.of<TodosBloc>(context).add(
@@ -250,7 +251,8 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                       );
                                     },
                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                    // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                                    radius: Radius.circular(50.0),
                                     width: 30.0,
                                   ),
                                 );
@@ -320,8 +322,8 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0,
           color: Colors.transparent,
-          child: CustomCheckbox(
-            side: BorderSide(color: Colors.black, width: 2.0),
+          child: CircularCheckBoxStable(
+            // side: BorderSide(color: Colors.black, width: 2.0),
             value: _todo.subTask[subCheckIndex].values.first,
             onChanged: (_) async {
               var subTask = _todo.subTask;
@@ -332,7 +334,8 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
               );
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+            radius: Radius.circular(50.0),
             width: 25.0,
           ),
         ),

@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/widgets/circular_checkbox.dart';
+import 'package:givnotes/widgets/circular_checkbox_beta.dart';
+import 'package:givnotes/widgets/circular_checkbox_stable.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
@@ -568,14 +569,15 @@ class CreateTodoCheckBox extends StatefulWidget {
 class _CreateTodoCheckBoxState extends State<CreateTodoCheckBox> {
   @override
   Widget build(BuildContext context) {
-    return CustomCheckbox(
+    return CircularCheckBoxStable(
       onChanged: (_) {
         setState(() {
           widget.subTask.setComplete(!widget.subTask.completed);
         });
       },
       value: widget.subTask.isCompleted(),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+      radius: Radius.circular(50.0),
       width: 30.0,
     );
   }

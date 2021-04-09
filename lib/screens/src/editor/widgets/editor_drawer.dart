@@ -12,11 +12,11 @@ import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 
-class EndDrawerItems extends StatelessWidget {
+class EditorEndDrawer extends StatelessWidget {
   final Function saveNote;
   final NotesModel note;
 
-  EndDrawerItems({
+  EditorEndDrawer({
     this.note,
     this.saveNote,
   });
@@ -60,7 +60,8 @@ class EndDrawerItems extends StatelessWidget {
 
                     _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                    if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                    if (Scaffold.of(context).isEndDrawerOpen)
+                      Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   context,
@@ -79,7 +80,8 @@ class EndDrawerItems extends StatelessWidget {
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(30),
                     // contentPadding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(0)),
                     title: Text('Statistics'),
                     content: Container(
                       // height: 160,
@@ -137,7 +139,8 @@ class EndDrawerItems extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0.0,
                                   primary: Colors.grey[200],
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5)),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -188,7 +191,8 @@ class EndDrawerItems extends StatelessWidget {
 
                           _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                          if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                          if (Scaffold.of(context).isEndDrawerOpen)
+                            Navigator.pop(context);
                           Navigator.pop(context);
                         },
                   context,
@@ -243,7 +247,8 @@ class EndDrawerItems extends StatelessWidget {
   }
 }
 
-_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
+_confirmDeleteAlert(
+    context, NotesModel note, HiveDBServices _dbServices) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {

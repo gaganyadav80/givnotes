@@ -16,7 +16,7 @@
 
 // import 'widgets/zefyr_widgets.dart';
 
-Map<String, int> noteTagsMap = {};
+// Map<String, int> noteTagsMap = {};
 
 // class ZefyrEdit extends StatefulWidget {
 //   ZefyrEdit({this.noteMode, this.note});

@@ -6,8 +6,9 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/screens/src/zefyr/zefyrEdit.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
+
+import '../editor_screen.dart';
 
 class AddTagsDialog extends StatefulWidget {
   AddTagsDialog({
@@ -50,7 +51,9 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
       final text = _newTagTextController.text.trim();
 
       if (text.isNotEmpty) {
-        final filterList = _allTagsMap.keys.where((element) => element.contains(text)).toList();
+        final filterList = _allTagsMap.keys
+            .where((element) => element.contains(text))
+            .toList();
         final List<int> filterColorList = [];
 
         filterList.forEach((element) {
@@ -103,7 +106,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
           TextField(
             controller: _newTagTextController,
             autocorrect: false,
-            cursorColor: isBrightnessDark(context) ? Colors.white : Colors.black,
+            cursorColor:
+                isBrightnessDark(context) ? Colors.white : Colors.black,
             textCapitalization: TextCapitalization.characters,
             inputFormatters: [
               TextInputFormatter.withFunction(
@@ -118,7 +122,9 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
             ),
             decoration: InputDecoration(
               filled: true,
-              fillColor: isBrightnessDark(context) ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
+              fillColor: isBrightnessDark(context)
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Colors.white,
               focusColor: Colors.grey,
               labelText: 'Tag name',
               labelStyle: TextStyle(
@@ -167,16 +173,20 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
 
                 return Padding(
                   // padding: const EdgeInsets.only(right: 5),
-                  padding: EdgeInsets.only(right: 0.012690355 * screenSize.width),
+                  padding:
+                      EdgeInsets.only(right: 0.012690355 * screenSize.width),
                   child: GestureDetector(
                     onTap: () {
-                      if (selectTagColors.length == 1 && !_allTagsMap.containsKey(_newTagTextController.text.trim())) {
+                      if (selectTagColors.length == 1 &&
+                          !_allTagsMap
+                              .containsKey(_newTagTextController.text.trim())) {
                         setState(() {
                           selectTagColors
                             ..clear()
                             ..addAll(materialColorValues);
                         });
-                      } else if (_allTagsMap.containsKey(_newTagTextController.text.trim())) {
+                      } else if (_allTagsMap
+                          .containsKey(_newTagTextController.text.trim())) {
                         showFlashToast(context, "Tag already exists...");
                       } else {
                         setState(() {
@@ -213,7 +223,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                   style: ElevatedButton.styleFrom(
                     elevation: 0.0,
                     primary: Colors.grey[200],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -240,7 +251,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                   style: ElevatedButton.styleFrom(
                     elevation: 0.0,
                     primary: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
                   ),
                   child: Text(
                     'SAVE',

@@ -3,10 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:givnotes/widgets/circular_checkbox_stable.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/widgets/circular_checkbox.dart';
+import 'package:givnotes/widgets/circular_checkbox_beta.dart';
 
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
@@ -298,7 +299,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                     return ListTile(
                       leading: BlocBuilder<TodosBloc, TodosState>(
                         builder: (context, state) {
-                          return CustomCheckbox(
+                          return CircularCheckBoxStable(
                             onChanged: (_) async {
                               //TODO flag
                               // setState(() {
@@ -313,7 +314,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                               );
                             },
                             value: _subTasks[index].values.first,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
+                            radius: Radius.circular(50.0),
                             width: 30.0,
                           );
                         },

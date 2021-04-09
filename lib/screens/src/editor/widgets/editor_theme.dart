@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:zefyr/zefyr.dart';
+// import 'package:flutter_quill/widgets/default_styles.dart';
 
 // final ZefyrThemeData zefyrThemeData = ZefyrThemeData(
 //   bold: TextStyle(fontWeight: FontWeight.bold),

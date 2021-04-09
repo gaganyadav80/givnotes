@@ -6,10 +6,10 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 
-class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
+class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
   final Function saveNote;
   final FlareControls controls;
-  const ZefyrEditAppBar({
+  const NoteEditorAppBar({
     @required this.saveNote,
     @required this.controls,
     Key key,
@@ -24,14 +24,20 @@ class ZefyrEditAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       leading: Padding(
         // padding: EdgeInsets.fromLTRB(8.5, 4.7, 8.5, 4.7),
-        padding: EdgeInsets.fromLTRB(0.021573604 * screenSize.width, 0.006184211 * screenSize.height, 0.021573604 * screenSize.width, 0.006184211 * screenSize.height),
+        padding: EdgeInsets.fromLTRB(
+            0.021573604 * screenSize.width,
+            0.006184211 * screenSize.height,
+            0.021573604 * screenSize.width,
+            0.006184211 * screenSize.height),
         child: InkWell(
           onTap: () {
             saveNote();
           },
           child: FlareActor(
             'assets/animations/arrow-tick.flr',
-            animation: noteEditStore.state.noteMode == NoteMode.Adding ? 'idle-tick' : 'idle-arrow',
+            animation: noteEditStore.state.noteMode == NoteMode.Adding
+                ? 'idle-tick'
+                : 'idle-arrow',
             controller: controls,
             alignment: Alignment.center,
             fit: BoxFit.contain,
