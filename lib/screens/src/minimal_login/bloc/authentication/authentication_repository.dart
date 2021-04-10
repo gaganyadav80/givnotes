@@ -37,7 +37,7 @@ class AuthenticationRepository {
     @required String password,
     @required String name,
   }) async {
-    assert(email != null && password != null);
+    assert(email != null && password != null && name != null);
     try {
       final firebase_auth.UserCredential _authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
@@ -54,13 +54,13 @@ class AuthenticationRepository {
 
   Future<void> logInWithGoogle() async {
     try {
-      final googleUser = await _googleSignIn.signIn();
-      final googleAuth = await googleUser.authentication;
-      final credential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
+      final GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
+      final GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
+      final firebase_auth.OAuthCredential _authCredential = firebase_auth.GoogleAuthProvider.credential(
+        accessToken: _googleAuth.accessToken,
+        idToken: _googleAuth.idToken,
       );
-      await _firebaseAuth.signInWithCredential(credential);
+      await _firebaseAuth.signInWithCredential(_authCredential);
     } on Exception {
       throw LogInWithGoogleFailure();
     }
@@ -99,6 +99,6 @@ class AuthenticationRepository {
 
 extension on firebase_auth.User {
   UserModel get toUser {
-    return UserModel(id: uid, email: email, name: displayName, photo: photoURL);
+    return UserModel(id: uid, email: email, name: displayName, photo: photoURL, verified: emailVerified);
   }
 }

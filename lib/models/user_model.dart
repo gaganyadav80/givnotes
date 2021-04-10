@@ -13,6 +13,7 @@ class UserModel extends Equatable {
     @required this.id,
     @required this.name,
     @required this.photo,
+    @required this.verified,
   })  : assert(email != null),
         assert(id != null);
 
@@ -28,9 +29,11 @@ class UserModel extends Equatable {
   /// Url for the current user's photo.
   final String photo;
 
+  final bool verified;
+
   /// Empty user which represents an unauthenticated user.
-  static const empty = UserModel(email: '', id: '', name: null, photo: null);
+  static const empty = UserModel(email: '', id: '', name: null, photo: null, verified: false);
 
   @override
-  List<Object> get props => [email, id, name, photo];
+  List<Object> get props => [email, id, name, photo, verified];
 }

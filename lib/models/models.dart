@@ -1,1 +1,1 @@
-export 'src/authentication_model.dart';
+export 'user_model.dart';

@@ -6,8 +6,8 @@ import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 
+import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
-import 'login_bloc/login_bloc.dart';
 import 'registration_page.dart';
 
 class LoginPage extends StatelessWidget {
@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignInPressed() {
-      BlocProvider.of<LoginBloc>(context).add(LoginWithGoogle());
+      BlocProvider.of<AuthenticationBloc>(context).add(LoginWithGoogle());
       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       //   content: Text("Google Sign In"),
       // ));
@@ -53,9 +53,9 @@ class LoginPage extends StatelessWidget {
                 )
               : null,
         ),
-        body: BlocListener<LoginBloc, LoginState>(
+        body: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) async {
-            if (state is LoginFailure) {
+            if (state is AuthFailure) {
               print(state.message);
               if (state.message.contains('password is invalid'))
                 showSnackBar("Invalid password", context);
@@ -64,7 +64,7 @@ class LoginPage extends StatelessWidget {
               else
                 showSnackBar("Login Failure", context);
             }
-            if (state is LoginSuccess) {
+            if (state is AuthSuccess) {
               // Navigator.of(context).pop();
               showSnackBar("Login successfull", context);
               Navigator.of(context).pushReplacementNamed('home_p');
@@ -72,14 +72,13 @@ class LoginPage extends StatelessWidget {
             // if (state is LoginInProgress) {
             //   showProgress(context);
             // }
-            if (state is LoginNeedsVerification) {
+            if (state is AuthNeedsVerification) {
               // showSnackBar("User email is not verified. Please verify your email id", context);
               Navigator.of(context).pushReplacementNamed('verification_p');
             }
             if (state is ForgetPasswordSuccess) {}
           },
           child: ListView(
-            // physics: NeverScrollableScrollPhysics(),
             children: [
               // SizedBox(
               //   height: screenHeight * 0.142312579, // 128
@@ -181,7 +180,7 @@ class _LoginFormState extends State<LoginForm> {
   void _onLoginButtonPressed() {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState.validate()) return;
-    BlocProvider.of<LoginBloc>(context).add(
+    BlocProvider.of<AuthenticationBloc>(context).add(
       LoginButtonPressed(
         email: _emailTextController.text,
         password: _passtextController.text,
@@ -200,7 +199,7 @@ class _LoginFormState extends State<LoginForm> {
         onPressed: () {
           if (!_formKey.currentState.validate()) return;
 
-          BlocProvider.of<LoginBloc>(context).add(ForgetPassword(email: _emailController.text));
+          BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
         },
       ),
     );
@@ -208,7 +207,7 @@ class _LoginFormState extends State<LoginForm> {
 
   void _onObscurePressed() {
     _isObscure = !_isObscure;
-    BlocProvider.of<LoginBloc>(context).add(LoginObscureEvent(obscureLogin: _isObscure));
+    BlocProvider.of<AuthenticationBloc>(context).add(LoginObscureEvent(obscureLogin: _isObscure));
   }
 
   @override
@@ -241,7 +240,7 @@ class _LoginFormState extends State<LoginForm> {
           ),
           SizedBox(height: screenHeight * 0.024459975),
           // 22
-          BlocConsumer<LoginBloc, LoginState>(
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is LoginObscureState) {
                 _isObscure = state.obscure;
@@ -294,7 +293,7 @@ class _LoginFormState extends State<LoginForm> {
             ],
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlocBuilder<LoginBloc, LoginState>(
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               // Theme(
               //   data: ThemeData(cupertinoOverrideTheme: CupertinoThemeData(brightness: Brightness.dark)),

@@ -1,4 +1,5 @@
 import 'package:flash/flash.dart';
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:package_info/package_info.dart';
@@ -7,6 +8,7 @@ PrefsModel prefsBox;
 PackageInfo packageInfo;
 // final quotesProvider = Quotes.getRandom();
 bool isPermanentDisabled = true;
+final FluroRouter fluroRouter = FluroRouter();
 
 enum NoteMode { Adding, Editing }
 

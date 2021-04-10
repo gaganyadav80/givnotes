@@ -8,4 +8,3 @@ export 'src/search/search_page.dart';
 export 'src/settings.dart';
 export 'src/tagsView.dart';
 export 'src/todo_timeline/todo_home.dart';
-export 'src/zefyr/zefyrEdit.dart';

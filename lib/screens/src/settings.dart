@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -38,73 +39,9 @@ class SettingsPage extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
-          // ProfileTileSettings(),
+          mainTitle("Profile", context),
+          ProfileTileSettings(),
           mainTitle('General', context),
-          StreamBuilder<User>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return CircularProgressIndicator();
-              } else if (snapshot.hasData) {
-                // final String photo = snapshot.data.photoURL;
-                String initials = '';
-                "Gagan Yadav".split(" ").forEach((element) {
-                  initials = initials + element[0];
-                });
-                return ListTile(
-                  // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyProfile())),
-                  title: Text(
-                    'Gagan Yadav',
-                    style: mainTextStyle(context).copyWith(
-                      fontSize: screenWidth * 0.0456852,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Row(
-                    children: [
-                      Text(
-                        " ${snapshot.data.email}",
-                        style: mainTextStyle(context).copyWith(
-                          fontSize: screenWidth * 0.03299492,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                      SizedBox(width: 5.0),
-                      !snapshot.data.emailVerified
-                          ? Icon(
-                              CupertinoIcons.exclamationmark_circle,
-                              color: Colors.red,
-                              size: 16.0,
-                            )
-                          : SizedBox.shrink(),
-                    ],
-                  ),
-                  leading: Icon(Icons.person_outline),
-                  trailing: Icon(CupertinoIcons.forward, color: Colors.grey),
-                );
-              } else {
-                return ListTile(
-                  // onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
-                  leading: Lottie.asset('assets/animations/people-portrait.json'),
-                  title: Text(
-                    "You are not logged in!",
-                    style: mainTextStyle(context).copyWith(
-                      fontSize: screenWidth * 0.04568527918, //18,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Text(
-                    "Click here and login to your account.",
-                    style: mainTextStyle(context).copyWith(
-                      fontSize: screenWidth * 0.0329942, //13.0,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  trailing: Icon(CupertinoIcons.forward, color: Colors.grey),
-                );
-              }
-            },
-          ),
           DropdownPreference(
             'Sort notes',
             'sort_notes',
@@ -253,42 +190,6 @@ class SettingsPage extends StatelessWidget {
             widgetScaffold: ContactGivnotes(),
           ),
           SizedBox(height: (10 / 760) * screenHeight),
-          mainTitle('Others', context),
-          StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              // User user;
-              if (snapshot.hasData) {
-                // user = snapshot.data;
-                // final String photo = snapshot.data.photoURL;
-                String initials = '';
-                "Gagan Yadav".split(" ").forEach((element) {
-                  initials = initials + element[0];
-                });
-                return ListTile(
-                  leading: Icon(Icons.logout),
-                  title: Text(
-                    'Logout',
-                    style: mainTextStyle(context),
-                  ),
-                  onTap: () {},
-                );
-              } else {
-                return ListTile(
-                  leading: Icon(
-                    Icons.login_outlined,
-                  ),
-                  title: Text(
-                    'Logout',
-                    style: mainTextStyle(context),
-                  ),
-                  onTap: () async {
-                    //TODO: implement
-                  },
-                );
-              }
-            },
-          ),
         ]),
       ),
     );
@@ -309,130 +210,245 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-// class ProfileTileSettings extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return InkWell(
-//       borderRadius: BorderRadius.circular(15.0),
-//       // onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
-//       child: Container(
-//         padding: EdgeInsets.symmetric(vertical: (10.0 / 760) * screenHeight),
-//         margin: EdgeInsets.symmetric(horizontal: (20.0 / 394) * screenWidth),
-//         child: StreamBuilder<User>(
-//           stream: FirebaseAuth.instance.authStateChanges(),
-//           builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-//             if (snapshot.connectionState == ConnectionState.waiting) {
-//               return Center(
-//                 child: Container(
-//                   height: (40.0 / 760) * screenHeight,
-//                   width: (40.0 / 394) * screenWidth,
-//                   child: CircularProgressIndicator(
-//                     strokeWidth: 1.0,
-//                     valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
-//                   ),
-//                 ),
-//               );
-//             } else if (snapshot.hasData) {
-//               final String photo = snapshot.data.photoURL;
-//               String initials = '';
-//               "Gagan Yadav".split(" ").forEach((element) {
-//                 initials = initials + element[0];
-//               });
+class ProfileTileSettings extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
 
-//               return Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                             "Gagan Yadav",
-//                             style: TextStyle(
-//                               color: Theme.of(context).textTheme.bodyText1.color,
-//                               fontSize: 18.0,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                           ),
-//                           Row(
-//                             mainAxisAlignment: MainAxisAlignment.start,
-//                             crossAxisAlignment: CrossAxisAlignment.center,
-//                             children: [
-//                               Text(
-//                                 " ${snapshot.data.email}",
-//                                 style: TextStyle(
-//                                   fontSize: 13.0,
-//                                   fontWeight: FontWeight.w300,
-//                                   color: Theme.of(context).textTheme.bodyText2.color,
-//                                 ),
-//                               ),
-//                               SizedBox(width: 5.0),
-//                               !snapshot.data.emailVerified
-//                                   ? Icon(
-//                                       CupertinoIcons.exclamationmark_circle,
-//                                       color: Colors.red,
-//                                       size: 16.0,
-//                                     )
-//                                   : SizedBox.shrink(),
-//                             ],
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                   Icon(CupertinoIcons.forward, color: Colors.grey),
-//                 ],
-//               );
-//             } else {
-//               return Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Row(
-//                     children: [
-//                       CircleAvatar(
-//                         radius: 35.0,
-//                         backgroundColor: Colors.orange,
-//                         child: Padding(
-//                           padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
-//                           child: Lottie.asset('assets/animations/people-portrait.json'),
-//                         ),
-//                       ),
-//                       // SizedBox(width: 10.0),
-//                       Column(
-//                         mainAxisAlignment: MainAxisAlignment.center,
-//                         children: [
-//                           Text(
-//                             "You are not logged in!",
-//                             style: TextStyle(
-//                               color: Theme.of(context).textTheme.bodyText1.color,
-//                               fontSize: 18.0,
-//                               fontWeight: FontWeight.w600,
-//                             ),
-//                           ),
-//                           Text(
-//                             "Click here and login to your account.",
-//                             style: TextStyle(
-//                               fontSize: 13.0,
-//                               fontWeight: FontWeight.w300,
-//                               color: Theme.of(context).textTheme.bodyText1.color,
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ],
-//                   ),
-//                   Icon(CupertinoIcons.forward, color: Colors.grey),
-//                 ],
-//               );
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
+    final String photo = user.photo;
+    String initials = '';
+    "Gagan Yadav".split(" ").forEach((element) {
+      initials = initials + element[0];
+    });
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(15.0),
+      onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+      child: Container(
+        height: 90.0,
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        child: user.email.isNotEmpty
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 35.0,
+                        backgroundColor: Colors.black,
+                        backgroundImage: photo != null ? NetworkImage(photo) : null,
+                        child: photo == null
+                            ? Text(
+                                initials,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 24.0,
+                                  letterSpacing: 1.5,
+                                ),
+                              )
+                            : SizedBox.shrink(),
+                      ),
+                      SizedBox(width: 20.0),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Gagan Yadav",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyText1.color,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                " ${user.email}",
+                                style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w300,
+                                  color: Theme.of(context).textTheme.bodyText2.color,
+                                ),
+                              ),
+                              SizedBox(width: 5.0),
+                              !user.verified
+                                  ? Icon(
+                                      CupertinoIcons.exclamationmark_circle,
+                                      color: Colors.red,
+                                      size: 16.0,
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Icon(CupertinoIcons.forward, color: Colors.grey),
+                    ],
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 35.0,
+                        backgroundColor: Colors.orange,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
+                          child: Lottie.asset('assets/animations/people-portrait.json'),
+                        ),
+                      ),
+                      // SizedBox(width: 10.0),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "You are not logged in!",
+                            style: TextStyle(
+                              color: Theme.of(context).textTheme.bodyText1.color,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            "Click here and login to your account.",
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w300,
+                              color: Theme.of(context).textTheme.bodyText1.color,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Icon(CupertinoIcons.forward, color: Colors.grey),
+                ],
+              ),
+
+        // StreamBuilder<User>(
+        //   stream: FirebaseAuth.instance.authStateChanges(),
+        //   builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+        //     if (snapshot.connectionState == ConnectionState.waiting) {
+        //       return Center(
+        //         child: Container(
+        //           height: (40.0 / 760) * screenHeight,
+        //           width: (40.0 / 394) * screenWidth,
+        //           child: CircularProgressIndicator(
+        //             strokeWidth: 1.0,
+        //             valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
+        //           ),
+        //         ),
+        //       );
+        // } else if (snapshot.hasData) {
+        //   final String photo = snapshot.data.photoURL;
+        //   String initials = '';
+        //   "Gagan Yadav".split(" ").forEach((element) {
+        //     initials = initials + element[0];
+        //   });
+
+        //   return Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Row(
+        //         children: [
+        //           Column(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             crossAxisAlignment: CrossAxisAlignment.start,
+        //             children: [
+        //               Text(
+        //                 "Gagan Yadav",
+        //                 style: TextStyle(
+        //                   color: Theme.of(context).textTheme.bodyText1.color,
+        //                   fontSize: 18.0,
+        //                   fontWeight: FontWeight.w600,
+        //                 ),
+        //               ),
+        //               Row(
+        //                 mainAxisAlignment: MainAxisAlignment.start,
+        //                 crossAxisAlignment: CrossAxisAlignment.center,
+        //                 children: [
+        //                   Text(
+        //                     " ${snapshot.data.email}",
+        //                     style: TextStyle(
+        //                       fontSize: 13.0,
+        //                       fontWeight: FontWeight.w300,
+        //                       color: Theme.of(context).textTheme.bodyText2.color,
+        //                     ),
+        //                   ),
+        //                   SizedBox(width: 5.0),
+        //                   !snapshot.data.emailVerified
+        //                       ? Icon(
+        //                           CupertinoIcons.exclamationmark_circle,
+        //                           color: Colors.red,
+        //                           size: 16.0,
+        //                         )
+        //                       : SizedBox.shrink(),
+        //                 ],
+        //               ),
+        //             ],
+        //           ),
+        //         ],
+        //       ),
+        //       Icon(CupertinoIcons.forward, color: Colors.grey),
+        //     ],
+        //   );
+        // } else {
+        //   return Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       Row(
+        //         children: [
+        //           CircleAvatar(
+        //             radius: 35.0,
+        //             backgroundColor: Colors.orange,
+        //             child: Padding(
+        //               padding: EdgeInsets.only(bottom: (10 / 760) * screenHeight),
+        //               child: Lottie.asset('assets/animations/people-portrait.json'),
+        //             ),
+        //           ),
+        //           // SizedBox(width: 10.0),
+        //           Column(
+        //             mainAxisAlignment: MainAxisAlignment.center,
+        //             children: [
+        //               Text(
+        //                 "You are not logged in!",
+        //                 style: TextStyle(
+        //                   color: Theme.of(context).textTheme.bodyText1.color,
+        //                   fontSize: 18.0,
+        //                   fontWeight: FontWeight.w600,
+        //                 ),
+        //               ),
+        //               Text(
+        //                 "Click here and login to your account.",
+        //                 style: TextStyle(
+        //                   fontSize: 13.0,
+        //                   fontWeight: FontWeight.w300,
+        //                   color: Theme.of(context).textTheme.bodyText1.color,
+        //                 ),
+        //               ),
+        //             ],
+        //           ),
+        //         ],
+        //       ),
+        //       Icon(CupertinoIcons.forward, color: Colors.grey),
+        //     ],
+        //   );
+        // }
+        //     },
+        //   ),
+        // ),
+      ),
+    );
+  }
+}
 
 class AppDetailSection extends StatefulWidget {
   final TextStyle textStyle;

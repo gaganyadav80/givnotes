@@ -5,10 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 
 import 'components/components.dart';
-import 'register_bloc/register_bloc.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
@@ -27,10 +27,7 @@ class RegisterPage extends StatelessWidget {
           child: Icon(CupertinoIcons.arrow_left, color: Theme.of(context).primaryIconTheme.color),
         ),
       ),
-      body: BlocProvider<RegisterBloc>(
-        create: (context) => RegisterBloc(),
-        child: RegisterMainBody(),
-      ),
+      body: RegisterMainBody(),
     );
   }
 }
@@ -44,7 +41,7 @@ class RegisterMainBody extends StatelessWidget {
       //   return;
       // }
 
-      BlocProvider.of<RegisterBloc>(context).add(GoogleSignUpClicked());
+      BlocProvider.of<AuthenticationBloc>(context).add(RegisterWithGoogle());
     }
 
     // void _onSignInPressed() {
@@ -54,12 +51,12 @@ class RegisterMainBody extends StatelessWidget {
     // }
 
     return SafeArea(
-      child: BlocListener<RegisterBloc, RegisterState>(
+      child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-          if (state is RegisterFailed) {
+          if (state is AuthFailure) {
             Toast.show(state.message, context);
           }
-          if (state is RegisterSuccess) {
+          if (state is AuthSuccess) {
             Toast.show("Registration succesfull", context);
             Navigator.of(context).pushReplacementNamed('verification_p');
           }
@@ -177,24 +174,23 @@ class _RegisterFormState extends State<RegisterForm> {
     //   return;
     // }
 
-    print("still validated");
-    // BlocProvider.of<RegisterBloc>(context).add(
-    //   RegisterButtonClicked(
-    //     name: _nametextController.text,
-    //     email: _emailTextController.text,
-    //     password: _passtextController.text,
-    //   ),
-    // );
+    BlocProvider.of<AuthenticationBloc>(context).add(
+      RegisterButtonClicked(
+        name: _nametextController.text,
+        email: _emailTextController.text,
+        password: _passtextController.text,
+      ),
+    );
   }
 
   void _onObscurePressed() {
     _isObscure = !_isObscure;
-    BlocProvider.of<RegisterBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   void _onConfirmObscurePressed() {
     _isConfirmObscure = !_isConfirmObscure;
-    BlocProvider.of<RegisterBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   @override
@@ -234,7 +230,7 @@ class _RegisterFormState extends State<RegisterForm> {
             validator: _validator.validateEmail,
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlocConsumer<RegisterBloc, RegisterState>(
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
                 _isObscure = state.obscure;
@@ -273,7 +269,7 @@ class _RegisterFormState extends State<RegisterForm> {
             },
           ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlocConsumer<RegisterBloc, RegisterState>(
+          BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
                 _isConfirmObscure = state.obscureConfirm;
@@ -397,7 +393,7 @@ class _RegisterFormState extends State<RegisterForm> {
           //   ],
           // ),
           SizedBox(height: screenHeight * 0.024459975), // 22
-          BlocBuilder<RegisterBloc, RegisterState>(
+          BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is RegisterInProgress
                   ? BlueButton(

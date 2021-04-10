@@ -1,66 +1,46 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/widgets/circular_checkbox_beta.dart';
-import 'package:givnotes/widgets/circular_checkbox_stable.dart';
+import 'package:givnotes/packages/circular_checkbox.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
-import 'package:givnotes/database/HiveDB.dart';
-import 'package:givnotes/database/HiveDB_helper.dart';
+import 'package:givnotes/global/material_colors.dart';
 
+import 'bloc/todo_bloc.dart';
+import 'bloc/todo_event.dart';
+import 'bloc/todo_state.dart';
+import 'src/todo_model.dart';
 import 'todo_widgets.dart';
 
-class CreateTodo extends StatefulWidget {
-  const CreateTodo({
+class CreateTodoBloc extends StatefulWidget {
+  const CreateTodoBloc({
     Key key,
-    this.editTodo = false,
-    this.index,
-    this.uuid,
-    this.title,
-    this.description,
-    this.completed = false,
-    this.category,
-    this.dueDate,
-    this.priority,
-    this.subTask,
-  })  : assert(editTodo != null),
-        assert(editTodo ? index != null : true),
-        assert(editTodo ? uuid != null : true),
-        assert(editTodo ? title != null : true),
-        assert(editTodo ? description != null : true),
-        assert(editTodo ? completed != null : true),
-        assert(editTodo ? dueDate != null : true),
-        // assert(editTodo ? priority != null : true),
-        assert(editTodo ? subTask != null : true),
-        assert(editTodo ? category != null : true),
+    this.id,
+    this.isEditing = false,
+    this.todo,
+  })  : assert(isEditing ? id != null : true),
+        assert(isEditing ? todo != null : true),
         super(key: key);
 
-  final dynamic index;
-  final bool editTodo;
-  final String uuid;
-  final String title;
-  final String description;
-  final bool completed;
-  final DateTime dueDate;
-  final String priority;
-  final List<SubTaskModel> subTask;
-  final Map<String, int> category;
+  final String id;
+  final bool isEditing;
+  final Todo todo;
 
   @override
   _CreateTodoState createState() => _CreateTodoState();
 }
 
-class _CreateTodoState extends State<CreateTodo> {
+class _CreateTodoState extends State<CreateTodoBloc> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _detailsController = TextEditingController();
   final TextEditingController _subtaskController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
-  final HiveDBServices _dbServices = HiveDBServices();
+  // final HiveDBServices _dbServices = HiveDBServices();
   String _priority;
-  List<SubTaskModel> _subTasks = <SubTaskModel>[];
+  List<dynamic> _subTasks = [];
   List<int> _selectCategoryColors = <int>[];
   bool _categoryAdded = false;
   DateTime _dueDate = DateTime.now();
@@ -68,20 +48,20 @@ class _CreateTodoState extends State<CreateTodo> {
   @override
   void initState() {
     super.initState();
-    if (widget.editTodo) {
+    if (widget.isEditing) {
       _categoryAdded = true;
 
-      _titleController.text = widget.title;
-      _detailsController.text = widget.description;
-      _categoryController.text = widget.category.keys.first;
+      _titleController.text = widget.todo.title;
+      _detailsController.text = widget.todo.description;
+      _categoryController.text = widget.todo.category.keys.first;
       _selectCategoryColors
         ..clear()
-        ..add(widget.category.values.first);
-      _priority = widget.priority;
+        ..add(widget.todo.category.values.first);
+      _priority = widget.todo.priority;
       _subTasks
         ..clear()
-        ..addAll(widget.subTask);
-      _dueDate = widget.dueDate;
+        ..addAll(widget.todo.subTask);
+      _dueDate = widget.todo.dueDate.toDate();
     } else {
       _selectCategoryColors.addAll(materialColorValues);
     }
@@ -105,12 +85,12 @@ class _CreateTodoState extends State<CreateTodo> {
         bool val = true;
         FocusScope.of(context).unfocus();
 
-        if (widget.editTodo && _titleController.text != widget.title) {
+        if (widget.isEditing && _titleController.text != widget.todo.title) {
           await showDialog(
             context: context,
             builder: (context) => TodoAlert(),
           ).then((value) => val = value);
-        } else if (!widget.editTodo && _titleController.text.isNotEmpty) {
+        } else if (!widget.isEditing && _titleController.text.isNotEmpty) {
           await showDialog(
             context: context,
             builder: (context) => TodoAlert(),
@@ -121,7 +101,7 @@ class _CreateTodoState extends State<CreateTodo> {
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        appBar: CreateTodoAppBar(controller: _titleController, prevTitle: widget.title, editTodo: widget.editTodo),
+        appBar: CreateTodoAppBar(controller: _titleController, prevTitle: widget.isEditing ? widget.todo.title : "", editTodo: widget.isEditing),
         floatingActionButton: _buildFab(),
         body: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -316,19 +296,31 @@ class _CreateTodoState extends State<CreateTodo> {
                   itemCount: _subTasks.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      leading: CreateTodoCheckBox(subTask: _subTasks[index]),
-                      // trailing: CircularCheckBox(
-                      //   value: _subTasks[index].isCompleted(),
-                      //   radius: 10.0,
-                      //   width: 12.0,
-                      //   materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      //   activeColor: Colors.blue,
-                      //   inactiveColor: Colors.blue,
-                      //   onChanged: (bool x) {
-                      //     _subTasks[index].setComplete(!_subTasks[index].completed);
-                      //   },
-                      // ),
-                      title: Text(_subTasks[index].subTask),
+                      leading: BlocBuilder<TodosBloc, TodosState>(
+                        builder: (context, state) {
+                          return CircularCheckBox(
+                            onChanged: (_) async {
+                              //TODO flag
+                              // setState(() {
+                              //   widget.subTask.setComplete(!widget.subTask.completed);
+                              // });
+
+                              var subTask = widget.todo.subTask;
+                              subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
+
+                              BlocProvider.of<TodosBloc>(context).add(
+                                UpdateTodo(widget.todo.copyWith(subTask: subTask)),
+                              );
+                            },
+                            value: _subTasks[index].values.first,
+                            inactiveColor: Colors.blue,
+                            activeColor: Colors.blue,
+                            radius: 14.0,
+                            width: 20.0,
+                          );
+                        },
+                      ),
+                      title: Text(_subTasks[index].keys.first),
                     );
                   },
                 ),
@@ -471,33 +463,59 @@ class _CreateTodoState extends State<CreateTodo> {
           backgroundColor: Colors.black,
           child: Icon(CupertinoIcons.floppy_disk, color: Colors.white),
           onPressed: () {
-            if (_titleController.text.isNotEmpty && !widget.editTodo) {
-              _dbServices.insertTodo(
-                TodoModel()
-                  ..title = _titleController.text
-                  ..description = _detailsController.text
-                  ..completed = false
-                  ..dueDate = _dueDate
-                  ..subTask = _subTasks
-                  ..category = {_categoryController.text: _selectCategoryColors.first}
-                  ..uuid = Uuid().v1()
-                  ..priority = _priority,
+            if (_titleController.text.isNotEmpty && !widget.isEditing) {
+              //TODO flag
+              // _dbServices.insertTodo(
+              //   TodoModel()
+              //     ..title = _titleController.text
+              //     ..description = _detailsController.text
+              //     ..completed = false
+              //     ..dueDate = _dueDate
+              //     ..subTask = _subTasks
+              //     ..category = {_categoryController.text: _selectCategoryColors.first}
+              //     ..uuid = Uuid().v1()
+              //     ..priority = _priority,
+              // );
+
+              BlocProvider.of<TodosBloc>(context).add(
+                AddTodo(Todo(
+                  title: _titleController.text,
+                  completed: false,
+                  description: _detailsController.text,
+                  dueDate: Timestamp.fromDate(_dueDate),
+                  priority: _priority,
+                  category: _categoryController.text.isNotEmpty ? {_categoryController.text: _selectCategoryColors.first} : {"": null},
+                  subTask: _subTasks,
+                )),
               );
 
               Navigator.pop(context);
-            } else if (widget.editTodo) {
-              _dbServices.updateTodo(
-                widget.index,
-                TodoModel()
-                  ..title = _titleController.text
-                  ..description = _detailsController.text
-                  ..completed = widget.completed
-                  ..dueDate = _dueDate
-                  ..subTask = _subTasks
-                  ..category = {_categoryController.text: _selectCategoryColors.first}
-                  ..uuid = widget.uuid
-                  ..priority = _priority,
+            } else if (widget.isEditing) {
+              //TODO flag
+              // _dbServices.updateTodo(
+              //   widget.index,
+              //   TodoModel()
+              //     ..title = _titleController.text
+              //     ..description = _detailsController.text
+              //     ..completed = widget.completed
+              //     ..dueDate = _dueDate
+              //     ..subTask = _subTasks
+              //     ..category = {_categoryController.text: _selectCategoryColors.first}
+              //     ..uuid = widget.uuid
+              //     ..priority = _priority,
+              // );
+
+              BlocProvider.of<TodosBloc>(context).add(
+                UpdateTodo(widget.todo.copyWith(
+                  title: _titleController.text,
+                  description: _detailsController.text,
+                  dueDate: Timestamp.fromDate(_dueDate),
+                  priority: _priority,
+                  category: {_categoryController.text: _selectCategoryColors.first},
+                  subTask: _subTasks,
+                )),
               );
+
               Navigator.pop(context);
             } else {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter a task title.")));
@@ -530,7 +548,8 @@ class _CreateTodoState extends State<CreateTodo> {
                       autofocus: true,
                       onSubmitted: (_) {
                         setState(() {
-                          _subTasks.add(SubTaskModel(_subtaskController.text));
+                          // _subTasks.add(SubTaskModel(_subtaskController.text));
+                          _subTasks.add({_subtaskController.text: false});
                         });
                         // Navigator.pop(context);
                         _subtaskController.clear();
@@ -543,7 +562,7 @@ class _CreateTodoState extends State<CreateTodo> {
                     iconSize: 28.0,
                     onPressed: () {
                       setState(() {
-                        _subTasks.add(SubTaskModel(_subtaskController.text));
+                        _subTasks.add({_subtaskController.text: false});
                       });
                       // Navigator.pop(context);
                       _subtaskController.clear();
@@ -555,30 +574,4 @@ class _CreateTodoState extends State<CreateTodo> {
           ),
         ),
       );
-}
-
-class CreateTodoCheckBox extends StatefulWidget {
-  CreateTodoCheckBox({Key key, @required this.subTask}) : super(key: key);
-
-  final SubTaskModel subTask;
-
-  @override
-  _CreateTodoCheckBoxState createState() => _CreateTodoCheckBoxState();
-}
-
-class _CreateTodoCheckBoxState extends State<CreateTodoCheckBox> {
-  @override
-  Widget build(BuildContext context) {
-    return CircularCheckBoxStable(
-      onChanged: (_) {
-        setState(() {
-          widget.subTask.setComplete(!widget.subTask.completed);
-        });
-      },
-      value: widget.subTask.isCompleted(),
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
-      radius: Radius.circular(50.0),
-      width: 30.0,
-    );
-  }
 }

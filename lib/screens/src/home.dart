@@ -13,7 +13,7 @@ import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/widgets/custom_appbar.dart';
 
-import 'todo_timeline/todo_home_bloc.dart';
+import 'todo_timeline/todo_home.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);

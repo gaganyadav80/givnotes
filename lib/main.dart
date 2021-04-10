@@ -1,4 +1,3 @@
-import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -6,22 +5,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/screens/themes/app_themes.dart';
 import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'cubit/cubits.dart';
 import 'global/size_utils.dart';
 import 'global/variables.dart';
 import 'packages/packages.dart';
 import 'screens/screens.dart';
-import 'screens/src/todo_timeline/bloc/todo_bloc.dart';
-import 'screens/src/todo_timeline/bloc/todo_event.dart';
-import 'screens/src/todo_timeline/src/firebase_todo_repository.dart';
+import 'screens/src/todo_timeline/todo_timeline.dart';
 import 'services/services.dart';
 
 void main() async {
@@ -43,12 +42,8 @@ void main() async {
 
   runApp(
     AppLock(
-      // builder: (_) => DevicePreview(
-      //   enabled: !kReleaseMode,
-      //   builder: (context) => GivnotesApp(),
-      // ),
-      // builder: (_) => App(authenticationRepository: AuthenticationRepository()),
-      builder: (_) => App(),
+      builder: (_) => App(authenticationRepository: AuthenticationRepository()),
+      // builder: (_) => App(),
       lockScreen: ShowLockscreen(changePassAuth: false),
       enabled: prefsBox.applock,
     ),
@@ -56,35 +51,32 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-  const App({Key key}) : super(key: key);
-
-  //  assert(authenticationRepository != null),
-  // final AuthenticationRepository authenticationRepository;
+  const App({Key key, this.authenticationRepository})
+      : assert(authenticationRepository != null),
+        super(key: key);
+  final AuthenticationRepository authenticationRepository;
 
   @override
   Widget build(BuildContext context) {
     initializeUtils(context);
 
-    // return RepositoryProvider.value(
-    //   value: authenticationRepository,
-    //   child:
-    // );
-    return MultiBlocProvider(
-      providers: [
-        // BlocProvider(create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
-        BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
-        BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
-        BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
-        BlocProvider<LoginBloc>(create: (_) => LoginBloc()),
-        BlocProvider<RegisterBloc>(create: (_) => RegisterBloc()),
-        BlocProvider<TodosBloc>(
-          create: (context) => TodosBloc(
-            todosRepository: FirebaseTodosRepository(),
-          )..add(LoadTodos()),
-        ),
-        BlocProvider(create: (_) => ThemeBloc()),
-      ],
-      child: MainAppWithTheme(),
+    return RepositoryProvider.value(
+      value: authenticationRepository,
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
+          BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
+          BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
+          BlocProvider<AuthenticationBloc>(create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
+          BlocProvider<TodosBloc>(
+            create: (context) => TodosBloc(
+              todosRepository: FirebaseTodosRepository(),
+            )..add(LoadTodos()),
+          ),
+          BlocProvider(create: (_) => ThemeBloc()),
+        ],
+        child: MainAppWithTheme(),
+      ),
     );
   }
 }
@@ -163,11 +155,7 @@ class CheckLogin extends StatelessWidget {
         // if (prefsBox.isAnonymous) return const HomePage();
 
         //  || !snapshot.data.emailVerified
-        if (!snapshot.hasData || snapshot.data == null)
-          return BlocProvider(
-            create: (context) => LoginBloc(),
-            child: LoginPage(),
-          );
+        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
         return const HomePage();
       },
