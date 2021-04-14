@@ -12,8 +12,6 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/screens/themes/app_themes.dart';
-import 'package:givnotes/screens/themes/bloc/theme_bloc.dart';
 
 import 'cubit/cubits.dart';
 import 'global/size_utils.dart';
@@ -43,7 +41,6 @@ void main() async {
   runApp(
     AppLock(
       builder: (_) => App(authenticationRepository: AuthenticationRepository()),
-      // builder: (_) => App(),
       lockScreen: ShowLockscreen(changePassAuth: false),
       enabled: prefsBox.applock,
     ),
@@ -73,35 +70,15 @@ class App extends StatelessWidget {
               todosRepository: FirebaseTodosRepository(),
             )..add(LoadTodos()),
           ),
-          BlocProvider(create: (_) => ThemeBloc()),
         ],
-        child: MainAppWithTheme(),
-      ),
-    );
-  }
-}
-
-class MainAppWithTheme extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ThemeBloc(),
-      child: BlocBuilder<ThemeBloc, ThemeState>(
-        builder: (context, state) => GivnotesApp(context: context, state: state),
+        child: GivnotesApp(),
       ),
     );
   }
 }
 
 class GivnotesApp extends StatefulWidget {
-  // final _navigatorKey = GlobalKey<NavigatorState>();
-
-  // NavigatorState get _navigator => _navigatorKey.currentState;
-
-  final BuildContext context;
-  final ThemeState state;
-
-  const GivnotesApp({Key key, @required this.context, @required this.state}) : super(key: key);
+  const GivnotesApp({Key key}) : super(key: key);
 
   @override
   _GivnotesAppState createState() => _GivnotesAppState();
@@ -121,14 +98,12 @@ class _GivnotesAppState extends State<GivnotesApp> {
         'search_p': (context) => SearchPage(),
       },
       title: 'Givnotes',
-      theme: lightTheme,
-      // theme: ThemeData(
-      //   //maybe switch to google fonts
-      //   fontFamily: 'Poppins',
-      //   accentColor: Colors.black,
-      //   accentColorBrightness: Brightness.light,
-      //   toggleableActiveColor: Colors.blue,
-      // ),
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        accentColor: Colors.black,
+        accentColorBrightness: Brightness.light,
+        toggleableActiveColor: Colors.blue,
+      ),
       home: const CheckLogin(),
     );
   }
@@ -152,9 +127,6 @@ class CheckLogin extends StatelessWidget {
             child: const CupertinoActivityIndicator(),
           );
 
-        // if (prefsBox.isAnonymous) return const HomePage();
-
-        //  || !snapshot.data.emailVerified
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
         return const HomePage();

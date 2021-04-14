@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:givnotes/cubit/cubits.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +13,6 @@ import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/screens/themes/app_themes.dart';
 
 class TagsView extends StatefulWidget {
   @override
@@ -29,11 +29,11 @@ class _TagsViewState extends State<TagsView> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: giveStatusBarColor(context),
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: giveStatusBarColor(context),
+    //   ),
+    // );
     // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(
@@ -243,12 +243,24 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
         _tagSearchStore.updateTagSearchList(_allTagsMap.keys.toList());
       }
     });
+
+    _searchTagFocus.addListener(() {
+      if (BlocProvider.of<HomeCubit>(context).state.index != 2) {
+        _searchTagFocus.unfocus();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchTagFocus?.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final NoteAndSearchCubit _tagSearchStore = BlocProvider.of<NoteAndSearchCubit>(context);
-    final hm = 7.6;
+    // final hm = 7.6;
 
     return Column(
       children: [
@@ -256,12 +268,11 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           focusNode: _searchTagFocus,
           controller: _searchTagController,
           autocorrect: false,
-          cursorColor: Theme.of(context).textTheme.bodyText2.color,
+          // cursorColor: Theme.of(context).textTheme.bodyText2.color,
           style: TextStyle(
             fontSize: 13,
             letterSpacing: 1.05,
-            // color: Colors.grey[800],
-            color: Theme.of(context).textTheme.bodyText1.color,
+            color: Colors.grey[800],
           ),
           textCapitalization: TextCapitalization.characters,
           inputFormatters: [
@@ -277,22 +288,24 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           },
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.black,
+            fillColor: Colors.white,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
+                width: 1.5,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
               borderSide: BorderSide(
                 color: Colors.black,
+                width: 1.5,
               ),
             ),
             prefixIcon: Icon(
               Icons.search_rounded,
-              color: Colors.blue,
+              color: Colors.black,
             ),
             suffixIcon: InkWell(
               onTap: () {
@@ -305,7 +318,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               child: Icon(
                 Icons.close,
                 size: 22,
-                color: Theme.of(context).textTheme.bodyText2.color,
+                color: Colors.black,
               ),
             ),
             border: InputBorder.none,
@@ -332,7 +345,6 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               final noteTag = state.tagSearchList[index];
 
               return ItemTags(
-                color: Colors.blue,
                 key: Key(index.toString()),
                 elevation: 2,
                 index: index,
@@ -346,7 +358,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   0.009210526 * screenSize.height,
                 ),
                 textStyle: TextStyle(
-                  fontSize: 1.8 * hm,
+                  fontSize: 1.8 * (screenHeight / 100),
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
                   color: Colors.white,

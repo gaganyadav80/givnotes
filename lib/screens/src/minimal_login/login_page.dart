@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
-import 'package:givnotes/screens/themes/app_themes.dart';
 
 import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
@@ -35,11 +34,11 @@ class LoginPage extends StatelessWidget {
       }));
     }
 
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: giveStatusBarColor(context),
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: giveStatusBarColor(context),
+    //   ),
+    // );
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -129,25 +128,14 @@ class LoginPage extends StatelessWidget {
                           color: Theme.of(context).scaffoldBackgroundColor,
                         ),
                         padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: Theme.of(context).textTheme.caption.copyWith(
-                                    fontSize: screenWidth * 0.034,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                            Text(
-                              "Sign Up",
-                              style: Theme.of(context).textTheme.headline6.copyWith(
-                                    fontSize: screenWidth * 0.0385786,
-                                    color: Theme.of(context).splashColor,
-                                  ),
-                            ),
-                          ],
+                        child: Center(
+                          child: Text(
+                            "Create a new account.",
+                            style: Theme.of(context).textTheme.caption.copyWith(
+                                  fontSize: screenWidth * 0.034,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                          ),
                         ),
                       ),
                     ),
@@ -233,10 +221,7 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
-            prefixIcon: Icon(
-              Icons.email_outlined,
-              color: Theme.of(context).splashColor,
-            ),
+            prefixIcon: Icon(Icons.email_outlined),
           ),
           SizedBox(height: screenHeight * 0.024459975),
           // 22
@@ -253,26 +238,13 @@ class _LoginFormState extends State<LoginForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: Icon(
-                  Icons.lock_outline,
-                  color: Theme.of(context).splashColor,
-                ),
+                prefixIcon: Icon(Icons.lock_outline),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure
-                    ? GestureDetector(
-                        onTap: _onObscurePressed,
-                        child: Icon(
-                          Icons.visibility_off_outlined,
-                          color: Theme.of(context).splashColor,
-                        ))
-                    : GestureDetector(
-                        onTap: _onObscurePressed,
-                        child: Icon(
-                          Icons.visibility_outlined,
-                          color: Theme.of(context).splashColor,
-                        )),
+                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
+                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
               );
             },
           ),

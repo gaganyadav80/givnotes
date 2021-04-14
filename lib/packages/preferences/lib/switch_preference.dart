@@ -15,11 +15,12 @@ class SwitchPreference extends StatefulWidget {
   final Function onChange;
   final bool disabled;
   final Color switchActiveColor;
-  final Color tileColor;
+
   final Color titleColor;
   final Widget leading;
   final double titleGap;
   final Color leadingColor;
+  final Color backgroundColor;
 
   SwitchPreference(
     this.title,
@@ -31,13 +32,13 @@ class SwitchPreference extends StatefulWidget {
     this.onEnable,
     this.onDisable,
     this.onChange,
-    this.tileColor = Colors.white,
     this.disabled = false,
     this.switchActiveColor,
     this.leading,
     this.titleColor = Colors.black,
     this.titleGap,
     this.leadingColor,
+    this.backgroundColor = Colors.white,
   });
 
   _SwitchPreferenceState createState() => _SwitchPreferenceState();
@@ -57,9 +58,9 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
     return Opacity(
       opacity: widget.disabled ? 0.5 : 1.0,
       child: ListTile(
-        tileColor: widget.tileColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        enableFeedback: true,
+        // enableFeedback: true,
+        tileColor: widget.backgroundColor,
         // leading: widget.leading,
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,

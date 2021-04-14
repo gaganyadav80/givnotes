@@ -16,43 +16,38 @@ class BlueButton extends StatelessWidget {
       borderRadius: kBorderRadius,
       color: Colors.transparent,
       elevation: 5.0,
-      // shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
-      child: Container(
-        height: screenHeight * 0.07394736842,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            primary: Theme.of(context).splashColor,
-            elevation: 0.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: kBorderRadius,
-            ),
-            padding: EdgeInsets.symmetric(
-              vertical: screenHeight * 0.018900889, // 17
-            ),
+      shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          onPrimary: Theme.of(context).splashColor,
+          elevation: 0.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: kBorderRadius,
           ),
-          onPressed: onPressed,
-          child: Center(
-            child: isLoading
-                ? Container(
-                    // height: 30.0,
-                    // width: 30.0,
-                    color: Theme.of(context).splashColor,
-                    height: screenHeight * 0.03547368421,
-                    width: screenWidth * 0.07614213198,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 1.0,
-                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
-                : Text(
-                    title,
-                    style: Theme.of(context).textTheme.button.copyWith(
-                          fontSize: screenHeight * 0.020,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+          padding: EdgeInsets.symmetric(
+            vertical: screenHeight * 0.018900889, // 17
+          ),
+          primary: Theme.of(context).primaryColor,
+        ),
+        child: Center(
+          child: isLoading
+              ? Container(
+                  height: 30.0,
+                  width: 30.0,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1.0,
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
-          ),
+                )
+              : Text(
+                  title,
+                  style: Theme.of(context).textTheme.button.copyWith(
+                        fontSize: screenHeight * 0.025,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                ),
         ),
       ),
     );

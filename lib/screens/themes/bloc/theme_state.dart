@@ -1,9 +1,9 @@
-part of 'theme_bloc.dart';
+// part of 'theme_bloc.dart';
 
-class ThemeState extends Equatable {
-  final ThemeData appThemeData;
-  const ThemeState({@required this.appThemeData}) : assert(appThemeData != null);
+// class ThemeState extends Equatable {
+//   final ThemeData appThemeData;
+//   const ThemeState({@required this.appThemeData}) : assert(appThemeData != null);
 
-  @override
-  List<Object> get props => [appThemeData];
-}
+//   @override
+//   List<Object> get props => [appThemeData];
+// }

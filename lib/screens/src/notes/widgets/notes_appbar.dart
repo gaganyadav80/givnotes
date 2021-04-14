@@ -233,11 +233,10 @@ class NotesBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    final Size screenSize = MediaQuery.of(context).size;
+    // final Size screenSize = MediaQuery.of(context).size;
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    //TODO: Redo Colors
     Color bgColor = isDark ? Colors.black : Colors.grey[300];
-    Color tileColor = isDark ? Colors.black.withOpacity(0.7) : Colors.white;
+    // Color tileColor = isDark ? Colors.black.withOpacity(0.7) : Colors.white;
     String def = hydratedPrefsCubit.state.sortBy == 'created'
         ? 'Date created'
         : hydratedPrefsCubit.state.sortBy == 'modified'
@@ -249,6 +248,7 @@ class NotesBottomSheet extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
         title: Text(
           'Notes Options',
           style: TextStyle(
@@ -288,6 +288,7 @@ class NotesBottomSheet extends StatelessWidget {
             TilesDivider(),
 
             ListTile(
+              tileColor: Colors.white,
               leading: Icon(
                 CupertinoIcons.sort_down_circle,
                 color: Theme.of(context).textTheme.bodyText1.color,
@@ -373,7 +374,7 @@ class NotesBottomSheet extends StatelessWidget {
               'Compact Tags',
               'compact_tags',
               titleColor: Theme.of(context).textTheme.bodyText1.color,
-              tileColor: Theme.of(context).canvasColor,
+              // tileColor: Theme.of(context).canvasColor,
               titleGap: 0.0,
               leading: Icon(
                 CupertinoIcons.bars,
@@ -395,7 +396,7 @@ class NotesBottomSheet extends StatelessWidget {
             PreferenceText(
               "Trash",
               style: tileTextStyle(context),
-              tileColor: Theme.of(context).canvasColor,
+              backgroundColor: Colors.white,
               leading: Icon(
                 CupertinoIcons.delete,
                 color: Theme.of(context).textTheme.bodyText1.color,

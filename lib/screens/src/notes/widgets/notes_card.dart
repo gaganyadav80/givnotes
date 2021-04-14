@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -58,7 +59,7 @@ class _NotesCardState extends State<NotesCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Theme.of(context).scaffoldBackgroundColor,
+        color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
           radius: 600, //maybe change to 400-500
@@ -80,17 +81,17 @@ class _NotesCardState extends State<NotesCard> {
               widget.notesViewUpdate();
               //
             } else {
-              // BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
+              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
 
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ZefyrEdit(
-              //       noteMode: NoteMode.Editing,
-              //       note: widget.note,
-              //     ),
-              //   ),
-              // );
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditorScreen(
+                    noteMode: NoteMode.Editing,
+                    note: widget.note,
+                  ),
+                ),
+              );
             }
           },
           child: Padding(
@@ -109,7 +110,7 @@ class _NotesCardState extends State<NotesCard> {
                         height: prefsCubit.state.compactTags ? 1 * hm : 2.3 * hm,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Theme.of(context).cardColor,
+                          color: Colors.white,
                         ),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -136,7 +137,7 @@ class _NotesCardState extends State<NotesCard> {
                                     // padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
                                     padding: EdgeInsets.fromLTRB(0.012690355 * screenSize.width, 0.002631579 * screenSize.height, 0.012690355 * screenSize.width, 0.002631579 * screenSize.height),
                                     decoration: BoxDecoration(
-                                      color: Colors.red,
+                                      color: color,
                                       borderRadius: BorderRadius.circular(5),
                                     ),
                                     child: Center(

@@ -2,21 +2,16 @@ import 'package:flutter/material.dart';
 
 class PreferenceText extends StatelessWidget {
   final String text;
-
   final TextStyle style;
   final Decoration decoration;
-
   final Widget leading;
   final Text subtitle;
-  final Color tileColor;
   final Function onTap;
-
   final TextOverflow overflow;
-
   final double titleGap;
-
   final Color leadingColor;
   final Widget trailing;
+  final Color backgroundColor;
 
   PreferenceText(
     this.text, {
@@ -29,7 +24,7 @@ class PreferenceText extends StatelessWidget {
     this.titleGap,
     this.leadingColor,
     this.trailing,
-    this.tileColor = Colors.white,
+    this.backgroundColor = Colors.white,
   });
 
   @override
@@ -37,9 +32,9 @@ class PreferenceText extends StatelessWidget {
     return Container(
       decoration: decoration,
       child: ListTile(
-        tileColor: tileColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         horizontalTitleGap: titleGap,
+        tileColor: backgroundColor,
         leading: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -24,24 +24,18 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       leading: Padding(
         // padding: EdgeInsets.fromLTRB(8.5, 4.7, 8.5, 4.7),
-        padding: EdgeInsets.fromLTRB(
-            0.021573604 * screenSize.width,
-            0.006184211 * screenSize.height,
-            0.021573604 * screenSize.width,
-            0.006184211 * screenSize.height),
+        padding: EdgeInsets.fromLTRB(0.021573604 * screenSize.width, 0.006184211 * screenSize.height, 0.021573604 * screenSize.width, 0.006184211 * screenSize.height),
         child: InkWell(
           onTap: () {
             saveNote();
           },
           child: FlareActor(
             'assets/animations/arrow-tick.flr',
-            animation: noteEditStore.state.noteMode == NoteMode.Adding
-                ? 'idle-tick'
-                : 'idle-arrow',
+            animation: noteEditStore.state.noteMode == NoteMode.Adding ? 'idle-tick' : 'idle-arrow',
             controller: controls,
             alignment: Alignment.center,
             fit: BoxFit.contain,
-            color: Theme.of(context).iconTheme.color,
+            // color: Theme.of(context).iconTheme.color,
           ),
         ),
       ),
@@ -49,14 +43,14 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
         IconButton(
           icon: Icon(
             Icons.more_vert,
-            color: Theme.of(context).iconTheme.color,
+            color: Colors.black,
           ),
           onPressed: () {
             Scaffold.of(context).openEndDrawer();
           },
         ),
       ],
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.white,
       elevation: 0,
       centerTitle: true,
     );

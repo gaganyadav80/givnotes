@@ -34,10 +34,7 @@ class VerificationPage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 5.0),
-                  Icon(
-                    Icons.fast_forward,
-                    color: Theme.of(context).splashColor,
-                  ),
+                  Icon(Icons.fast_forward, color: Colors.black),
                 ],
               ),
             ),
@@ -62,7 +59,7 @@ class VerificationMainBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
+    // bool isDark = Theme.of(context).brightness == Brightness.dark;
     void _onConfirmButtonPressed() {
       BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
     }
@@ -101,7 +98,7 @@ class VerificationMainBody extends StatelessWidget {
                 SizedBox(height: screenHeight * 0.05),
                 Center(
                     child: Image.asset(
-                  isDark ? "assets/giv_img/lock_dark.png" : "assets/giv_img/lock_light.png",
+                  "assets/img/login-verify.png",
                   height: 180,
                   width: 180,
                 )),
