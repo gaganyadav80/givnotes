@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -411,7 +412,7 @@ class NotesBottomSheet extends StatelessWidget {
               onTap: () {
                 BlocProvider.of<HomeCubit>(context).updateTrash(true);
                 Navigator.pop(context);
-                Navigator.push(context, NotesView().materialRoute());
+                Navigator.pushNamed(context, RouterName.notesviewRoute);
               },
             ),
             TilesDivider(),

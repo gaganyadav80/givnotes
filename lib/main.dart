@@ -20,6 +20,7 @@ import 'packages/packages.dart';
 import 'screens/screens.dart';
 import 'screens/src/todo_timeline/todo_timeline.dart';
 import 'services/services.dart';
+import 'routes.dart' as rt;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -89,22 +90,27 @@ class _GivnotesAppState extends State<GivnotesApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      routes: {
-        'login_p': (context) => LoginPage(),
-        'register_p': (context) => RegisterPage(),
-        'verification_p': (context) => VerificationPage(),
-        'home_p': (context) => HomePage(),
-        'settings_p': (context) => SettingsPage(),
-        'search_p': (context) => SearchPage(),
-      },
       title: 'Givnotes',
       theme: ThemeData(
         fontFamily: 'Poppins',
         accentColor: Colors.black,
         accentColorBrightness: Brightness.light,
         toggleableActiveColor: Colors.blue,
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: ZoomPageTransitionsBuilder(),
+          },
+        ),
       ),
-      home: const CheckLogin(),
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: RemoveScrollGlow(),
+          child: child,
+        );
+      },
+      onGenerateRoute: rt.Router.generateRoute,
+      initialRoute: '/',
+      // home: const CheckLogin(),
     );
   }
 }

@@ -2,13 +2,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/routes.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/services/services.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -128,12 +128,13 @@ class SettingsPage extends StatelessWidget {
             onTap: () {
               // if (prefsBox.passcode != '')
               if (PrefService.getBool('app_lock') == true)
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShowLockscreen(changePassAuth: true),
-                  ),
-                );
+                // Navigator.pushz(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ShowLockscreen(changePassAuth: true),
+                //   ),
+                // );
+                Navigator.pushNamed(context, RouterName.lockscreenRoute, arguments: true);
               else
                 Toast.show("Please enable applock first", context);
             },
@@ -182,7 +183,7 @@ class ProfileTileSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(15.0),
-      onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => MyProfile())),
+      onTap: () => Navigator.pushNamed(context, RouterName.profileRoute),
       child: Container(
         height: 90.0,
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -404,12 +405,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           titleGap: 0.0,
           onEnable: () {
             if (prefsBox.passcode == '') {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddLockscreen(),
-                ),
-              ).then((value) {
+              Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
                 if (!value) {
                   PrefService.setBool('app_lock', false);
                   setState(() {});

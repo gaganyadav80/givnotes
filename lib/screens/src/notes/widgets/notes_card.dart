@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -83,15 +84,7 @@ class _NotesCardState extends State<NotesCard> {
             } else {
               BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
 
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EditorScreen(
-                    noteMode: NoteMode.Editing,
-                    note: widget.note,
-                  ),
-                ),
-              );
+              Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },
           child: Padding(

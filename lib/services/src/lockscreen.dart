@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
 
@@ -54,12 +55,7 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
       onUnlocked: widget.changePassAuth
           ? () {
               Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddLockscreen(),
-                ),
-              );
+              Navigator.pushNamed(context, RouterName.addlockRoute);
             }
           : () {
               AppLock.of(context).didUnlock();

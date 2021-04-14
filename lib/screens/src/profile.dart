@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
+import 'package:givnotes/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
@@ -286,12 +287,13 @@ class _MyProfileState extends State<MyProfile> {
         onPressed: isSignOut == false
             ? () {
                 // Navigator.of(context).pushReplacementNamed('login_p');
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginPage(),
-                  ),
-                );
+                // Navigator.pushz(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => LoginPage(),
+                //   ),
+                // );
+                Navigator.pushNamed(context, RouterName.loginRoute);
               }
             : () {
                 _signOutAlert(context);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/packages/circular_checkbox.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
@@ -152,13 +153,11 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                       children: [
                                         InkWell(
                                           onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                CreateTodoBloc(
-                                                  isEditing: true,
-                                                  id: todo.id,
-                                                  todo: todo,
-                                                ).materialRoute());
+                                            Navigator.pushNamed(
+                                              context,
+                                              RouterName.createTodoRoute,
+                                              arguments: [true, todo.id, todo],
+                                            );
                                           },
                                           borderRadius: BorderRadius.circular(15.0),
                                           child: Padding(

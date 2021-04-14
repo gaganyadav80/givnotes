@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:givnotes/routes.dart';
 import 'package:stringprocess/stringprocess.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -60,8 +61,7 @@ class EditorEndDrawer extends StatelessWidget {
 
                     _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                    if (Scaffold.of(context).isEndDrawerOpen)
-                      Navigator.pop(context);
+                    if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
                     Navigator.pop(context);
                   },
                   context,
@@ -80,8 +80,7 @@ class EditorEndDrawer extends StatelessWidget {
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(30),
                     // contentPadding: EdgeInsets.zero,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
                     title: Text('Statistics'),
                     content: Container(
                       // height: 160,
@@ -139,8 +138,7 @@ class EditorEndDrawer extends StatelessWidget {
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0.0,
                                   primary: Colors.grey[200],
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -191,8 +189,7 @@ class EditorEndDrawer extends StatelessWidget {
 
                           _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                          if (Scaffold.of(context).isEndDrawerOpen)
-                            Navigator.pop(context);
+                          if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
                           Navigator.pop(context);
                         },
                   context,
@@ -247,8 +244,7 @@ class EditorEndDrawer extends StatelessWidget {
   }
 }
 
-_confirmDeleteAlert(
-    context, NotesModel note, HiveDBServices _dbServices) async {
+_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
   await showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -265,16 +261,10 @@ _confirmDeleteAlert(
               final _noteEditStore = context.read<NoteAndSearchCubit>();
 
               _dbServices.deleteNote(note.key);
-              // Var.noteMode = NoteMode.Adding;
               _noteEditStore.updateNoteMode(NoteMode.Adding);
 
               Navigator.pop(context); //? close the dialog
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => HomePage(),
-                ),
-              );
+              Navigator.pushNamed(context, RouterName.homeRoute);
             },
           ),
         ],

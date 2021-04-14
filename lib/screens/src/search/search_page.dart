@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -91,16 +92,8 @@ class _SearchPageState extends State<SearchPage> {
   void onSearchListItemSelected(NotesModel item) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-    // BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ZefyrEdit(
-    //       noteMode: NoteMode.Editing,
-    //       note: item,
-    //     ),
-    //   ),
-    // );
+    BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
+    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, item]);
   }
 
   @override

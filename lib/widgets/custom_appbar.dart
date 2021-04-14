@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -60,16 +61,17 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                 key: key,
                                 onTap: state.index == 0
                                     ? () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => SearchPage()),
-                                          // ConcentricPageRoute(
-                                          //   builder: (context) => SearchPage(),
-                                          //   radius: -1,
-                                          //   dy: 60,
-                                          //   dx: 170,
-                                          // ),
-                                        );
+                                        Navigator.pushNamed(context, RouterName.searchRoute);
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(builder: (context) => SearchPage()),
+                                        //   ConcentricPageRoute(
+                                        //     builder: (context) => SearchPage(),
+                                        //     radius: -1,
+                                        //     dy: 60,
+                                        //     dx: 170,
+                                        //   ),
+                                        // );
                                       }
                                     : () async {
                                         await showDatePicker(
@@ -96,7 +98,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                 child: InkWell(
                                   child: Icon(CupertinoIcons.pencil_ellipsis_rectangle, size: 28.0),
                                   // splashRadius: 25.0,
-                                  onTap: () => Navigator.push(context, CreateTodoBloc().materialRoute()),
+                                  onTap: () => Navigator.pushNamed(context, RouterName.createTodoRoute, arguments: [false, null, null]),
                                 ),
                               ),
                             )

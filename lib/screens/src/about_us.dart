@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/minimal_login/components/blueButton.dart';
 
@@ -23,133 +24,125 @@ class AboutGivnotes extends StatelessWidget {
     //     statusBarColor: giveStatusBarColor(context),
     //   ),
     // );
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          leading: IconButton(
-            splashRadius: 25.0,
-            onPressed: () => Navigator.pop(context),
-            icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
-          ),
-          elevation: 0.0,
-          backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          splashRadius: 25.0,
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
         ),
-        body: ListView(
-          children: [
-            Row(
-              children: [
-                SvgPicture.asset(
-                  'assets/logo/givnotes_logo.svg',
-                  alignment: Alignment.center,
-                  fit: BoxFit.contain,
-                  height: 120,
-                  width: 120,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Givnotes",
-                      style: TextStyle(
-                        fontSize: 36.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      "by Giv Inc. Private Limited",
-                      style: TextStyle(
-                        fontSize: 14.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Container(
-              padding: const EdgeInsets.only(left: 40.0, right: 40.0),
-              child: Column(
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+      ),
+      body: ListView(
+        children: [
+          Row(
+            children: [
+              SvgPicture.asset(
+                'assets/logo/givnotes_logo.svg',
+                alignment: Alignment.center,
+                fit: BoxFit.contain,
+                height: 120,
+                width: 120,
+              ),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(aboutGivnotes),
-                  SizedBox(height: 30.0),
                   Text(
-                    "Are we a selfish private company?",
+                    "Givnotes",
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 36.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  Text("selfish = money hoggers, selling data, etc. etc. xD"),
-                  SizedBox(height: 10.0),
                   Text(
-                    "Absolutely not!! Or maybe a little bit. But let us clear that for you "
-                    "by saying this, We DONOT sell your data and we will NEVER use your data for "
-                    "our financial benefits because it is, your data, it's "
-                    "encrypted (you must be smiling at this point). We cannot trace even a single character "
-                    "inside your notes.",
-                  ),
-                  SizedBox(height: 30.0),
-                  Text(
-                    "Where are my notes stored?",
+                    "by Giv Inc. Private Limited",
                     style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
                       color: Colors.black,
                     ),
                   ),
-                  SizedBox(height: 10.0),
-                  Text(
-                    "Well for a starter we say it's your choice. Yes! you read it right. "
-                    "You can either use our servers which obviously encryptes your data before "
-                    "handing it over to us, or you can use your choice of online cloud storage provider "
-                    "which too will be encrypted, to sync and backup your notes.",
-                  ),
-                  SizedBox(height: 30.0),
-                  GestureDetector(
-                    onTap: () => showLicensePage(
-                      context: context,
-                      applicationIcon: SvgPicture.asset(
-                        'assets/logo/givnotes_logo.svg',
-                        alignment: Alignment.center,
-                        fit: BoxFit.contain,
-                        height: 120,
-                        width: 120,
-                      ),
-                      applicationName: "Givnotes",
-                      applicationVersion: "v0.0.1-beta",
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          "License",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                        Icon(CupertinoIcons.forward, color: Colors.blue),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30.0),
-                  BlueButton(
-                    title: "Contact Us",
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ContactGivnotes()),
-                    ),
-                  ),
-                  SizedBox(height: 50.0),
                 ],
               ),
+            ],
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 40.0, right: 40.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(aboutGivnotes),
+                SizedBox(height: 30.0),
+                Text(
+                  "Are we a selfish private company?",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                Text("selfish = money hoggers, selling data, etc. etc. xD"),
+                SizedBox(height: 10.0),
+                Text(
+                  "Absolutely not!! Or maybe a little bit. But let us clear that for you "
+                  "by saying this, We DONOT sell your data and we will NEVER use your data for "
+                  "our financial benefits because it is, your data, it's "
+                  "encrypted (you must be smiling at this point). We cannot trace even a single character "
+                  "inside your notes.",
+                ),
+                SizedBox(height: 30.0),
+                Text(
+                  "Where are my notes stored?",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  "Well for a starter we say it's your choice. Yes! you read it right. "
+                  "You can either use our servers which obviously encryptes your data before "
+                  "handing it over to us, or you can use your choice of online cloud storage provider "
+                  "which too will be encrypted, to sync and backup your notes.",
+                ),
+                SizedBox(height: 30.0),
+                GestureDetector(
+                  onTap: () => showLicensePage(
+                    context: context,
+                    applicationIcon: SvgPicture.asset(
+                      'assets/logo/givnotes_logo.svg',
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
+                      height: 120,
+                      width: 120,
+                    ),
+                    applicationName: "Givnotes",
+                    applicationVersion: "v0.0.1-beta",
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "License",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 18.0,
+                        ),
+                      ),
+                      Icon(CupertinoIcons.forward, color: Colors.blue),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 30.0),
+                BlueButton(title: "Contact Us", onPressed: () => Navigator.pushNamed(context, RouterName.contactRoute)),
+                SizedBox(height: 50.0),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

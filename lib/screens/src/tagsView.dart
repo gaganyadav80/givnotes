@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -29,12 +30,7 @@ class _TagsViewState extends State<TagsView> {
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
-    // final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+    final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Column(
       children: [
@@ -113,17 +109,8 @@ class _TagsViewState extends State<TagsView> {
                               child: FadeInAnimation(
                                 child: InkWell(
                                   onTap: () {
-                                    // _noteEditStore.updateNoteMode(NoteMode.Editing);
-
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => ZefyrEdit(
-                                    //       noteMode: NoteMode.Editing,
-                                    //       note: note,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                    _noteEditStore.updateNoteMode(NoteMode.Editing);
+                                    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
                                   },
                                   child: Card(
                                     elevation: 0,
