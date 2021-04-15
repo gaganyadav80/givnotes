@@ -76,6 +76,10 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         yield (LoginObscureState(obscure: event.obscureLogin));
       } else if (event is RegisterObscureEvent) {
         yield (RegisterObscureState(obscure: event.obscure, obscureConfirm: event.obscureConfirm));
+      } else if (event is LogOutUser) {
+        yield (LogoutInProgress());
+        await _authRepo.logOut();
+        yield (LogoutSuccess());
       }
     } on PlatformException catch (e) {
       yield (AuthFailure(message: "Error: ${e.message}"));

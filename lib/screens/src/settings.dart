@@ -1,7 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:givnotes/routes.dart';
 import 'package:lottie/lottie.dart';
 
@@ -29,6 +29,7 @@ class SettingsPage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
         child: PreferencePage([
+          PreferenceTitle('Profile', topPadding: 10.0),
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.0),
           DropdownPreference(
@@ -181,36 +182,24 @@ class SettingsPage extends StatelessWidget {
 class ProfileTileSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
+
+    final String photo = user.photo;
+    String initials = '';
+    //TODO flag
+    "Gagan Yadav".split(" ").forEach((element) {
+      initials = initials + element[0];
+    });
+
     return InkWell(
       borderRadius: BorderRadius.circular(15.0),
       onTap: () => Navigator.pushNamed(context, RouterName.profileRoute),
       child: Container(
         height: 90.0,
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        margin: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: StreamBuilder<User>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return Center(
-            //     child: Container(
-            //       height: 40.0,
-            //       width: 40.0,
-            //       child: CircularProgressIndicator(
-            //         strokeWidth: 1.0,
-            //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
-            //       ),
-            //     ),
-            //   );
-            // } else
-            if (snapshot.hasData) {
-              final String photo = snapshot.data.photoURL;
-              String initials = '';
-              "Gagan Yadav".split(" ").forEach((element) {
-                initials = initials + element[0];
-              });
-
-              return Row(
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        margin: EdgeInsets.symmetric(horizontal: 20.0),
+        child: user.email.isNotEmpty
+            ? Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -218,7 +207,7 @@ class ProfileTileSettings extends StatelessWidget {
                       CircleAvatar(
                         radius: 35.0,
                         backgroundColor: Colors.black,
-                        backgroundImage: photo != null ? NetworkImage(snapshot.data.photoURL) : null,
+                        backgroundImage: photo != null ? NetworkImage(photo) : null,
                         child: photo == null
                             ? Text(
                                 initials,
@@ -239,8 +228,8 @@ class ProfileTileSettings extends StatelessWidget {
                           Text(
                             "Gagan Yadav",
                             style: TextStyle(
-                              color: const Color(0xff32343D).withOpacity(0.85),
-                              fontSize: 24.0,
+                              color: Theme.of(context).textTheme.bodyText1.color,
+                              fontSize: 18.0,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -249,7 +238,7 @@ class ProfileTileSettings extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
-                                " ${snapshot.data.email}",
+                                " ${user.email}",
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   fontWeight: FontWeight.w300,
@@ -257,7 +246,7 @@ class ProfileTileSettings extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(width: 5.0),
-                              !snapshot.data.emailVerified
+                              !user.verified
                                   ? Icon(
                                       CupertinoIcons.exclamationmark_circle,
                                       color: Colors.red,
@@ -272,9 +261,8 @@ class ProfileTileSettings extends StatelessWidget {
                   ),
                   Icon(CupertinoIcons.forward, color: Colors.grey),
                 ],
-              );
-            } else {
-              return Row(
+              )
+            : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
@@ -313,10 +301,7 @@ class ProfileTileSettings extends StatelessWidget {
                   ),
                   Icon(CupertinoIcons.forward, color: Colors.grey),
                 ],
-              );
-            }
-          },
-        ),
+              ),
       ),
     );
   }

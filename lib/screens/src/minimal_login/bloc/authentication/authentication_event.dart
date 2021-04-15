@@ -58,3 +58,5 @@ class RegisterObscureEvent extends AuthenticationEvent {
 class LoginWithGoogle extends AuthenticationEvent {}
 
 class RegisterWithGoogle extends AuthenticationEvent {}
+
+class LogOutUser extends AuthenticationEvent {}

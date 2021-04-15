@@ -5,7 +5,6 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/screens.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {

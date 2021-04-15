@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final IconData trailing;

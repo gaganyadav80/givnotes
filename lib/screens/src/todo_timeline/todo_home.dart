@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/packages/circular_checkbox.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';

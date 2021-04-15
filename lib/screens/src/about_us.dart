@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/minimal_login/components/blueButton.dart';
 
 //TODO add privacy policy and other legal documents

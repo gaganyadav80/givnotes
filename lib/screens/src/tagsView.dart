@@ -338,12 +338,12 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 title: noteTag,
                 active: false,
                 // padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
-                padding: EdgeInsets.fromLTRB(
-                  0.038071066 * screenSize.width,
-                  0.009210526 * screenSize.height,
-                  0.038071066 * screenSize.width,
-                  0.009210526 * screenSize.height,
-                ),
+                // padding: EdgeInsets.fromLTRB(
+                //   0.038071066 * screenSize.width,
+                //   0.009210526 * screenSize.height,
+                //   0.038071066 * screenSize.width,
+                //   0.009210526 * screenSize.height,
+                // ),
                 textStyle: TextStyle(
                   fontSize: 1.8 * (screenHeight / 100),
                   fontWeight: FontWeight.w600,
@@ -373,12 +373,6 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   }
                   //FIXME idk how?
                   // widget.tagsViewState.setState(() {});
-                },
-                onLongPressed: (item) {
-                  // setState(() {
-                  // _items.removeAt(index);
-                  // });
-                  // showToast("Not Available yet.");
                 },
               );
             },

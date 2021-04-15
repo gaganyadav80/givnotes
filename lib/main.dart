@@ -31,6 +31,11 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
+  // To match status bar color to app bar color
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
+
   EquatableConfig.stringify = kDebugMode;
   //TODO comment when done with bloc
   Bloc.observer = SimpleBlocObserver();
@@ -127,11 +132,11 @@ class CheckLogin extends StatelessWidget {
     return StreamBuilder<User>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Transform.scale(
-            scale: 2.0,
-            child: const CupertinoActivityIndicator(),
-          );
+        // if (snapshot.connectionState == ConnectionState.waiting)
+        //   return Transform.scale(
+        //     scale: 2.0,
+        //     child: const CupertinoActivityIndicator(),
+        //   );
 
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 

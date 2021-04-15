@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -34,7 +33,7 @@ class NotesCard extends StatefulWidget {
 class _NotesCardState extends State<NotesCard> {
   String _created;
   Map<String, int> _allTagsMap;
-  Color _splashColor;
+  // Color _splashColor;
 
   @override
   void initState() {
@@ -46,9 +45,9 @@ class _NotesCardState extends State<NotesCard> {
   @override
   Widget build(BuildContext context) {
     // final NoteEditStore _noteEditStore = context.read(noteEditProvider);
-    _splashColor = widget.note.tagsMap.length == 0 ? Colors.black : Color(widget.note.tagsMap.values.last);
-    final hm = context.percentHeight;
-    final wm = context.percentWidth;
+    // _splashColor = widget.note.tagsMap.length == 0 ? Colors.black : Color(widget.note.tagsMap.values.last);
+    final hm = screenHeight / 100;
+    final wm = screenWidth / 100;
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
     return Container(
       decoration: BoxDecoration(
@@ -63,8 +62,7 @@ class _NotesCardState extends State<NotesCard> {
         color: widget.multiSelectController.isSelected(widget.index) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
-          radius: 600, //maybe change to 400-500
-          splashColor: _splashColor,
+          // splashColor: _splashColor,
           borderRadius: BorderRadius.circular(8),
           //TODO flag
           // onLongPress: () {
@@ -103,7 +101,7 @@ class _NotesCardState extends State<NotesCard> {
                         height: prefsCubit.state.compactTags ? 1 * hm : 2.3 * hm,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
-                          color: Colors.white,
+                          color: Colors.transparent,
                         ),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
@@ -111,7 +109,6 @@ class _NotesCardState extends State<NotesCard> {
                           itemBuilder: (context, index) {
                             String tagsTitle = widget.note.tagsMap.keys.toList()[index];
                             Color color = Color(_allTagsMap[tagsTitle]);
-                            // Color color = Color(widget.note.tagsMap[tagsTitle]);
 
                             return prefsCubit.state.compactTags
                                 ? Container(
@@ -148,8 +145,7 @@ class _NotesCardState extends State<NotesCard> {
                           },
                         ),
                       ),
-                // SizedBox(height: wm),
-                SizedBox(height: 0.005184211 * screenSize.height),
+                SizedBox(height: screenWidth),
                 Text(
                   widget.note.title,
                   style: TextStyle(
@@ -157,8 +153,7 @@ class _NotesCardState extends State<NotesCard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                // SizedBox(height: wm),
-                SizedBox(height: 0.005184211 * screenSize.height),
+                SizedBox(height: screenWidth),
                 Text(
                   widget.note.text,
                   style: TextStyle(

@@ -95,7 +95,11 @@ class _HomePageState extends State<HomePage> {
                   BottomNavigationBarItem(
                     icon: GFIconBadge(
                       child: Icon(CupertinoIcons.settings),
-                      counterChild: FirebaseAuth.instance.currentUser.emailVerified ? GFBadge(color: Colors.transparent) : GFBadge(text: "!"),
+                      counterChild: FirebaseAuth.instance.currentUser == null
+                          ? GFBadge(color: Colors.transparent)
+                          : FirebaseAuth.instance.currentUser.emailVerified
+                              ? GFBadge(color: Colors.transparent)
+                              : GFBadge(text: "!"),
                     ),
                     label: 'Settings',
                   ),

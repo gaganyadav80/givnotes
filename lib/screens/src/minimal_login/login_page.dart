@@ -34,117 +34,110 @@ class LoginPage extends StatelessWidget {
       }));
     }
 
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          iconTheme: IconThemeData(color: Colors.black),
-          leading: ModalRoute.of(context).canPop
-              ? InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(Icons.close, color: Colors.black),
-                )
-              : null,
-        ),
-        body: BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) async {
-            if (state is AuthFailure) {
-              print(state.message);
-              if (state.message.contains('password is invalid'))
-                showSnackBar("Invalid password", context);
-              else if (state.message.contains('no user record'))
-                showSnackBar("Invalid email", context);
-              else
-                showSnackBar("Login Failure", context);
-            }
-            if (state is AuthSuccess) {
-              // Navigator.of(context).pop();
-              showSnackBar("Login successfull", context);
-              Navigator.of(context).pushReplacementNamed('home_p');
-            }
-            // if (state is LoginInProgress) {
-            //   showProgress(context);
-            // }
-            if (state is AuthNeedsVerification) {
-              // showSnackBar("User email is not verified. Please verify your email id", context);
-              Navigator.of(context).pushReplacementNamed('verification_p');
-            }
-            if (state is ForgetPasswordSuccess) {}
-          },
-          child: ListView(
-            children: [
-              // SizedBox(
-              //   height: screenHeight * 0.142312579, // 128
-              // ),
-              SizedBox(height: screenHeight * 0.07),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Welcome",
-                      style: Theme.of(context).textTheme.headline1.copyWith(
-                            fontSize: screenWidth * 0.0964467005, //38
-                            fontWeight: FontWeight.w300,
-                          ),
-                    ),
-                    SizedBox(
-                      height: screenWidth * 0.08375634517, //33
-                    ),
-                    LoginForm(),
-                    SizedBox(height: screenWidth * 0.051),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "or connect with",
-                          style: Theme.of(context).textTheme.headline4.copyWith(
-                                fontSize: screenWidth * 0.0328629,
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        iconTheme: IconThemeData(color: Colors.black),
+        leading: ModalRoute.of(context).canPop
+            ? InkWell(
+                onTap: () => Navigator.pop(context),
+                child: Icon(Icons.close, color: Colors.black),
+              )
+            : null,
+      ),
+      body: BlocListener<AuthenticationBloc, AuthenticationState>(
+        listener: (context, state) async {
+          if (state is AuthFailure) {
+            print(state.message);
+            if (state.message.contains('password is invalid'))
+              showSnackBar("Invalid password", context);
+            else if (state.message.contains('no user record'))
+              showSnackBar("Invalid email", context);
+            else
+              showSnackBar("Login Failure", context);
+          }
+          if (state is AuthSuccess) {
+            // Navigator.of(context).pop();
+            showSnackBar("Login successfull", context);
+            Navigator.of(context).pushReplacementNamed('home_p');
+          }
+          // if (state is LoginInProgress) {
+          //   showProgress(context);
+          // }
+          if (state is AuthNeedsVerification) {
+            // showSnackBar("User email is not verified. Please verify your email id", context);
+            Navigator.of(context).pushReplacementNamed('verification_p');
+          }
+          if (state is ForgetPasswordSuccess) {}
+        },
+        child: ListView(
+          children: [
+            // SizedBox(
+            //   height: screenHeight * 0.142312579, // 128
+            // ),
+            SizedBox(height: screenHeight * 0.07),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome",
+                    style: Theme.of(context).textTheme.headline1.copyWith(
+                          fontSize: screenWidth * 0.0964467005, //38
+                          fontWeight: FontWeight.w300,
+                        ),
+                  ),
+                  SizedBox(
+                    height: screenWidth * 0.08375634517, //33
+                  ),
+                  LoginForm(),
+                  SizedBox(height: screenWidth * 0.051),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "or connect with",
+                        style: Theme.of(context).textTheme.headline4.copyWith(
+                              fontSize: screenWidth * 0.0328629,
+                            ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: screenHeight * 0.015),
+                  GoogleButton(
+                    title: "Continue with Google",
+                    onPressed: _onGoogleSignInPressed,
+                  ),
+                  SizedBox(height: screenHeight * 0.14),
+                  GestureDetector(
+                    onTap: _onSignUpPressed,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        // borderRadius: kBorderRadius,
+                        // border: Border.all(width: 1.0, color: Colors.grey[500].withOpacity(0.5)),
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
+                      child: Center(
+                        child: Text(
+                          "Create a new account.",
+                          style: Theme.of(context).textTheme.caption.copyWith(
+                                fontSize: screenWidth * 0.034,
+                                fontWeight: FontWeight.w600,
                               ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight * 0.015),
-                    GoogleButton(
-                      title: "Continue with Google",
-                      onPressed: _onGoogleSignInPressed,
-                    ),
-                    SizedBox(height: screenHeight * 0.14),
-                    GestureDetector(
-                      onTap: _onSignUpPressed,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          // borderRadius: kBorderRadius,
-                          // border: Border.all(width: 1.0, color: Colors.grey[500].withOpacity(0.5)),
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                        padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
-                        child: Center(
-                          child: Text(
-                            "Create a new account.",
-                            style: Theme.of(context).textTheme.caption.copyWith(
-                                  fontSize: screenWidth * 0.034,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
                         ),
                       ),
                     ),
-                    // SizedBox(height: screenHeight * 0.045),
-                  ],
-                ), // 30
-              ),
-            ],
-          ),
+                  ),
+                  // SizedBox(height: screenHeight * 0.045),
+                ],
+              ), // 30
+            ),
+          ],
         ),
       ),
     );

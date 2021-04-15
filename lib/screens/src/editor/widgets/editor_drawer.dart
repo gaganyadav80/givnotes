@@ -11,7 +11,6 @@ import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/screens/screens.dart';
 
 class EditorEndDrawer extends StatelessWidget {
   final Function saveNote;
@@ -179,7 +178,23 @@ class EditorEndDrawer extends StatelessWidget {
                   _homeVarStore.state.trash
                       ? () async {
                           Navigator.pop(context); //? close the drawer
-                          await _confirmDeleteAlert(context, note, _dbServices);
+                          // await _confirmDeleteAlert(context, note, _dbServices);
+                          await showCustomDialog(
+                            context,
+                            "Delete Note",
+                            mainButtonText: "Delete",
+                            message: 'Are you sure to permanently delete this note?',
+                            showCancle: true,
+                            onTap: () async {
+                              final _noteEditStore = context.read<NoteAndSearchCubit>();
+
+                              _dbServices.deleteNote(note.key);
+                              _noteEditStore.updateNoteMode(NoteMode.Adding);
+
+                              Navigator.pop(context); //? close the dialog
+                              Navigator.pushNamed(context, RouterName.homeRoute);
+                            },
+                          );
                           // Navigator.pop(context); //TODO problem
                           // Navigator.pop(context);
                         }
@@ -244,31 +259,31 @@ class EditorEndDrawer extends StatelessWidget {
   }
 }
 
-_confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
-  await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        content: Text('Are you sure you permanently want to delete this note?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context), //? Close the dialog
-            child: Text('Cancel'),
-          ),
-          TextButton(
-            child: Text('Delete'),
-            onPressed: () async {
-              final _noteEditStore = context.read<NoteAndSearchCubit>();
+// _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
+//   await showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         content: Text('Are you sure you permanently want to delete this note?'),
+//         actions: [
+//           TextButton(
+//             onPressed: () => Navigator.pop(context), //? Close the dialog
+//             child: Text('Cancel'),
+//           ),
+//           TextButton(
+//             child: Text('Delete'),
+//             onPressed: () async {
+//               final _noteEditStore = context.read<NoteAndSearchCubit>();
 
-              _dbServices.deleteNote(note.key);
-              _noteEditStore.updateNoteMode(NoteMode.Adding);
+//               _dbServices.deleteNote(note.key);
+//               _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-              Navigator.pop(context); //? close the dialog
-              Navigator.pushNamed(context, RouterName.homeRoute);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
+//               Navigator.pop(context); //? close the dialog
+//               Navigator.pushNamed(context, RouterName.homeRoute);
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }

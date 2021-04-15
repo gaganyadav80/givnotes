@@ -2,11 +2,12 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/global/size_utils.dart';
@@ -26,15 +27,9 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    hm = MediaQuery.of(context).size.height / 100;
-    wm = MediaQuery.of(context).size.width / 100;
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
-    // return MainProfilePage();
-    //TODO too much to rebuild... redesign
+    hm = screenHeight / 100;
+    wm = screenWidth / 100;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -133,12 +128,31 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             // SizedBox(height: 5.5 * hm),
                             SizedBox(height: 0.055 * screenSize.height),
-                            Padding(
-                              // padding: EdgeInsets.symmetric(horizontal: 3 * wm),
-                              padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
-                              child: signInButton(context, true),
+                            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+                              builder: (context, state) {
+                                return state is LogoutInProgress
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
+                                        child: Container(
+                                          height: 0.077763158 * screenSize.height,
+                                          child: Center(
+                                            child: Container(
+                                              height: 30.0,
+                                              width: 30.0,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 1.0,
+                                                valueColor: new AlwaysStoppedAnimation<Color>(Colors.black),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
+                                        child: signInButton(context, true),
+                                      );
+                              },
                             ),
-                            // SizedBox(height: 2 * hm),
                             SizedBox(height: 0.02 * screenSize.height),
                           ],
                         ),
@@ -286,7 +300,6 @@ class _MyProfileState extends State<MyProfile> {
         ),
         onPressed: isSignOut == false
             ? () {
-                // Navigator.of(context).pushReplacementNamed('login_p');
                 // Navigator.pushz(
                 //   context,
                 //   MaterialPageRoute(
@@ -296,37 +309,47 @@ class _MyProfileState extends State<MyProfile> {
                 Navigator.pushNamed(context, RouterName.loginRoute);
               }
             : () {
-                _signOutAlert(context);
+                showCustomDialog(
+                  context,
+                  'Log Out',
+                  message: 'Do you really want to log out?',
+                  mainButtonText: 'Log Out',
+                  showCancle: true,
+                  onTap: () async {
+                    BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
+                    setState(() {});
+                    Navigator.pop(context);
+                  },
+                );
+                // _signOutAlert(context);
               },
       ),
     );
   }
 
-  _signOutAlert(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text('Please confirm your sign out.'),
-          actions: [
-            TextButton(
-              child: Text('Cancle'),
-              onPressed: () => Navigator.pop(context),
-            ),
-            TextButton(
-              child: Text("Confirm"),
-              onPressed: () async {
-                FirebaseAuth.instance.signOut();
-                GoogleSignIn.standard().signOut();
-                setState(() {});
-                // prefsBox.isAnonymous = true;
-                // prefsBox.save();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  // _signOutAlert(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         insetPadding: const EdgeInsets.symmetric(horizontal: 10.0),
+  //         content: Text('Sign Out', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0)),
+  //         actions: [
+  //           TextButton(
+  //             child: Text('CANCLE'),
+  //             onPressed: () => Navigator.pop(context),
+  //           ),
+  //           TextButton(
+  //             child: Text("CONFIRM"),
+  //             onPressed: () async {
+  //               BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
+  //               setState(() {});
+  //               Navigator.pop(context);
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }
