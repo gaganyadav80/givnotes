@@ -1,14 +1,21 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:givnotes/models/models.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/floating_modal.dart';
 import 'package:lottie/lottie.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+
+import 'setting_widgets.dart';
 
 class SettingsPage extends StatelessWidget {
   SettingsPage({Key key}) : super(key: key);
@@ -17,14 +24,6 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
-    String def = _prefsCubit.state.sortBy == 'created'
-        ? 'Date created'
-        : _prefsCubit.state.sortBy == 'modified'
-            ? 'Date modified'
-            : _prefsCubit.state.sortBy == 'a-z'
-                ? "Alphabetical (A-Z)"
-                : "Alphabetical (Z-A)";
-
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -32,32 +31,33 @@ class SettingsPage extends StatelessWidget {
           PreferenceTitle('Profile', topPadding: 10.0),
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.0),
-          DropdownPreference(
-            'Sort notes',
-            'sort_notes',
-            defaultVal: def,
-            desc: "Sort your notes on one of the following filters.",
-            showDesc: false,
-            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-            titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
-            // leadingColor: Colors.red,
-            titleGap: 0.0,
-            onChange: ((String value) {
-              String val;
+          // DropdownPreference(
+          //   'Sort notes',
+          //   'sort_notes',
+          //   defaultVal: def,
+          //   desc: "Sort your notes on one of the following filters.",
+          //   showDesc: false,
+          //   values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+          //   titleColor: const Color(0xff32343D),
+          //   leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
+          //   // leadingColor: Colors.red,
+          //   titleGap: 0.0,
+          //   onChange: ((String value) {
+          //     String val;
 
-              if (value == 'Date created')
-                val = 'created';
-              else if (value == 'Date modified')
-                val = 'modified';
-              else if (value == 'Alphabetical (A-Z)')
-                val = 'a-z';
-              else
-                val = 'z-a';
+          //     if (value == 'Date created')
+          //       val = 'created';
+          //     else if (value == 'Date modified')
+          //       val = 'modified';
+          //     else if (value == 'Alphabetical (A-Z)')
+          //       val = 'a-z';
+          //     else
+          //       val = 'z-a';
 
-              _prefsCubit.updateSortBy(val);
-            }),
-          ),
+          //     _prefsCubit.updateSortBy(val);
+          //   }),
+          // ),
+          SortNotesFloatModalSheet(),
           SwitchPreference(
             'Compact tags',
             'compact_tags',

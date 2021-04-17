@@ -5,6 +5,6 @@ export 'src/minimal_login/minimal_login.dart';
 export 'src/notes/notes_view.dart';
 export 'src/profile.dart';
 export 'src/search/search_page.dart';
-export 'src/settings.dart';
+export 'src/settings_page/settings.dart';
 export 'src/tagsView.dart';
 export 'src/todo_timeline/todo_home.dart';
