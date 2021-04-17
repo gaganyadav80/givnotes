@@ -122,13 +122,17 @@ In release mode, the default value ($value) will silently be used.
                 padding: const EdgeInsets.only(right: 5.0),
                 child: Text(
                   "$value",
-                  style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 16),
+                  style: TextStyle(
+                    color: CupertinoColors.systemGrey,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w300,
+                  ),
                 ),
               ),
               Icon(
                 CupertinoIcons.forward,
                 size: 21.0,
-                color: widget.titleColor.withOpacity(0.6),
+                color: Color(0xFFDD4C4F),
               ),
             ],
           ),

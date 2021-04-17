@@ -86,7 +86,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
               ),
         trailing: CupertinoSwitch(
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
-          activeColor: widget.switchActiveColor ?? Color(0xFF40D0FD).withOpacity(0.6),
+          activeColor: widget.switchActiveColor ?? Color(0xFFDD4C4F),
           // blurRadius: 8,
           onChanged: widget.disabled ? (_) {} : (val) => val ? onEnable() : onDisable(),
         ),

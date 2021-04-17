@@ -3,6 +3,7 @@ import 'package:givnotes/main.dart';
 import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
 import 'package:givnotes/services/services.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'screens/screens.dart';
 
@@ -27,43 +28,43 @@ abstract class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouterName.root:
-        return MaterialPageRoute(builder: (_) => CheckLogin());
+        return MaterialWithModalsPageRoute(builder: (_) => CheckLogin());
       case RouterName.homeRoute:
-        return MaterialPageRoute(builder: (_) => HomePage());
+        return MaterialWithModalsPageRoute(builder: (_) => HomePage());
       case RouterName.loginRoute:
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return MaterialWithModalsPageRoute(builder: (_) => LoginPage());
       case RouterName.signupRouter:
-        return MaterialPageRoute(builder: (_) => RegisterPage());
+        return MaterialWithModalsPageRoute(builder: (_) => RegisterPage());
       case RouterName.verificationRoute:
-        return MaterialPageRoute(builder: (_) => VerificationPage());
+        return MaterialWithModalsPageRoute(builder: (_) => VerificationPage());
       case RouterName.searchRoute:
-        return MaterialPageRoute(builder: (_) => SearchPage());
+        return MaterialWithModalsPageRoute(builder: (_) => SearchPage());
       case RouterName.editorRoute:
         List<dynamic> data = settings.arguments;
-        return MaterialPageRoute(builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
+        return MaterialWithModalsPageRoute(builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
       case RouterName.aboutRoute:
-        return MaterialPageRoute(builder: (_) => AboutGivnotes());
+        return MaterialWithModalsPageRoute(builder: (_) => AboutGivnotes());
       case RouterName.contactRoute:
-        return MaterialPageRoute(builder: (_) => ContactGivnotes());
+        return MaterialWithModalsPageRoute(builder: (_) => ContactGivnotes());
       case RouterName.profileRoute:
-        return MaterialPageRoute(builder: (_) => MyProfile());
+        return MaterialWithModalsPageRoute(builder: (_) => MyProfile());
       case RouterName.lockscreenRoute:
         bool data = settings.arguments as bool;
-        return MaterialPageRoute(builder: (_) => ShowLockscreen(changePassAuth: data));
+        return MaterialWithModalsPageRoute(builder: (_) => ShowLockscreen(changePassAuth: data));
       case RouterName.addlockRoute:
-        return MaterialPageRoute(builder: (_) => AddLockscreen());
+        return MaterialWithModalsPageRoute(builder: (_) => AddLockscreen());
       case RouterName.notesviewRoute:
-        return MaterialPageRoute(builder: (_) => NotesView());
+        return MaterialWithModalsPageRoute(builder: (_) => NotesView());
       case RouterName.createTodoRoute:
         List<dynamic> data = settings.arguments;
-        return MaterialPageRoute(
+        return MaterialWithModalsPageRoute(
             builder: (_) => CreateTodoBloc(
                   isEditing: data[0],
                   id: data[1],
                   todo: data[2],
                 ));
       default:
-        return MaterialPageRoute(
+        return MaterialWithModalsPageRoute(
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),

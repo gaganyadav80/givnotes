@@ -35,20 +35,22 @@ class PreferenceText extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         horizontalTitleGap: titleGap,
         tileColor: backgroundColor,
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: leadingColor,
-                borderRadius: BorderRadius.circular(8.0),
+        leading: leading == null
+            ? leading
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: leadingColor,
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    height: 30.0,
+                    width: 30.0,
+                    child: Center(child: leading),
+                  ),
+                ],
               ),
-              height: 30.0,
-              width: 30.0,
-              child: Center(child: leading),
-            ),
-          ],
-        ),
         onTap: onTap,
         title: Text(
           text,

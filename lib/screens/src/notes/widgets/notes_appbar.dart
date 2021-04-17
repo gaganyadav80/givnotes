@@ -5,7 +5,9 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:velocity_x/velocity_x.dart';
+import 'package:get/get.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
   NotesAppBar(this.tabController);
@@ -69,36 +71,6 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                           ),
                         ),
                       },
-                      // physics: NeverScrollableScrollPhysics(),
-                      // isScrollable: true,
-                      // indicatorSize: TabBarIndicatorSize.tab,
-                      // labelPadding: const EdgeInsets.symmetric(horizontal: 15),
-                      // labelColor: Colors.black,
-                      // unselectedLabelColor: Colors.grey,
-                      // labelStyle: TextStyle(
-                      //   fontSize: 16,
-                      //   fontWeight: FontWeight.w700,
-                      // ),
-                      // unselectedLabelStyle: TextStyle(
-                      //   fontSize: 14,
-                      //   fontWeight: FontWeight.w600,
-                      // ),
-                      // tabs: <Tab>[
-                      //   const Tab(text: "Recent"),
-                      //   // const Tab(text: "Trash"),
-                      //   const Tab(text: "Global (Upcoming)"),
-                      // ],
-                      // controller: tabController,
-                      // onTap: (int value) {
-                      //   if (value == 0) {
-                      //     BlocProvider.of<HomeCubit>(context).updateGlobal(false);
-                      //     BlocProvider.of<HomeCubit>(context).updateTrash(false);
-                      //     // } else if (value == 1) {
-                      //     //   BlocProvider.of<HomeCubit>(context).updateGlobal(false);
-                      //     //   BlocProvider.of<HomeCubit>(context).updateTrash(true);
-                      //   } else
-                      //     BlocProvider.of<HomeCubit>(context).updateGlobal(true);
-                      // },
                     ),
                   ),
                   Material(
@@ -110,31 +82,313 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
                         splashRadius: 25.0,
                         iconSize: 18.0,
                         icon: Icon(Icons.view_agenda_outlined),
-                        // onPressed: () => showModalBottomSheet(
-                        //   context: context,
-                        //   builder: (context) {
-                        //     return NotesModelSheet();
-                        //   },
-                        //   backgroundColor: Color(0xff171C26),
-                        //   shape: RoundedRectangleBorder(
-                        //     borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                        //   ),
-                        // ),
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return NotesBottomSheet();
-                              },
-                            ),
-                          );
-                        },
+                        onPressed: () => showCupertinoModalBottomSheet(
+                          context: context,
+                          closeProgressThreshold: 0.5,
+                          builder: (context) {
+                            return ModalSheetTabView();
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+    );
+  }
+}
+
+class ModalSheetTabView extends StatefulWidget {
+  ModalSheetTabView({Key key}) : super(key: key);
+
+  @override
+  _ModalSheetTabViewState createState() => _ModalSheetTabViewState();
+}
+
+class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTickerProviderStateMixin {
+  TabController tabController;
+  var index = 0.obs;
+
+  final List<String> sortName = ["Creation Date", "Modification date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
+
+  @override
+  void initState() {
+    super.initState();
+    tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      index.value = tabController.index;
+      // index.refresh();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
+
+    var def = hydratedPrefsCubit.state.sortBy == 'created'
+        ? 0.obs
+        : hydratedPrefsCubit.state.sortBy == 'modified'
+            ? 1.obs
+            : hydratedPrefsCubit.state.sortBy == 'a-z'
+                ? 2.obs
+                : 3.obs;
+
+    return WillPopScope(
+      onWillPop: () async {
+        if (tabController.index != 0) {
+          tabController.animateTo(0);
+          return false;
+        }
+
+        return true;
+      },
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size(double.infinity, 56.0),
+          child: Obx(
+            () => AppBar(
+              leading: index.value == 0
+                  ? SizedBox.shrink()
+                  : IconButton(
+                      icon: Icon(CupertinoIcons.back),
+                      color: Colors.grey,
+                      onPressed: () {
+                        tabController.animateTo(0);
+                      },
+                    ),
+              elevation: 0.0,
+              backgroundColor: Colors.white,
+              title: Text(
+                'Notes Options',
+                style: TextStyle(
+                  fontSize: screenWidth * 0.04583756, //22,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
+              ),
+              centerTitle: true,
+              actions: [
+                TextButton(
+                  child: Text(
+                    'Done',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+        backgroundColor: Colors.white,
+        body: TabBarView(
+          controller: tabController,
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            NotesBottomSheet(
+              tabController: tabController,
+              prefsCubit: hydratedPrefsCubit,
+              sortby: def,
+            ),
+            Obx(
+              () => Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(height: 10.0),
+                  TilesDivider(),
+                  ListTile(
+                    title: Text(
+                      'Creation Date',
+                    ),
+                    // horizontalTitleGap: 0.0,
+                    tileColor: Colors.white,
+                    onTap: () {
+                      PrefService.setString(sortName[def.value], 'Date Created');
+                      hydratedPrefsCubit.updateSortBy('created');
+                      def.value = 0;
+                    },
+                    trailing: def.value == 0 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                  ),
+                  TilesDivider(),
+                  ListTile(
+                    title: Text(
+                      'Modification Date',
+                    ),
+                    // horizontalTitleGap: 0.0,
+                    tileColor: Colors.white,
+                    onTap: () {
+                      PrefService.setString(sortName[def.value], 'Date Modified');
+                      hydratedPrefsCubit.updateSortBy('modified');
+                      def.value = 1;
+                    },
+                    trailing: def.value == 1 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                  ),
+                  TilesDivider(),
+                  ListTile(
+                    title: Text(
+                      'Alphabetical (A-Z)',
+                    ),
+                    // horizontalTitleGap: 0.0,
+                    tileColor: Colors.white,
+                    onTap: () {
+                      PrefService.setString(sortName[def.value], 'Alphabetical (A-Z)');
+                      hydratedPrefsCubit.updateSortBy('a-z');
+                      def.value = 2;
+                    },
+                    trailing: def.value == 2 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                  ),
+                  TilesDivider(),
+                  ListTile(
+                    title: Text(
+                      'Alphabetical (Z-A)',
+                    ),
+                    // horizontalTitleGap: 0.0,
+                    tileColor: Colors.white,
+
+                    onTap: () {
+                      PrefService.setString(sortName[def.value], 'Alphabetical (Z-A)');
+                      hydratedPrefsCubit.updateSortBy('z-a');
+                      def.value = 3;
+                    },
+                    trailing: def.value == 3 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                  ),
+                  TilesDivider(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NotesBottomSheet extends StatelessWidget {
+  NotesBottomSheet({Key key, @required this.tabController, @required this.prefsCubit, @required this.sortby}) : super(key: key);
+
+  final TabController tabController;
+  final RxInt sortby;
+  final HydratedPrefsCubit prefsCubit;
+
+  final List<String> sortName = ["Creation Date", "Modification date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        // mainAxisSize: MainAxisSize.max,
+        children: [
+          SizedBox(height: 10.0),
+          TilesDivider(),
+          PreferenceText(
+            "Sort Notes",
+            style: TextStyle(fontWeight: FontWeight.w600),
+            titleGap: 0.0,
+            leading: Icon(
+              CupertinoIcons.square_arrow_right,
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+            trailing: Container(
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 5.0),
+                    child: Obx(
+                      () => Text(
+                        sortName[sortby.value],
+                        style: TextStyle(
+                          color: CupertinoColors.systemGrey,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    CupertinoIcons.forward,
+                    size: 21.0,
+                    color: Color(0xFFDD4C4F),
+                  ),
+                ],
+              ),
+            ),
+            onTap: () {
+              tabController.animateTo(1);
+            },
+          ),
+          TilesDivider(),
+          ListTile(
+            tileColor: Colors.transparent,
+            dense: true,
+          ),
+          TilesDivider(),
+          SwitchPreference(
+            'Compact Tags',
+            'compact_tags',
+            titleColor: Theme.of(context).textTheme.bodyText1.color,
+            // tileColor: Theme.of(context).canvasColor,
+            titleGap: 0.0,
+            leading: Icon(
+              CupertinoIcons.bars,
+              color: Theme.of(context).textTheme.bodyText1.color,
+            ),
+            desc: 'Enable compact tags in notes view',
+            defaultVal: prefsCubit.state.compactTags,
+            onEnable: () => prefsCubit.updateCompactTags(true),
+            onDisable: () => prefsCubit.updateCompactTags(false),
+          ),
+          TilesDivider(),
+          ListTile(
+            tileColor: Colors.transparent,
+            dense: true,
+          ),
+          TilesDivider(),
+          PreferenceText(
+            "Trash",
+            style: TextStyle(fontWeight: FontWeight.w600),
+            backgroundColor: Colors.white,
+            leading: Icon(
+              CupertinoIcons.delete,
+              color: Theme.of(context).textTheme.bodyText1.color,
+              size: 20.0,
+            ),
+            trailing: Icon(
+              CupertinoIcons.forward,
+              size: 21.0,
+              color: Color(0xFFDD4C4F),
+            ),
+            titleGap: 0.0,
+            onTap: () {
+              BlocProvider.of<HomeCubit>(context).updateTrash(true);
+              Navigator.pushNamed(context, RouterName.notesviewRoute);
+            },
+          ),
+          TilesDivider(),
+        ],
+      ),
+    );
+  }
+}
+
+class TilesDivider extends StatelessWidget {
+  const TilesDivider({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      height: 0.0,
+      thickness: 1.0,
     );
   }
 }
@@ -226,218 +480,3 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
 //     );
 //   }
 // }
-
-class NotesBottomSheet extends StatelessWidget {
-  NotesBottomSheet({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    // final Size screenSize = MediaQuery.of(context).size;
-    bool isDark = Theme.of(context).brightness == Brightness.dark;
-    Color bgColor = isDark ? Colors.black : Colors.grey[300];
-    // Color tileColor = isDark ? Colors.black.withOpacity(0.7) : Colors.white;
-    String def = hydratedPrefsCubit.state.sortBy == 'created'
-        ? 'Date created'
-        : hydratedPrefsCubit.state.sortBy == 'modified'
-            ? 'Date modified'
-            : hydratedPrefsCubit.state.sortBy == 'a-z'
-                ? "Alphabetical (A-Z)"
-                : "Alphabetical (Z-A)";
-
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
-        title: Text(
-          'Notes Options',
-          style: TextStyle(
-            fontSize: screenWidth * 0.04583756, //22,
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).textTheme.bodyText1.color,
-          ),
-        ),
-        centerTitle: true,
-        actions: [
-          TextButton(
-            child: Text(
-              'Done',
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      ),
-      // backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      backgroundColor: bgColor,
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            // Container(
-            //   height: 0.013157895 * screenSize.height,
-            //   width: MediaQuery.of(context).size.width,
-            //   color: Colors.transparent,
-            // ),
-            TilesDivider(),
-
-            ListTile(
-              tileColor: Colors.white,
-              leading: Icon(
-                CupertinoIcons.sort_down_circle,
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
-              title: Text(
-                'Sort Notes',
-                style: tileTextStyle(context),
-              ),
-              trailing: Text(
-                def,
-                style: tileTextStyle(context),
-              ),
-              horizontalTitleGap: 0.0,
-              dense: true,
-            ),
-            TilesDivider(),
-
-            ListTile(
-              title: Text(
-                'Date Created',
-                style: tileTextStyle(context),
-              ),
-              // horizontalTitleGap: 0.0,
-              tileColor: Theme.of(context).canvasColor,
-              onTap: () {
-                PrefService.setString(def, 'Date Created');
-                hydratedPrefsCubit.updateSortBy('created');
-                Navigator.of(context).pop();
-              },
-            ),
-            TilesDivider(),
-            ListTile(
-              title: Text(
-                'Date Modified',
-                style: tileTextStyle(context),
-              ),
-              // horizontalTitleGap: 0.0,
-              tileColor: Theme.of(context).canvasColor,
-              onTap: () {
-                PrefService.setString(def, 'Date Modified');
-                hydratedPrefsCubit.updateSortBy('modified');
-                Navigator.of(context).pop();
-              },
-            ),
-            TilesDivider(),
-            ListTile(
-              title: Text(
-                'Alphabetical (A-Z)',
-                style: tileTextStyle(context),
-              ),
-              // horizontalTitleGap: 0.0,
-              tileColor: Theme.of(context).canvasColor,
-              onTap: () {
-                PrefService.setString(def, 'Alphabetical (A-Z)');
-                hydratedPrefsCubit.updateSortBy('a-z');
-                Navigator.of(context).pop();
-              },
-            ),
-            TilesDivider(),
-
-            ListTile(
-              title: Text(
-                'Alphabetical (Z-A)',
-                style: tileTextStyle(context),
-              ),
-              // horizontalTitleGap: 0.0,
-              tileColor: Theme.of(context).canvasColor,
-
-              onTap: () {
-                PrefService.setString(def, 'Alphabetical (Z-A)');
-                hydratedPrefsCubit.updateSortBy('z-a');
-                Navigator.of(context).pop();
-              },
-            ),
-            TilesDivider(),
-            ListTile(
-              tileColor: Colors.transparent,
-              dense: true,
-            ),
-            TilesDivider(),
-
-            SwitchPreference(
-              'Compact Tags',
-              'compact_tags',
-              titleColor: Theme.of(context).textTheme.bodyText1.color,
-              // tileColor: Theme.of(context).canvasColor,
-              titleGap: 0.0,
-              leading: Icon(
-                CupertinoIcons.bars,
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
-              desc: 'Enable compact tags in notes view',
-              defaultVal: hydratedPrefsCubit.state.compactTags,
-              onEnable: () => hydratedPrefsCubit.updateCompactTags(true),
-              onDisable: () => hydratedPrefsCubit.updateCompactTags(false),
-            ),
-            TilesDivider(),
-
-            ListTile(
-              tileColor: Colors.transparent,
-              dense: true,
-            ),
-            TilesDivider(),
-
-            PreferenceText(
-              "Trash",
-              style: tileTextStyle(context),
-              backgroundColor: Colors.white,
-              leading: Icon(
-                CupertinoIcons.delete,
-                color: Theme.of(context).textTheme.bodyText1.color,
-                size: 20.0,
-              ),
-              trailing: Icon(
-                CupertinoIcons.forward,
-                size: 21.0,
-                color: Theme.of(context).textTheme.bodyText1.color,
-              ),
-              titleGap: 0.0,
-              onTap: () {
-                BlocProvider.of<HomeCubit>(context).updateTrash(true);
-                Navigator.pop(context);
-                Navigator.pushNamed(context, RouterName.notesviewRoute);
-              },
-            ),
-            TilesDivider(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  TextStyle tileTextStyle(BuildContext context) {
-    return TextStyle(
-      color: Theme.of(context).textTheme.bodyText1.color,
-    );
-  }
-}
-
-class TilesDivider extends StatelessWidget {
-  const TilesDivider({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      height: 0.0,
-      thickness: 1.0,
-    );
-  }
-}
