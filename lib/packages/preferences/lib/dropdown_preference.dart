@@ -143,7 +143,7 @@ In release mode, the default value ($value) will silently be used.
                 context: context,
                 builder: (ctx) => CupertinoActionSheet(
                   title: Text(widget.title.toUpperCase()),
-                  message: Text(widget.desc),
+                  message: widget.desc == null ? null : Text(widget.desc),
                   actions: widget.values.map((val) {
                     return CupertinoActionSheetAction(
                       onPressed: () {

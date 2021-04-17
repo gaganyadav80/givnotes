@@ -24,6 +24,14 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
+    String def = _prefsCubit.state.sortBy == 'created'
+        ? 'Date Created'
+        : _prefsCubit.state.sortBy == 'modified'
+            ? 'Date Modified'
+            : _prefsCubit.state.sortBy == 'a-z'
+                ? 'Alphabetical (A-Z)'
+                : 'Alphabetical (Z-A)';
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -31,33 +39,33 @@ class SettingsPage extends StatelessWidget {
           PreferenceTitle('Profile', topPadding: 10.0),
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.0),
-          // DropdownPreference(
-          //   'Sort notes',
-          //   'sort_notes',
-          //   defaultVal: def,
-          //   desc: "Sort your notes on one of the following filters.",
-          //   showDesc: false,
-          //   values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-          //   titleColor: const Color(0xff32343D),
-          //   leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
-          //   // leadingColor: Colors.red,
-          //   titleGap: 0.0,
-          //   onChange: ((String value) {
-          //     String val;
+          DropdownPreference(
+            'Sort notes',
+            'sort_notes',
+            defaultVal: def,
+            desc: "Sort your notes on one of the following filters.",
+            showDesc: false,
+            values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
+            titleColor: const Color(0xff32343D),
+            leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
+            // leadingColor: Colors.red,
+            titleGap: 0.0,
+            onChange: ((String value) {
+              String val;
 
-          //     if (value == 'Date created')
-          //       val = 'created';
-          //     else if (value == 'Date modified')
-          //       val = 'modified';
-          //     else if (value == 'Alphabetical (A-Z)')
-          //       val = 'a-z';
-          //     else
-          //       val = 'z-a';
+              if (value == 'Date created')
+                val = 'created';
+              else if (value == 'Date modified')
+                val = 'modified';
+              else if (value == 'Alphabetical (A-Z)')
+                val = 'a-z';
+              else
+                val = 'z-a';
 
-          //     _prefsCubit.updateSortBy(val);
-          //   }),
-          // ),
-          SortNotesFloatModalSheet(),
+              _prefsCubit.updateSortBy(val);
+            }),
+          ),
+          // SortNotesFloatModalSheet(),
           SwitchPreference(
             'Compact tags',
             'compact_tags',
