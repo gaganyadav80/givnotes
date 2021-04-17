@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -300,27 +300,24 @@ class _MyProfileState extends State<MyProfile> {
         ),
         onPressed: isSignOut == false
             ? () {
-                // Navigator.pushz(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => LoginPage(),
-                //   ),
-                // );
                 Navigator.pushNamed(context, RouterName.loginRoute);
               }
-            : () {
-                showCustomDialog(
-                  context,
-                  'Log Out',
-                  message: 'Do you really want to log out?',
-                  mainButtonText: 'Log Out',
-                  showCancle: true,
-                  onTap: () async {
-                    BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
-                    setState(() {});
-                    Navigator.pop(context);
-                  },
-                );
+            : () async {
+                await showDialog(
+                  context: context,
+                  useRootNavigator: false,
+                  builder: (ctx) => GivnotesDialog(
+                    title: 'Log Out',
+                    message: 'Do you really want to log out?',
+                    mainButtonText: 'Log Out',
+                    showCancel: true,
+                    onTap: () async {
+                      Navigator.pop(ctx);
+                      BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
+                      // setState(() {});
+                    },
+                  ),
+                ).then((value) => Navigator.pop(context));
                 // _signOutAlert(context);
               },
       ),

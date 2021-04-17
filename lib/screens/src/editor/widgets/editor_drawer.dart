@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/dialog.dart';
 import 'package:stringprocess/stringprocess.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -179,21 +180,23 @@ class EditorEndDrawer extends StatelessWidget {
                       ? () async {
                           Navigator.pop(context); //? close the drawer
                           // await _confirmDeleteAlert(context, note, _dbServices);
-                          await showCustomDialog(
-                            context,
-                            "Delete Note",
-                            mainButtonText: "Delete",
-                            message: 'Are you sure to permanently delete this note?',
-                            showCancle: true,
-                            onTap: () async {
-                              final _noteEditStore = context.read<NoteAndSearchCubit>();
+                          await showDialog(
+                            context: context,
+                            builder: (context) => GivnotesDialog(
+                              title: "Delete Note",
+                              mainButtonText: "Delete",
+                              message: 'Are you sure to permanently delete this note?',
+                              showCancel: true,
+                              onTap: () async {
+                                final _noteEditStore = context.read<NoteAndSearchCubit>();
 
-                              _dbServices.deleteNote(note.key);
-                              _noteEditStore.updateNoteMode(NoteMode.Adding);
+                                _dbServices.deleteNote(note.key);
+                                _noteEditStore.updateNoteMode(NoteMode.Adding);
 
-                              Navigator.pop(context); //? close the dialog
-                              Navigator.pushNamed(context, RouterName.homeRoute);
-                            },
+                                Navigator.pop(context); //? close the dialog
+                                Navigator.pushNamed(context, RouterName.homeRoute);
+                              },
+                            ),
                           );
                           // Navigator.pop(context); //TODO problem
                           // Navigator.pop(context);

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/routes.dart';
 
 import 'components/components.dart';
 import 'bloc/verification_bloc/verification_bloc.dart';
@@ -20,8 +21,8 @@ class VerificationPage extends StatelessWidget {
             padding: EdgeInsets.only(right: 30.0),
             child: InkWell(
               onTap: () {
-                Navigator.of(context).popUntil((route) => route.isFirst);
-                Navigator.of(context).pushReplacementNamed('home_p');
+                // Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

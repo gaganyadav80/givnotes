@@ -87,10 +87,10 @@ class AuthenticationRepository {
 
   Future<void> logOut() async {
     try {
-      await Future.wait([
-        _firebaseAuth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+      // await Future.wait([
+      await _firebaseAuth.signOut();
+      await _googleSignIn.signOut();
+      // ]);
     } on Exception {
       throw LogOutFailure();
     }

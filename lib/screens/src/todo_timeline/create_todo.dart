@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/packages/circular_checkbox.dart';
+import 'package:givnotes/widgets/dialog.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/global/material_colors.dart';
@@ -88,12 +89,22 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         if (widget.isEditing && _titleController.text != widget.todo.title) {
           await showDialog(
             context: context,
-            builder: (context) => TodoAlert(),
+            builder: (context) => GivnotesDialog(
+              title: "Unsaved Changes",
+              message: "Confirm exit?",
+              mainButtonText: "Exit",
+              showCancel: true,
+            ),
           ).then((value) => val = value);
         } else if (!widget.isEditing && _titleController.text.isNotEmpty) {
           await showDialog(
             context: context,
-            builder: (context) => TodoAlert(),
+            builder: (context) => GivnotesDialog(
+              title: "Unsaved Changes",
+              message: "Confirm exit?",
+              mainButtonText: "Exit",
+              showCancel: true,
+            ),
           ).then((value) => val = value);
         }
         return val;

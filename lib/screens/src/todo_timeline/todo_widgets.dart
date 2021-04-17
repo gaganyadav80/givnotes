@@ -3,29 +3,30 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/widgets/dialog.dart';
 
-class TodoAlert extends StatelessWidget {
-  const TodoAlert({Key key}) : super(key: key);
+// class TodoAlert extends StatelessWidget {
+//   const TodoAlert({Key key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-      content: Text("Unsaved changes. Sure exit?"),
-      actions: [
-        TextButton(
-          child: Text("No"),
-          onPressed: () => Navigator.pop(context, false),
-        ),
-        TextButton(
-          child: Text("Yes"),
-          onPressed: () => Navigator.pop(context, true),
-        ),
-      ],
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return AlertDialog(
+//       backgroundColor: Colors.white,
+//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+//       content: Text("Unsaved changes. Sure exit?"),
+//       actions: [
+//         TextButton(
+//           child: Text("No"),
+//           onPressed: () => Navigator.pop(context, false),
+//         ),
+//         TextButton(
+//           child: Text("Yes"),
+//           onPressed: () => Navigator.pop(context, true),
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   const CreateTodoAppBar({Key key, this.controller, this.prevTitle, this.editTodo}) : super(key: key);
@@ -54,7 +55,12 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
           } else {
             await showDialog(
               context: context,
-              builder: (context) => TodoAlert(),
+              builder: (context) => GivnotesDialog(
+                title: "Unsaved Changes",
+                message: "Confirm exit?",
+                mainButtonText: "Exit",
+                showCancel: true,
+              ),
             ).then((value) => val = value);
 
             if (val == true) Navigator.pop(context);

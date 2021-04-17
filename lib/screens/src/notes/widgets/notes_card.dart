@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/routes.dart';
 import 'package:intl/intl.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-// import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-// import 'package:givnotes/screens/screens.dart';
 
 class NotesCard extends StatefulWidget {
   NotesCard({
@@ -145,7 +142,7 @@ class _NotesCardState extends State<NotesCard> {
                           },
                         ),
                       ),
-                SizedBox(height: screenWidth),
+                SizedBox(height: screenWidth / 100),
                 Text(
                   widget.note.title,
                   style: TextStyle(
@@ -153,7 +150,7 @@ class _NotesCardState extends State<NotesCard> {
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                SizedBox(height: screenWidth),
+                SizedBox(height: screenWidth / 100),
                 Text(
                   widget.note.text,
                   style: TextStyle(

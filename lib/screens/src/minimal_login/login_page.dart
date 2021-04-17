@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
+import 'package:givnotes/routes.dart';
 
 import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
-import 'registration_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
@@ -29,9 +29,7 @@ class LoginPage extends StatelessWidget {
     }
 
     void _onSignUpPressed() {
-      Navigator.of(context).push(CupertinoPageRoute(builder: (BuildContext context) {
-        return RegisterPage();
-      }));
+      Navigator.of(context).pushNamed(RouterName.signupRouter);
     }
 
     return Scaffold(
@@ -60,14 +58,14 @@ class LoginPage extends StatelessWidget {
           if (state is AuthSuccess) {
             // Navigator.of(context).pop();
             showSnackBar("Login successfull", context);
-            Navigator.of(context).pushReplacementNamed('home_p');
+            Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
           }
           // if (state is LoginInProgress) {
           //   showProgress(context);
           // }
           if (state is AuthNeedsVerification) {
             // showSnackBar("User email is not verified. Please verify your email id", context);
-            Navigator.of(context).pushReplacementNamed('verification_p');
+            Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
           }
           if (state is ForgetPasswordSuccess) {}
         },

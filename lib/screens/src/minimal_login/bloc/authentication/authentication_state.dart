@@ -13,9 +13,21 @@ class LoginInProgress extends AuthenticationState {}
 
 class RegisterInProgress extends AuthenticationState {}
 
-class AuthSuccess extends AuthenticationState {}
+class AuthSuccess extends AuthenticationState {
+  final UserModel user;
+  AuthSuccess({this.user});
 
-class AuthNeedsVerification extends AuthenticationState {}
+  @override
+  List<Object> get props => [user];
+}
+
+class AuthNeedsVerification extends AuthenticationState {
+  final UserModel user;
+  AuthNeedsVerification({this.user});
+
+  @override
+  List<Object> get props => [user];
+}
 
 // class LoginNeedsProfileComplete extends LoginState {}
 
@@ -48,4 +60,10 @@ class AuthFailure extends AuthenticationState {
 
 class LogoutInProgress extends AuthenticationState {}
 
-class LogoutSuccess extends AuthenticationState {}
+class LogoutSuccess extends AuthenticationState {
+  final UserModel user;
+  LogoutSuccess({this.user});
+
+  @override
+  List<Object> get props => [user];
+}

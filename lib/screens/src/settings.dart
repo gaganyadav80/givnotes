@@ -182,126 +182,143 @@ class SettingsPage extends StatelessWidget {
 class ProfileTileSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
-
-    final String photo = user.photo;
+    // final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
+    UserModel user = UserModel.empty;
+    String photo;
     String initials = '';
-    //TODO flag
-    "Gagan Yadav".split(" ").forEach((element) {
-      initials = initials + element[0];
-    });
 
     return InkWell(
       borderRadius: BorderRadius.circular(15.0),
       onTap: () => Navigator.pushNamed(context, RouterName.profileRoute),
-      child: Container(
-        height: 90.0,
-        padding: EdgeInsets.symmetric(vertical: 10.0),
-        margin: EdgeInsets.symmetric(horizontal: 20.0),
-        child: user.email.isNotEmpty
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+        buildWhen: (previous, current) => previous != current,
+        builder: (context, state) {
+          if (state is AuthSuccess) {
+            user = state.user;
+          } else if (state is AuthNeedsVerification) {
+            user = state.user;
+          } else if (state is LogoutSuccess) {
+            user = state.user;
+          }
+
+          if (user.email.isNotEmpty) {
+            photo = user.photo;
+            //TODO flag
+            "Gagan Yadav".split(" ").forEach((element) {
+              initials = initials + element[0];
+            });
+          }
+
+          return Container(
+            height: 90.0,
+            padding: EdgeInsets.symmetric(vertical: 10.0),
+            margin: EdgeInsets.symmetric(horizontal: 20.0),
+            child: user.email.isNotEmpty
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: Colors.black,
-                        backgroundImage: photo != null ? NetworkImage(photo) : null,
-                        child: photo == null
-                            ? Text(
-                                initials,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  fontSize: 24.0,
-                                  letterSpacing: 1.5,
-                                ),
-                              )
-                            : SizedBox.shrink(),
-                      ),
-                      SizedBox(width: 20.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Text(
-                            "Gagan Yadav",
-                            style: TextStyle(
-                              color: Theme.of(context).textTheme.bodyText1.color,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          CircleAvatar(
+                            radius: 35.0,
+                            backgroundColor: Colors.black,
+                            backgroundImage: photo != null ? NetworkImage(photo) : null,
+                            child: photo == null
+                                ? Text(
+                                    initials,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 24.0,
+                                      letterSpacing: 1.5,
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                          SizedBox(width: 20.0),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                " ${user.email}",
+                                "Gagan Yadav",
+                                style: TextStyle(
+                                  color: Theme.of(context).textTheme.bodyText1.color,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    " ${user.email}",
+                                    style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5.0),
+                                  !user.verified
+                                      ? Icon(
+                                          CupertinoIcons.exclamationmark_circle,
+                                          color: Colors.red,
+                                          size: 16.0,
+                                        )
+                                      : SizedBox.shrink(),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      Icon(CupertinoIcons.forward, color: Colors.grey),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 35.0,
+                            backgroundColor: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 10.0),
+                              child: Lottie.asset('assets/animations/people-portrait.json'),
+                            ),
+                          ),
+                          // SizedBox(width: 10.0),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "You are not logged in!",
+                                style: TextStyle(
+                                  color: const Color(0xff32343D).withOpacity(0.85),
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                "Click here and login to your account.",
                                 style: TextStyle(
                                   fontSize: 13.0,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black54,
                                 ),
                               ),
-                              SizedBox(width: 5.0),
-                              !user.verified
-                                  ? Icon(
-                                      CupertinoIcons.exclamationmark_circle,
-                                      color: Colors.red,
-                                      size: 16.0,
-                                    )
-                                  : SizedBox.shrink(),
                             ],
                           ),
                         ],
                       ),
+                      Icon(CupertinoIcons.forward, color: Colors.grey),
                     ],
                   ),
-                  Icon(CupertinoIcons.forward, color: Colors.grey),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 10.0),
-                          child: Lottie.asset('assets/animations/people-portrait.json'),
-                        ),
-                      ),
-                      // SizedBox(width: 10.0),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "You are not logged in!",
-                            style: TextStyle(
-                              color: const Color(0xff32343D).withOpacity(0.85),
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            "Click here and login to your account.",
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.black54,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Icon(CupertinoIcons.forward, color: Colors.grey),
-                ],
-              ),
+          );
+        },
       ),
     );
   }

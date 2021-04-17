@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:givnotes/models/user_model.dart';
+import 'package:givnotes/screens/screens.dart';
 
 import 'authentication_repository.dart';
 
@@ -20,12 +21,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
   })  : assert(authenticationRepository != null),
         _authRepo = authenticationRepository,
         super(AuthInitial()) {
-    _userSubscription = _authRepo.user.listen((_user) => user = _user);
+    _userSubscription = _authRepo.user.listen((data) => _user = data);
   }
 
   final AuthenticationRepository _authRepo;
   StreamSubscription<UserModel> _userSubscription;
-  UserModel user;
+  UserModel _user;
 
   @override
   Stream<AuthenticationState> mapEventToState(
@@ -40,9 +41,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
 
         if (_currentUser.emailVerified) {
-          yield (AuthSuccess());
+          yield (AuthSuccess(user: _user));
         } else {
-          yield AuthNeedsVerification();
+          yield AuthNeedsVerification(user: _user);
         }
       } else if (event is RegisterButtonClicked) {
         yield (RegisterInProgress());
@@ -50,9 +51,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
         if (_currentUser.emailVerified) {
-          yield (AuthSuccess());
+          yield (AuthSuccess(user: _user));
         } else {
-          yield (AuthNeedsVerification());
+          yield (AuthNeedsVerification(user: _user));
         }
       } else if (event is LoginWithGoogle) {
         yield (LoginInProgress());
@@ -62,12 +63,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
         // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
 
-        yield (AuthSuccess());
+        yield (AuthSuccess(user: _user));
       } else if (event is RegisterWithGoogle) {
         yield (RegisterInProgress());
 
         await _authRepo.logInWithGoogle();
-        yield (AuthSuccess());
+        yield (AuthSuccess(user: _user));
       } else if (event is ForgetPassword) {
         yield (LoginInProgress());
         await _authRepo.resetPassword(event.email);
@@ -79,7 +80,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
       } else if (event is LogOutUser) {
         yield (LogoutInProgress());
         await _authRepo.logOut();
-        yield (LogoutSuccess());
+        yield (LogoutSuccess(user: _user));
       }
     } on PlatformException catch (e) {
       yield (AuthFailure(message: "Error: ${e.message}"));
