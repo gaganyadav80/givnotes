@@ -184,7 +184,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                           child: NotesCard(
                                             note: note,
                                             index: index,
-                                            multiSelectController: _multiSelectController,
                                           ),
                                         ),
                                       ),
