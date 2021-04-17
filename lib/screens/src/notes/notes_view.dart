@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -68,132 +67,94 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
               builder: (BuildContext context, Box<NotesModel> box, Widget widget) {
                 _notes = box.values.where((element) => element.trash == homeState.trash).toList();
 
-                if ((box.isEmpty || _notes.length == 0) && homeState.global == false) {
+                if ((box.isEmpty || _notes.length == 0)) {
                   return NotesEmptyView(isTrash: homeState.trash);
                 }
 
                 return BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
                   builder: (context, prefState) {
-                    return homeState.global == true
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.network(
-                                    "https://image.freepik.com/free-vector/tiny-people-near-hashtag-social-media-flat-illustration_74855-11115.jpg",
-                                    height: 400.0,
-                                    width: 400.0,
-                                  ),
-                                  Text(
-                                    "Global is coming later in future updates!\nStay tuned. But till then you can check out the features.",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 0.038071065 * screenWidth, //15,
+                    return AnimationLimiter(
+                      child: CupertinoScrollbar(
+                        child: ListView.builder(
+                          physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                          // separatorBuilder: (context, index) => Divider(thickness: 1.0, height: 0.0),
+                          itemCount: _notes.length,
+                          itemBuilder: (context, index) {
+                            sortNotes = prefState.sortBy;
+
+                            if (sortNotes == 'created')
+                              _notes.sort((a, b) => a.created.compareTo(b.created));
+                            else if (sortNotes == 'modified')
+                              _notes.sort((a, b) => a.modified.compareTo(b.modified));
+                            else if (sortNotes == 'a-z')
+                              _notes.sort((a, b) => b.title.compareTo(a.title));
+                            else if (sortNotes == 'z-a') {
+                              _notes.sort((a, b) => a.title.compareTo(b.title));
+                            } else
+                              _notes.sort((a, b) => a.created.compareTo(b.created));
+
+                            _animateIndex = index;
+                            index = _notes.length - index - 1;
+
+                            NotesModel note = _notes[index];
+
+                            return AnimationConfiguration.staggeredList(
+                              position: _animateIndex,
+                              duration: const Duration(milliseconds: 375),
+                              child: SlideAnimation(
+                                verticalOffset: 25.0,
+                                child: FadeInAnimation(
+                                  child: Slidable(
+                                    key: UniqueKey(),
+                                    actionPane: SlidableBehindActionPane(),
+                                    actionExtentRatio: 1.0,
+                                    dismissal: SlidableDismissal(
+                                      child: SlidableDrawerDismissal(),
+                                      onDismissed: (actionType) {
+                                        _multiSelectController.deselectAll();
+
+                                        if (!homeState.trash) {
+                                          note.trash = !note.trash;
+                                          note.save();
+
+                                          Toast.show("moved to trash", context);
+
+                                          _multiSelectController.set(_notes.length);
+                                        } else {
+                                          note.trash = false;
+                                          note.save();
+
+                                          Toast.show("moved to notes", context);
+
+                                          _multiSelectController.set(_notes.length);
+                                        }
+                                      },
+                                    ),
+                                    secondaryActions: <Widget>[
+                                      !homeState.trash
+                                          //TODO bear app dull red color
+                                          //c46e6c
+                                          ? iconSlideAction(Color(0xFFcc7876), CupertinoIcons.trash, 'TRASH')
+                                          : iconSlideAction(
+                                              Color(0xFF82C8F6),
+                                              CupertinoIcons.arrow_up_bin,
+                                              'RESTORE',
+                                            ),
+                                    ],
+                                    child: NotesCard(
+                                      note: note,
+                                      index: index,
+                                      multiSelectController: _multiSelectController,
+                                      isLast: index == _notes.length - 1,
                                     ),
                                   ),
-                                  SizedBox(height: 20.0),
-                                  GestureDetector(
-                                    //TODO flag
-                                    onTap: () {},
-                                    child: Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Explore",
-                                          style: TextStyle(
-                                            color: Colors.blue,
-                                            fontSize: screenWidth * 0.0456852, //18.0,
-                                          ),
-                                        ),
-                                        Icon(CupertinoIcons.forward, color: Colors.blue),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
-                          )
-                        : AnimationLimiter(
-                            child: CupertinoScrollbar(
-                              child: ListView.builder(
-                                itemCount: _notes.length,
-                                itemBuilder: (context, index) {
-                                  sortNotes = prefState.sortBy;
-
-                                  if (sortNotes == 'created')
-                                    _notes.sort((a, b) => a.created.compareTo(b.created));
-                                  else if (sortNotes == 'modified')
-                                    _notes.sort((a, b) => a.modified.compareTo(b.modified));
-                                  else if (sortNotes == 'a-z')
-                                    _notes.sort((a, b) => b.title.compareTo(a.title));
-                                  else if (sortNotes == 'z-a') {
-                                    _notes.sort((a, b) => a.title.compareTo(b.title));
-                                  } else
-                                    _notes.sort((a, b) => a.created.compareTo(b.created));
-
-                                  _animateIndex = index;
-                                  index = _notes.length - index - 1;
-
-                                  NotesModel note = _notes[index];
-
-                                  return AnimationConfiguration.staggeredList(
-                                    position: _animateIndex,
-                                    duration: const Duration(milliseconds: 375),
-                                    child: SlideAnimation(
-                                      verticalOffset: 25.0,
-                                      child: FadeInAnimation(
-                                        child: Slidable(
-                                          key: UniqueKey(),
-                                          actionPane: SlidableBehindActionPane(),
-                                          actionExtentRatio: 1.0,
-                                          dismissal: SlidableDismissal(
-                                            child: SlidableDrawerDismissal(),
-                                            onDismissed: (actionType) {
-                                              _multiSelectController.deselectAll();
-
-                                              if (!homeState.trash) {
-                                                note.trash = !note.trash;
-                                                note.save();
-
-                                                Toast.show("moved to trash", context);
-
-                                                _multiSelectController.set(_notes.length);
-                                              } else {
-                                                note.trash = false;
-                                                note.save();
-
-                                                Toast.show("moved to notes", context);
-
-                                                _multiSelectController.set(_notes.length);
-                                              }
-                                            },
-                                          ),
-                                          secondaryActions: <Widget>[
-                                            !homeState.trash
-                                                ? iconSlideAction(Colors.red, Icons.delete, 'Trash')
-                                                : iconSlideAction(
-                                                    Color(0xff66a9e0),
-                                                    Icons.restore,
-                                                    'Resotre',
-                                                  ),
-                                          ],
-                                          child: NotesCard(
-                                            note: note,
-                                            index: index,
-                                            multiSelectController: _multiSelectController,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
+                            );
+                          },
+                        ),
+                      ),
+                    );
                   },
                 );
               },
@@ -203,11 +164,12 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
         floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => previous != current,
           builder: (context, state) {
-            return state.trash == false && state.global == false
+            return state.trash == false
                 ? FloatingActionButton(
                     heroTag: 'fab',
                     child: Icon(CupertinoIcons.add, color: Colors.white),
-                    backgroundColor: Colors.black,
+                    //TODO bear app original red
+                    backgroundColor: Color(0xFFCC5654),
                     onPressed: () async {
                       if (_multiSelectController.isSelecting) {
                         //TODO flag
@@ -240,27 +202,24 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
   IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
     return IconSlideAction(
-      // caption: 'Trash',
       color: color,
-      // icon: Icons.delete,
       iconWidget: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            // padding: const EdgeInsets.only(right: 40),
-            padding: EdgeInsets.only(right: 0.101522843 * MediaQuery.of(context).size.height),
-
+            padding: const EdgeInsets.only(right: 40.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   icon,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.9),
                 ),
+                SizedBox(height: 15.0),
                 Text(
                   caption,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
                 ),
               ],
             ),

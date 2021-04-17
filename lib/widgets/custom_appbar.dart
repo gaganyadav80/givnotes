@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/screens/src/notes/widgets/notes_widgets.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
   final IconData trailing;
@@ -49,6 +52,27 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                   ),
                   Row(
                     children: [
+                      state.index == 0
+                          ? Material(
+                              type: MaterialType.transparency,
+                              child: Padding(
+                                // padding: const EdgeInsets.only(right: 8.0),
+                                padding: EdgeInsets.only(right: 0.020304569 * screenSize.width),
+                                child: IconButton(
+                                  splashRadius: 25.0,
+                                  iconSize: 22.0,
+                                  icon: Icon(CupertinoIcons.collections),
+                                  onPressed: () => showCupertinoModalBottomSheet(
+                                    context: context,
+                                    closeProgressThreshold: 0.5,
+                                    builder: (context) {
+                                      return ModalSheetTabView();
+                                    },
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink(),
                       _appBarIcon[state.index] != null
                           ? Material(
                               type: MaterialType.transparency,
@@ -57,19 +81,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                 // splashRadius: 25.0,
                                 key: key,
                                 onTap: state.index == 0
-                                    ? () {
-                                        Navigator.pushNamed(context, RouterName.searchRoute);
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(builder: (context) => SearchPage()),
-                                        //   ConcentricPageRoute(
-                                        //     builder: (context) => SearchPage(),
-                                        //     radius: -1,
-                                        //     dy: 60,
-                                        //     dx: 170,
-                                        //   ),
-                                        // );
-                                      }
+                                    ? () => Navigator.pushNamed(context, RouterName.searchRoute)
                                     : () async {
                                         await showDatePicker(
                                           context: context,
@@ -93,7 +105,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               child: Material(
                                 type: MaterialType.transparency,
                                 child: InkWell(
-                                  child: Icon(CupertinoIcons.pencil_ellipsis_rectangle, size: 28.0),
+                                  child: Icon(CupertinoIcons.pencil_ellipsis_rectangle, size: 22.0),
                                   // splashRadius: 25.0,
                                   onTap: () => Navigator.pushNamed(context, RouterName.createTodoRoute, arguments: [false, null, null]),
                                 ),

@@ -6,18 +6,17 @@ class HomeCubit extends Cubit<HomeState> {
 
   void updateIndex(int value) => emit(state.copyWith(index: value));
   void updateTrash(bool value) => emit(state.copyWith(trash: value));
-  void updateGlobal(bool value) => emit(state.copyWith(global: value));
 }
 
 class HomeState extends Equatable {
-  const HomeState({this.index = 0, this.trash = false, this.global = false});
+  const HomeState({this.index = 0, this.trash = false});
 
   final int index;
   final bool trash;
-  final bool global;
+  // final bool global;
 
   @override
-  List<Object> get props => [index, trash, global];
+  List<Object> get props => [index, trash];
 
   HomeState copyWith({
     int index,
@@ -27,7 +26,6 @@ class HomeState extends Equatable {
     return HomeState(
       index: index ?? this.index,
       trash: trash ?? this.trash,
-      global: global ?? this.global,
     );
   }
 }
