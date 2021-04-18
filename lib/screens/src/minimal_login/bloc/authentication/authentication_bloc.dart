@@ -20,7 +20,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     @required AuthenticationRepository authenticationRepository,
   })  : assert(authenticationRepository != null),
         _authRepo = authenticationRepository,
-        super(AuthInitial()) {
+        super(
+          authenticationRepository.currentUser.id == ''
+              ? AuthInitial()
+              : AuthSuccess(user: authenticationRepository.currentUser),
+        ) {
     _userSubscription = _authRepo.user.listen((data) => _user = data);
   }
 
@@ -59,9 +63,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         yield (LoginInProgress());
 
         await _authRepo.logInWithGoogle();
-        // final User _currentUser = FirebaseAuth.instance.currentUser;
-
-        // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
 
         yield (AuthSuccess(user: _user));
       } else if (event is RegisterWithGoogle) {

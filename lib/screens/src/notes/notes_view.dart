@@ -3,15 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/services/services.dart';
 
 import 'widgets/notes_widgets.dart';
 
@@ -42,12 +39,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // Size size = MediaQuery.of(context).size;
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
     return WillPopScope(
       onWillPop: () async {
         if (BlocProvider.of<HomeCubit>(context).state.trash) {
@@ -159,41 +150,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                 );
               },
             );
-          },
-        ),
-        floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
-          buildWhen: (previous, current) => previous != current,
-          builder: (context, state) {
-            return state.trash == false
-                ? FloatingActionButton(
-                    heroTag: 'fab',
-                    child: Icon(CupertinoIcons.add, color: Colors.white),
-                    //TODO bear app original red
-                    backgroundColor: Color(0xFFCC5654),
-                    onPressed: () async {
-                      if (_multiSelectController.isSelecting) {
-                        //TODO flag
-                        // _speedDialController.unfold();
-                      } else {
-                        await HandlePermission().requestPermission().then((value) async {
-                          if (value) {
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
-                            Navigator.pushNamed(
-                              context,
-                              RouterName.editorRoute,
-                              arguments: [NoteMode.Adding, null],
-                            );
-                          } else {
-                            if (isPermanentDisabled) {
-                              HandlePermission().permanentDisabled(context);
-                            }
-                          }
-                        });
-                      }
-                    },
-                  )
-                : SizedBox.shrink();
           },
         ),
       ),

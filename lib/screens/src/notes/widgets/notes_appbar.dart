@@ -5,7 +5,6 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:get/get.dart';
 
@@ -18,7 +17,7 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
+    // final Size screenSize = MediaQuery.of(context).size;
     final HomeCubit _homeCubit = BlocProvider.of<HomeCubit>(context);
 
     return SafeArea(

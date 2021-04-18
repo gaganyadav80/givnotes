@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 
 import 'components/components.dart';
@@ -57,7 +58,7 @@ class RegisterMainBody extends StatelessWidget {
           }
           if (state is AuthSuccess) {
             Toast.show("Registration succesfull", context);
-            Navigator.of(context).pushReplacementNamed('verification_p');
+            Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
           }
           // if (state is RegisterInProgress) {
           //   showProgress(context);
@@ -314,20 +315,6 @@ class _RegisterFormState extends State<RegisterForm> {
               );
             },
           ),
-          //***
-          // CustomTextFormField(
-          //   currentNode: _confirmPassNode,
-          //   textInputAction: TextInputAction.done,
-          //   maxLines: 1,
-          //   fieldController: _confirmPassTextController,
-          //   hintText: 'Confirm Password',
-          //   prefixIcon: Icon(Icons.lock_outline),
-          //   keyboardType: TextInputType.text,
-          //   validator: _validator.validatePassword,
-          //   obscureText: _isObscure,
-          //   suffix: _isObscure ? Icon(Icons.visibility_off_outlined) : Icon(Icons.visibility_outlined),
-          // ),
-          //***
           // Row(
           //   mainAxisAlignment: MainAxisAlignment.end,
           //   children: [

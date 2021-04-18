@@ -49,7 +49,7 @@ class _MyProfileState extends State<MyProfile> {
             user = snapshot.data;
             final String photo = snapshot.data.photoURL;
             String initials = '';
-            "Gagan Yadav".split(" ").forEach((element) {
+            user.displayName.split(" ").forEach((element) {
               initials = initials + element[0];
             });
 
@@ -78,7 +78,7 @@ class _MyProfileState extends State<MyProfile> {
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
                               padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
                               child: Text(
-                                "Gagan Yadav",
+                                user.displayName,
                                 style: GoogleFonts.arizonia(
                                   color: Colors.black,
                                   fontSize: 4.5 * hm,
@@ -261,7 +261,7 @@ class _MyProfileState extends State<MyProfile> {
     );
   }
 
-  Widget signInButton(BuildContext context, bool isSignOut) {
+  Widget signInButton(BuildContext rootContext, bool isSignOut) {
     return Container(
       decoration: BoxDecoration(boxShadow: [
         BoxShadow(
@@ -300,11 +300,11 @@ class _MyProfileState extends State<MyProfile> {
         ),
         onPressed: isSignOut == false
             ? () {
-                Navigator.pushNamed(context, RouterName.loginRoute);
+                Navigator.pushNamed(rootContext, RouterName.loginRoute);
               }
             : () async {
                 await showDialog(
-                  context: context,
+                  context: rootContext,
                   useRootNavigator: false,
                   builder: (ctx) => GivnotesDialog(
                     title: 'Log Out',
@@ -313,40 +313,14 @@ class _MyProfileState extends State<MyProfile> {
                     showCancel: true,
                     onTap: () async {
                       Navigator.pop(ctx);
-                      BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
+                      BlocProvider.of<AuthenticationBloc>(rootContext).add(LogOutUser());
                       // setState(() {});
                     },
                   ),
-                ).then((value) => Navigator.pop(context));
+                ).then((value) => Navigator.pop(rootContext));
                 // _signOutAlert(context);
               },
       ),
     );
   }
-
-  // _signOutAlert(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         insetPadding: const EdgeInsets.symmetric(horizontal: 10.0),
-  //         content: Text('Sign Out', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 24.0)),
-  //         actions: [
-  //           TextButton(
-  //             child: Text('CANCLE'),
-  //             onPressed: () => Navigator.pop(context),
-  //           ),
-  //           TextButton(
-  //             child: Text("CONFIRM"),
-  //             onPressed: () async {
-  //               BlocProvider.of<AuthenticationBloc>(context).add(LogOutUser());
-  //               setState(() {});
-  //               Navigator.pop(context);
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

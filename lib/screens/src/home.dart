@@ -2,8 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttericon/typicons_icons.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/routes.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
+import 'package:velocity_x/velocity_x.dart';
+import 'dart:math' as math;
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
@@ -29,11 +35,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
     return TapTapClose(
       child: DefaultTabController(
         length: 4,
@@ -105,6 +106,45 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               );
+            },
+          ),
+          floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
+            buildWhen: (previous, current) => previous != current,
+            builder: (context, state) {
+              return state.trash == false && state.index == 0
+                  ? FloatingActionButton(
+                      heroTag: 'fab',
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(math.pi),
+                        child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
+                      ),
+                      //TODO bear app original red
+                      backgroundColor: Color(0xFFCC5654),
+                      onPressed: () async {
+                        if (false) {
+                          //TODO flag
+                          // _speedDialController.unfold();
+                        } else {
+                          await HandlePermission().requestPermission().then((value) async {
+                            if (value) {
+                              BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
+                              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
+                              Navigator.pushNamed(
+                                context,
+                                RouterName.editorRoute,
+                                arguments: [NoteMode.Adding, null],
+                              );
+                            } else {
+                              if (isPermanentDisabled) {
+                                HandlePermission().permanentDisabled(context);
+                              }
+                            }
+                          });
+                        }
+                      },
+                    )
+                  : SizedBox.shrink();
             },
           ),
         ),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:givnotes/models/models.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
@@ -18,18 +19,30 @@ class LogOutFailure implements Exception {}
 /// {@endtemplate}
 class AuthenticationRepository {
   AuthenticationRepository({
+    CacheClient cache,
     firebase_auth.FirebaseAuth firebaseAuth,
     GoogleSignIn googleSignIn,
-  })  : _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
+  })  : _cache = cache ?? CacheClient(),
+        _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance,
         _googleSignIn = googleSignIn ?? GoogleSignIn.standard();
 
+  final CacheClient _cache;
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
 
+  @visibleForTesting
+  static const userCacheKey = '__user_cache_key__';
+
   Stream<UserModel> get user {
-    return _firebaseAuth.authStateChanges().map((firebaseUser) {
-      return firebaseUser == null ? UserModel.empty : firebaseUser.toUser;
+    return _firebaseAuth.userChanges().map((firebaseUser) {
+      final user = firebaseUser == null ? UserModel.empty : firebaseUser.toUser;
+      _cache.write(key: userCacheKey, value: user);
+      return user;
     });
+  }
+
+  UserModel get currentUser {
+    return _cache.read<UserModel>(key: userCacheKey) ?? UserModel.empty;
   }
 
   Future<void> signUp({
@@ -43,9 +56,9 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-      // final firebase_auth.User _user = _authResult.user;
+
       await _authResult.user.updateProfile(displayName: name);
-      await _authResult.user.reload();
+      // await _authResult.user.reload();
       await _authResult.user.sendEmailVerification();
     } on Exception {
       throw SignUpFailure();
@@ -76,8 +89,8 @@ class AuthenticationRepository {
         email: email,
         password: password,
       );
-    } catch (e) {
-      throw e.toString();
+    } on Exception {
+      throw LogInWithEmailAndPasswordFailure();
     }
   }
 
@@ -87,10 +100,10 @@ class AuthenticationRepository {
 
   Future<void> logOut() async {
     try {
-      // await Future.wait([
-      await _firebaseAuth.signOut();
-      await _googleSignIn.signOut();
-      // ]);
+      await Future.wait([
+        _firebaseAuth.signOut(),
+        _googleSignIn.signOut(),
+      ]);
     } on Exception {
       throw LogOutFailure();
     }

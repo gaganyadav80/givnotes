@@ -45,9 +45,12 @@ void main() async {
   await initHiveDb();
   await pluginInitializer();
 
+  final authenticationRepository = AuthenticationRepository();
+  await authenticationRepository.user.first;
+
   runApp(
     AppLock(
-      builder: (_) => App(authenticationRepository: AuthenticationRepository()),
+      builder: (_) => App(authenticationRepository: authenticationRepository),
       lockScreen: ShowLockscreen(changePassAuth: false),
       enabled: prefsBox.applock,
     ),
@@ -133,12 +136,6 @@ class CheckLogin extends StatelessWidget {
     return StreamBuilder<User>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-        // if (snapshot.connectionState == ConnectionState.waiting)
-        //   return Transform.scale(
-        //     scale: 2.0,
-        //     child: const CupertinoActivityIndicator(),
-        //   );
-
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
         return const HomePage();
