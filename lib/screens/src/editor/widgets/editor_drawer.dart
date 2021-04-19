@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/dialog.dart';
+import 'package:givnotes/widgets/widgets.dart';
 import 'package:stringprocess/stringprocess.dart';
 
 import 'package:givnotes/cubit/cubits.dart';

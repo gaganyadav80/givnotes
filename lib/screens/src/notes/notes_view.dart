@@ -23,7 +23,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
   TabController _tabController;
 
   int _animateIndex = 0;
-  String sortNotes;
+  int sortNotes;
   List<NotesModel> _notes = <NotesModel>[];
 
   final MultiSelectController _multiSelectController = MultiSelectController();
@@ -73,13 +73,13 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                           itemBuilder: (context, index) {
                             sortNotes = prefState.sortBy;
 
-                            if (sortNotes == 'created')
+                            if (sortNotes == 0)
                               _notes.sort((a, b) => a.created.compareTo(b.created));
-                            else if (sortNotes == 'modified')
+                            else if (sortNotes == 1)
                               _notes.sort((a, b) => a.modified.compareTo(b.modified));
-                            else if (sortNotes == 'a-z')
+                            else if (sortNotes == 2)
                               _notes.sort((a, b) => b.title.compareTo(a.title));
-                            else if (sortNotes == 'z-a') {
+                            else if (sortNotes == 3) {
                               _notes.sort((a, b) => a.title.compareTo(b.title));
                             } else
                               _notes.sort((a, b) => a.created.compareTo(b.created));

@@ -6,7 +6,7 @@ part 'hydrated_prefs_state.dart';
 class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
   HydratedPrefsCubit() : super(const HydratedPrefsState());
 
-  void updateSortBy(String value) => emit(state.copyWith(sortBy: value));
+  void updateSortBy(int value) => emit(state.copyWith(sortBy: value));
   void updateCompactTags(bool value) => emit(state.copyWith(compactTags: value));
 
   @override
@@ -14,7 +14,7 @@ class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
     try {
       return HydratedPrefsState(
         compactTags: json['compact'] as bool,
-        sortBy: json['sort'] as String,
+        sortBy: json['sort'] as int,
       );
     } catch (_) {
       return null;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/widgets/dialog.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 // class TodoAlert extends StatelessWidget {
 //   const TodoAlert({Key key}) : super(key: key);

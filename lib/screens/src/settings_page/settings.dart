@@ -204,9 +204,6 @@ class ProfileTileSettings extends StatelessWidget {
             user = state.user;
           }
 
-          print(user.email);
-          print(state);
-
           if (user.email.isNotEmpty) {
             initials = "";
             photo = user.photo;

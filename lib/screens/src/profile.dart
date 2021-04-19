@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/dialog.dart';
+import 'package:givnotes/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 

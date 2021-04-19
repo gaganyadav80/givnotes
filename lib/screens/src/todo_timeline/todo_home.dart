@@ -21,13 +21,10 @@ class TodoTimelineBloc extends StatefulWidget {
 }
 
 class _TodoTimelineState extends State<TodoTimelineBloc> {
-  // final HiveDBServices _dbServices = HiveDBServices();
   DateTime appBarDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    // final TodosState todosBlocState = BlocProvider.of<TodosBloc>(context).state;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

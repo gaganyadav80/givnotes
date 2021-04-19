@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:givnotes/packages/circular_checkbox.dart';
-import 'package:givnotes/widgets/dialog.dart';
+import 'package:givnotes/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/global/material_colors.dart';

@@ -1,21 +1,21 @@
+import 'dart:math' as math;
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/routes.dart';
-import 'package:givnotes/services/services.dart';
-import 'package:hive/hive.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'dart:math' as math;
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/widgets/custom_appbar.dart';
+import 'package:givnotes/screens/src/todo_timeline/todo_timeline.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 import 'todo_timeline/todo_home.dart';
 
@@ -78,13 +78,22 @@ class _HomePageState extends State<HomePage> {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    icon: GFIconBadge(
-                      counterChild: GFBadge(
-                        color: state.index == 1 || Hive.box<TodoModel>('givtodos').length == 0 ? Colors.transparent : Colors.black,
-                        text: state.index == 1 || Hive.box<TodoModel>('givtodos').length == 0 ? null : "${Hive.box<TodoModel>('givtodos').length}",
-                      ),
-                      child: Icon(CupertinoIcons.layers),
-                    ),
+                    // icon: GFIconBadge(
+                    //   counterChild: BlocBuilder<TodosBloc, TodosState>(
+                    //     builder: (context, todostate) {
+                    //       if (todostate is TodosLoaded) {
+                    //         return GFBadge(
+                    //           color: Colors.black,
+                    //           text: todostate.todos.length > 0 ? "${todostate.todos.length}" : null,
+                    //         );
+                    //       } else {
+                    //         return null;
+                    //       }
+                    //     },
+                    //   ),
+                    //   child: Icon(CupertinoIcons.layers),
+                    // ),
+                    icon: Icon(CupertinoIcons.layers),
                     activeIcon: Icon(CupertinoIcons.layers_fill),
                     label: 'Todo',
                   ),

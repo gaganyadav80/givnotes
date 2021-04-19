@@ -3,23 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/widgets/floating_modal.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class SortNotesFloatModalSheet extends StatelessWidget {
-  final List<String> sortName = ["Creation Date", "Modification date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
-
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
-    var def = _prefsCubit.state.sortBy == 'created'
-        ? 0.obs
-        : _prefsCubit.state.sortBy == 'modified'
-            ? 1.obs
-            : _prefsCubit.state.sortBy == 'a-z'
-                ? 2.obs
-                : 3.obs;
+    var def = _prefsCubit.state.sortBy.obs;
 
     return PreferenceText(
       "Sort Notes",
@@ -39,7 +32,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
               padding: const EdgeInsets.only(right: 5.0),
               child: Obx(
                 () => Text(
-                  sortName[def.value],
+                  sortbyNames[def.value],
                   style: TextStyle(
                     color: CupertinoColors.systemGrey,
                     fontSize: 15,
@@ -100,12 +93,10 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                             fontSize: 15.0,
                           ),
                         ),
-                        // horizontalTitleGap: 0.0,
                         tileColor: Colors.white,
                         onTap: () {
-                          PrefService.setString(sortName[def.value], 'Date Created');
-                          _prefsCubit.updateSortBy('created');
                           def.value = 0;
+                          _prefsCubit.updateSortBy(0);
                         },
                         trailing: def.value == 0 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
                       ),
@@ -119,11 +110,9 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                             fontSize: 15.0,
                           ),
                         ),
-                        // horizontalTitleGap: 0.0,
                         tileColor: Colors.white,
                         onTap: () {
-                          PrefService.setString(sortName[def.value], 'Date Modified');
-                          _prefsCubit.updateSortBy('modified');
+                          _prefsCubit.updateSortBy(1);
                           def.value = 1;
                         },
                         trailing: def.value == 1 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -138,11 +127,9 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                             fontSize: 15.0,
                           ),
                         ),
-                        // horizontalTitleGap: 0.0,
                         tileColor: Colors.white,
                         onTap: () {
-                          PrefService.setString(sortName[def.value], 'Alphabetical (A-Z)');
-                          _prefsCubit.updateSortBy('a-z');
+                          _prefsCubit.updateSortBy(2);
                           def.value = 2;
                         },
                         trailing: def.value == 2 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -157,12 +144,10 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                             fontSize: 15.0,
                           ),
                         ),
-                        // horizontalTitleGap: 0.0,
                         tileColor: Colors.white,
 
                         onTap: () {
-                          PrefService.setString(sortName[def.value], 'Alphabetical (Z-A)');
-                          _prefsCubit.updateSortBy('z-a');
+                          _prefsCubit.updateSortBy(3);
                           def.value = 3;
                         },
                         trailing: def.value == 3 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,

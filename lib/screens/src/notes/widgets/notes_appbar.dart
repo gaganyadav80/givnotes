@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -50,8 +51,6 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
   TabController tabController;
   var index = 0.obs;
 
-  final List<String> sortName = ["Creation Date", "Modification date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
-
   @override
   void initState() {
     super.initState();
@@ -66,13 +65,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
   Widget build(BuildContext context) {
     final HydratedPrefsCubit hydratedPrefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
-    var def = hydratedPrefsCubit.state.sortBy == 'created'
-        ? 0.obs
-        : hydratedPrefsCubit.state.sortBy == 'modified'
-            ? 1.obs
-            : hydratedPrefsCubit.state.sortBy == 'a-z'
-                ? 2.obs
-                : 3.obs;
+    var def = hydratedPrefsCubit.state.sortBy.obs;
 
     return WillPopScope(
       onWillPop: () async {
@@ -145,11 +138,9 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
                     title: Text(
                       'Creation Date',
                     ),
-                    // horizontalTitleGap: 0.0,
                     tileColor: Colors.white,
                     onTap: () {
-                      PrefService.setString(sortName[def.value], 'Date Created');
-                      hydratedPrefsCubit.updateSortBy('created');
+                      hydratedPrefsCubit.updateSortBy(0);
                       def.value = 0;
                     },
                     trailing: def.value == 0 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -162,8 +153,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
                     // horizontalTitleGap: 0.0,
                     tileColor: Colors.white,
                     onTap: () {
-                      PrefService.setString(sortName[def.value], 'Date Modified');
-                      hydratedPrefsCubit.updateSortBy('modified');
+                      hydratedPrefsCubit.updateSortBy(1);
                       def.value = 1;
                     },
                     trailing: def.value == 1 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -176,8 +166,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
                     // horizontalTitleGap: 0.0,
                     tileColor: Colors.white,
                     onTap: () {
-                      PrefService.setString(sortName[def.value], 'Alphabetical (A-Z)');
-                      hydratedPrefsCubit.updateSortBy('a-z');
+                      hydratedPrefsCubit.updateSortBy(2);
                       def.value = 2;
                     },
                     trailing: def.value == 2 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -191,8 +180,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
                     tileColor: Colors.white,
 
                     onTap: () {
-                      PrefService.setString(sortName[def.value], 'Alphabetical (Z-A)');
-                      hydratedPrefsCubit.updateSortBy('z-a');
+                      hydratedPrefsCubit.updateSortBy(3);
                       def.value = 3;
                     },
                     trailing: def.value == 3 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
@@ -214,8 +202,6 @@ class NotesBottomSheet extends StatelessWidget {
   final TabController tabController;
   final RxInt sortby;
   final HydratedPrefsCubit prefsCubit;
-
-  final List<String> sortName = ["Creation Date", "Modification date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
 
   @override
   Widget build(BuildContext context) {
@@ -244,7 +230,7 @@ class NotesBottomSheet extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 5.0),
                     child: Obx(
                       () => Text(
-                        sortName[sortby.value],
+                        sortbyNames[sortby.value],
                         style: TextStyle(
                           color: CupertinoColors.systemGrey,
                           fontSize: 15,

@@ -8,6 +8,8 @@ PrefsModel prefsBox;
 PackageInfo packageInfo;
 bool isPermanentDisabled = true;
 
+const List<String> sortbyNames = ["Creation Date", "Modification Date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
+
 enum NoteMode { Adding, Editing }
 
 void showFlashToast(BuildContext context, String msg) {

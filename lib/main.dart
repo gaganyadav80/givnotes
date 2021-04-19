@@ -37,8 +37,8 @@ void main() async {
     statusBarColor: Colors.transparent,
   ));
 
+  //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
-  //TODO comment when done with bloc
   Bloc.observer = SimpleBlocObserver();
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
