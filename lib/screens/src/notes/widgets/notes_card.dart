@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/utils.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/multi_select_notes.dart';
 import 'package:givnotes/routes.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/packages/packages.dart';
 
 class NotesCard extends StatefulWidget {
   NotesCard({
