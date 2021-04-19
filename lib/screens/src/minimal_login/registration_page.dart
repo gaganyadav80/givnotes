@@ -7,7 +7,7 @@ import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
-
+import 'package:givnotes/routes.dart';
 import 'components/components.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -59,6 +59,9 @@ class RegisterMainBody extends StatelessWidget {
           if (state is AuthSuccess) {
             Toast.show("Registration succesfull", context);
             Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
+          }
+          if (state is AuthNeedsVerification) {
+            Navigator.of(context).pushReplacementNamed('/verification');
           }
           // if (state is RegisterInProgress) {
           //   showProgress(context);

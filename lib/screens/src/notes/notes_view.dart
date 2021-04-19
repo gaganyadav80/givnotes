@@ -117,9 +117,25 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
                                           Toast.show("moved to notes", context);
 
-                                          _multiSelectController.set(_notes.length);
-                                        }
-                                      },
+                                                _multiSelectController.set(_notes.length);
+                                              }
+                                            },
+                                          ),
+                                          secondaryActions: <Widget>[
+                                            !homeState.trash
+                                                ? iconSlideAction(Colors.red, Icons.delete, 'Trash')
+                                                : iconSlideAction(
+                                                    Color(0xff66a9e0),
+                                                    Icons.restore,
+                                                    'Resotre',
+                                                  ),
+                                          ],
+                                          child: NotesCard(
+                                            note: note,
+                                            index: index,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                     secondaryActions: <Widget>[
                                       !homeState.trash
