@@ -2,7 +2,6 @@ export 'GFSearchBar.dart';
 export 'circular_checkbox.dart';
 export 'flutter_app_lock_1.4.0+1.dart';
 export 'move_to_background.dart';
-export 'multi_select_item.dart';
 export 'tap_tap_close.dart';
 export 'toast.dart';
 

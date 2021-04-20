@@ -2,12 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/packages/circular_checkbox.dart';
-import 'package:givnotes/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/global/material_colors.dart';
+import 'package:givnotes/packages/circular_checkbox.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
@@ -112,10 +113,13 @@ class _CreateTodoState extends State<CreateTodoBloc> {
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
-        appBar: CreateTodoAppBar(controller: _titleController, prevTitle: widget.isEditing ? widget.todo.title : "", editTodo: widget.isEditing),
+        appBar: CreateTodoAppBar(
+            controller: _titleController,
+            prevTitle: widget.isEditing ? widget.todo.title : "",
+            editTodo: widget.isEditing),
         floatingActionButton: _buildFab(),
         body: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0.w),
           child: ListView(
             children: [
               Row(
@@ -123,20 +127,21 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(CupertinoIcons.text_insert, color: Colors.black),
-                  SizedBox(width: 10.0),
+                  SizedBox(width: 10.0.w),
                   Expanded(child: _titleTextField()),
                 ],
               ),
               _detailsTextField(),
-              // SizedBox(height: 20.0),
               ListTile(
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       CupertinoIcons.tag_solid,
-                      size: 24.0,
-                      color: _selectCategoryColors.length == 1 && _categoryAdded ? Color(_selectCategoryColors.first) : null,
+                      size: 24.0.w,
+                      color: _selectCategoryColors.length == 1 && _categoryAdded
+                          ? Color(_selectCategoryColors.first)
+                          : null,
                     ),
                   ],
                 ),
@@ -158,7 +163,9 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   _categoryController.text.isNotEmpty && _categoryAdded ? _categoryController.text : "Category",
                   style: TextStyle(
                     fontWeight: FontWeight.w500,
-                    color: _selectCategoryColors.length == 1 && _categoryAdded ? Color(_selectCategoryColors.first) : Colors.black,
+                    color: _selectCategoryColors.length == 1 && _categoryAdded
+                        ? Color(_selectCategoryColors.first)
+                        : Colors.black,
                   ),
                 ),
                 horizontalTitleGap: 0.0,
@@ -167,7 +174,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   isDismissible: true,
                   isScrollControlled: true,
                   useRootNavigator: true,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
                   builder: (BuildContext context) => Padding(
                     padding: MediaQuery.of(context).viewInsets,
                     child: SelectCategory(
@@ -191,7 +198,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               ListTile(
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.calendar, size: 26.0)],
+                  children: [Icon(CupertinoIcons.calendar, size: 26.0.w)],
                 ),
                 title: Row(
                   children: [
@@ -210,13 +217,13 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         });
                       },
                       color: Colors.black,
-                      padding: EdgeInsets.symmetric(horizontal: 20.0),
+                      padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
                       child: Text(DateFormat("EEE, dd MMM").format(_dueDate), style: TextStyle(fontSize: 16.0)),
                     ),
-                    SizedBox(width: 10.0),
+                    SizedBox(width: 10.0.w),
                     GFButton(
                       onPressed: () async {
                         await showTimePicker(
@@ -231,7 +238,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         ).then((value) {
                           if (value != null)
                             setState(() {
-                              _dueDate = DateTime(_dueDate.year, _dueDate.month, _dueDate.day, value.hour, value.minute);
+                              _dueDate =
+                                  DateTime(_dueDate.year, _dueDate.month, _dueDate.day, value.hour, value.minute);
                             });
                         });
                       },
@@ -239,7 +247,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(DateFormat("HH:mm").format(_dueDate), style: TextStyle(fontSize: 16.0)),
+                      child: Text(DateFormat("HH:mm").format(_dueDate), style: TextStyle(fontSize: 16.0.w)),
                     ),
                   ],
                 ),
@@ -249,7 +257,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 horizontalTitleGap: 0.0,
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.bell_solid, size: 26.0)],
+                  children: [Icon(CupertinoIcons.bell_solid, size: 26.0.w)],
                 ),
                 title: Row(
                   children: [
@@ -262,7 +270,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                       color: Colors.black,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(TimeOfDay.now().format(context), style: TextStyle(fontSize: 16.0)),
+                      child: Text(TimeOfDay.now().format(context), style: TextStyle(fontSize: 16.0.w)),
                     ),
                   ],
                 ),
@@ -271,15 +279,16 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 horizontalTitleGap: 0.0,
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.exclamationmark_circle_fill, size: 26.0)],
+                  children: [Icon(CupertinoIcons.exclamationmark_circle_fill, size: 26.0.w)],
                 ),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                title: Text(_priority == null ? "Set priority" : "Priority - $_priority", style: TextStyle(fontWeight: FontWeight.w500)),
+                title: Text(_priority == null ? "Set priority" : "Priority - $_priority",
+                    style: TextStyle(fontWeight: FontWeight.w500)),
                 onTap: () => showModalBottomSheet(
                   context: context,
                   backgroundColor: Color(0xff171C26),
                   isDismissible: true,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
                   builder: (context) => setPriorityModal(context),
                 ),
               ),
@@ -287,22 +296,22 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 horizontalTitleGap: 0.0,
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.list_bullet, size: 26.0)],
+                  children: [Icon(CupertinoIcons.list_bullet, size: 26.0.w)],
                 ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
                 title: Text("Add subtask", style: TextStyle(fontWeight: FontWeight.w500)),
                 onTap: () async {
                   await showModalBottomSheet(
                     context: context,
                     isDismissible: true,
                     isScrollControlled: true,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0))),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
                     builder: (BuildContext context) => _buildSubTaskModal(),
                   );
                 },
               ),
               Container(
-                height: 300.0,
+                height: 300.0.h,
                 child: ListView.builder(
                   itemCount: _subTasks.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -311,11 +320,6 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         builder: (context, state) {
                           return CircularCheckBox(
                             onChanged: (_) async {
-                              //TODO flag
-                              // setState(() {
-                              //   widget.subTask.setComplete(!widget.subTask.completed);
-                              // });
-
                               var subTask = widget.todo.subTask;
                               subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
 
@@ -326,8 +330,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                             value: _subTasks[index].values.first,
                             inactiveColor: Colors.blue,
                             activeColor: Colors.blue,
-                            radius: 14.0,
-                            width: 20.0,
+                            radius: 14.0.r,
+                            width: 20.0.w,
                           );
                         },
                       ),
@@ -344,8 +348,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   }
 
   Container setPriorityModal(BuildContext context) => Container(
-        height: 400.0,
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        height: 400.0.h,
+        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -353,76 +357,76 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  margin: EdgeInsets.only(top: 10.0, bottom: 30.0),
+                  margin: EdgeInsets.only(top: 10.0.h, bottom: 30.0.h),
                   decoration: BoxDecoration(
                     color: Colors.grey[600],
-                    borderRadius: BorderRadius.circular(15.0),
+                    borderRadius: BorderRadius.circular(15.0.r),
                   ),
-                  height: 5.0,
-                  width: 50.0,
+                  height: 5.0.h,
+                  width: 50.0.w,
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
               child: Text(
                 "Select a priority",
                 style: TextStyle(
                   color: Colors.grey[350],
-                  fontSize: 22.0,
+                  fontSize: 22.0.w,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             ListTile(
-              leading: Text("\u{1F525}", style: TextStyle(fontSize: 24.0)),
+              leading: Text("\u{1F525}", style: TextStyle(fontSize: 24.0.w)),
               title: Text("Urgent", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0,
+              horizontalTitleGap: 10.0.w,
               onTap: () {
                 setState(() => _priority = "Urgent");
                 Navigator.pop(context);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
             ),
             ListTile(
-              leading: Text("\u{1F9E8}", style: TextStyle(fontSize: 24.0)),
+              leading: Text("\u{1F9E8}", style: TextStyle(fontSize: 24.0.w)),
               title: Text("High", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0,
+              horizontalTitleGap: 10.0.w,
               onTap: () {
                 setState(() => _priority = "High");
                 Navigator.pop(context);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
             ),
             ListTile(
-              leading: Text("\u{1F383}", style: TextStyle(fontSize: 24.0)),
+              leading: Text("\u{1F383}", style: TextStyle(fontSize: 24.0.w)),
               title: Text("Medium", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0,
+              horizontalTitleGap: 10.0.w,
               onTap: () {
                 setState(() => _priority = "Medium");
                 Navigator.pop(context);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
             ),
             ListTile(
-              leading: Text("\u{2744}", style: TextStyle(fontSize: 24.0)),
+              leading: Text("\u{2744}", style: TextStyle(fontSize: 24.0.w)),
               title: Text("Low", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0,
+              horizontalTitleGap: 10.0.w,
               onTap: () {
                 setState(() => _priority = "Low");
                 Navigator.pop(context);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
             ),
             ListTile(
-              leading: Text("\u{26C4}", style: TextStyle(fontSize: 24.0)),
+              leading: Text("\u{26C4}", style: TextStyle(fontSize: 24.0.w)),
               title: Text("No priority", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0,
+              horizontalTitleGap: 10.0.w,
               onTap: () {
                 setState(() => _priority = "None");
                 Navigator.pop(context);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
             ),
           ],
         ),
@@ -434,7 +438,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
       controller: _titleController,
       textCapitalization: TextCapitalization.sentences,
       style: TextStyle(
-        fontSize: 26.0,
+        fontSize: 26.0.w,
         fontWeight: FontWeight.w500,
         color: Colors.black,
       ),
@@ -442,7 +446,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         border: InputBorder.none,
         hintText: "Task title",
         hintStyle: TextStyle(
-          fontSize: 26.0,
+          fontSize: 26.0.w,
           fontWeight: FontWeight.w500,
           color: Colors.grey,
         ),
@@ -452,42 +456,29 @@ class _CreateTodoState extends State<CreateTodoBloc> {
 
   ConstrainedBox _detailsTextField() {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 100.0),
+      constraints: BoxConstraints(maxHeight: 100.0.h),
       child: TextField(
         autocorrect: false,
         controller: _detailsController,
         textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(fontSize: 16.0, color: Colors.black),
+        style: TextStyle(fontSize: 16.0.w, color: Colors.black),
         maxLines: null,
         decoration: InputDecoration(
           border: InputBorder.none,
           hintText: "Would you like to add more details?",
-          hintStyle: TextStyle(fontSize: 16.0, color: Colors.grey),
+          hintStyle: TextStyle(fontSize: 16.0.w, color: Colors.grey),
         ),
       ),
     );
   }
 
   Padding _buildFab() => Padding(
-        padding: const EdgeInsets.only(bottom: 20.0),
+        padding: EdgeInsets.only(bottom: 20.0.h),
         child: FloatingActionButton(
           backgroundColor: Colors.black,
           child: Icon(CupertinoIcons.floppy_disk, color: Colors.white),
           onPressed: () {
             if (_titleController.text.isNotEmpty && !widget.isEditing) {
-              //TODO flag
-              // _dbServices.insertTodo(
-              //   TodoModel()
-              //     ..title = _titleController.text
-              //     ..description = _detailsController.text
-              //     ..completed = false
-              //     ..dueDate = _dueDate
-              //     ..subTask = _subTasks
-              //     ..category = {_categoryController.text: _selectCategoryColors.first}
-              //     ..uuid = Uuid().v1()
-              //     ..priority = _priority,
-              // );
-
               BlocProvider.of<TodosBloc>(context).add(
                 AddTodo(Todo(
                   title: _titleController.text,
@@ -495,27 +486,15 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   description: _detailsController.text,
                   dueDate: Timestamp.fromDate(_dueDate),
                   priority: _priority,
-                  category: _categoryController.text.isNotEmpty ? {_categoryController.text: _selectCategoryColors.first} : {"": null},
+                  category: _categoryController.text.isNotEmpty
+                      ? {_categoryController.text: _selectCategoryColors.first}
+                      : {"": null},
                   subTask: _subTasks,
                 )),
               );
 
               Navigator.pop(context);
             } else if (widget.isEditing) {
-              //TODO flag
-              // _dbServices.updateTodo(
-              //   widget.index,
-              //   TodoModel()
-              //     ..title = _titleController.text
-              //     ..description = _detailsController.text
-              //     ..completed = widget.completed
-              //     ..dueDate = _dueDate
-              //     ..subTask = _subTasks
-              //     ..category = {_categoryController.text: _selectCategoryColors.first}
-              //     ..uuid = widget.uuid
-              //     ..priority = _priority,
-              // );
-
               BlocProvider.of<TodosBloc>(context).add(
                 UpdateTodo(widget.todo.copyWith(
                   title: _titleController.text,
@@ -538,7 +517,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   Padding _buildSubTaskModal() => Padding(
         padding: MediaQuery.of(context).viewInsets,
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -546,7 +525,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               Text(
                 'Create new subtask',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 18.w,
                   fontWeight: FontWeight.w600,
                   color: Colors.grey[600],
                 ),
@@ -570,7 +549,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   IconButton(
                     icon: Icon(CupertinoIcons.add),
                     color: Colors.blue,
-                    iconSize: 28.0,
+                    iconSize: 28.0.w,
                     onPressed: () {
                       setState(() {
                         _subTasks.add({_subtaskController.text: false});

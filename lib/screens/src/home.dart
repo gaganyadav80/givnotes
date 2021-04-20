@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttericon/typicons_icons.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -31,7 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const double _kIconSize = 26.0;
+  final double _kIconSize = 26.0.w;
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +62,8 @@ class _HomePageState extends State<HomePage> {
             builder: (context, state) {
               return BottomNavigationBar(
                 iconSize: _kIconSize,
-                selectedFontSize: 13.0,
-                unselectedFontSize: 13.0,
+                selectedFontSize: 13.0.w,
+                unselectedFontSize: 13.0.w,
                 backgroundColor: Colors.white,
                 // selectedItemColor: Color(0xff0366d6),
                 selectedItemColor: Colors.black,
@@ -128,29 +129,25 @@ class _HomePageState extends State<HomePage> {
                         transform: Matrix4.rotationY(math.pi),
                         child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
                       ),
-                      //TODO bear app original red
+                      //TODO bear app original
+                      // DC4C4F
                       backgroundColor: Color(0xFFCC5654),
                       onPressed: () async {
-                        if (false) {
-                          //TODO flag
-                          // _speedDialController.unfold();
-                        } else {
-                          await HandlePermission().requestPermission().then((value) async {
-                            if (value) {
-                              BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
-                              Navigator.pushNamed(
-                                context,
-                                RouterName.editorRoute,
-                                arguments: [NoteMode.Adding, null],
-                              );
-                            } else {
-                              if (isPermanentDisabled) {
-                                HandlePermission().permanentDisabled(context);
-                              }
+                        await HandlePermission().requestPermission().then((value) async {
+                          if (value) {
+                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
+                            BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
+                            Navigator.pushNamed(
+                              context,
+                              RouterName.editorRoute,
+                              arguments: [NoteMode.Adding, null],
+                            );
+                          } else {
+                            if (isPermanentDisabled) {
+                              HandlePermission().permanentDisabled(context);
                             }
-                          });
-                        }
+                          }
+                        });
                       },
                     )
                   : SizedBox.shrink();

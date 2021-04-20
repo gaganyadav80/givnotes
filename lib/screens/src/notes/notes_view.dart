@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:hive/hive.dart';
@@ -20,22 +21,11 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
-  TabController _tabController;
-
   int _animateIndex = 0;
   int sortNotes;
   List<NotesModel> _notes = <NotesModel>[];
 
-  final MultiSelectController _multiSelectController = MultiSelectController();
-  // final HiveDBServices _dbServices = HiveDBServices();
   int noteIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    // _speedDialController = SpeedDialController();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +39,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        appBar: NotesAppBar(_tabController),
+        appBar: NotesAppBar(),
         body: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => previous != current,
           builder: (BuildContext context, HomeState homeState) {
@@ -102,7 +92,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                     dismissal: SlidableDismissal(
                                       child: SlidableDrawerDismissal(),
                                       onDismissed: (actionType) {
-                                        _multiSelectController.deselectAll();
+                                        // _multiSelectController.deselectAll();
 
                                         if (!homeState.trash) {
                                           note.trash = !note.trash;
@@ -110,14 +100,14 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
                                           Toast.show("moved to trash", context);
 
-                                          _multiSelectController.set(_notes.length);
+                                          // _multiSelectController.set(_notes.length);
                                         } else {
                                           note.trash = false;
                                           note.save();
 
                                           Toast.show("moved to notes", context);
 
-                                          _multiSelectController.set(_notes.length);
+                                          // _multiSelectController.set(_notes.length);
                                         }
                                       },
                                     ),
@@ -162,7 +152,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           Padding(
-            padding: const EdgeInsets.only(right: 40.0),
+            padding: EdgeInsets.only(right: 40.0.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -170,7 +160,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                   icon,
                   color: Colors.white.withOpacity(0.9),
                 ),
-                SizedBox(height: 15.0),
+                SizedBox(height: 15.0.w),
                 Text(
                   caption,
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),

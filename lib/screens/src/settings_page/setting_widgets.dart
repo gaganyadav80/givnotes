@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
@@ -23,19 +25,19 @@ class SortNotesFloatModalSheet extends StatelessWidget {
         color: Theme.of(context).textTheme.bodyText1.color,
       ),
       trailing: Container(
-        width: 200,
+        width: 200.w,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(right: 5.0),
+              padding: EdgeInsets.only(right: 5.0.w),
               child: Obx(
                 () => Text(
                   sortbyNames[def.value],
                   style: TextStyle(
                     color: CupertinoColors.systemGrey,
-                    fontSize: 15,
+                    fontSize: 15.w,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -43,7 +45,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
             ),
             Icon(
               CupertinoIcons.forward,
-              size: 21.0,
+              size: 21.0.w,
               color: Color(0xFFDD4C4F),
             ),
           ],
@@ -66,8 +68,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                     "SORT NOTES",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
-                      color: Color(0xFF222222), //TODO color
-                      fontSize: 16.0,
+                      color: Color(0xFF222222),
+                      fontSize: 16.0.w,
                     ),
                   ),
                   actions: [
@@ -82,15 +84,13 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      // SizedBox(height: 10.0),
-                      // tilesDivider(),
                       ListTile(
                         title: Text(
                           'Creation Date',
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Color(0xFF222222),
-                            fontSize: 15.0,
+                            fontSize: 15.0.w,
                           ),
                         ),
                         tileColor: Colors.white,
@@ -107,7 +107,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Color(0xFF222222),
-                            fontSize: 15.0,
+                            fontSize: 15.0.w,
                           ),
                         ),
                         tileColor: Colors.white,
@@ -121,10 +121,11 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Alphabetical (A-Z)',
+                          //TODO too much duplicate code @Gagan
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Color(0xFF222222),
-                            fontSize: 15.0,
+                            fontSize: 15.0.w,
                           ),
                         ),
                         tileColor: Colors.white,
@@ -141,11 +142,10 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Color(0xFF222222),
-                            fontSize: 15.0,
+                            fontSize: 15.0.w,
                           ),
                         ),
                         tileColor: Colors.white,
-
                         onTap: () {
                           _prefsCubit.updateSortBy(3);
                           def.value = 3;

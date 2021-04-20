@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:givnotes/routes.dart';
 
-import 'components/components.dart';
 import 'bloc/verification_bloc/verification_bloc.dart';
+import 'components/components.dart';
 
 class VerificationPage extends StatelessWidget {
   @override
@@ -18,7 +19,7 @@ class VerificationPage extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 30.0),
+            padding: EdgeInsets.only(right: 30.0.w),
             child: InkWell(
               onTap: () {
                 // Navigator.of(context).popUntil((route) => route.isFirst);
@@ -31,10 +32,10 @@ class VerificationPage extends StatelessWidget {
                     "Do it later?",
                     style: TextStyle(
                       color: Theme.of(context).textTheme.bodyText1.color,
-                      fontSize: screenWidth * 0.040609, //16,
+                      fontSize: 16.w,
                     ),
                   ),
-                  SizedBox(width: 5.0),
+                  SizedBox(width: 5.0.w),
                   Icon(Icons.fast_forward, color: Colors.black),
                 ],
               ),
@@ -77,8 +78,9 @@ class VerificationMainBody extends StatelessWidget {
         if (state is VerificationSuccess) {
           showSnackBar('Verification Successful', context);
           Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.of(context).pushReplacementNamed('home_p');
+          Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
         }
+        //TODO flag @Gagan
         // if (state is VerificationInProgress) {
         //   showProgress(context);
         // }
@@ -89,42 +91,37 @@ class VerificationMainBody extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
+          padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: screenHeight * 0.05),
+                SizedBox(height: 40.w),
                 Center(
                     child: Image.asset(
                   "assets/img/login-verify.png",
-                  height: 180,
-                  width: 180,
+                  height: 180.w,
+                  width: 180.w,
                 )),
-                SizedBox(height: screenHeight * 0.044472681), // 40
+                SizedBox(height: 40.w),
                 Text(
                   "Waiting for Verification",
                   style: Theme.of(context).textTheme.headline1.copyWith(
-                        fontSize: screenWidth * 0.06852791, // 27
+                        fontSize: 27.w,
                         fontWeight: FontWeight.w300,
                       ),
                 ),
-                SizedBox(height: screenHeight * 0.03001906), // 27
+                SizedBox(height: 27.w),
                 Text(
                   "A verification email has been sent to your email",
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                        fontSize: screenWidth * 0.035532994, // 14
-                      ),
+                  style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
                 ),
                 Text(
                   "Verify by clicking on the link provided",
-                  style: Theme.of(context).textTheme.caption.copyWith(
-                        fontSize: screenWidth * 0.035532994, // 14
-                      ),
+                  style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
                 ),
-                SizedBox(height: screenHeight * 0.050031766), // 45
+                SizedBox(height: 45.w),
                 BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
                     return state is VerificationInProgress
@@ -132,7 +129,7 @@ class VerificationMainBody extends StatelessWidget {
                         : BlueButton(title: "Confirm Verification", onPressed: _onConfirmButtonPressed);
                   },
                 ),
-                SizedBox(height: screenHeight * 0.025031766), // 45
+                SizedBox(height: 45.w),
                 BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
                     return state is ResendVerificationInProgress

@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/widgets.dart';
 import 'package:stringprocess/stringprocess.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class EditorEndDrawer extends StatelessWidget {
   final Function saveNote;
@@ -25,19 +25,14 @@ class EditorEndDrawer extends StatelessWidget {
   final HiveDBServices _dbServices = HiveDBServices();
   final StringProcessor _sp = StringProcessor();
 
-  final hm = 7.6;
-  final wm = 3.94;
-
   @override
   Widget build(BuildContext context) {
     final _homeVarStore = BlocProvider.of<HomeCubit>(context);
     final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
 
     return Container(
-      // width: wm * 65,
-      width: 0.65 * screenSize.width,
+      width: 256.w,
       child: Drawer(
-        elevation: 40,
         child: PreferencePage([
           // PreferenceTitle('Options'),
           _homeVarStore.state.trash == false
@@ -50,7 +45,6 @@ class EditorEndDrawer extends StatelessWidget {
                     saveNote(isDrawerSave: true);
                   },
                   context,
-                  screenSize,
                 )
               : myEndDrawerListTheme(
                   'Restore note',
@@ -65,7 +59,6 @@ class EditorEndDrawer extends StatelessWidget {
                     Navigator.pop(context);
                   },
                   context,
-                  screenSize,
                 ),
 
           myEndDrawerListTheme(
@@ -78,14 +71,13 @@ class EditorEndDrawer extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    insetPadding: EdgeInsets.all(30),
+                    insetPadding: EdgeInsets.all(30.w),
                     // contentPadding: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
                     title: Text('Statistics'),
                     content: Container(
-                      // height: 160,
-                      height: 0.210526316 * screenSize.height,
-                      width: (screenSize.width * 0.85),
+                      height: 160.h,
+                      width: 335.w,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -125,20 +117,17 @@ class EditorEndDrawer extends StatelessWidget {
                               Text("${note.text.split(".\n\n").length}"),
                             ],
                           ),
-                          // SizedBox(height: 10.0),
-                          SizedBox(height: 0.013157895 * screenSize.height),
+                          SizedBox(height: 10.0.h),
                           Align(
                             alignment: Alignment.topRight,
                             child: Container(
-                              // height: 45.0,
-                              // width: 90.0,
-                              height: 0.059210526 * screenSize.height,
-                              width: 0.228426396 * screenSize.width,
+                              height: 45.0.h,
+                              width: 90.0.w,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0.0,
                                   primary: Colors.grey[200],
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                                 ),
                                 onPressed: () {
                                   Navigator.pop(context);
@@ -168,7 +157,6 @@ class EditorEndDrawer extends StatelessWidget {
               );
             },
             context,
-            screenSize,
           ),
 
           //
@@ -211,7 +199,6 @@ class EditorEndDrawer extends StatelessWidget {
                           Navigator.pop(context);
                         },
                   context,
-                  screenSize,
                 )
               : SizedBox.shrink(),
         ]),
@@ -224,7 +211,6 @@ class EditorEndDrawer extends StatelessWidget {
     IconData icon,
     Function onPressed,
     BuildContext context,
-    Size screenSize,
   ) {
     return InkWell(
       onTap: onPressed,
@@ -232,22 +218,16 @@ class EditorEndDrawer extends StatelessWidget {
         children: [
           // SizedBox(height: hm * 2),
           GFListTile(
-            // padding: EdgeInsets.fromLTRB(10, 15, 20, 15),
-            padding: EdgeInsets.fromLTRB(
-              0.025380711 * screenSize.width,
-              0.019736842 * screenSize.height,
-              0.050761421 * screenSize.width,
-              0.019736842 * screenSize.height,
-            ),
+            padding: EdgeInsets.fromLTRB(10.w, 15.h, 20.w, 15.h),
             margin: EdgeInsets.zero,
             icon: Icon(
               icon,
-              size: 5 * wm,
+              size: 20.w,
             ),
             title: Text(
               title,
               style: TextStyle(
-                fontSize: 4.5 * wm,
+                fontSize: 18.w,
                 fontWeight: FontWeight.w300,
               ),
             ),

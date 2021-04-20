@@ -1,32 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/widgets/widgets.dart';
-
-// class TodoAlert extends StatelessWidget {
-//   const TodoAlert({Key key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return AlertDialog(
-//       backgroundColor: Colors.white,
-//       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-//       content: Text("Unsaved changes. Sure exit?"),
-//       actions: [
-//         TextButton(
-//           child: Text("No"),
-//           onPressed: () => Navigator.pop(context, false),
-//         ),
-//         TextButton(
-//           child: Text("Yes"),
-//           onPressed: () => Navigator.pop(context, true),
-//         ),
-//       ],
-//     );
-//   }
-// }
 
 class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   const CreateTodoAppBar({Key key, this.controller, this.prevTitle, this.editTodo}) : super(key: key);
@@ -86,7 +64,7 @@ class _SelectCategoryState extends State<SelectCategory> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      padding: EdgeInsets.all(20.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,7 +72,7 @@ class _SelectCategoryState extends State<SelectCategory> {
           Text(
             'Enter category and color',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.w,
               fontWeight: FontWeight.w600,
               color: Colors.grey[600],
             ),
@@ -111,7 +89,7 @@ class _SelectCategoryState extends State<SelectCategory> {
               IconButton(
                 icon: Icon(CupertinoIcons.add),
                 color: Colors.blue,
-                iconSize: 28.0,
+                iconSize: 28.0.w,
                 onPressed: () {
                   if (widget.controller.text.isEmpty)
                     showFlashToast(context, "Please enter category name");
@@ -123,13 +101,13 @@ class _SelectCategoryState extends State<SelectCategory> {
               ),
             ],
           ),
-          SizedBox(height: 0.032894737 * screenSize.height),
+          SizedBox(height: 25.w),
           Container(
-            height: 0.092105263 * screenSize.height,
-            padding: const EdgeInsets.only(left: 10.0),
+            height: 70.h,
+            padding: EdgeInsets.only(left: 10.0.w),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.black, width: 0.5),
-              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: Colors.black, width: 0.5.w),
+              borderRadius: BorderRadius.circular(8.0.r),
             ),
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -138,7 +116,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                 Color color = Color(widget.selectCategoryColors[index]);
 
                 return Padding(
-                  padding: EdgeInsets.only(right: 5.0),
+                  padding: EdgeInsets.only(right: 5.0.r),
                   child: GestureDetector(
                     onTap: () {
                       if (widget.selectCategoryColors.length == 1) {

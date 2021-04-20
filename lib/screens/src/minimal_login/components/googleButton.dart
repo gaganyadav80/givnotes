@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:givnotes/global/size_utils.dart';
 
 import 'constants.dart';
 
@@ -21,7 +21,7 @@ class GoogleButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           elevation: 0.0,
-          padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
+          padding: EdgeInsets.symmetric(vertical: 13.5.w), // 13.5
           // color: Theme.of(context).scaffoldBackgroundColor,
           primary: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
@@ -39,17 +39,13 @@ class GoogleButton extends StatelessWidget {
               'assets/logo/google.svg',
               alignment: Alignment.center,
               fit: BoxFit.contain,
-              height: screenWidth * 0.068055556, // 28
-              width: screenWidth * 0.068055556, // 28
+              height: 28.w,
+              width: 28.w,
             ),
-            SizedBox(
-              width: screenWidth * 0.051041667, // 21
-            ),
+            SizedBox(width: 21.w),
             Text(
               title,
-              style: Theme.of(context).textTheme.caption.copyWith(
-                    fontSize: screenHeight * 0.017789072, //16
-                  ),
+              style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16.w),
             )
           ],
         ),

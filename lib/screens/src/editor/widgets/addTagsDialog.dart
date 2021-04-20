@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 
 import '../editor_screen.dart';
@@ -95,8 +95,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
   Widget build(BuildContext context) {
     final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
     return Container(
-      height: 0.342105263 * screenSize.height, //260
-      width: (screenSize.width * 0.85),
+      height: 260.h, //260
+      width: (335.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -123,7 +123,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               focusColor: Colors.grey,
               labelText: 'Tag name',
               labelStyle: TextStyle(
-                fontSize: 16,
+                fontSize: 16.w,
                 fontWeight: FontWeight.bold,
                 color: Colors.grey[600],
               ),
@@ -132,33 +132,30 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                   color: Colors.grey[800],
                   width: 2.5,
                 ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
               ),
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
                   color: Colors.grey[800],
                   width: 2.5,
                 ),
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15.r)),
               ),
             ),
           ),
-          // SizedBox(height: 25),
-          SizedBox(height: 0.032894737 * screenSize.height),
+          SizedBox(height: 25.h),
           Text(
             'Tag color: ',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.w,
               fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
           ),
-          // SizedBox(width: 5),
           Container(
-            // height: 70,
-            height: 0.092105263 * screenSize.height,
+            height: 70.h,
             color: Colors.transparent,
-            width: (MediaQuery.of(context).size.width * 0.85),
+            width: 335.w,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.all(0),
@@ -167,8 +164,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 Color color = Color(selectTagColors[index]);
 
                 return Padding(
-                  // padding: const EdgeInsets.only(right: 5),
-                  padding: EdgeInsets.only(right: 0.012690355 * screenSize.width),
+                  padding: EdgeInsets.only(right: 5.w),
                   child: GestureDetector(
                     onTap: () {
                       if (selectTagColors.length == 1 && !_allTagsMap.containsKey(_newTagTextController.text.trim())) {
@@ -200,21 +196,18 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
               },
             ),
           ),
-          // SizedBox(height: 10),
-          SizedBox(height: 0.013157895 * screenSize.height),
+          SizedBox(height: 10.h),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                // height: 45,
-                // width: 90,
-                height: 0.059210526 * screenSize.height,
-                width: 0.228426396 * screenSize.width,
+                height: 45.h,
+                width: 90.w,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 0.0,
                     primary: Colors.grey[200],
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                   ),
                   onPressed: () {
                     Navigator.pop(context);
@@ -230,18 +223,15 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                   ),
                 ),
               ),
-              // SizedBox(width: 15),
-              SizedBox(width: 0.038071066 * screenSize.width),
+              SizedBox(width: 15.w),
               Container(
-                // height: 45,
-                // width: 90,
-                height: 0.059210526 * screenSize.height,
-                width: 0.228426396 * screenSize.width,
+                height: 45.h,
+                width: 90.w,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     elevation: 0.0,
                     primary: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                   ),
                   child: Text(
                     'SAVE',

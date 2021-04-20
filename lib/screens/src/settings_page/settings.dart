@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/models/models.dart';
-import 'package:givnotes/routes.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 
 import 'setting_widgets.dart';
@@ -29,11 +30,11 @@ class SettingsPage extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+        padding: EdgeInsets.symmetric(horizontal: 5.0.w),
         child: PreferencePage([
-          PreferenceTitle('Profile', topPadding: 10.0),
+          PreferenceTitle('Profile', topPadding: 10.0.w),
           ProfileTileSettings(),
-          PreferenceTitle('General', topPadding: 10.0),
+          PreferenceTitle('General', topPadding: 10.0.w),
           // DropdownPreference(
           //   'Sort notes',
           //   'sort_notes',
@@ -67,7 +68,7 @@ class SettingsPage extends StatelessWidget {
             // desc: "For the minimalistic.",
             defaultVal: _prefsCubit.state.compactTags,
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.bars, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.bars, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.blue,
             titleGap: 0.0,
             onEnable: () => _prefsCubit.updateCompactTags(true),
@@ -88,7 +89,7 @@ class SettingsPage extends StatelessWidget {
             disabled: true,
             // desc: "So now the fun begins.",
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.moon, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.moon, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.purple,
             titleGap: 0.0,
             onChange: ((value) {
@@ -103,7 +104,7 @@ class SettingsPage extends StatelessWidget {
             defaultVal: 'Darkish grey',
             values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
             titleColor: const Color(0xff32343D),
-            leading: Icon(CupertinoIcons.at, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.at, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.pink,
             titleGap: 0.0,
             onChange: ((value) {
@@ -115,7 +116,7 @@ class SettingsPage extends StatelessWidget {
             // desc: 'Extend your experience.',
             disabled: true,
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.bolt, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.bolt, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
@@ -126,7 +127,7 @@ class SettingsPage extends StatelessWidget {
           PreferenceText(
             'Change Passcode',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.lock_shield, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.lock_shield, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
@@ -150,7 +151,7 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Application',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.app, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.app, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.grey,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
@@ -159,7 +160,7 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'About Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.person, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.person, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
@@ -168,13 +169,13 @@ class SettingsPage extends StatelessWidget {
           PreferencePageLink(
             'Contact Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
-            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.black, size: 26.0),
+            leading: Icon(CupertinoIcons.chat_bubble, color: Colors.black, size: 26.0.w),
             // leadingColor: Colors.blueGrey,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
             widgetScaffold: ContactGivnotes(),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: 10.0.w),
           //! =============================================
         ]),
       ),
@@ -213,9 +214,9 @@ class ProfileTileSettings extends StatelessWidget {
           }
 
           return Container(
-            height: 90.0,
-            padding: EdgeInsets.symmetric(vertical: 10.0),
-            margin: EdgeInsets.symmetric(horizontal: 20.0),
+            height: 90.0.w,
+            padding: EdgeInsets.symmetric(vertical: 10.0.w),
+            margin: EdgeInsets.symmetric(horizontal: 20.0.w),
             child: user.email.isNotEmpty
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -223,7 +224,7 @@ class ProfileTileSettings extends StatelessWidget {
                       Row(
                         children: [
                           CircleAvatar(
-                            radius: 35.0,
+                            radius: 35.0.w,
                             backgroundColor: Colors.black,
                             backgroundImage: photo != null ? NetworkImage(photo) : null,
                             child: photo == null
@@ -232,13 +233,13 @@ class ProfileTileSettings extends StatelessWidget {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                      fontSize: 24.0,
-                                      letterSpacing: 1.5,
+                                      fontSize: 24.0.w,
+                                      letterSpacing: 1.5.w,
                                     ),
                                   )
                                 : SizedBox.shrink(),
                           ),
-                          SizedBox(width: 20.0),
+                          SizedBox(width: 20.0.w),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,7 +248,7 @@ class ProfileTileSettings extends StatelessWidget {
                                 user.name,
                                 style: TextStyle(
                                   color: Theme.of(context).textTheme.bodyText1.color,
-                                  fontSize: 18.0,
+                                  fontSize: 18.0.w,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -258,17 +259,17 @@ class ProfileTileSettings extends StatelessWidget {
                                   Text(
                                     " ${user.email}",
                                     style: TextStyle(
-                                      fontSize: 13.0,
+                                      fontSize: 13.0.w,
                                       fontWeight: FontWeight.w300,
                                       color: Colors.black54,
                                     ),
                                   ),
-                                  SizedBox(width: 5.0),
+                                  SizedBox(width: 5.0.w),
                                   !user.verified
                                       ? Icon(
                                           CupertinoIcons.exclamationmark_circle,
                                           color: Colors.red,
-                                          size: 16.0,
+                                          size: 16.0.w,
                                         )
                                       : SizedBox.shrink(),
                                 ],
@@ -289,7 +290,7 @@ class ProfileTileSettings extends StatelessWidget {
                             radius: 35.0,
                             backgroundColor: Colors.white,
                             child: Padding(
-                              padding: EdgeInsets.only(bottom: 10.0),
+                              padding: EdgeInsets.only(bottom: 10.0.w),
                               child: Lottie.asset('assets/animations/people-portrait.json'),
                             ),
                           ),
@@ -301,14 +302,14 @@ class ProfileTileSettings extends StatelessWidget {
                                 "You are not logged in!",
                                 style: TextStyle(
                                   color: const Color(0xff32343D).withOpacity(0.85),
-                                  fontSize: 18.0,
+                                  fontSize: 18.0.w,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               Text(
                                 "Click here and login to your account.",
                                 style: TextStyle(
-                                  fontSize: 13.0,
+                                  fontSize: 13.0.w,
                                   fontWeight: FontWeight.w300,
                                   color: Colors.black54,
                                 ),
@@ -353,7 +354,7 @@ class _AppDetailSectionState extends State<AppDetailSection> {
           preferredSize: Size(double.infinity, 50.0),
           child: Container(
             // color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
+            padding: EdgeInsets.symmetric(horizontal: 30.0.w),
             width: double.infinity,
             child: CupertinoSlidingSegmentedControl(
               children: {
@@ -367,7 +368,7 @@ class _AppDetailSectionState extends State<AppDetailSection> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 50.0),
+        padding: EdgeInsets.fromLTRB(30.0.w, 30.0.w, 30.0.w, 50.0.w),
         child: _bodyWidgets[selectedIndex],
       ),
     );
@@ -376,14 +377,26 @@ class _AppDetailSectionState extends State<AppDetailSection> {
   List<Widget> _bodyWidgets = [
     Column(
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("App name: "), Text("${packageInfo.appName}")]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Package: "), Text("${packageInfo.packageName}")]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Build_no: "), Text("${packageInfo.buildNumber}")]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Release version: "), Text("v${packageInfo.version}-beta")]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text("Development version: "), Text("v2.0.0")]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("App name: "), Text("${packageInfo.appName}")]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("Package: "), Text("${packageInfo.packageName}")]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("Build_no: "), Text("${packageInfo.buildNumber}")]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("Release version: "), Text("v${packageInfo.version}-beta")]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [Text("Development version: "), Text("v2.0.0")]),
       ],
     ),
-    Align(alignment: Alignment.topCenter, child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
+    Align(
+        alignment: Alignment.topCenter,
+        child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
   ];
 }
 
@@ -405,7 +418,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // desc: 'Add 4 digit pin',
           defaultVal: false,
           ignoreTileTap: false,
-          leading: Icon(CupertinoIcons.lock, color: Colors.black, size: 26.0),
+          leading: Icon(CupertinoIcons.lock, color: Colors.black, size: 26.0.w),
           // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
@@ -438,7 +451,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
           disabled: !prefsBox.applock,
-          leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: 26.0),
+          leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: 26.0.w),
           // leadingColor: Colors.teal,
           titleGap: 0.0,
           onEnable: () {

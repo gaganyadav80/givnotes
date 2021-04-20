@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'constants.dart';
 
@@ -69,19 +69,15 @@ class CustomTextFormField extends StatelessWidget {
       validator: _validator,
       textCapitalization: _textCapitalization ?? TextCapitalization.none,
       textAlignVertical: TextAlignVertical.center,
-      style: Theme.of(context).textTheme.caption.copyWith(
-            fontSize: screenHeight * 0.015565438, // 14
-          ),
+      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
       inputFormatters: _inputFormatters,
       decoration: InputDecoration(
         suffixIcon: _suffix,
         border: kInputBorderStyle,
         focusedBorder: kInputBorderStyle,
         enabledBorder: kInputBorderStyle,
-        hintStyle: Theme.of(context).textTheme.caption.copyWith(
-              fontSize: screenHeight * 0.015565438, // 14
-            ),
-        contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.036458333, vertical: screenHeight * 0.021124524), // h=15, v=19
+        hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
+        contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 19.w),
         hintText: _hintText,
         prefixIcon: _prefixIcon,
       ),

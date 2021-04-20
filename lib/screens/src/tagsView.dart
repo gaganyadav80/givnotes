@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
-import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
+import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/routes.dart';
 
 class TagsView extends StatefulWidget {
   @override
@@ -39,8 +39,7 @@ class _TagsViewState extends State<TagsView> {
         //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
         // ),
         Padding(
-          // padding: EdgeInsets.fromLTRB(3 * wm, 1.5 * hm, 3 * wm, 0),
-          padding: EdgeInsets.fromLTRB(0.025 * screenSize.width, 0.020 * screenSize.height, 0.025 * screenSize.width, 0),
+          padding: EdgeInsets.all(10.w),
           child: SearchTagsTextField(tagStateKey: _tagStateKey),
         ),
         /*
@@ -48,8 +47,7 @@ class _TagsViewState extends State<TagsView> {
          */
         Expanded(
           child: Padding(
-            // padding: EdgeInsets.fromLTRB(1.5 * wm, 0, 1.5 * wm, 0),
-            padding: EdgeInsets.symmetric(horizontal: 0.015 * screenSize.width),
+            padding: EdgeInsets.symmetric(horizontal: 6.w),
             child: BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
               builder: (context, state) {
                 return ValueListenableBuilder(
@@ -68,20 +66,17 @@ class _TagsViewState extends State<TagsView> {
                     if (_notes.length == 0) {
                       return SingleChildScrollView(
                         child: Padding(
-                          // padding: EdgeInsets.fromLTRB(5 * wm, 2 * hm, 5 * wm, 0),
-                          padding: EdgeInsets.fromLTRB(0.05 * screenSize.width, 0.02 * screenSize.height, 0.05 * screenSize.height, 0),
+                          padding: EdgeInsets.all(20.0.w),
                           child: Column(
                             children: [
                               Image.asset(
                                 isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                // height: 40 * hm,
-
-                                height: 0.2 * screenSize.height,
+                                height: 150.h,
                               ),
                               Text(
                                 'Search according the tags here',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 12.w,
                                 ),
                               ),
                             ],
@@ -110,60 +105,47 @@ class _TagsViewState extends State<TagsView> {
                                 child: InkWell(
                                   onTap: () {
                                     _noteEditStore.updateNoteMode(NoteMode.Editing);
-                                    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
+                                    Navigator.pushNamed(context, RouterName.editorRoute,
+                                        arguments: [NoteMode.Editing, note]);
                                   },
                                   child: Card(
                                     elevation: 0,
                                     color: Colors.white,
                                     child: Padding(
-                                      // padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
-                                      padding: EdgeInsets.symmetric(horizontal: 0.015 * screenSize.width),
+                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: <Widget>[
-                                          Divider(
-                                            // height: 0.057 * wm,
-                                            height: 0.0002955 * screenSize.height,
-                                            color: Colors.black,
-                                          ),
-                                          // SizedBox(height: 2 * wm),
-                                          SizedBox(height: 0.010368421 * screenSize.height),
+                                          SizedBox(height: 5.h),
                                           Text(
                                             note.title,
                                             style: TextStyle(
-                                              fontSize: 17,
+                                              fontSize: 17.w,
                                               fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                          // SizedBox(height: 1 * wm),
-                                          SizedBox(height: 0.005184211 * screenSize.height),
+                                          SizedBox(height: 1.sw / 100),
                                           Text(
                                             note.text,
                                             style: TextStyle(
                                               color: Colors.grey[800],
-                                              // fontSize: 3 * wm,
+                                              fontSize: 12.w,
                                             ),
                                             maxLines: 5,
                                             overflow: TextOverflow.ellipsis,
                                           ),
-                                          // SizedBox(height: wm),
-                                          SizedBox(height: 0.005184211 * screenSize.height),
+                                          SizedBox(height: 1.sw / 100),
                                           Text(
                                             "created  $_created",
                                             style: TextStyle(
                                               fontWeight: FontWeight.w300,
                                               color: Colors.grey,
-                                              fontSize: 12,
+                                              fontSize: 12.w,
                                               // fontStyle: FontStyle.italic,
                                             ),
                                           ),
-                                          // SizedBox(height: 1.5 * wm),
-                                          SizedBox(height: 0.007776316 * screenSize.height),
-                                          Divider(
-                                            // height: 0.057 * wm,
-                                            height: 0.0002955 * screenSize.height,
-                                            color: Colors.black,
-                                          ),
+                                          SizedBox(height: 10.0.h),
+                                          Divider(height: 0.0, thickness: 1.0),
                                         ],
                                       ),
                                     ),
@@ -316,10 +298,10 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
               fontSize: 14,
             ),
             contentPadding: EdgeInsets.only(
-              left: 0.030609137 * screenSize.width, //16
-              right: 0.040761421 * screenSize.width, //20
-              top: 0.008421053 * screenSize.height, //14
-              bottom: 0.008421053 * screenSize.height, //14
+              left: 16.w,
+              right: 20.w,
+              top: 14.w,
+              bottom: 14.w,
             ),
           ),
         ),
@@ -338,14 +320,8 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 title: noteTag,
                 active: false,
                 // padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
-                // padding: EdgeInsets.fromLTRB(
-                //   0.038071066 * screenSize.width,
-                //   0.009210526 * screenSize.height,
-                //   0.038071066 * screenSize.width,
-                //   0.009210526 * screenSize.height,
-                // ),
                 textStyle: TextStyle(
-                  fontSize: 1.8 * (screenHeight / 100),
+                  fontSize: 14.w,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.5,
                   color: Colors.white,

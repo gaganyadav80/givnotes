@@ -2,22 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/routes.dart';
+
 import 'components/components.dart';
 
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -69,9 +65,9 @@ class RegisterMainBody extends StatelessWidget {
         },
         child: ListView(
           children: [
-            SizedBox(height: screenHeight * 0.07),
+            SizedBox(height: 50.w),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667), // 30
+              margin: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -80,32 +76,28 @@ class RegisterMainBody extends StatelessWidget {
                   Text(
                     "Sign Up",
                     style: Theme.of(context).textTheme.headline1.copyWith(
-                          fontSize: screenWidth * 0.0964467005, //38
+                          fontSize: 38.w,
                           fontWeight: FontWeight.w300,
                         ),
                   ),
-                  SizedBox(
-                    height: screenHeight * 0.036689962, //33
-                  ),
+                  SizedBox(height: 33.w),
                   RegisterForm(),
-                  SizedBox(height: screenHeight * 0.035),
+                  SizedBox(height: 25.w),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "or register with",
-                        style: Theme.of(context).textTheme.headline4.copyWith(
-                              fontSize: screenWidth * 0.0308629,
-                            ),
+                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 12.w),
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight * 0.015),
+                  SizedBox(height: 10.w),
                   GoogleButton(
                     title: "Sign Up with Google",
                     onPressed: _onGoogleSignUpPressed,
                   ),
-                  SizedBox(height: screenHeight * 0.045),
+                  SizedBox(height: 30.w),
                 ],
               ),
             ),
@@ -188,12 +180,14 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _onObscurePressed() {
     _isObscure = !_isObscure;
-    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context)
+        .add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   void _onConfirmObscurePressed() {
     _isConfirmObscure = !_isConfirmObscure;
-    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context)
+        .add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   @override
@@ -214,7 +208,7 @@ class _RegisterFormState extends State<RegisterForm> {
             keyboardType: TextInputType.name,
             validator: _validator.validateName,
           ),
-          SizedBox(height: screenHeight * 0.024459975),
+          SizedBox(height: 22.w),
           CustomTextFormField(
             currentNode: _emailNode,
             nextNode: _passwordNode,
@@ -226,7 +220,7 @@ class _RegisterFormState extends State<RegisterForm> {
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
           ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: 22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
@@ -252,7 +246,7 @@ class _RegisterFormState extends State<RegisterForm> {
               );
             },
           ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: 22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
@@ -294,20 +288,17 @@ class _RegisterFormState extends State<RegisterForm> {
                       obscureText: _isConfirmObscure,
                       textCapitalization: TextCapitalization.none,
                       textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(context).textTheme.caption.copyWith(
-                            fontSize: screenWidth * 0.03553299, // 14
-                          ),
+                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
                       decoration: InputDecoration(
                         suffixIcon: _isConfirmObscure
-                            ? GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_off_outlined))
+                            ? GestureDetector(
+                                onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_off_outlined))
                             : GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_outlined)),
                         border: kInputBorderStyle,
                         focusedBorder: kInputBorderStyle,
                         enabledBorder: kInputBorderStyle,
-                        hintStyle: Theme.of(context).textTheme.caption.copyWith(
-                              fontSize: screenWidth * 0.03553299, // 14
-                            ),
-                        contentPadding: EdgeInsets.symmetric(horizontal: screenWidth * 0.036458333, vertical: screenHeight * 0.021124524), // h=15, v=19
+                        hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
+                        contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.w),
                         hintText: 'Confirm Password',
                         prefixIcon: Icon(Icons.lock_outline),
                         errorText: _passwordMatch.value,
@@ -349,7 +340,7 @@ class _RegisterFormState extends State<RegisterForm> {
           //     ),
           //   ],
           // ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: 22.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is RegisterInProgress

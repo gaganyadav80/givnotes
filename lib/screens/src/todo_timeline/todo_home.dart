@@ -2,11 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/packages/circular_checkbox.dart';
-import 'package:givnotes/routes.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
+
+import 'package:givnotes/packages/circular_checkbox.dart';
+import 'package:givnotes/routes.dart';
 
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
@@ -38,18 +40,18 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
               splashRadius: 25.0,
               icon: Icon(CupertinoIcons.back, color: Colors.black),
               onPressed: () {
-                //TODO flag
+                //TODO flag use getX @Gagan
                 setState(() => appBarDate = appBarDate.subtract(Duration(days: 1)));
               },
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: Text(
                 DateFormat('dd-MMM-yyyy - EEEE').format(appBarDate),
                 style: TextStyle(
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w700,
-                  fontSize: 16.0,
+                  fontSize: 16.0.w,
                   color: appBarDate.day == DateTime.now().day
                       ? const Color(0xff32343D)
                       : appBarDate.day > DateTime.now().day
@@ -70,7 +72,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
         ),
         actions: [
           IconButton(
-            iconSize: 18.0,
+            iconSize: 18.0.w,
             splashRadius: 25.0,
             icon: Icon(Icons.view_agenda_outlined, color: Colors.black),
             onPressed: () {},
@@ -78,7 +80,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+        padding: EdgeInsets.symmetric(horizontal: 10.w),
         child: BlocBuilder<TodosBloc, TodosState>(
           builder: (context, state) {
             if (state is TodosLoading) {
@@ -86,9 +88,12 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                 child: CircularProgressIndicator.adaptive(),
               );
             } else if (state is TodosLoaded) {
-              final List<Todo> _todosBox = state.todos.where((element) => element.dueDate.toDate().day == appBarDate.day).toList();
-              final int pending = state.todos.where((element) => element.dueDate.toDate().day < DateTime.now().day).length;
-              final int upcoming = state.todos.where((element) => element.dueDate.toDate().day > DateTime.now().day).length;
+              final List<Todo> _todosBox =
+                  state.todos.where((element) => element.dueDate.toDate().day == appBarDate.day).toList();
+              final int pending =
+                  state.todos.where((element) => element.dueDate.toDate().day < DateTime.now().day).length;
+              final int upcoming =
+                  state.todos.where((element) => element.dueDate.toDate().day > DateTime.now().day).length;
 
               return Column(
                 children: [
@@ -96,7 +101,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                       ? Hero(
                           tag: "today-view",
                           child: Padding(
-                            padding: const EdgeInsets.only(top: 5.0, bottom: 10.0),
+                            padding: EdgeInsets.only(top: 5.0.w, bottom: 10.0.w),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -110,12 +115,12 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                       : Hero(tag: "today-view", child: SizedBox.shrink()),
                   _todosBox.length == 0
                       ? Padding(
-                          padding: const EdgeInsets.only(top: 30.0),
+                          padding: EdgeInsets.only(top: 30.0.w),
                           child: Center(
                             child: Image.network(
                               "https://image.freepik.com/free-vector/list-concept-illustration_114360-1208.jpg",
-                              height: 300.0,
-                              width: 300.0,
+                              height: 300.0.w,
+                              width: 300.0.w,
                             ).rotate(5.0),
                           ),
                         )
@@ -123,7 +128,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                           child: Timeline.tileBuilder(
                             theme: TimelineThemeData(
                               nodePosition: 0,
-                              indicatorTheme: IndicatorThemeData(position: 0, size: 28.0),
+                              indicatorTheme: IndicatorThemeData(position: 0, size: 28.0.w),
                             ),
                             builder: TimelineTileBuilder.connected(
                               connectionDirection: ConnectionDirection.before,
@@ -137,10 +142,10 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                 });
 
                                 return Padding(
-                                  padding: EdgeInsets.only(left: 5.0, bottom: 20.0),
+                                  padding: EdgeInsets.only(left: 5.0.w, bottom: 20.0.w),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15.0),
+                                      borderRadius: BorderRadius.circular(15.0.r),
                                       color: todo.completed ? Colors.grey[300] : Colors.transparent,
                                     ),
                                     child: Column(
@@ -157,7 +162,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                           },
                                           borderRadius: BorderRadius.circular(15.0),
                                           child: Padding(
-                                            padding: const EdgeInsets.only(left: 5.0, top: 5.0, right: 10.0),
+                                            padding: EdgeInsets.only(left: 5.0.w, top: 5.0.w, right: 10.0.w),
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               mainAxisSize: MainAxisSize.min,
@@ -165,48 +170,52 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                                 Text(
                                                   todo.title,
                                                   style: TextStyle(
-                                                    fontSize: 22.0,
+                                                    fontSize: 22.0.w,
                                                     fontWeight: FontWeight.bold,
                                                     fontFamily: "Roboto",
-                                                    decoration: todo.completed ? TextDecoration.lineThrough : TextDecoration.none,
+                                                    decoration: todo.completed
+                                                        ? TextDecoration.lineThrough
+                                                        : TextDecoration.none,
                                                   ),
                                                 ),
                                                 Row(
                                                   children: [
                                                     Text("\u{1F525} ${todo.priority ?? "None"}"),
-                                                    SizedBox(width: 10.0),
-                                                    Icon(Icons.check_circle_outline_outlined, size: 16.0),
-                                                    SizedBox(width: 5.0),
+                                                    SizedBox(width: 10.0.w),
+                                                    Icon(Icons.check_circle_outline_outlined, size: 16.0.w),
+                                                    SizedBox(width: 5.0.w),
                                                     Text("$taskCompleted/${todo.subTask.length}"),
-                                                    SizedBox(width: 10.0),
-                                                    Icon(Icons.access_time_outlined, size: 16.0),
-                                                    SizedBox(width: 5.0),
+                                                    SizedBox(width: 10.0.w),
+                                                    Icon(Icons.access_time_outlined, size: 16.0.w),
+                                                    SizedBox(width: 5.0.w),
                                                     Text(DateFormat("HH:mm").format(todo.dueDate.toDate())),
                                                   ],
                                                 ),
                                                 Container(
-                                                  margin: EdgeInsets.fromLTRB(0, 8, 5, 0),
-                                                  padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
+                                                  margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
+                                                  padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
                                                   decoration: BoxDecoration(
                                                     color: todo.category.values.first == null
                                                         ? Colors.transparent
                                                         : todo.completed
                                                             ? Color(todo.category.values.first).withOpacity(0.4)
                                                             : Color(todo.category.values.first),
-                                                    borderRadius: BorderRadius.circular(5),
+                                                    borderRadius: BorderRadius.circular(5.r),
                                                   ),
                                                   child: Center(
                                                     child: Text(
-                                                      todo.category.keys.first.isEmptyOrNull ? "Category N/A" : todo.category.keys.first,
+                                                      todo.category.keys.first.isEmptyOrNull
+                                                          ? "Category N/A"
+                                                          : todo.category.keys.first,
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontWeight: FontWeight.w700,
-                                                        fontSize: 12,
+                                                        fontSize: 12.w,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 10.0),
+                                                SizedBox(height: 10.0.w),
                                                 if (todo.description.isNotBlank)
                                                   Text(
                                                     todo.description,
@@ -214,17 +223,17 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                                     overflow: TextOverflow.ellipsis,
                                                     style: Theme.of(context).textTheme.subtitle1,
                                                   ),
-                                                SizedBox(height: 5.0),
+                                                SizedBox(height: 5.0.w),
                                               ],
                                             ),
                                           ),
                                         ),
-                                        SizedBox(height: 5.0),
+                                        SizedBox(height: 5.0.w),
                                         Padding(
-                                          padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                                          padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
                                           child: _buildSubTaskTimeline(todo),
                                         ),
-                                        SizedBox(height: 10.0),
+                                        SizedBox(height: 10.0.w),
                                       ],
                                     ),
                                   ),
@@ -234,7 +243,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                 Todo checkTodo = _todosBox[index];
 
                                 return DotIndicator(
-                                  size: 30.0,
+                                  size: 30.0.w,
                                   color: Colors.transparent,
                                   child: CircularCheckBox(
                                     value: checkTodo.completed,
@@ -246,13 +255,13 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                                     activeColor: Colors.blue,
                                     inactiveColor: Colors.blue,
                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    radius: 14.0,
-                                    width: 20.0,
+                                    radius: 14.0.r,
+                                    width: 20.0.w,
                                   ),
                                 );
                               },
-                              connectorBuilder: (_, index, ___) => SolidLineConnector(indent: 5.0, endIndent: 5.0),
-                              lastConnectorBuilder: (context) => SolidLineConnector(indent: 5.0, endIndent: 20.0),
+                              connectorBuilder: (_, index, ___) => SolidLineConnector(indent: 5.0.w, endIndent: 5.0.w),
+                              lastConnectorBuilder: (context) => SolidLineConnector(indent: 5.0.w, endIndent: 20.0.w),
                             ),
                           ),
                         ),
@@ -275,13 +284,13 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
         elevation: 8.0,
         borderRadius: BorderRadius.circular(15.0),
         child: Container(
-          height: 110.0,
-          width: 100.0,
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15.0)),
+          height: 110.0.h,
+          width: 100.0.w,
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15.0.r)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: ["$number".text.size(22.0).bold.make(), title.text.semiBold.make()],
+            children: ["$number".text.size(22.0.w).bold.make(), title.text.semiBold.make()],
           ),
         ),
       );
@@ -295,7 +304,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
           String subTitle = _todo.subTask[subtaskIndex].keys.first;
 
           return Padding(
-            padding: EdgeInsets.only(left: 10.0),
+            padding: EdgeInsets.only(left: 10.0.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -303,10 +312,11 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                 Text(
                   subTitle,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 20.0.w,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Roboto',
-                    decoration: _todo.subTask[subtaskIndex].values.first ? TextDecoration.lineThrough : TextDecoration.none,
+                    decoration:
+                        _todo.subTask[subtaskIndex].values.first ? TextDecoration.lineThrough : TextDecoration.none,
                   ),
                 ),
               ],
@@ -314,7 +324,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
           );
         },
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
-          size: 20.0,
+          size: 20.0.w,
           color: Colors.transparent,
           child: CircularCheckBox(
             value: _todo.subTask[subCheckIndex].values.first,
@@ -329,29 +339,12 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: Colors.blue,
             inactiveColor: Colors.blue,
-            radius: 12.0,
-            width: 15.0,
+            radius: 12.0.r,
+            width: 15.0.w,
           ),
         ),
-        connectorBuilder: (_, index, ___) => SolidLineConnector(endIndent: 8.0),
+        connectorBuilder: (_, index, ___) => SolidLineConnector(endIndent: 8.0.w),
       ),
     );
   }
 }
-
-// class TodoHomeAppBar extends StatefulWidget with PreferredSizeWidget {
-//   TodoHomeAppBar({Key key}) : super(key: key);
-
-//   @override
-//   Size get preferredSize => Size.fromHeight(56.0);
-
-//   @override
-//   _TodoHomeAppBarState createState() => _TodoHomeAppBarState();
-// }
-
-// class _TodoHomeAppBarState extends State<TodoHomeAppBar> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'constants.dart';
 
@@ -26,15 +26,15 @@ class BlueButton extends StatelessWidget {
             borderRadius: kBorderRadius,
           ),
           padding: EdgeInsets.symmetric(
-            vertical: screenHeight * 0.018900889, // 17
+            vertical: 17.w
           ),
           primary: Theme.of(context).primaryColor,
         ),
         child: Center(
           child: isLoading
               ? Container(
-                  height: 30.0,
-                  width: 30.0,
+                  height: 30.0.w,
+                  width: 30.0.w,
                   child: CircularProgressIndicator(
                     strokeWidth: 1.0,
                     valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
@@ -43,7 +43,7 @@ class BlueButton extends StatelessWidget {
               : Text(
                   title,
                   style: Theme.of(context).textTheme.button.copyWith(
-                        fontSize: screenHeight * 0.025,
+                        fontSize: 18.w,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
                       ),

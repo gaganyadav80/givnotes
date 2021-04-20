@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/routes.dart';
 
@@ -71,12 +72,9 @@ class LoginPage extends StatelessWidget {
         },
         child: ListView(
           children: [
-            // SizedBox(
-            //   height: screenHeight * 0.142312579, // 128
-            // ),
-            SizedBox(height: screenHeight * 0.07),
+            SizedBox(height: 50.w),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.072916667),
+              margin: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -85,32 +83,28 @@ class LoginPage extends StatelessWidget {
                   Text(
                     "Welcome",
                     style: Theme.of(context).textTheme.headline1.copyWith(
-                          fontSize: screenWidth * 0.0964467005, //38
+                          fontSize: 38.w,
                           fontWeight: FontWeight.w300,
                         ),
                   ),
-                  SizedBox(
-                    height: screenWidth * 0.08375634517, //33
-                  ),
+                  SizedBox(height: 33.w),
                   LoginForm(),
-                  SizedBox(height: screenWidth * 0.051),
+                  SizedBox(height: 20.w),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         "or connect with",
-                        style: Theme.of(context).textTheme.headline4.copyWith(
-                              fontSize: screenWidth * 0.0328629,
-                            ),
+                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 13.w),
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight * 0.015),
+                  SizedBox(height: 10.w),
                   GoogleButton(
                     title: "Continue with Google",
                     onPressed: _onGoogleSignInPressed,
                   ),
-                  SizedBox(height: screenHeight * 0.14),
+                  SizedBox(height: 100.w),
                   GestureDetector(
                     onTap: _onSignUpPressed,
                     child: Container(
@@ -119,21 +113,21 @@ class LoginPage extends StatelessWidget {
                         // border: Border.all(width: 1.0, color: Colors.grey[500].withOpacity(0.5)),
                         color: Theme.of(context).scaffoldBackgroundColor,
                       ),
-                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.01500953), // 13.5
+                      padding: EdgeInsets.symmetric(vertical: 13.w), // 13.5
                       child: Center(
                         child: Text(
                           "Create a new account.",
                           style: Theme.of(context).textTheme.caption.copyWith(
-                                fontSize: screenWidth * 0.034,
+                                fontSize: 14.w,
                                 fontWeight: FontWeight.w600,
                               ),
                         ),
                       ),
                     ),
                   ),
-                  // SizedBox(height: screenHeight * 0.045),
+                  // SizedBox(height: screenHeight * 0.045), //30
                 ],
-              ), // 30
+              ),
             ),
           ],
         ),
@@ -214,8 +208,7 @@ class _LoginFormState extends State<LoginForm> {
             validator: _validator.validateEmail,
             prefixIcon: Icon(Icons.email_outlined),
           ),
-          SizedBox(height: screenHeight * 0.024459975),
-          // 22
+          SizedBox(height: 22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is LoginObscureState) {
@@ -239,7 +232,7 @@ class _LoginFormState extends State<LoginForm> {
               );
             },
           ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: 22.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -248,14 +241,14 @@ class _LoginFormState extends State<LoginForm> {
                 child: Text(
                   "Forgot Password?",
                   style: Theme.of(context).textTheme.headline6.copyWith(
-                        fontSize: screenWidth * 0.025076,
+                        fontSize: 10.w,
                         color: Theme.of(context).iconTheme.color,
                       ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: screenHeight * 0.024459975), // 22
+          SizedBox(height: 22.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               // Theme(

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,13 +16,12 @@ import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 
 import 'cubit/cubits.dart';
-import 'global/size_utils.dart';
 import 'global/variables.dart';
 import 'packages/packages.dart';
+import 'routes.dart' as rt;
 import 'screens/screens.dart';
 import 'screens/src/todo_timeline/todo_timeline.dart';
 import 'services/services.dart';
-import 'routes.dart' as rt;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,8 +65,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    initializeUtils(context);
-
     return RepositoryProvider.value(
       value: authenticationRepository,
       child: MultiBlocProvider(
@@ -74,7 +72,8 @@ class App extends StatelessWidget {
           BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
           BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
           BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
-          BlocProvider<AuthenticationBloc>(create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
+          BlocProvider<AuthenticationBloc>(
+              create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
           BlocProvider<TodosBloc>(
             create: (context) => TodosBloc(
               todosRepository: FirebaseTodosRepository(),
@@ -97,29 +96,32 @@ class GivnotesApp extends StatefulWidget {
 class _GivnotesAppState extends State<GivnotesApp> {
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Givnotes',
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        accentColor: Colors.black,
-        accentColorBrightness: Brightness.light,
-        toggleableActiveColor: Colors.blue,
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: ZoomPageTransitionsBuilder(),
-          },
+    return ScreenUtilInit(
+      designSize: Size(414, 896),
+      builder: () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Givnotes',
+        theme: ThemeData(
+          fontFamily: 'Poppins',
+          accentColor: Colors.black,
+          accentColorBrightness: Brightness.light,
+          toggleableActiveColor: Colors.blue,
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: ZoomPageTransitionsBuilder(),
+            },
+          ),
         ),
+        builder: (context, child) {
+          return ScrollConfiguration(
+            behavior: RemoveScrollGlow(),
+            child: child,
+          );
+        },
+        onGenerateRoute: rt.Router.generateRoute,
+        initialRoute: '/',
+        // home: const CheckLogin(),
       ),
-      builder: (context, child) {
-        return ScrollConfiguration(
-          behavior: RemoveScrollGlow(),
-          child: child,
-        );
-      },
-      onGenerateRoute: rt.Router.generateRoute,
-      initialRoute: '/',
-      // home: const CheckLogin(),
     );
   }
 }

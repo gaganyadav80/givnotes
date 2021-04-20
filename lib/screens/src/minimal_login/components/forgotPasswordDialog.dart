@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:givnotes/global/validators/validators.dart';
 
 import 'constants.dart';
 import 'customFormField.dart';
 
+//TODO user custom dialog
 class PassResetMailDialog extends StatelessWidget {
   final Function onPressed;
   final TextEditingController emailController;
@@ -23,19 +25,19 @@ class PassResetMailDialog extends StatelessWidget {
       title: Text(
         "Forgot Password",
         style: Theme.of(context).textTheme.headline1.copyWith(
-              fontSize: screenHeight * 0.030685206,
+              fontSize: 22.w,
               fontWeight: FontWeight.w300,
             ),
       ),
       content: Container(
-        width: screenWidth * 0.80,
+        width: 315.w,
         child: Form(
           key: formKey,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: screenHeight * 0.028246941),
+              SizedBox(height: 20.w),
               CustomTextFormField(
                 fieldController: emailController,
                 hintText: "Enter registered email",
@@ -45,7 +47,7 @@ class PassResetMailDialog extends StatelessWidget {
                 validator: Validator().validateEmail,
                 maxLines: 1,
               ),
-              SizedBox(height: screenHeight * 0.025246941),
+              SizedBox(height: 20.w),
               Text(
                 "A link will be sent to your registered email Id. Click on the link to reset your password",
                 style: Theme.of(context).textTheme.caption,

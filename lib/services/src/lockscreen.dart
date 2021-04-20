@@ -4,6 +4,7 @@ import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShowLockscreen extends StatefulWidget {
   ShowLockscreen({
@@ -61,10 +62,10 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
               AppLock.of(context).didUnlock();
             },
       dotSecretConfig: DotSecretConfig(
-        dotSize: 15,
+        dotSize: 15.w,
         dotBorderColor: Colors.teal[200],
         enabledColor: Colors.teal[100],
-        padding: EdgeInsets.symmetric(horizontal: 75, vertical: 0),
+        padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
       ),
       circleInputButtonConfig: CircleInputButtonConfig(
         backgroundColor: Colors.teal[200],
@@ -104,10 +105,10 @@ class _AddLockscreenState extends State<AddLockscreen> {
           passChangeAlert(context);
         },
         dotSecretConfig: DotSecretConfig(
-          dotSize: 15,
+          dotSize: 15.w,
           dotBorderColor: Colors.teal[200],
           enabledColor: Colors.teal[100],
-          padding: EdgeInsets.symmetric(horizontal: 75, vertical: 0),
+          padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
         ),
         circleInputButtonConfig: CircleInputButtonConfig(
           backgroundColor: Colors.teal[200],

@@ -4,17 +4,18 @@ import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_quill/models/documents/document.dart' as qd;
 import 'package:flutter_quill/widgets/controller.dart';
 import 'package:flutter_quill/widgets/editor.dart';
 import 'package:flutter_quill/widgets/toolbar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:intl/intl.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:flutter_quill/models/documents/document.dart' as qd;
 import 'package:givnotes/packages/packages.dart';
-import 'package:intl/intl.dart';
 
 import 'widgets/editor_widgets.dart';
 
@@ -46,9 +47,6 @@ class _EditorScreenState extends State<EditorScreen> {
   // bool zefyrEditMode = false;
   NoteAndSearchCubit _noteEditStore;
   ValueNotifier<NotesModel> _notesModel = ValueNotifier<NotesModel>(null);
-
-  final hm = 7.6;
-  final wm = 3.94;
 
   Future<qd.Document> _loadDocument() async {
     final contents = widget.note.znote;
@@ -121,26 +119,23 @@ class _EditorScreenState extends State<EditorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                // padding: const EdgeInsets.symmetric(horizontal: 15),
-                padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: getTitleTextField(),
               ),
-              // SizedBox(height: wm),
-              SizedBox(height: 0.00518421053 * screenSize.height),
+              SizedBox(height: 1.sw / 100),
               _noteEditStore.state.noteMode == NoteMode.Editing
                   ? ValueListenableBuilder(
                       valueListenable: _notesModel,
                       builder: (BuildContext context, NotesModel value, Widget child) {
                         return Padding(
-                          // padding: const EdgeInsets.symmetric(horizontal: 15),
-                          padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
+                          padding: EdgeInsets.symmetric(horizontal: 15.w),
                           child: Text(
                             'modified ${DateFormat.yMMMd().add_Hm().format(value.modified)}',
                             style: TextStyle(
                               fontFamily: 'ZillaSlab',
                               color: Colors.black.withOpacity(0.7),
                               fontWeight: FontWeight.w400,
-                              fontSize: 2 * hm,
+                              fontSize: 15.h,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -148,63 +143,47 @@ class _EditorScreenState extends State<EditorScreen> {
                       },
                     )
                   : SizedBox.shrink(),
-              // SizedBox(height: 1 * hm),
-              SizedBox(height: 0.01 * screenSize.height),
+              SizedBox(height: 1.sh / 100),
               Padding(
-                // padding: EdgeInsets.symmetric(horizontal: 15),
-                padding: EdgeInsets.symmetric(horizontal: 0.038071066 * screenSize.width),
-
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
                       getNoteTags(),
-                      noteTagsMap.length == 0
-                          ? SizedBox.shrink()
-                          // : SizedBox(width: 10),
-                          : SizedBox(width: 0.0131578947 * screenWidth),
+                      noteTagsMap.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
                       BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
                         builder: (context, state) {
                           return state.isEditing
                               ? Container(
-                                  height: 0.04 * screenHeight,
-                                  width: 0.08 * screenWidth,
+                                  height: 0.04.sh,
+                                  width: 32.w,
                                   decoration: BoxDecoration(
                                     color: Colors.transparent,
                                     shape: BoxShape.circle,
                                     border: Border.all(
                                       color: Colors.blueGrey,
-                                      width: 2,
+                                      width: 2.w,
                                     ),
                                   ),
                                   child: InkWell(
-                                    borderRadius: BorderRadius.circular(25),
+                                    borderRadius: BorderRadius.circular(25.r),
                                     onTap: () {
                                       _titleFocus.unfocus();
                                       showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
-                                            insetPadding: EdgeInsets.all(10),
+                                            insetPadding: EdgeInsets.all(10.w),
                                             title: Text('New tag'),
-                                            titlePadding: EdgeInsets.fromLTRB(
-                                              0.038071066 * screenWidth,
-                                              0.0197368421 * screenHeight,
-                                              0.038071066 * screenWidth,
-                                              0,
-                                            ),
+                                            titlePadding: EdgeInsets.all(15.w),
                                             titleTextStyle: TextStyle(
-                                              fontSize: 22,
+                                              fontSize: 22.w,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black,
-                                              letterSpacing: 0.5,
+                                              letterSpacing: 0.5.w,
                                             ),
-                                            contentPadding: EdgeInsets.fromLTRB(
-                                              0.038071066 * screenSize.width,
-                                              0.0197368421 * screenSize.height,
-                                              0.038071066 * screenSize.width,
-                                              0,
-                                            ),
+                                            contentPadding: EdgeInsets.all(15.w),
                                             content: BlocProvider(
                                               create: (_) => NoteAndSearchCubit(),
                                               child: AddTagsDialog(
@@ -219,14 +198,13 @@ class _EditorScreenState extends State<EditorScreen> {
                                     child: Icon(
                                       Icons.add,
                                       color: Colors.blueGrey,
-                                      size: 2 * hm,
+                                      size: 15.w, //TODO check icon size
                                     ),
                                   ),
                                 )
                               : noteTagsMap.length == 0
                                   ? Container(
-                                      // height: 4 * hm,
-                                      height: 0.04 * screenSize.height,
+                                      height: 30.h,
                                       child: Center(
                                         child: Text(
                                           '"no tags added."',
@@ -234,15 +212,14 @@ class _EditorScreenState extends State<EditorScreen> {
                                             fontFamily: 'ZillaSlab',
                                             color: Colors.black.withOpacity(0.7),
                                             fontWeight: FontWeight.w600,
-                                            fontSize: 2.5 * hm,
+                                            fontSize: 19.w,
                                           ),
                                         ),
                                       ),
                                     )
                                   : Container(
                                       color: Colors.transparent,
-                                      // height: 4.0 * hm,
-                                      height: 0.04 * screenSize.height,
+                                      height: 30.h,
                                     );
                         },
                       )
@@ -250,14 +227,7 @@ class _EditorScreenState extends State<EditorScreen> {
                   ),
                 ),
               ),
-              // Divider(
-              //   color: Colors.grey,
-              //   indent: 15,
-              //   endIndent: 15,
-              //   thickness: 1,
-              // ),
-              // SizedBox(height: 2 * wm),
-              SizedBox(height: 0.0103684211 * screenHeight),
+              SizedBox(height: 8.w),
               Expanded(
                 child: _editorBody(),
               ),
@@ -272,7 +242,7 @@ class _EditorScreenState extends State<EditorScreen> {
                             showClearFormat: false,
                             showHorizontalRule: false,
                             showListCheck: false,
-                            toolbarIconSize: 22.0,
+                            toolbarIconSize: 22.0.w,
                           )
                         : SizedBox.shrink(),
                   );
@@ -290,10 +260,7 @@ class _EditorScreenState extends State<EditorScreen> {
           builder: (context, state) {
             return state.noteMode == NoteMode.Editing && !state.isEditing
                 ? Container(
-                    // height: 18 * wm,
-                    // margin: EdgeInsets.only(bottom: 15),
-                    margin: EdgeInsets.only(bottom: 0.0197368421 * screenSize.height),
-
+                    margin: EdgeInsets.only(bottom: 15.h),
                     child: FloatingActionButton(
                       heroTag: 'parent',
                       tooltip: 'Edit',
@@ -324,7 +291,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 focusNode: _editorfocusNode,
                 scrollController: ScrollController(),
                 scrollable: true,
-                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                 autoFocus: false,
                 readOnly: !(state.isEditing || state.noteMode == NoteMode.Adding),
                 expands: true,
@@ -349,14 +316,14 @@ class _EditorScreenState extends State<EditorScreen> {
             hintText: 'Title',
             hintStyle: TextStyle(
               fontFamily: 'ZillaSlab',
-              fontSize: 4.5 * hm,
+              fontSize: 35.w,
               fontWeight: FontWeight.w600,
               color: Colors.grey,
             ),
           ),
           style: TextStyle(
             fontFamily: 'ZillaSlab',
-            fontSize: 4.5 * hm,
+            fontSize: 35.w,
             fontWeight: FontWeight.w600,
             color: Colors.black,
           ),
@@ -385,9 +352,9 @@ class _EditorScreenState extends State<EditorScreen> {
           active: false,
           combine: ItemTagsCombine.withTextBefore,
           textStyle: TextStyle(
-            fontSize: 1.8 * hm,
+            fontSize: 14.w,
             fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
+            letterSpacing: 0.5.w,
           ),
           border: Border.all(color: Color(borderColor), width: 2),
           textActiveColor: Color(borderColor),
@@ -415,28 +382,14 @@ class _EditorScreenState extends State<EditorScreen> {
                   return AlertDialog(
                     insetPadding: EdgeInsets.all(10),
                     title: Text('Edit tag'),
-                    // titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-                    titlePadding: EdgeInsets.fromLTRB(
-                      0.038071066 * screenSize.width,
-                      0.0197368421 * screenSize.height,
-                      0.038071066 * screenSize.width,
-                      0,
-                    ),
-
+                    titlePadding: EdgeInsets.all(15.w),
                     titleTextStyle: TextStyle(
-                      fontSize: 22,
+                      fontSize: 22.w,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
-                      letterSpacing: 0.5,
+                      letterSpacing: 0.5.w,
                     ),
-                    // contentPadding: EdgeInsets.fromLTRB(15, 15, 15, 0),
-                    contentPadding: EdgeInsets.fromLTRB(
-                      0.038071066 * screenSize.width,
-                      0.0197368421 * screenSize.height,
-                      0.038071066 * screenSize.width,
-                      0,
-                    ),
-
+                    contentPadding: EdgeInsets.all(15.w),
                     content: BlocProvider(
                       create: (_) => BlocProvider.of<NoteAndSearchCubit>(context),
                       child: AddTagsDialog(

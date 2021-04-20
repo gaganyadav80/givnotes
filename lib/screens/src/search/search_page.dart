@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:givnotes/routes.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -11,8 +11,8 @@ import 'package:intl/intl.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/routes.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key key}) : super(key: key);
@@ -30,9 +30,6 @@ class _SearchPageState extends State<SearchPage> {
   final FocusNode _focusNode = FocusNode();
   List<NotesModel> _notes = [];
   Map<String, int> _allTagsMap;
-
-  // var hm = 7.6;
-  // var wm = 3.94;
 
   @override
   void initState() {
@@ -65,18 +62,15 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  void onSearchListItemLongPress(NotesModel item, {@required Size size}) {
+  void onSearchListItemLongPress(NotesModel item) {
     _focusNode.unfocus();
 
     showModalBottomSheet(
       context: context,
       builder: (context) {
         return Container(
-          // height: 55 * hm,
-          height: 0.55 * size.height,
-          // padding:
-          //     EdgeInsets.symmetric(horizontal: 3.5 * wm, vertical: 2.5 * hm),
-          padding: EdgeInsets.symmetric(horizontal: 0.035 * size.width, vertical: 0.025 * size.height),
+          height: 400.h,
+          padding: EdgeInsets.symmetric(horizontal: 0.035.sw, vertical: 0.025.sh),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [],
@@ -106,11 +100,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     bool isDark = Theme.of(context).brightness == Brightness.dark;
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: giveStatusBarColor(context),
-    //   ),
-    // );
+
     return WillPopScope(
       onWillPop: () async {
         BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
@@ -133,14 +123,14 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 elevation: 0.0,
                 backgroundColor: Colors.white,
-                expandedHeight: 0.081052632 * screenSize.height,
+                expandedHeight: 20.w,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
                     'Search',
                     style: TextStyle(
                       height: 0.0,
-                      fontSize: 22,
+                      fontSize: 22.w,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -153,7 +143,7 @@ class _SearchPageState extends State<SearchPage> {
                 elevation: 0.0,
                 backgroundColor: Colors.white,
                 title: searchNoteTextField(),
-                titleSpacing: 10.0,
+                titleSpacing: 10.0.w,
               ),
               ValueListenableBuilder(
                   valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
@@ -173,18 +163,14 @@ class _SearchPageState extends State<SearchPage> {
                                       child: SingleChildScrollView(
                                         physics: null,
                                         child: Padding(
-                                          padding: EdgeInsets.only(
-                                            left: 0.05 * screenSize.width,
-                                            top: 0.05 * screenSize.height,
-                                            right: 0.05 * screenSize.width,
-                                          ),
+                                          padding: EdgeInsets.all(0.05.sw),
                                           child: Column(
                                             children: [
                                               Image.asset(
-                                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                                // height: 40 * hm,
-
-                                                height: 0.2 * screenSize.height,
+                                                isDark
+                                                    ? 'assets/giv_img/search_dark.png'
+                                                    : 'assets/giv_img/search_light.png',
+                                                height: 0.2.sh,
                                               ),
                                               Center(
                                                 child: Text('Search for your notes according to Tags'),
@@ -197,15 +183,14 @@ class _SearchPageState extends State<SearchPage> {
                                   )
                                 : SliverToBoxAdapter(
                                     child: Padding(
-                                      // padding: EdgeInsets.only(top: 3 * hm),
-                                      padding: EdgeInsets.only(top: 0.03 * screenSize.height),
+                                      padding: EdgeInsets.only(top: 20.h),
                                       child: Text(
                                         'Ops! nothing found',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
                                           fontWeight: FontWeight.w400,
-                                          fontSize: 22,
+                                          fontSize: 22.w,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -232,22 +217,13 @@ class _SearchPageState extends State<SearchPage> {
                                               child: InkWell(
                                                 borderRadius: BorderRadius.circular(5),
                                                 onTap: () => onSearchListItemSelected(item),
-                                                onLongPress: () => onSearchListItemLongPress(item, size: screenSize),
+                                                onLongPress: () => onSearchListItemLongPress(item),
                                                 child: _textController.text.isNotEmpty
                                                     ? Padding(
-                                                        padding: EdgeInsets.symmetric(
-                                                          // horizontal: 1.5 * wm,
-                                                          horizontal: 0.015 * screenSize.width,
-                                                        ),
+                                                        padding: EdgeInsets.symmetric(horizontal: 6.w),
                                                         child: Column(
                                                           crossAxisAlignment: CrossAxisAlignment.start,
                                                           children: <Widget>[
-                                                            Divider(
-                                                              height:
-                                                                  // 0.057 * wm,
-                                                                  0.00057 * screenSize.height,
-                                                              color: Colors.black,
-                                                            ),
                                                             Row(
                                                               children: [
                                                                 item.tagsMap.length == 0
@@ -255,13 +231,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                     : Expanded(
                                                                         flex: 4,
                                                                         child: Container(
-                                                                          margin:
-                                                                              // EdgeInsets.only(top: 1.5 * wm),
-                                                                              EdgeInsets.only(top: 0.015 * screenSize.width),
-                                                                          // height: BlocProvider.of<HydratedPrefsCubit>(context).state.compactTags
-                                                                          //     ? 1 * hm
-                                                                          //     : 2 * hm,
-                                                                          height: BlocProvider.of<HydratedPrefsCubit>(context).state.compactTags ? 0.01 * screenSize.height : 0.02 * screenSize.height,
+                                                                          margin: EdgeInsets.only(top: 5.w),
+                                                                          height: BlocProvider.of<HydratedPrefsCubit>(
+                                                                                      context)
+                                                                                  .state
+                                                                                  .compactTags
+                                                                              ? 8.h
+                                                                              : 16.h,
                                                                           decoration: BoxDecoration(
                                                                             borderRadius: BorderRadius.circular(5),
                                                                           ),
@@ -269,44 +245,35 @@ class _SearchPageState extends State<SearchPage> {
                                                                             scrollDirection: Axis.horizontal,
                                                                             itemCount: item.tagsMap.length,
                                                                             itemBuilder: (cntx, index) {
-                                                                              String title = item.tagsMap.keys.toList()[index];
+                                                                              String title =
+                                                                                  item.tagsMap.keys.toList()[index];
                                                                               Color color = Color(_allTagsMap[title]);
 
-                                                                              return BlocProvider.of<HydratedPrefsCubit>(context).state.compactTags
+                                                                              return BlocProvider.of<
+                                                                                          HydratedPrefsCubit>(context)
+                                                                                      .state
+                                                                                      .compactTags
                                                                                   ? Container(
-                                                                                      // width: 7.6 * wm,
-                                                                                      width: 0.076 * screenSize.width,
-                                                                                      // margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                                                                      margin: EdgeInsets.fromLTRB(
-                                                                                        0,
-                                                                                        0,
-                                                                                        0.0126903553 * screenSize.width,
-                                                                                        0,
-                                                                                      ),
+                                                                                      width: 30.w,
+                                                                                      margin:
+                                                                                          EdgeInsets.only(right: 5.w),
                                                                                       decoration: BoxDecoration(
                                                                                         color: color,
-                                                                                        borderRadius: BorderRadius.circular(5),
+                                                                                        borderRadius:
+                                                                                            BorderRadius.circular(5.r),
                                                                                       ),
                                                                                       child: SizedBox.shrink(),
                                                                                     )
                                                                                   : Container(
-                                                                                      // margin: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                                                                      margin: EdgeInsets.fromLTRB(
-                                                                                        0,
-                                                                                        0,
-                                                                                        0.0126903553 * screenSize.width,
-                                                                                        0,
-                                                                                      ),
-                                                                                      // padding: EdgeInsets.fromLTRB(5, 2, 5, 2),
-                                                                                      padding: EdgeInsets.fromLTRB(
-                                                                                        0.0126903553 * screenSize.width,
-                                                                                        0.00263157895 * screenSize.height,
-                                                                                        0.0126903553 * screenSize.width,
-                                                                                        0.00263157895 * screenSize.height,
-                                                                                      ),
+                                                                                      margin:
+                                                                                          EdgeInsets.only(right: 5.w),
+                                                                                      padding: EdgeInsets.symmetric(
+                                                                                          horizontal: 5.w,
+                                                                                          vertical: 2.h),
                                                                                       decoration: BoxDecoration(
                                                                                         color: color,
-                                                                                        borderRadius: BorderRadius.circular(5),
+                                                                                        borderRadius:
+                                                                                            BorderRadius.circular(5),
                                                                                       ),
                                                                                       child: Center(
                                                                                         child: Text(
@@ -314,8 +281,8 @@ class _SearchPageState extends State<SearchPage> {
                                                                                           style: TextStyle(
                                                                                             color: Colors.white,
                                                                                             fontWeight: FontWeight.w700,
-                                                                                            letterSpacing: 0.5,
-                                                                                            fontSize: 8,
+                                                                                            letterSpacing: 0.5.w,
+                                                                                            fontSize: 8.w,
                                                                                           ),
                                                                                         ),
                                                                                       ),
@@ -327,19 +294,13 @@ class _SearchPageState extends State<SearchPage> {
                                                                 Expanded(
                                                                   flex: 1,
                                                                   child: Padding(
-                                                                    // padding: EdgeInsets
-                                                                    //     .only(
-                                                                    //         top:
-                                                                    //             3),
-                                                                    padding: EdgeInsets.only(
-                                                                      top: 0.00394736842 * screenSize.height,
-                                                                    ),
+                                                                    padding: EdgeInsets.only(top: 3.h),
                                                                     child: Text(
                                                                       item.trash ? 'Deleted' : '',
                                                                       style: TextStyle(
                                                                         fontWeight: FontWeight.w300,
                                                                         // color: Colors.red,
-                                                                        fontSize: 12,
+                                                                        fontSize: 12.w,
                                                                         fontStyle: FontStyle.italic,
                                                                       ),
                                                                     ),
@@ -347,17 +308,15 @@ class _SearchPageState extends State<SearchPage> {
                                                                 ),
                                                               ],
                                                             ),
-                                                            // SizedBox(
-                                                            //     height: wm),
-                                                            SizedBox(height: 0.00518421053 * screenSize.height),
+                                                            SizedBox(height: 5.w),
                                                             Text(
                                                               item.title,
                                                               style: TextStyle(
-                                                                fontSize: 18,
+                                                                fontSize: 18.w,
                                                                 fontWeight: FontWeight.w600,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 0.00518421053 * screenSize.height),
+                                                            SizedBox(height: 5.w),
                                                             Text(
                                                               item.text,
                                                               style: TextStyle(
@@ -366,7 +325,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               maxLines: 5,
                                                               overflow: TextOverflow.ellipsis,
                                                             ),
-                                                            SizedBox(height: 0.00518421053 * screenSize.height),
+                                                            SizedBox(height: 5.w),
                                                             Text(
                                                               "created  $_created",
                                                               style: TextStyle(
@@ -375,16 +334,8 @@ class _SearchPageState extends State<SearchPage> {
                                                                 fontSize: 12,
                                                               ),
                                                             ),
-                                                            // SizedBox(
-                                                            //     height:
-                                                            //         1.5 * wm),
-                                                            SizedBox(height: 0.00777631579 * screenSize.height),
-                                                            Divider(
-                                                              // height:
-                                                              //     0.057 * wm,
-                                                              height: 0.0002955 * screenSize.height,
-                                                              color: Colors.black,
-                                                            ),
+                                                            SizedBox(height: 10.0.w),
+                                                            Divider(height: 0.0, thickness: 1.0),
                                                           ],
                                                         ),
                                                       )
@@ -395,7 +346,6 @@ class _SearchPageState extends State<SearchPage> {
                                         ),
                                       );
                                     },
-                                    // padding: EdgeInsets.symmetric(horizontal: 1.5 * wm),
                                     childCount: searchLength,
                                   ),
                                 ),
@@ -414,13 +364,13 @@ class _SearchPageState extends State<SearchPage> {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
       builder: (context, state) => Container(
         color: Colors.white,
-        height: 0.0492105263 * screenSize.height,
+        height: 36.w,
         child: CupertinoTextField(
           controller: _textController,
           focusNode: _focusNode,
           cursorColor: Colors.black,
           style: TextStyle(
-            fontSize: 18,
+            fontSize: 18.w,
             color: Colors.grey[800],
             fontWeight: FontWeight.w500,
           ),
@@ -429,20 +379,16 @@ class _SearchPageState extends State<SearchPage> {
           },
           clearButtonMode: OverlayVisibilityMode.editing,
           placeholder: ' \u{1F50D}  Search for notes',
-          // padding: EdgeInsets.only(left: 10.0),
-          padding: EdgeInsets.only(left: 0.0253807107 * screenSize.width),
+          padding: EdgeInsets.only(left: 10.0.w),
           toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
           decoration: BoxDecoration(
             color: CupertinoDynamicColor.withBrightness(
               color: CupertinoColors.white,
               darkColor: CupertinoColors.black,
             ),
-            // border: _kDefaultRoundedBorder,
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.0.r)),
             border: Border.all(
               color: CupertinoDynamicColor.withBrightness(
-                // color: Color(0x33000000),
-                // darkColor: Color(0x33FFFFFF),
                 darkColor: Colors.white,
                 color: Colors.black,
               ),
@@ -450,43 +396,6 @@ class _SearchPageState extends State<SearchPage> {
               width: 1.0, // default 0 for cupertino
             ),
           ),
-          // decoration: InputDecoration(
-          //   fillColor: Colors.white,
-          //   enabledBorder: const OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   focusedBorder: OutlineInputBorder(
-          //     borderSide: BorderSide(
-          //       color: Colors.black,
-          //     ),
-          //   ),
-          //   suffixIcon: state.isSearchBoxSelected
-          //       ? InkWell(
-          //           child: Icon(Icons.close, size: 22, color: Colors.black),
-          //           onTap: () {
-          //             _focusNode.unfocus();
-          //             _textController.clear();
-          //             BlocProvider.of<NoteAndSearchCubit>(context).updateBoxSelected(false);
-          //           },
-          //         )
-          //       : Icon(Icons.search, color: Colors.black),
-          //   border: InputBorder.none,
-          //   hintText: 'Search for notes',
-          //   hintStyle: TextStyle(
-          //     fontWeight: FontWeight.w300,
-          //     color: Colors.grey,
-          //     fontSize: 14,
-          //     fontStyle: FontStyle.italic,
-          //   ),
-          //   contentPadding: const EdgeInsets.only(
-          //     left: 16,
-          //     right: 20,
-          //     top: 14,
-          //     bottom: 14,
-          //   ),
-          // ),
         ),
       ),
     );

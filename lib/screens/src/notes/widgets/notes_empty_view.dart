@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/global/size_utils.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NotesEmptyView extends StatelessWidget {
   const NotesEmptyView({Key key, @required this.isTrash}) : super(key: key);
@@ -8,9 +8,6 @@ class NotesEmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hm = 7.6;
-    // bool isDark = Theme.of(context).brightness == Brightness.dark;
-    // final wm = 3.93;
     return isTrash
         ? SafeArea(
             child: Container(
@@ -25,32 +22,27 @@ class NotesEmptyView extends StatelessWidget {
                       "You don't have any trash",
                       style: TextStyle(
                         fontWeight: FontWeight.w700,
-                        fontSize: 2.0 * hm,
+                        fontSize: 15.h,
                       ),
                     ),
                   ),
-                  // SizedBox(height: 0.5 * hm),
-                  SizedBox(height: 0.005 * screenSize.height),
+                  SizedBox(height: 5.w),
                   Center(
                     child: Text(
                       "Create 'em, trash 'em. See them",
                       style: TextStyle(
                         fontWeight: FontWeight.w400,
-                        fontSize: 1.5 * hm,
+                        fontSize: 12.h,
                       ),
                     ),
                   ),
-                  // SizedBox(height: 30 * hm),
-                  SizedBox(height: 0.3 * screenSize.height),
+                  SizedBox(height: 0.3.sh),
                   Padding(
-                    // padding: EdgeInsets.only(bottom: hm),
-                    padding: EdgeInsets.only(bottom: 0.01 * screenSize.height),
+                    padding: EdgeInsets.only(bottom: 8.h),
                     child: Image(
                       image: AssetImage('assets/img/trash.png'),
-                      // height: 25 * hm,
-                      // width: 45 * wm,
-                      height: 0.25 * screenSize.height,
-                      width: 0.45 * screenSize.width,
+                      height: 180.w,
+                      width: 180.w,
                     ),
                   ),
                 ],
@@ -61,8 +53,8 @@ class NotesEmptyView extends StatelessWidget {
             alignment: Alignment.center,
             child: Image.asset(
               'assets/img/lady-on-phone.png',
-              width: 0.75 * screenSize.width,
-              height: 0.336973684 * screenSize.height,
+              width: 300.w,
+              height: 250.h,
             ),
           );
   }

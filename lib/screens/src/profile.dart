@@ -3,15 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttericon/font_awesome5_icons.dart' show FontAwesome5;
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-import 'package:givnotes/global/size_utils.dart';
+import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class MyProfile extends StatefulWidget {
   // bool isAnonymous;
@@ -27,8 +27,8 @@ class _MyProfileState extends State<MyProfile> {
 
   @override
   Widget build(BuildContext context) {
-    hm = screenHeight / 100;
-    wm = screenWidth / 100;
+    hm = 1.sh / 100;
+    wm = 1.sw / 100;
 
     return Scaffold(
       appBar: AppBar(
@@ -57,12 +57,12 @@ class _MyProfileState extends State<MyProfile> {
               children: [
                 Padding(
                   // padding: EdgeInsets.symmetric(horizontal: 3.5 * wm),
-                  padding: EdgeInsets.symmetric(horizontal: 0.035 * screenSize.width),
+                  padding: EdgeInsets.symmetric(horizontal: 0.035.sw),
                   child: Stack(
                     children: <Widget>[
                       Card(
                         // margin: EdgeInsets.only(top: 8 * hm),
-                        margin: EdgeInsets.only(top: 0.08 * screenSize.height),
+                        margin: EdgeInsets.only(top: 0.08.sh),
                         elevation: 1 * hm,
                         shadowColor: Colors.grey[300],
                         shape: RoundedRectangleBorder(
@@ -73,10 +73,10 @@ class _MyProfileState extends State<MyProfile> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             // SizedBox(height: 14 * wm),
-                            SizedBox(height: 0.09 * screenSize.height),
+                            SizedBox(height: 0.09.sh),
                             Padding(
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
-                              padding: EdgeInsets.symmetric(horizontal: 0.07 * screenSize.width),
+                              padding: EdgeInsets.symmetric(horizontal: 0.07.sw),
                               child: Text(
                                 user.displayName,
                                 style: GoogleFonts.arizonia(
@@ -89,7 +89,7 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             Padding(
                               // padding: EdgeInsets.symmetric(horizontal: 7 * wm),
-                              padding: EdgeInsets.symmetric(horizontal: 0.08 * screenSize.width),
+                              padding: EdgeInsets.symmetric(horizontal: 0.08.sw),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -101,7 +101,7 @@ class _MyProfileState extends State<MyProfile> {
                                       fontWeight: FontWeight.w300,
                                     ),
                                   ),
-                                  SizedBox(height: (10 / 760) * screenHeight),
+                                  SizedBox(height: (10 / 760).sh),
                                   !user.emailVerified
                                       ? Row(
                                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,14 +127,14 @@ class _MyProfileState extends State<MyProfile> {
                               ),
                             ),
                             // SizedBox(height: 5.5 * hm),
-                            SizedBox(height: 0.055 * screenSize.height),
+                            SizedBox(height: 0.055.sh),
                             BlocBuilder<AuthenticationBloc, AuthenticationState>(
                               builder: (context, state) {
                                 return state is LogoutInProgress
                                     ? Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
+                                        padding: EdgeInsets.symmetric(horizontal: 0.03.sw),
                                         child: Container(
-                                          height: 0.077763158 * screenSize.height,
+                                          height: 0.077763158.sh,
                                           child: Center(
                                             child: Container(
                                               height: 30.0,
@@ -148,12 +148,12 @@ class _MyProfileState extends State<MyProfile> {
                                         ),
                                       )
                                     : Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 0.03 * screenSize.width),
+                                        padding: EdgeInsets.symmetric(horizontal: 0.03.sw),
                                         child: signInButton(context, true),
                                       );
                               },
                             ),
-                            SizedBox(height: 0.02 * screenSize.height),
+                            SizedBox(height: 0.02.sh),
                           ],
                         ),
                       ),
@@ -177,7 +177,7 @@ class _MyProfileState extends State<MyProfile> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white,
-                                      fontSize: 0.0609137 * screenWidth,
+                                      fontSize: 0.0609137.sw,
                                       letterSpacing: 1.5,
                                     ),
                                   )
@@ -190,7 +190,7 @@ class _MyProfileState extends State<MyProfile> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 20.0),
-                  height: 0.269578947 * screenSize.height,
+                  height: 0.269578947.sh,
                   width: double.infinity,
                   child: Image.asset('assets/img/profile.png'),
                 ),
@@ -198,7 +198,7 @@ class _MyProfileState extends State<MyProfile> {
             );
           } else {
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 0.046 * screenSize.width),
+              padding: EdgeInsets.symmetric(horizontal: 0.046.sw),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -206,11 +206,11 @@ class _MyProfileState extends State<MyProfile> {
                     alignment: Alignment.topRight,
                     child: Lottie.asset(
                       'assets/animations/people-portrait.json',
-                      height: 0.245 * screenSize.height,
-                      width: 0.463 * screenSize.width,
+                      height: 0.245.sh,
+                      width: 0.463.sw,
                     ),
                   ),
-                  SizedBox(height: 0.05 * screenSize.height),
+                  SizedBox(height: 0.05.sh),
                   Text(
                     'Oops!',
                     style: TextStyle(
@@ -219,7 +219,7 @@ class _MyProfileState extends State<MyProfile> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 0.006 * screenSize.height),
+                  SizedBox(height: 0.006.sh),
                   Text(
                     'Looks like you are not logged in.',
                     style: TextStyle(
@@ -229,10 +229,10 @@ class _MyProfileState extends State<MyProfile> {
                     ),
                   ),
                   // SizedBox(height: 5 * hm),
-                  SizedBox(height: 0.05 * screenSize.height),
+                  SizedBox(height: 0.05.sh),
                   Container(
                     // height:8 * hm,
-                    height: 0.08 * screenSize.height,
+                    height: 0.08.sh,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.black,
@@ -242,7 +242,7 @@ class _MyProfileState extends State<MyProfile> {
                     child: signInButton(context, false),
                   ),
                   // SizedBox(height: 5 * hm),
-                  SizedBox(height: 0.05 * screenSize.height),
+                  SizedBox(height: 0.05.sh),
                   Text(
                     'Not much here, yet. Maybe I\'ll add later.',
                     style: TextStyle(
@@ -270,7 +270,7 @@ class _MyProfileState extends State<MyProfile> {
         )
       ]),
       // height: 15 * wm,
-      height: 0.077763158 * screenSize.height,
+      height: 0.077763158.sh,
       child: GFButton(
         elevation: 2,
         fullWidthButton: true,
@@ -287,7 +287,7 @@ class _MyProfileState extends State<MyProfile> {
               size: 5 * wm,
             ),
             // SizedBox(width: 2.6 * wm),
-            SizedBox(width: 0.026 * screenSize.width),
+            SizedBox(width: 0.026.sw),
             Text(
               isSignOut == false ? 'Sign in' : 'Sign out',
               style: TextStyle(

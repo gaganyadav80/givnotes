@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class GivnotesDialog extends StatelessWidget {
   const GivnotesDialog({
@@ -19,13 +20,13 @@ class GivnotesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
       child: Container(
-        width: 350.0,
+        width: 350.0.w,
         // height: 180.0,
-        padding: const EdgeInsets.only(top: 15.0),
+        padding:  EdgeInsets.only(top: 15.0.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(12.0.r),
           color: Colors.white,
         ),
         child: Column(
@@ -34,25 +35,25 @@ class GivnotesDialog extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
               child: Text(
                 title,
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 16.0,
+                  fontSize: 16.0.w,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
             message.isNotEmpty
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(15.0, 8.0, 15.0, 15.0),
+                    padding: EdgeInsets.fromLTRB(15.0.w, 8.0.h, 15.0.w, 15.0.h),
                     child: Text(
                       message,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.grey[700],
-                        fontSize: 14.0,
+                        fontSize: 14.0.w,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -72,13 +73,13 @@ class GivnotesDialog extends StatelessWidget {
                       onTap: () => Navigator.pop(context, false),
                       child: Container(
                         // height: 30.0,
-                        padding: const EdgeInsets.symmetric(vertical: 18.0),
+                        padding: EdgeInsets.symmetric(vertical: 18.0.h),
                         child: Center(
                           child: Text(
                             'Cancel',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 14.0,
+                              fontSize: 14.0.w,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -94,21 +95,21 @@ class GivnotesDialog extends StatelessWidget {
             ),
             Material(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0)),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
               ),
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0)),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
                 onTap: onTap == null ? () => Navigator.pop(context, true) : onTap,
                 child: Container(
                   // height: 30.0,
-                  padding: const EdgeInsets.symmetric(vertical: 18.0),
+                  padding: EdgeInsets.symmetric(vertical: 18.0.h),
                   child: Center(
                     child: Text(
                       mainButtonText,
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 14.0,
+                        fontSize: 14.0.w,
                         fontWeight: FontWeight.w600,
                       ),
                     ),

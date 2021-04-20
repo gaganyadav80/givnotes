@@ -1,18 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
+
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/size_utils.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
-import 'package:velocity_x/velocity_x.dart';
-import 'package:get/get.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
-  NotesAppBar(this.tabController);
-  final TabController tabController;
-
   @override
   Size get preferredSize => Size.fromHeight(50.0);
 
@@ -26,7 +24,7 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
           ? AppBar(
               elevation: 0.0,
               backgroundColor: Colors.white,
-              title: "Trash".text.size(24.0).black.bold.make(),
+              title: "Trash".text.size(24.0.w).black.bold.make(),
               leading: InkWell(
                 onTap: () async {
                   _homeCubit.updateTrash(false);
@@ -95,7 +93,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
               title: Text(
                 'Notes Options',
                 style: TextStyle(
-                  fontSize: screenWidth * 0.04583756, //22,
+                  fontSize: 22.w,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).textTheme.bodyText1.color,
                 ),
@@ -132,7 +130,7 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
               () => Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10.0),
+                  SizedBox(height: 10.0.w),
                   TilesDivider(),
                   ListTile(
                     title: Text(
@@ -197,7 +195,8 @@ class _ModalSheetTabViewState extends State<ModalSheetTabView> with SingleTicker
 }
 
 class NotesBottomSheet extends StatelessWidget {
-  NotesBottomSheet({Key key, @required this.tabController, @required this.prefsCubit, @required this.sortby}) : super(key: key);
+  NotesBottomSheet({Key key, @required this.tabController, @required this.prefsCubit, @required this.sortby})
+      : super(key: key);
 
   final TabController tabController;
   final RxInt sortby;
@@ -210,7 +209,7 @@ class NotesBottomSheet extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         // mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(height: 10.0),
+          SizedBox(height: 10.0.w),
           TilesDivider(),
           PreferenceText(
             "Sort Notes",
@@ -221,19 +220,19 @@ class NotesBottomSheet extends StatelessWidget {
               color: Theme.of(context).textTheme.bodyText1.color,
             ),
             trailing: Container(
-              width: 200,
+              width: 200.w,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(right: 5.0),
+                    padding: EdgeInsets.only(right: 5.0.w),
                     child: Obx(
                       () => Text(
                         sortbyNames[sortby.value],
                         style: TextStyle(
                           color: CupertinoColors.systemGrey,
-                          fontSize: 15,
+                          fontSize: 15.w,
                           fontWeight: FontWeight.w300,
                         ),
                       ),
@@ -241,7 +240,7 @@ class NotesBottomSheet extends StatelessWidget {
                   ),
                   Icon(
                     CupertinoIcons.forward,
-                    size: 21.0,
+                    size: 21.0.w,
                     color: Color(0xFFDD4C4F),
                   ),
                 ],
@@ -285,11 +284,11 @@ class NotesBottomSheet extends StatelessWidget {
             leading: Icon(
               CupertinoIcons.delete,
               color: Theme.of(context).textTheme.bodyText1.color,
-              size: 20.0,
+              size: 20.0.w,
             ),
             trailing: Icon(
               CupertinoIcons.forward,
-              size: 21.0,
+              size: 21.0.w,
               color: Color(0xFFDD4C4F),
             ),
             titleGap: 0.0,
