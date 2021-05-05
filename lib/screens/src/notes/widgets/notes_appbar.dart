@@ -12,7 +12,7 @@ import 'package:givnotes/routes.dart';
 
 class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
   @override
-  Size get preferredSize => Size.fromHeight(50.0);
+  Size get preferredSize => Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
           ? AppBar(
               elevation: 0.0,
               backgroundColor: Colors.white,
-              title: "Trash".text.size(24.0.w).black.bold.make(),
+              title: "Trash".text.size(24.0.w).black.fontWeight(FontWeight.w500).make(),
               leading: InkWell(
                 onTap: () async {
                   _homeCubit.updateTrash(false);

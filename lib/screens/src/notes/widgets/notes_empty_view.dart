@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class NotesEmptyView extends StatelessWidget {
   const NotesEmptyView({Key key, @required this.isTrash}) : super(key: key);
@@ -11,8 +12,6 @@ class NotesEmptyView extends StatelessWidget {
     return isTrash
         ? SafeArea(
             child: Container(
-              width: double.infinity,
-              height: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -21,27 +20,25 @@ class NotesEmptyView extends StatelessWidget {
                     child: Text(
                       "You don't have any trash",
                       style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15.h,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 20.w,
                       ),
                     ),
                   ),
-                  SizedBox(height: 5.w),
                   Center(
                     child: Text(
                       "Create 'em, trash 'em. See them",
                       style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12.h,
+                        fontWeight: FontWeight.w300,
+                        fontSize: 15.w,
                       ),
                     ),
                   ),
-                  SizedBox(height: 0.3.sh),
+                  SizedBox(height: 150.h),
                   Padding(
                     padding: EdgeInsets.only(bottom: 8.h),
                     child: Image(
-                      image: AssetImage('assets/img/trash.png'),
-                      height: 180.w,
+                      image: AssetImage('assets/giv_img/empty_trash_light.png'),
                       width: 180.w,
                     ),
                   ),
@@ -52,9 +49,8 @@ class NotesEmptyView extends StatelessWidget {
         : Align(
             alignment: Alignment.center,
             child: Image.asset(
-              'assets/img/lady-on-phone.png',
-              width: 300.w,
-              height: 250.h,
+              'assets/giv_img/empty_notes_light.png',
+              width: 400.w,
             ),
           );
   }

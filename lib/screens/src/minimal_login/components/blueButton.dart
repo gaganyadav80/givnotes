@@ -15,7 +15,7 @@ class BlueButton extends StatelessWidget {
     return Material(
       borderRadius: kBorderRadius,
       color: Colors.transparent,
-      elevation: 5.0,
+      elevation: 0.0,
       shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
       child: ElevatedButton(
         onPressed: onPressed,
@@ -25,9 +25,7 @@ class BlueButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: kBorderRadius,
           ),
-          padding: EdgeInsets.symmetric(
-            vertical: 17.w
-          ),
+          padding: EdgeInsets.symmetric(vertical: 15.w),
           primary: Theme.of(context).primaryColor,
         ),
         child: Center(

@@ -57,15 +57,10 @@ class LoginPage extends StatelessWidget {
               showSnackBar("Login Failure", context);
           }
           if (state is AuthSuccess) {
-            // Navigator.of(context).pop();
             showSnackBar("Login successfull", context);
             Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
           }
-          // if (state is LoginInProgress) {
-          //   showProgress(context);
-          // }
           if (state is AuthNeedsVerification) {
-            // showSnackBar("User email is not verified. Please verify your email id", context);
             Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
           }
           if (state is ForgetPasswordSuccess) {}
@@ -251,10 +246,6 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(height: 22.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
-              // Theme(
-              //   data: ThemeData(cupertinoOverrideTheme: CupertinoThemeData(brightness: Brightness.dark)),
-              //   child: CupertinoActivityIndicator(),
-              // );
               return state is LoginInProgress
                   ? BlueButton(
                       title: "loading",

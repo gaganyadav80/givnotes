@@ -52,9 +52,9 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                   fontFamily: 'Roboto',
                   fontWeight: FontWeight.w700,
                   fontSize: 16.0.w,
-                  color: appBarDate.day == DateTime.now().day
+                  color: appBarDate.day == DateTime.now().day && appBarDate.month == DateTime.now().month
                       ? const Color(0xff32343D)
-                      : appBarDate.day > DateTime.now().day
+                      : appBarDate.isAfter(DateTime.now())
                           ? Colors.green
                           : Colors.red,
                 ),
@@ -97,7 +97,7 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
 
               return Column(
                 children: [
-                  appBarDate.day == DateTime.now().day
+                  appBarDate.day == DateTime.now().day && appBarDate.month == DateTime.now().month
                       ? Hero(
                           tag: "today-view",
                           child: Padding(
@@ -114,14 +114,12 @@ class _TodoTimelineState extends State<TodoTimelineBloc> {
                         )
                       : Hero(tag: "today-view", child: SizedBox.shrink()),
                   _todosBox.length == 0
-                      ? Padding(
-                          padding: EdgeInsets.only(top: 30.0.w),
+                      ? Expanded(
                           child: Center(
-                            child: Image.network(
-                              "https://image.freepik.com/free-vector/list-concept-illustration_114360-1208.jpg",
-                              height: 300.0.w,
+                            child: Image.asset(
+                              "assets/giv_img/empty_todo_light.png",
                               width: 300.0.w,
-                            ).rotate(5.0),
+                            ).pOnly(bottom: 30.h),
                           ),
                         )
                       : Expanded(

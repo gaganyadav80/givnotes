@@ -71,7 +71,7 @@ class _NotesCardState extends State<NotesCard> {
                     ? SizedBox(height: 5.w)
                     : Container(
                         margin: EdgeInsets.only(top: 6.w),
-                        height: prefsCubit.state.compactTags ? 8.h : 16.h,
+                        height: prefsCubit.state.compactTags ? 8.h : 18.h,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5.r),
                           color: Colors.transparent,
@@ -95,7 +95,8 @@ class _NotesCardState extends State<NotesCard> {
                                   )
                                 : Container(
                                     margin: EdgeInsets.only(right: 5.w),
-                                    padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+                                    height: 18.h,
+                                    padding: EdgeInsets.symmetric(horizontal: 5.w),
                                     decoration: BoxDecoration(
                                       color: color,
                                       borderRadius: BorderRadius.circular(5.r),

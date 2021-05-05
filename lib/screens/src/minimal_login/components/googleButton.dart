@@ -15,13 +15,13 @@ class GoogleButton extends StatelessWidget {
     return Material(
       borderRadius: kBorderRadius,
       color: Colors.transparent,
-      elevation: 2.0,
+      elevation: 0.0,
       shadowColor: Colors.grey[400].withOpacity(0.2),
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           elevation: 0.0,
-          padding: EdgeInsets.symmetric(vertical: 13.5.w), // 13.5
+          padding: EdgeInsets.symmetric(vertical: 15.w),
           // color: Theme.of(context).scaffoldBackgroundColor,
           primary: Theme.of(context).scaffoldBackgroundColor,
           shape: RoundedRectangleBorder(
@@ -39,8 +39,8 @@ class GoogleButton extends StatelessWidget {
               'assets/logo/google.svg',
               alignment: Alignment.center,
               fit: BoxFit.contain,
-              height: 28.w,
-              width: 28.w,
+              height: 26.w,
+              width: 26.w,
             ),
             SizedBox(width: 21.w),
             Text(

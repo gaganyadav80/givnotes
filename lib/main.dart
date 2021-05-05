@@ -33,9 +33,9 @@ void main() async {
   ]);
 
   // To match status bar color to app bar color
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   statusBarColor: Colors.transparent,
+  // ));
 
   //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
@@ -49,10 +49,13 @@ void main() async {
   await authenticationRepository.user.first;
 
   runApp(
-    AppLock(
-      builder: (_) => App(authenticationRepository: authenticationRepository),
-      lockScreen: ShowLockscreen(changePassAuth: false),
-      enabled: prefsBox.applock,
+    ScreenUtilInit(
+      designSize: Size(414, 896),
+      builder: () => AppLock(
+        builder: (_) => App(authenticationRepository: authenticationRepository),
+        lockScreen: ShowLockscreen(changePassAuth: false),
+        enabled: prefsBox.applock,
+      ),
     ),
   );
 }
@@ -73,11 +76,7 @@ class App extends StatelessWidget {
           BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
           BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
           BlocProvider<AuthenticationBloc>(
-              create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository)),
-          BlocProvider<TodosBloc>(
-            create: (context) => TodosBloc(
-              todosRepository: FirebaseTodosRepository(),
-            )..add(LoadTodos()),
+            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
           ),
         ],
         child: GivnotesApp(),
@@ -96,32 +95,29 @@ class GivnotesApp extends StatefulWidget {
 class _GivnotesAppState extends State<GivnotesApp> {
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: Size(414, 896),
-      builder: () => GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Givnotes',
-        theme: ThemeData(
-          fontFamily: 'Poppins',
-          accentColor: Colors.black,
-          accentColorBrightness: Brightness.light,
-          toggleableActiveColor: Colors.blue,
-          pageTransitionsTheme: PageTransitionsTheme(
-            builders: {
-              TargetPlatform.android: ZoomPageTransitionsBuilder(),
-            },
-          ),
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Givnotes',
+      theme: ThemeData(
+        fontFamily: 'Poppins',
+        accentColor: Colors.black,
+        accentColorBrightness: Brightness.light,
+        toggleableActiveColor: Colors.blue,
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {
+            TargetPlatform.android: ZoomPageTransitionsBuilder(),
+          },
         ),
-        builder: (context, child) {
-          return ScrollConfiguration(
-            behavior: RemoveScrollGlow(),
-            child: child,
-          );
-        },
-        onGenerateRoute: rt.Router.generateRoute,
-        initialRoute: '/',
-        // home: const CheckLogin(),
       ),
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: RemoveScrollGlow(),
+          child: child,
+        );
+      },
+      onGenerateRoute: rt.Router.generateRoute,
+      initialRoute: '/',
+      // home: const CheckLogin(),
     );
   }
 }
@@ -140,7 +136,12 @@ class CheckLogin extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
-        return const HomePage();
+        return BlocProvider<TodosBloc>(
+          create: (context) => TodosBloc(
+            todosRepository: FirebaseTodosRepository(),
+          )..add(LoadTodos()),
+          child: HomePage(),
+        );
       },
     );
   }

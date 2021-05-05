@@ -9,9 +9,7 @@ import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/widgets/notes_widgets.dart';
 
 class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
-  final IconData trailing;
-
-  const CustomAppBar({Key key, this.trailing}) : super(key: key);
+  const CustomAppBar({Key key}) : super(key: key);
   @override
   Size get preferredSize => Size.fromHeight(65.0);
 
@@ -64,6 +62,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   iconSize: 22.0.w,
                                   icon: Icon(CupertinoIcons.collections),
                                   onPressed: () => showCupertinoModalBottomSheet(
+                                    expand: true,
                                     context: context,
                                     closeProgressThreshold: 0.5,
                                     builder: (context) {

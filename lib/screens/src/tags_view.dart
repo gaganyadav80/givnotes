@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:givnotes/widgets/search_text_field.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -24,7 +25,6 @@ class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List<NotesModel> _notes = <NotesModel>[];
   String _created;
-  int _animateIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -34,10 +34,6 @@ class _TagsViewState extends State<TagsView> {
 
     return Column(
       children: [
-        // Text(
-        //   'Search',
-        //   style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold, color: Colors.black),
-        // ),
         Padding(
           padding: EdgeInsets.all(10.w),
           child: SearchTagsTextField(tagStateKey: _tagStateKey),
@@ -53,9 +49,7 @@ class _TagsViewState extends State<TagsView> {
                 return ValueListenableBuilder(
                   valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
                   builder: (context, Box<NotesModel> box, widget) {
-                    // List<String> lst = [];
 
-                    // _tagStateKey.currentState.getAllItem.where((a) => a.active == true).forEach((a) => lst.add(a.title));
                     _notes = box.values.where((element) {
                       return (element.trash == false) &&
                           state.selectedTagList.any((title) {
@@ -69,9 +63,10 @@ class _TagsViewState extends State<TagsView> {
                           padding: EdgeInsets.all(20.0.w),
                           child: Column(
                             children: [
+                              SizedBox(height: 50.h),
                               Image.asset(
                                 isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                height: 150.h,
+                                height: 180.h,
                               ),
                               Text(
                                 'Search according the tags here',
@@ -85,77 +80,64 @@ class _TagsViewState extends State<TagsView> {
                       );
                     }
 
-                    return AnimationLimiter(
-                      child: ListView.builder(
-                        itemCount: _notes.length,
-                        itemBuilder: (context, index) {
-                          _animateIndex = index;
-                          index = _notes.length - index - 1;
+                    return ListView.builder(
+                      itemCount: _notes.length,
+                      itemBuilder: (context, index) {
+                        index = _notes.length - index - 1;
 
-                          var note = _notes[index];
+                        var note = _notes[index];
 
-                          _created = DateFormat.yMMMd().format(note.created);
+                        _created = DateFormat.yMMMd().format(note.created);
 
-                          return AnimationConfiguration.staggeredList(
-                            position: _animateIndex,
-                            duration: const Duration(milliseconds: 375),
-                            child: SlideAnimation(
-                              verticalOffset: 25.0,
-                              child: FadeInAnimation(
-                                child: InkWell(
-                                  onTap: () {
-                                    _noteEditStore.updateNoteMode(NoteMode.Editing);
-                                    Navigator.pushNamed(context, RouterName.editorRoute,
-                                        arguments: [NoteMode.Editing, note]);
-                                  },
-                                  child: Card(
-                                    elevation: 0,
-                                    color: Colors.white,
-                                    child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 6.w),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          SizedBox(height: 5.h),
-                                          Text(
-                                            note.title,
-                                            style: TextStyle(
-                                              fontSize: 17.w,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                          SizedBox(height: 1.sw / 100),
-                                          Text(
-                                            note.text,
-                                            style: TextStyle(
-                                              color: Colors.grey[800],
-                                              fontSize: 12.w,
-                                            ),
-                                            maxLines: 5,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          SizedBox(height: 1.sw / 100),
-                                          Text(
-                                            "created  $_created",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.grey,
-                                              fontSize: 12.w,
-                                              // fontStyle: FontStyle.italic,
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.0.h),
-                                          Divider(height: 0.0, thickness: 1.0),
-                                        ],
-                                      ),
+                        return InkWell(
+                          onTap: () {
+                            _noteEditStore.updateNoteMode(NoteMode.Editing);
+                            Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
+                          },
+                          child: Card(
+                            elevation: 0,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  index == 0 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    note.title,
+                                    style: TextStyle(
+                                      fontSize: 17.w,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                ),
+                                  SizedBox(height: 1.sw / 100),
+                                  Text(
+                                    note.text,
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontSize: 12.w,
+                                    ),
+                                    maxLines: 5,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 1.sw / 100),
+                                  Text(
+                                    "created  $_created",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.grey,
+                                      fontSize: 12.w,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0.h),
+                                  Divider(height: 0.0, thickness: 1.0),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
                 );
@@ -172,7 +154,6 @@ class SearchTagsTextField extends StatefulWidget {
   SearchTagsTextField({Key key, this.tagStateKey}) : super(key: key);
 
   final GlobalKey<TagsState> tagStateKey;
-  // final _TagsViewState tagsViewState;
 
   @override
   _SearchTagsTextFieldState createState() => _SearchTagsTextFieldState();
@@ -180,7 +161,6 @@ class SearchTagsTextField extends StatefulWidget {
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   final Map<String, int> _allTagsMap = prefsBox.allTagsMap;
-  // bool editTags = false;
 
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();
@@ -229,81 +209,26 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   @override
   Widget build(BuildContext context) {
     final NoteAndSearchCubit _tagSearchStore = BlocProvider.of<NoteAndSearchCubit>(context);
-    // final hm = 7.6;
 
     return Column(
       children: [
-        TextField(
-          focusNode: _searchTagFocus,
+        CustomSearchTextField(
           controller: _searchTagController,
-          autocorrect: false,
-          // cursorColor: Theme.of(context).textTheme.bodyText2.color,
-          style: TextStyle(
-            fontSize: 13,
-            letterSpacing: 1.05,
-            color: Colors.grey[800],
-          ),
-          textCapitalization: TextCapitalization.characters,
-          inputFormatters: [
-            TextInputFormatter.withFunction(
-              (oldValue, newValue) => TextEditingValue(
-                text: newValue.text?.toUpperCase(),
-                selection: newValue.selection,
-              ),
-            ),
-          ],
-          onEditingComplete: () {
+          focusNode: _searchTagFocus,
+          useCapitals: true,
+          // prefixSize: 18.0,
+          placeholder: 'Search tags',
+          padding: EdgeInsets.fromLTRB(8.w, 10.w, 0, 10.w),
+          onClearTap: () {
+            _tagSearchStore.clearTagSearchList();
+            _tagSearchStore.updateTagSearchList(_allTagsMap.keys.toList());
+
+            _searchTagController.clear();
             _searchTagFocus.unfocus();
           },
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 1.5,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide(
-                color: Colors.black,
-                width: 1.5,
-              ),
-            ),
-            prefixIcon: Icon(
-              Icons.search_rounded,
-              color: Colors.black,
-            ),
-            suffixIcon: InkWell(
-              onTap: () {
-                _tagSearchStore.clearTagSearchList();
-                _tagSearchStore.updateTagSearchList(_allTagsMap.keys.toList());
-
-                _searchTagController.clear();
-                _searchTagFocus.unfocus();
-              },
-              child: Icon(
-                Icons.close,
-                size: 22,
-                color: Colors.black,
-              ),
-            ),
-            border: InputBorder.none,
-            hintText: 'Search Tags',
-            hintStyle: TextStyle(
-              fontWeight: FontWeight.w300,
-              color: Colors.grey,
-              fontSize: 14,
-            ),
-            contentPadding: EdgeInsets.only(
-              left: 16.w,
-              right: 20.w,
-              top: 14.w,
-              bottom: 14.w,
-            ),
-          ),
+          onSubmitted: (_) {
+            _searchTagFocus.unfocus();
+          },
         ),
         BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
           builder: (context, state) => Tags(
@@ -319,7 +244,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 index: index,
                 title: noteTag,
                 active: false,
-                // padding: EdgeInsets.fromLTRB(15, 7, 15, 7),
+                padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
                 textStyle: TextStyle(
                   fontSize: 14.w,
                   fontWeight: FontWeight.w600,

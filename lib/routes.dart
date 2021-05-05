@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/main.dart';
 import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
@@ -6,6 +7,7 @@ import 'package:givnotes/services/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'screens/screens.dart';
+import 'screens/src/todo_timeline/todo_timeline.dart';
 
 abstract class RouterName {
   static const String root = '/';
@@ -30,7 +32,14 @@ abstract class Router {
       case RouterName.root:
         return MaterialWithModalsPageRoute(builder: (_) => CheckLogin());
       case RouterName.homeRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => HomePage());
+        return MaterialWithModalsPageRoute(
+          builder: (_) => BlocProvider<TodosBloc>(
+            create: (context) => TodosBloc(
+              todosRepository: FirebaseTodosRepository(),
+            )..add(LoadTodos()),
+            child: HomePage(),
+          ),
+        );
       case RouterName.loginRoute:
         return MaterialWithModalsPageRoute(builder: (_) => LoginPage());
       case RouterName.signupRouter:

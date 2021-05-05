@@ -32,8 +32,9 @@ class CircleInputButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textStyle = config.textStyle ??
         TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.095,
-          fontWeight: FontWeight.w400,
+          fontSize: MediaQuery.of(context).size.width * 0.085,
+          fontWeight: FontWeight.w300,
+          color: Colors.black,
         );
 
     return ElevatedButton(
@@ -48,12 +49,14 @@ class CircleInputButton extends StatelessWidget {
         shape: config.shape ??
             CircleBorder(
               side: BorderSide(
-                color: Colors.transparent,
-                width: 0,
+                color: config.backgroundColor,
+                width: 1.0,
                 style: BorderStyle.solid,
               ),
             ),
-        primary: config.backgroundColor.withOpacity(config.backgroundOpacity),
+        // primary: config.backgroundColor.withOpacity(config.backgroundOpacity),
+        primary: Colors.transparent,
+        shadowColor: config.backgroundColor.withOpacity(config.backgroundOpacity),
         elevation: 0,
       ),
     );

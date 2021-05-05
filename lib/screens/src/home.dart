@@ -41,9 +41,7 @@ class _HomePageState extends State<HomePage> {
         length: 4,
         child: Scaffold(
           backgroundColor: Colors.white,
-          appBar: CustomAppBar(
-            trailing: CupertinoIcons.search,
-          ),
+          appBar: CustomAppBar(),
           body: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               return IndexedStack(
@@ -74,8 +72,8 @@ class _HomePageState extends State<HomePage> {
                 onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.book),
-                    activeIcon: Icon(CupertinoIcons.book_fill),
+                    icon: Icon(CupertinoIcons.house),
+                    activeIcon: Icon(CupertinoIcons.house_fill),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
@@ -99,8 +97,8 @@ class _HomePageState extends State<HomePage> {
                     label: 'Todo',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.tag),
-                    activeIcon: Icon(CupertinoIcons.tag_fill),
+                    icon: Icon(CupertinoIcons.grid),
+                    activeIcon: Icon(CupertinoIcons.grid),
                     label: 'Tags',
                   ),
                   BottomNavigationBarItem(
@@ -122,33 +120,41 @@ class _HomePageState extends State<HomePage> {
             buildWhen: (previous, current) => previous != current,
             builder: (context, state) {
               return state.trash == false && state.index == 0
-                  ? FloatingActionButton(
-                      heroTag: 'fab',
-                      child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(math.pi),
-                        child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
+                  ? Container(
+                      height: 65.0,
+                      width: 65.0,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFDD4C4F),
+                        shape: BoxShape.circle,
                       ),
-                      //TODO bear app original
-                      // DC4C4F
-                      backgroundColor: Color(0xFFCC5654),
-                      onPressed: () async {
-                        await HandlePermission().requestPermission().then((value) async {
-                          if (value) {
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
-                            Navigator.pushNamed(
-                              context,
-                              RouterName.editorRoute,
-                              arguments: [NoteMode.Adding, null],
-                            );
-                          } else {
-                            if (isPermanentDisabled) {
-                              HandlePermission().permanentDisabled(context);
+                      child: FloatingActionButton(
+                        heroTag: 'fab',
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.rotationY(math.pi),
+                          child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
+                        ),
+                        //TODO bear app original
+                        // DC4C4F
+                        backgroundColor: Color(0xFFDD4C4F),
+                        onPressed: () async {
+                          await HandlePermission().requestPermission().then((value) async {
+                            if (value) {
+                              BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
+                              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
+                              Navigator.pushNamed(
+                                context,
+                                RouterName.editorRoute,
+                                arguments: [NoteMode.Adding, null],
+                              );
+                            } else {
+                              if (isPermanentDisabled) {
+                                HandlePermission().permanentDisabled(context);
+                              }
                             }
-                          }
-                        });
-                      },
+                          });
+                        },
+                      ),
                     )
                   : SizedBox.shrink();
             },

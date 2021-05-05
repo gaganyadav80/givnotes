@@ -63,12 +63,12 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
             },
       dotSecretConfig: DotSecretConfig(
         dotSize: 15.w,
-        dotBorderColor: Colors.teal[200],
-        enabledColor: Colors.teal[100],
+        dotBorderColor: Color(0xffDD4C4F),
+        enabledColor: Color(0xffDD4C4F),
         padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
       ),
       circleInputButtonConfig: CircleInputButtonConfig(
-        backgroundColor: Colors.teal[200],
+        backgroundColor: Color(0xffDD4C4F),
       ),
     );
   }
@@ -97,42 +97,20 @@ class _AddLockscreenState extends State<AddLockscreen> {
           AppLock.of(context).enable();
           prefsBox.applock = true;
           prefsBox.save();
-          // Navigator.push(
-          //   context,
-          //   MorpheusPageRoute(builder: (context) => HomePage()),
-          // );
+
           Navigator.pop(context, true);
-          passChangeAlert(context);
         },
         dotSecretConfig: DotSecretConfig(
           dotSize: 15.w,
-          dotBorderColor: Colors.teal[200],
-          enabledColor: Colors.teal[100],
+          dotBorderColor: Color(0xffDD4C4F),
+          enabledColor: Color(0xffDD4C4F),
           padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
         ),
         circleInputButtonConfig: CircleInputButtonConfig(
-          backgroundColor: Colors.teal[200],
+          backgroundColor: Color(0xffDD4C4F),
+          backgroundOpacity: 0.6,
         ),
       ),
     );
   }
-}
-
-passChangeAlert(BuildContext context) {
-  Future.delayed(Duration(milliseconds: 500), () async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text('Passcode changed successfully!'),
-          actions: [
-            TextButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.pop(context),
-            ),
-          ],
-        );
-      },
-    );
-  });
 }

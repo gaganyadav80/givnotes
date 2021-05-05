@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:givnotes/widgets/search_text_field.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -107,7 +107,7 @@ class _SearchPageState extends State<SearchPage> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.white,
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[
@@ -166,14 +166,20 @@ class _SearchPageState extends State<SearchPage> {
                                           padding: EdgeInsets.all(0.05.sw),
                                           child: Column(
                                             children: [
+                                              SizedBox(height: 50.h),
                                               Image.asset(
                                                 isDark
                                                     ? 'assets/giv_img/search_dark.png'
                                                     : 'assets/giv_img/search_light.png',
-                                                height: 0.2.sh,
+                                                height: 180.h,
                                               ),
                                               Center(
-                                                child: Text('Search for your notes according to Tags'),
+                                                child: Text(
+                                                  'Search for your notes according to Tags',
+                                                  style: TextStyle(
+                                                    fontSize: 12.w,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -189,165 +195,151 @@ class _SearchPageState extends State<SearchPage> {
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontStyle: FontStyle.italic,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 22.w,
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 18.w,
                                           color: Colors.grey,
                                         ),
                                       ),
                                     ),
                                   )
-                            : AnimationLimiter(
-                                child: SliverList(
-                                  delegate: SliverChildBuilderDelegate(
-                                    (context, index) {
-                                      int _animateIndex = index;
-                                      index = searchLength - index - 1;
+                            : SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (context, index) {
+                                    index = searchLength - index - 1;
 
-                                      final item = state.searchList.elementAt(index);
-                                      String _created = DateFormat.yMMMd().format(item.created);
+                                    final item = state.searchList.elementAt(index);
+                                    String _created = DateFormat.yMMMd().format(item.created);
 
-                                      return AnimationConfiguration.staggeredList(
-                                        position: _animateIndex,
-                                        duration: const Duration(milliseconds: 375),
-                                        child: SlideAnimation(
-                                          verticalOffset: 25.0,
-                                          child: FadeInAnimation(
-                                            child: Card(
-                                              elevation: 0,
-                                              child: InkWell(
-                                                borderRadius: BorderRadius.circular(5),
-                                                onTap: () => onSearchListItemSelected(item),
-                                                onLongPress: () => onSearchListItemLongPress(item),
-                                                child: _textController.text.isNotEmpty
-                                                    ? Padding(
-                                                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Row(
-                                                              children: [
-                                                                item.tagsMap.length == 0
-                                                                    ? SizedBox.shrink()
-                                                                    : Expanded(
-                                                                        flex: 4,
-                                                                        child: Container(
-                                                                          margin: EdgeInsets.only(top: 5.w),
-                                                                          height: BlocProvider.of<HydratedPrefsCubit>(
-                                                                                      context)
-                                                                                  .state
-                                                                                  .compactTags
-                                                                              ? 8.h
-                                                                              : 16.h,
-                                                                          decoration: BoxDecoration(
-                                                                            borderRadius: BorderRadius.circular(5),
-                                                                          ),
-                                                                          child: ListView.builder(
-                                                                            scrollDirection: Axis.horizontal,
-                                                                            itemCount: item.tagsMap.length,
-                                                                            itemBuilder: (cntx, index) {
-                                                                              String title =
-                                                                                  item.tagsMap.keys.toList()[index];
-                                                                              Color color = Color(_allTagsMap[title]);
+                                    return Card(
+                                      elevation: 0,
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(5),
+                                        onTap: () => onSearchListItemSelected(item),
+                                        onLongPress: () => onSearchListItemLongPress(item),
+                                        child: _textController.text.isNotEmpty
+                                            ? Padding(
+                                                padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: <Widget>[
+                                                    index == 0
+                                                        ? Divider(height: 0.0, thickness: 1.0)
+                                                        : SizedBox.shrink(),
+                                                    Row(
+                                                      children: [
+                                                        item.tagsMap.length == 0
+                                                            ? SizedBox.shrink()
+                                                            : Expanded(
+                                                                flex: 4,
+                                                                child: Container(
+                                                                  margin: EdgeInsets.only(top: 5.w),
+                                                                  height: BlocProvider.of<HydratedPrefsCubit>(context)
+                                                                          .state
+                                                                          .compactTags
+                                                                      ? 8.h
+                                                                      : 18.h,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                  ),
+                                                                  child: ListView.builder(
+                                                                    scrollDirection: Axis.horizontal,
+                                                                    itemCount: item.tagsMap.length,
+                                                                    itemBuilder: (cntx, index) {
+                                                                      String title = item.tagsMap.keys.toList()[index];
+                                                                      Color color = Color(_allTagsMap[title]);
 
-                                                                              return BlocProvider.of<
-                                                                                          HydratedPrefsCubit>(context)
-                                                                                      .state
-                                                                                      .compactTags
-                                                                                  ? Container(
-                                                                                      width: 30.w,
-                                                                                      margin:
-                                                                                          EdgeInsets.only(right: 5.w),
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: color,
-                                                                                        borderRadius:
-                                                                                            BorderRadius.circular(5.r),
-                                                                                      ),
-                                                                                      child: SizedBox.shrink(),
-                                                                                    )
-                                                                                  : Container(
-                                                                                      margin:
-                                                                                          EdgeInsets.only(right: 5.w),
-                                                                                      padding: EdgeInsets.symmetric(
-                                                                                          horizontal: 5.w,
-                                                                                          vertical: 2.h),
-                                                                                      decoration: BoxDecoration(
-                                                                                        color: color,
-                                                                                        borderRadius:
-                                                                                            BorderRadius.circular(5),
-                                                                                      ),
-                                                                                      child: Center(
-                                                                                        child: Text(
-                                                                                          title,
-                                                                                          style: TextStyle(
-                                                                                            color: Colors.white,
-                                                                                            fontWeight: FontWeight.w700,
-                                                                                            letterSpacing: 0.5.w,
-                                                                                            fontSize: 8.w,
-                                                                                          ),
-                                                                                        ),
-                                                                                      ),
-                                                                                    );
-                                                                            },
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                Expanded(
-                                                                  flex: 1,
-                                                                  child: Padding(
-                                                                    padding: EdgeInsets.only(top: 3.h),
-                                                                    child: Text(
-                                                                      item.trash ? 'Deleted' : '',
-                                                                      style: TextStyle(
-                                                                        fontWeight: FontWeight.w300,
-                                                                        // color: Colors.red,
-                                                                        fontSize: 12.w,
-                                                                        fontStyle: FontStyle.italic,
-                                                                      ),
-                                                                    ),
+                                                                      return BlocProvider.of<HydratedPrefsCubit>(
+                                                                                  context)
+                                                                              .state
+                                                                              .compactTags
+                                                                          ? Container(
+                                                                              width: 30.w,
+                                                                              margin: EdgeInsets.only(right: 5.w),
+                                                                              decoration: BoxDecoration(
+                                                                                color: color,
+                                                                                borderRadius:
+                                                                                    BorderRadius.circular(5.r),
+                                                                              ),
+                                                                              child: SizedBox.shrink(),
+                                                                            )
+                                                                          : Container(
+                                                                              height: 18.h,
+                                                                              margin: EdgeInsets.only(right: 5.w),
+                                                                              padding:
+                                                                                  EdgeInsets.symmetric(horizontal: 5.w),
+                                                                              decoration: BoxDecoration(
+                                                                                color: color,
+                                                                                borderRadius: BorderRadius.circular(5),
+                                                                              ),
+                                                                              child: Center(
+                                                                                child: Text(
+                                                                                  title,
+                                                                                  style: TextStyle(
+                                                                                    color: Colors.white,
+                                                                                    fontWeight: FontWeight.w700,
+                                                                                    letterSpacing: 0.5.w,
+                                                                                    fontSize: 8.w,
+                                                                                  ),
+                                                                                ),
+                                                                              ),
+                                                                            );
+                                                                    },
                                                                   ),
                                                                 ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height: 5.w),
-                                                            Text(
-                                                              item.title,
-                                                              style: TextStyle(
-                                                                fontSize: 18.w,
-                                                                fontWeight: FontWeight.w600,
                                                               ),
-                                                            ),
-                                                            SizedBox(height: 5.w),
-                                                            Text(
-                                                              item.text,
-                                                              style: TextStyle(
-                                                                color: Colors.grey[800],
-                                                              ),
-                                                              maxLines: 5,
-                                                              overflow: TextOverflow.ellipsis,
-                                                            ),
-                                                            SizedBox(height: 5.w),
-                                                            Text(
-                                                              "created  $_created",
+                                                        Expanded(
+                                                          flex: 1,
+                                                          child: Padding(
+                                                            padding: EdgeInsets.only(top: 3.h),
+                                                            child: Text(
+                                                              item.trash ? 'Deleted' : '',
                                                               style: TextStyle(
                                                                 fontWeight: FontWeight.w300,
-                                                                color: Colors.grey,
-                                                                fontSize: 12,
+                                                                // color: Colors.red,
+                                                                fontSize: 12.w,
+                                                                fontStyle: FontStyle.italic,
                                                               ),
                                                             ),
-                                                            SizedBox(height: 10.0.w),
-                                                            Divider(height: 0.0, thickness: 1.0),
-                                                          ],
+                                                          ),
                                                         ),
-                                                      )
-                                                    : SizedBox.shrink(),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    childCount: searchLength,
-                                  ),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 5.w),
+                                                    Text(
+                                                      item.title,
+                                                      style: TextStyle(
+                                                        fontSize: 18.w,
+                                                        fontWeight: FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 5.w),
+                                                    Text(
+                                                      item.text,
+                                                      style: TextStyle(
+                                                        color: Colors.grey[800],
+                                                      ),
+                                                      maxLines: 5,
+                                                      overflow: TextOverflow.ellipsis,
+                                                    ),
+                                                    SizedBox(height: 5.w),
+                                                    Text(
+                                                      "created  $_created",
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w300,
+                                                        color: Colors.grey,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 10.0.w),
+                                                    Divider(height: 0.0, thickness: 1.0),
+                                                  ],
+                                                ),
+                                              )
+                                            : SizedBox.shrink(),
+                                      ),
+                                    );
+                                  },
+                                  childCount: searchLength,
                                 ),
                               );
                       },
@@ -365,37 +357,12 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context, state) => Container(
         color: Colors.white,
         height: 36.w,
-        child: CupertinoTextField(
+        child: CustomSearchTextField(
           controller: _textController,
           focusNode: _focusNode,
-          cursorColor: Colors.black,
-          style: TextStyle(
-            fontSize: 18.w,
-            color: Colors.grey[800],
-            fontWeight: FontWeight.w500,
-          ),
-          onEditingComplete: () {
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-          },
-          clearButtonMode: OverlayVisibilityMode.editing,
-          placeholder: ' \u{1F50D}  Search for notes',
-          padding: EdgeInsets.only(left: 10.0.w),
-          toolbarOptions: ToolbarOptions(copy: true, cut: true, paste: true, selectAll: true),
-          decoration: BoxDecoration(
-            color: CupertinoDynamicColor.withBrightness(
-              color: CupertinoColors.white,
-              darkColor: CupertinoColors.black,
-            ),
-            borderRadius: BorderRadius.all(Radius.circular(5.0.r)),
-            border: Border.all(
-              color: CupertinoDynamicColor.withBrightness(
-                darkColor: Colors.white,
-                color: Colors.black,
-              ),
-              style: BorderStyle.solid,
-              width: 1.0, // default 0 for cupertino
-            ),
-          ),
+          useBorders: false,
+          padding: const EdgeInsets.fromLTRB(8, 8, 5, 8),
+          placeholder: 'Search notes',
         ),
       ),
     );

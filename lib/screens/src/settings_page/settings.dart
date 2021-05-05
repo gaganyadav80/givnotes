@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -408,8 +409,29 @@ class AppLockSwitchPrefs extends StatefulWidget {
 }
 
 class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
+  final LocalAuthentication _localAuthentication = LocalAuthentication();
+
+  bool canUseBiometric = false;
+  String reason = '';
+
+  void setBiometricButton() async {
+    canUseBiometric = (await _localAuthentication.isDeviceSupported());
+    if (canUseBiometric == false) {
+      reason = 'Biometrics not enabled';
+      return;
+    }
+
+    canUseBiometric = (await _localAuthentication.getAvailableBiometrics()).contains(BiometricType.fingerprint);
+
+    if (canUseBiometric == false) {
+      reason = 'Biometrics are not enrolled';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    setBiometricButton();
+
     return Column(
       children: [
         SwitchPreference(
@@ -425,7 +447,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             if (prefsBox.passcode == '') {
               Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
                 if (!value) {
-                  PrefService.setBool('app_lock', false);
+                  // PrefService.setBool('app_lock', false);
                   setState(() {});
                 }
               });
@@ -439,6 +461,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           onDisable: () {
             if (prefsBox.passcode != '') {
               AppLock.of(context).disable();
+              prefsBox.passcode = '';
               prefsBox.applock = false;
               prefsBox.save();
             }
@@ -450,10 +473,17 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           'biometric',
           // desc: 'Enable Fingerprint/Face unlock',
           defaultVal: false,
-          disabled: !prefsBox.applock,
+          disabled: canUseBiometric ? !prefsBox.applock : true,
           leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: 26.0.w),
           // leadingColor: Colors.teal,
           titleGap: 0.0,
+          ondisableTap: () {
+            ScaffoldMessenger.of(context)
+              ..removeCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(content: Text(reason)),
+              );
+          },
           onEnable: () {
             prefsBox.biometric = true;
             prefsBox.save();

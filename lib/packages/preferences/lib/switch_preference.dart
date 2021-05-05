@@ -22,6 +22,8 @@ class SwitchPreference extends StatefulWidget {
   final Color leadingColor;
   final Color backgroundColor;
 
+  final Function ondisableTap;
+
   SwitchPreference(
     this.title,
     this.localKey, {
@@ -39,6 +41,7 @@ class SwitchPreference extends StatefulWidget {
     this.titleGap,
     this.leadingColor,
     this.backgroundColor = Colors.white,
+    this.ondisableTap,
   });
 
   _SwitchPreferenceState createState() => _SwitchPreferenceState();
@@ -88,9 +91,9 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
           activeColor: widget.switchActiveColor ?? Color(0xFFDD4C4F),
           // blurRadius: 8,
-          onChanged: widget.disabled ? (_) {} : (val) => val ? onEnable() : onDisable(),
+          onChanged: widget.disabled ? (_) => widget.ondisableTap: (val) => val ? onEnable() : onDisable(),
         ),
-        onTap: (widget.disabled || widget.ignoreTileTap) ? null : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
+        onTap: (widget.disabled || widget.ignoreTileTap) ? widget.ondisableTap : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
       ),
     );
   }

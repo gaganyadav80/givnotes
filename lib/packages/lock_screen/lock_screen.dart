@@ -69,7 +69,7 @@ class _LockScreenState extends State<LockScreen> {
   final StreamController<String> enteredStream = StreamController<String>();
   final StreamController<void> removedStreamController = StreamController<void>();
   final StreamController<int> enteredLengthStream = StreamController<int>.broadcast();
-  final StreamController<bool> validateStreamController = StreamController<bool>();
+  final StreamController<bool> validateStreamController = StreamController<bool>.broadcast();
 
   // control for Android back button
   // bool _needClose = false;
@@ -92,24 +92,6 @@ class _LockScreenState extends State<LockScreen> {
     ]);
 
     if (widget.showBiometricFirst) {
-      // // Maintain compatibility.
-      // if (widget.biometricFunction != null) {
-      //   // Set the listener if there is a stream option.
-      //   if (widget.showBiometricFirstController != null) {
-      //     widget.showBiometricFirstController.stream.listen((_) {
-      //       widget.biometricFunction(context);
-      //     });
-      //   } else {
-      //     // It is executed by a certain time.
-      //     Future.delayed(
-      //       Duration(milliseconds: 350),
-      //       () {
-      //         widget.biometricFunction(context);
-      //       },
-      //     );
-      //   }
-      // }
-
       if (widget.biometricAuthenticate != null) {
         // Set the listener if there is a stream option.
         if (widget.showBiometricFirstController != null) {
@@ -217,6 +199,13 @@ class _LockScreenState extends State<LockScreen> {
         validateStreamController.add(false);
         enteredValues.clear();
         enteredLengthStream.add(enteredValues.length);
+        // ScaffoldMessenger.of(context)
+        //   ..removeCurrentSnackBar()
+        //   ..showSnackBar(
+        //     SnackBar(
+        //       content: _isConfirmation ? Text("Passcode does not match. Try again!") : Text("Wrong passcode."),
+        //     ),
+        //   );
       }
     });
   }
@@ -312,7 +301,9 @@ class _LockScreenState extends State<LockScreen> {
                                     : _buildBothSidesButton(context, _biometricButton())
                                 : _buildBothSidesButton(context, _biometricButton()),
                             _buildNumberTextButton(context, '0'),
-                            _heightLess ? _buildBothSidesButton(context, _deleteSideButton()) : _buildBothSidesButton(context, Container()),
+                            _heightLess
+                                ? _buildBothSidesButton(context, _deleteSideButton())
+                                : _buildBothSidesButton(context, Container()),
                           ],
                         ),
                       ),
@@ -369,9 +360,28 @@ class _LockScreenState extends State<LockScreen> {
   Widget _buildTitle() {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 20),
-      child: Text(
-        _isConfirmation ? widget.confirmTitle : widget.title,
-        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+      child: StreamBuilder<bool>(
+        stream: validateStreamController.stream,
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data != false) {
+              return Text(
+                'Success',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+              );
+            } else {
+              return Text(
+                _isConfirmation ? 'Passcode Does Not Match' : 'Wrong Passcode',
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+              );
+            }
+          } else {
+            return Text(
+              _isConfirmation ? widget.confirmTitle : widget.title,
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+            );
+          }
+        },
       ),
     );
   }
@@ -431,8 +441,9 @@ class _LockScreenState extends State<LockScreen> {
       child: Text(
         widget.cancelText,
         style: TextStyle(
-          fontSize: MediaQuery.of(context).size.width * 0.055,
+          fontSize: MediaQuery.of(context).size.width * 0.045,
           fontWeight: FontWeight.w300,
+          color: Colors.black,
         ),
         softWrap: false,
         textAlign: TextAlign.center,
@@ -463,8 +474,9 @@ class _LockScreenState extends State<LockScreen> {
             child: Text(
               widget.deleteText,
               style: TextStyle(
-                fontSize: MediaQuery.of(context).size.width * 0.055,
+                fontSize: MediaQuery.of(context).size.width * 0.045,
                 fontWeight: FontWeight.w300,
+                color: Colors.black,
               ),
               softWrap: false,
               textAlign: TextAlign.center,
