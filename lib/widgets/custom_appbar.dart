@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
       child: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(10.0.w, 10.0.h, 20.0.w, 5.0.h),
+          padding: EdgeInsets.fromLTRB(10.w, 10.h, 20.w, 5.h),
           child: BlocBuilder<HomeCubit, HomeState>(
             builder: (context, state) {
               return Row(
@@ -55,7 +55,6 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                           ? Material(
                               type: MaterialType.transparency,
                               child: Padding(
-                                // padding: const EdgeInsets.only(right: 8.0),
                                 padding: EdgeInsets.only(right: 8.w),
                                 child: IconButton(
                                   splashRadius: 25.0,
@@ -64,10 +63,8 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                   onPressed: () => showCupertinoModalBottomSheet(
                                     expand: true,
                                     context: context,
-                                    closeProgressThreshold: 0.5,
-                                    builder: (context) {
-                                      return ModalSheetTabView();
-                                    },
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => NotesOptionModalSheet(),
                                   ),
                                 ),
                               ),

@@ -21,14 +21,6 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
-    // String def = _prefsCubit.state.sortBy == 'created'
-    //     ? 'Date Created'
-    //     : _prefsCubit.state.sortBy == 'modified'
-    //         ? 'Date Modified'
-    //         : _prefsCubit.state.sortBy == 'a-z'
-    //             ? 'Alphabetical (A-Z)'
-    //             : 'Alphabetical (Z-A)';
-
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 5.0.w),
@@ -132,14 +124,8 @@ class SettingsPage extends StatelessWidget {
             // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
-              // if (prefsBox.passcode != '')
-              if (PrefService.getBool('app_lock') == true)
-                // Navigator.pushz(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => ShowLockscreen(changePassAuth: true),
-                //   ),
-                // );
+              if (prefsBox.passcode != '')
+              // if (PrefService.getBool('app_lock') == true)
                 Navigator.pushNamed(context, RouterName.lockscreenRoute, arguments: true);
               else
                 Toast.show("Please enable applock first", context);
@@ -497,41 +483,3 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
     );
   }
 }
-
-//TODO add iosInfo
-//       PreferencePageLink(
-//         'Device',
-//         leading: Icon(Icons.phone_iphone),
-//         trailing: Icon(Icons.keyboard_arrow_right),
-//         page: PreferencePage([
-//           PreferenceTitle('Device'),
-//           PreferenceText(
-//             """
-// Brand:   ${_pluginInitializer.androidInfo.manufacturer}
-// Device:  ${_pluginInitializer.androidInfo.device}
-// Model:   ${_pluginInitializer.androidInfo.model}
-//   """,
-//             overflow: TextOverflow.visible,
-//           ),
-//           PreferenceTitle('Software'),
-//           PreferenceText(
-//             """
-// Host distro:  ${_pluginInitializer.androidInfo.host}
-// Android ID:  ${_pluginInitializer.androidInfo.androidId}
-// Fingerprint:  ${_pluginInitializer.androidInfo.fingerprint}
-//   """,
-//             overflow: TextOverflow.visible,
-//           ),
-//           PreferenceTitle('Hardware'),
-//           PreferenceText(
-//             """
-// Architecture:  ${_pluginInitializer.androidInfo.supported64BitAbis}
-// Hardware:  ${_pluginInitializer.androidInfo.hardware}
-// Device ID:  ${_pluginInitializer.androidInfo.id}
-// Display:  ${_pluginInitializer.androidInfo.display}
-// HM - WM:  $hm - $wm
-//   """,
-//             overflow: TextOverflow.visible,
-//           ),
-//         ]),
-//       ),

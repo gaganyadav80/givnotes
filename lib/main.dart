@@ -78,6 +78,11 @@ class App extends StatelessWidget {
           BlocProvider<AuthenticationBloc>(
             create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
           ),
+          BlocProvider<TodosBloc>(
+            create: (context) => TodosBloc(
+              todosRepository: FirebaseTodosRepository(),
+            )..add(LoadTodos()),
+          ),
         ],
         child: GivnotesApp(),
       ),
@@ -103,11 +108,10 @@ class _GivnotesAppState extends State<GivnotesApp> {
         accentColor: Colors.black,
         accentColorBrightness: Brightness.light,
         toggleableActiveColor: Colors.blue,
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {
-            TargetPlatform.android: ZoomPageTransitionsBuilder(),
-          },
-        ),
+        //TODO problem with CupertinoPageRoute in NotesOptionModalSheet @Gagan
+        // pageTransitionsTheme: PageTransitionsTheme(
+        //   builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
+        // ),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
@@ -116,18 +120,13 @@ class _GivnotesAppState extends State<GivnotesApp> {
         );
       },
       onGenerateRoute: rt.Router.generateRoute,
-      initialRoute: '/',
-      // home: const CheckLogin(),
+      // initialRoute: '/',
     );
   }
 }
 
 class CheckLogin extends StatelessWidget {
   const CheckLogin({Key key}) : super(key: key);
-
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => CheckLogin());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,12 +135,7 @@ class CheckLogin extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
         if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
-        return BlocProvider<TodosBloc>(
-          create: (context) => TodosBloc(
-            todosRepository: FirebaseTodosRepository(),
-          )..add(LoadTodos()),
-          child: HomePage(),
-        );
+        return HomePage();
       },
     );
   }

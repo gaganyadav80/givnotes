@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/main.dart';
 import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:givnotes/screens/src/todo_timeline/create_todo.dart';
@@ -7,7 +6,6 @@ import 'package:givnotes/services/services.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'screens/screens.dart';
-import 'screens/src/todo_timeline/todo_timeline.dart';
 
 abstract class RouterName {
   static const String root = '/';
@@ -30,43 +28,38 @@ abstract class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouterName.root:
-        return MaterialWithModalsPageRoute(builder: (_) => CheckLogin());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => CheckLogin());
       case RouterName.homeRoute:
-        return MaterialWithModalsPageRoute(
-          builder: (_) => BlocProvider<TodosBloc>(
-            create: (context) => TodosBloc(
-              todosRepository: FirebaseTodosRepository(),
-            )..add(LoadTodos()),
-            child: HomePage(),
-          ),
-        );
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => HomePage());
       case RouterName.loginRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => LoginPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => LoginPage());
       case RouterName.signupRouter:
-        return MaterialWithModalsPageRoute(builder: (_) => RegisterPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => RegisterPage());
       case RouterName.verificationRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => VerificationPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => VerificationPage());
       case RouterName.searchRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => SearchPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => SearchPage());
       case RouterName.editorRoute:
         List<dynamic> data = settings.arguments;
-        return MaterialWithModalsPageRoute(builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
+        return MaterialWithModalsPageRoute(
+            settings: settings, builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
       case RouterName.aboutRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => AboutGivnotes());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => AboutGivnotes());
       case RouterName.contactRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => ContactGivnotes());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ContactGivnotes());
       case RouterName.profileRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => MyProfile());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => MyProfile());
       case RouterName.lockscreenRoute:
         bool data = settings.arguments as bool;
-        return MaterialWithModalsPageRoute(builder: (_) => ShowLockscreen(changePassAuth: data));
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ShowLockscreen(changePassAuth: data));
       case RouterName.addlockRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => AddLockscreen());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => AddLockscreen());
       case RouterName.notesviewRoute:
-        return MaterialWithModalsPageRoute(builder: (_) => NotesView());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => NotesView());
       case RouterName.createTodoRoute:
         List<dynamic> data = settings.arguments;
         return MaterialWithModalsPageRoute(
+            settings: settings,
             builder: (_) => CreateTodoBloc(
                   isEditing: data[0],
                   id: data[1],
@@ -74,6 +67,7 @@ abstract class Router {
                 ));
       default:
         return MaterialWithModalsPageRoute(
+          settings: settings,
           builder: (_) => Scaffold(
             body: Center(child: Text('No route defined for ${settings.name}')),
           ),
