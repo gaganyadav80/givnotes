@@ -5,7 +5,7 @@ import 'package:fluttericon/brandico_icons.dart';
 import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/getwidget.dart';
 
-class ContactGivnotes extends StatelessWidget {
+class ContactUsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,40 +18,40 @@ class ContactGivnotes extends StatelessWidget {
           child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
         ),
       ),
-      body: ListView(
+      body: Column(
         children: [
           Image.asset(
             "assets/img/contact_us.png",
-            height: 320.0.w,
-            width: 320.0.w,
+            height: 300.0.w,
+            width: 300.0.w,
           ),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 40.0.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 20.0.h),
+                SizedBox(height: 20.w),
                 Text(
                   "How can we help you?",
                   style: TextStyle(
-                    fontSize: 22.0.w,
+                    fontSize: 22.w,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 10.0.h),
+                SizedBox(height: 10.w),
                 Text(
                   "It looks like you are experiencing problems "
                   "with our services. We are here to help "
                   "so please get in touch with us.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 14.0.w,
+                    fontSize: 14.w,
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 30.0.h),
+                SizedBox(height: 30.w),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -59,16 +59,16 @@ class ContactGivnotes extends StatelessWidget {
                     _contactTiles(CupertinoIcons.mail_solid, "Email us", context),
                   ],
                 ),
-                SizedBox(height: 30.0.h),
+                SizedBox(height: 30.w),
                 Text(
                   "Follow us on",
                   style: TextStyle(
-                    fontSize: 22.0.w,
+                    fontSize: 22.w,
                     fontWeight: FontWeight.bold,
                     color: Colors.black,
                   ),
                 ),
-                SizedBox(height: 20.0.h),
+                SizedBox(height: 20.w),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -78,7 +78,7 @@ class ContactGivnotes extends StatelessWidget {
                     _socialButtons(FontAwesome5.github, () {}),
                   ],
                 ),
-                SizedBox(height: 50.0.h),
+                SizedBox(height: 50.w),
               ],
             ),
           ),
@@ -91,13 +91,13 @@ class ContactGivnotes extends StatelessWidget {
 
   Container _socialButtons(IconData icon, Function onPressed) {
     return Container(
-      height: 60.0.w,
-      width: 60.0.w,
+      height: 60.w,
+      width: 60.w,
       child: GFIconButton(
         onPressed: onPressed,
         color: blueColor,
         icon: Icon(icon),
-        iconSize: 26.0.w,
+        iconSize: 26.w,
       ),
     );
   }
@@ -106,18 +106,18 @@ class ContactGivnotes extends StatelessWidget {
     return Material(
       elevation: 8.0,
       shadowColor: Colors.grey[350],
-      borderRadius: BorderRadius.circular(15.0.r),
+      borderRadius: BorderRadius.circular(15.r),
       child: Container(
-        height: 160.0.h,
-        width: 150.0.w,
+        height: 160.h,
+        width: 150.w,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15.0.r),
+          borderRadius: BorderRadius.circular(15.r),
         ),
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            borderRadius: BorderRadius.circular(15.0.r),
+            borderRadius: BorderRadius.circular(15.r),
             onTap: () => ScaffoldMessenger.of(context)
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
@@ -130,12 +130,12 @@ class ContactGivnotes extends StatelessWidget {
                 Icon(
                   icon,
                   color: blueColor,
-                  size: 52.0.w,
+                  size: 52.w,
                 ),
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 17.0.w,
+                    fontSize: 17.w,
                     fontWeight: FontWeight.w600,
                     color: Colors.black,
                   ),

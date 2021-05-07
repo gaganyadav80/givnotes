@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/routes.dart';
 import 'package:givnotes/widgets/simple_lockscreen.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:page_transition/page_transition.dart';
 
 class ShowLockscreen extends StatefulWidget {
   ShowLockscreen({
     Key key,
     @required this.changePassAuth,
-    this.disableLock = false,
   }) : super(key: key);
 
-  final bool changePassAuth;
-  final bool disableLock;
+  final VoidCallback changePassAuth;
 
   @override
   _ShowLockscreenState createState() => new _ShowLockscreenState();
@@ -50,19 +46,14 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
       title: 'Unlock givnotes',
       correctString: prefsBox.passcode,
       confirmMode: false,
-      canCancel: widget.changePassAuth || widget.disableLock,
+      canCancel: widget.changePassAuth != null ? true : false,
       canBiometric: prefsBox.biometric,
       showBiometricFirst: prefsBox.biometric,
       biometricAuthenticate: biometrics,
-      onUnlocked: widget.changePassAuth
-          ? () {
-              Navigator.of(context)
-                ..pop()
-                ..pushNamed(RouterName.addlockRoute); //TODO disrupts the view with zoom effect. FIX @Gagan
-            }
-          : () {
-              AppLock.of(context).didUnlock();
-            },
+      onUnlocked: widget.changePassAuth ??
+          () {
+            AppLock.of(context).didUnlock();
+          },
       // dotSecretConfig: DotSecretConfig(
       //   dotSize: 15.w,
       //   dotBorderColor: Color(0xffDD4C4F),

@@ -87,7 +87,7 @@ class SettingsPage extends StatelessWidget {
             // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
-            widgetScaffold: AboutGivnotes(),
+            widgetScaffold: AboutUsPage(),
           ),
           PreferenceTitle('Security'),
           AppLockSwitchPrefs(),
@@ -98,11 +98,19 @@ class SettingsPage extends StatelessWidget {
             // leadingColor: Colors.lightGreen,
             titleGap: 0.0,
             onTap: () {
-              if (prefsBox.passcode != '')
-                // if (PrefService.getBool('app_lock') == true)
-                Navigator.pushNamed(context, RouterName.lockscreenRoute, arguments: true);
-              else
+              if (prefsBox.passcode != '') {
+                Navigator.pushNamed(
+                  context,
+                  RouterName.lockscreenRoute,
+                  arguments: () {
+                    Navigator.of(context)
+                      ..pop()
+                      ..pushNamed(RouterName.addlockRoute); //TODO disrupts the view with zoom effect. FIX @Gagan
+                  },
+                );
+              } else {
                 Toast.show("Please enable applock first", context);
+              }
             },
           ),
 
@@ -125,7 +133,7 @@ class SettingsPage extends StatelessWidget {
             // leadingColor: Colors.brown,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
-            widgetScaffold: AboutGivnotes(),
+            widgetScaffold: AboutUsPage(),
           ),
           PreferencePageLink(
             'Contact Us',
@@ -134,7 +142,7 @@ class SettingsPage extends StatelessWidget {
             // leadingColor: Colors.blueGrey,
             trailing: Icon(Icons.keyboard_arrow_right, color: Color(0xFFDD4C4F)),
             titleGap: 0.0,
-            widgetScaffold: ContactGivnotes(),
+            widgetScaffold: ContactUsPage(),
           ),
           SizedBox(height: 10.0.w),
           //! =============================================
@@ -386,6 +394,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
     if (canUseBiometric == false) {
       reason = 'Biometrics are not enrolled';
     }
+
+    reason = '';
   }
 
   @override
@@ -404,28 +414,35 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
-            // if (prefsBox.passcode == '') {
-            Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
-              if (!value) {
-                PrefService.setBool('app_lock', false);
-                setState(() {});
-              }
-            });
-            // } else {
-            //   AppLock.of(context).enable();
-            //   prefsBox.applock = true;
-            //   prefsBox.save();
-            //   setState(() {});
-            // }
+            if (prefsBox.passcode == '') {
+              Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
+                if (!value) {
+                  PrefService.setBool('app_lock', false);
+                  setState(() {});
+                }
+              });
+            }
           },
           onDisable: () {
             if (prefsBox.passcode != '') {
-              AppLock.of(context).disable();
-              prefsBox.passcode = '';
-              prefsBox.applock = false;
-              prefsBox.save();
+              Navigator.pushNamed(
+                context,
+                RouterName.lockscreenRoute,
+                arguments: () {
+                  Navigator.pop(context, true);
+                  AppLock.of(context).disable();
+                  prefsBox.passcode = '';
+                  prefsBox.applock = false;
+                  prefsBox.save();
+                },
+              ).then((value) {
+                if (!value) {
+                  PrefService.setBool('app_lock', true);
+                  setState(() {});
+                }
+              });
             }
-            setState(() {});
+            // setState(() {});
           },
         ),
         SwitchPreference(
@@ -438,11 +455,12 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // leadingColor: Colors.teal,
           titleGap: 0.0,
           ondisableTap: () {
-            ScaffoldMessenger.of(context)
-              ..removeCurrentSnackBar()
-              ..showSnackBar(
-                SnackBar(content: Text(reason)),
-              );
+            if (reason.isNotEmpty) Toast.show(reason, context);
+            // ScaffoldMessenger.of(context)
+            //   ..removeCurrentSnackBar()
+            //   ..showSnackBar(
+            //     SnackBar(content: Text(reason)),
+            //   );
           },
           onEnable: () {
             prefsBox.biometric = true;

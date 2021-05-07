@@ -158,7 +158,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               ? IconButton(
                   icon: Icon(CupertinoIcons.arrow_left),
                   color: Colors.black,
-                  onPressed: () => Navigator.of(context).pop(false),
+                  onPressed: () => Navigator.pop(context, false),
                 )
               : Container(),
         ),

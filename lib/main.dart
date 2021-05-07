@@ -53,7 +53,7 @@ void main() async {
       designSize: Size(414, 896),
       builder: () => AppLock(
         builder: (_) => App(authenticationRepository: authenticationRepository),
-        lockScreen: ShowLockscreen(changePassAuth: false),
+        lockScreen: ShowLockscreen(changePassAuth: null),
         enabled: prefsBox.applock,
       ),
     ),
@@ -134,7 +134,7 @@ class CheckLogin extends StatelessWidget {
     return StreamBuilder<User>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+        if (!snapshot.hasData) return LoginPage();
 
         return HomePage();
       },

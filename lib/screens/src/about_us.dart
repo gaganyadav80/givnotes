@@ -6,8 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/minimal_login/components/blueButton.dart';
 
-//TODO deprecate
-class AboutGivnotes extends StatelessWidget {
+class AboutUsPage extends StatelessWidget {
   static const String aboutGivnotes = "Givnotes originated with the need for a notes app that is "
       "functional but also at the same time looks minimal and aesthetic. But wait, "
       "now you think you can name some apps which match this profile and even we "
@@ -82,8 +81,9 @@ class AboutGivnotes extends StatelessWidget {
                 SizedBox(height: 10.0.h),
                 Text(
                   "Well for a starter we say it's your choice. Yes! you read it right. "
-                  "You can either use our servers which obviously encryptes your data before "
-                  "handing it over to us, or you can use your choice of online cloud storage provider "
+                  // "You can either use our servers which obviously encryptes your data before "
+                  // "handing it over to us, or"
+                  "You can use your choice of online cloud storage provider "
                   "which too will be encrypted, to sync and backup your notes.",
                 ),
                 SizedBox(height: 30.0.h),

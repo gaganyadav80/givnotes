@@ -44,13 +44,13 @@ abstract class Router {
         return MaterialWithModalsPageRoute(
             settings: settings, builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
       case RouterName.aboutRoute:
-        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => AboutGivnotes());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => AboutUsPage());
       case RouterName.contactRoute:
-        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ContactGivnotes());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ContactUsPage());
       case RouterName.profileRoute:
         return MaterialWithModalsPageRoute(settings: settings, builder: (_) => MyProfile());
       case RouterName.lockscreenRoute:
-        bool data = settings.arguments as bool;
+        VoidCallback data = settings.arguments as VoidCallback;
         return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ShowLockscreen(changePassAuth: data));
       case RouterName.addlockRoute:
         return MaterialWithModalsPageRoute(settings: settings, builder: (_) => AddLockscreen());
