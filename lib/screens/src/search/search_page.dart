@@ -354,16 +354,12 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget searchNoteTextField() {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
-      builder: (context, state) => Container(
-        color: Colors.white,
-        height: 36.w,
-        child: CustomSearchTextField(
-          controller: _textController,
-          focusNode: _focusNode,
-          useBorders: false,
-          padding: const EdgeInsets.fromLTRB(8, 8, 5, 8),
-          placeholder: 'Search notes',
-        ),
+      builder: (context, state) => CustomSearchTextField(
+        controller: _textController,
+        focusNode: _focusNode,
+        useBorders: false,
+        padding: const EdgeInsets.fromLTRB(8, 10, 0, 10),
+        placeholder: 'Search notes',
       ),
     );
   }

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -112,8 +113,9 @@ class NotesOptionModalSheet extends StatelessWidget {
                       ),
                       onTap: () {
                         Navigator.of(context).push(
-                          CupertinoPageRoute(
-                            builder: (context) => Material(
+                          PageTransition(
+                            type: PageTransitionType.rightToLeft,
+                            child: Material(
                               child: CupertinoPageScaffold(
                                 navigationBar: CupertinoNavigationBar(
                                   middle: Text('Sort by'),

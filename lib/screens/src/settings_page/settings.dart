@@ -28,32 +28,6 @@ class SettingsPage extends StatelessWidget {
           PreferenceTitle('Profile', topPadding: 10.0.w),
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.0.w),
-          // DropdownPreference(
-          //   'Sort notes',
-          //   'sort_notes',
-          //   defaultVal: def,
-          //   desc: "Sort your notes on one of the following filters.",
-          //   showDesc: false,
-          //   values: ['Date created', 'Date modified', 'Alphabetical (A-Z)', 'Alphabetical (Z-A)'],
-          //   titleColor: const Color(0xff32343D),
-          //   leading: Icon(CupertinoIcons.sort_down_circle, color: Colors.black, size: 26.0),
-          //   // leadingColor: Colors.red,
-          //   titleGap: 0.0,
-          //   onChange: ((String value) {
-          //     String val;
-
-          //     if (value == 'Date created')
-          //       val = 'created';
-          //     else if (value == 'Date modified')
-          //       val = 'modified';
-          //     else if (value == 'Alphabetical (A-Z)')
-          //       val = 'a-z';
-          //     else
-          //       val = 'z-a';
-
-          //     _prefsCubit.updateSortBy(val);
-          //   }),
-          // ),
           SortNotesFloatModalSheet(),
           SwitchPreference(
             'Compact tags',
@@ -125,7 +99,7 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             onTap: () {
               if (prefsBox.passcode != '')
-              // if (PrefService.getBool('app_lock') == true)
+                // if (PrefService.getBool('app_lock') == true)
                 Navigator.pushNamed(context, RouterName.lockscreenRoute, arguments: true);
               else
                 Toast.show("Please enable applock first", context);
@@ -430,19 +404,19 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           onEnable: () {
-            if (prefsBox.passcode == '') {
-              Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
-                if (!value) {
-                  // PrefService.setBool('app_lock', false);
-                  setState(() {});
-                }
-              });
-            } else {
-              AppLock.of(context).enable();
-              prefsBox.applock = true;
-              prefsBox.save();
-              setState(() {});
-            }
+            // if (prefsBox.passcode == '') {
+            Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
+              if (!value) {
+                PrefService.setBool('app_lock', false);
+                setState(() {});
+              }
+            });
+            // } else {
+            //   AppLock.of(context).enable();
+            //   prefsBox.applock = true;
+            //   prefsBox.save();
+            //   setState(() {});
+            // }
           },
           onDisable: () {
             if (prefsBox.passcode != '') {

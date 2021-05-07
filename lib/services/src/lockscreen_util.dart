@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/simple_lockscreen.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 
 class ShowLockscreen extends StatefulWidget {
   ShowLockscreen({
     Key key,
     @required this.changePassAuth,
+    this.disableLock = false,
   }) : super(key: key);
 
   final bool changePassAuth;
+  final bool disableLock;
 
   @override
   _ShowLockscreenState createState() => new _ShowLockscreenState();
@@ -43,33 +46,32 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LockScreen(
-      title: 'Enter Passcode',
+    return SimpleLockScreen(
+      title: 'Unlock givnotes',
       correctString: prefsBox.passcode,
       confirmMode: false,
-      digits: 4,
-      canCancel: widget.changePassAuth,
+      canCancel: widget.changePassAuth || widget.disableLock,
       canBiometric: prefsBox.biometric,
       showBiometricFirst: prefsBox.biometric,
       biometricAuthenticate: biometrics,
-      backgroundColorOpacity: 1,
       onUnlocked: widget.changePassAuth
           ? () {
-              Navigator.pop(context);
-              Navigator.pushNamed(context, RouterName.addlockRoute);
+              Navigator.of(context)
+                ..pop()
+                ..pushNamed(RouterName.addlockRoute); //TODO disrupts the view with zoom effect. FIX @Gagan
             }
           : () {
               AppLock.of(context).didUnlock();
             },
-      dotSecretConfig: DotSecretConfig(
-        dotSize: 15.w,
-        dotBorderColor: Color(0xffDD4C4F),
-        enabledColor: Color(0xffDD4C4F),
-        padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
-      ),
-      circleInputButtonConfig: CircleInputButtonConfig(
-        backgroundColor: Color(0xffDD4C4F),
-      ),
+      // dotSecretConfig: DotSecretConfig(
+      //   dotSize: 15.w,
+      //   dotBorderColor: Color(0xffDD4C4F),
+      //   enabledColor: Color(0xffDD4C4F),
+      //   padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
+      // ),
+      // circleInputButtonConfig: CircleInputButtonConfig(
+      //   backgroundColor: Color(0xffDD4C4F),
+      // ),
     );
   }
 }
@@ -86,12 +88,12 @@ class _AddLockscreenState extends State<AddLockscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: LockScreen(
-        title: 'Enter New Passcode',
+      body: SimpleLockScreen(
+        title: 'Lock givnotes',
         confirmMode: true,
         canCancel: true,
         canBiometric: false,
-        backgroundColorOpacity: 0,
+        isAddingLock: true,
         onCompleted: (context, passcode) {
           prefsBox.passcode = passcode;
           AppLock.of(context).enable();
@@ -100,16 +102,16 @@ class _AddLockscreenState extends State<AddLockscreen> {
 
           Navigator.pop(context, true);
         },
-        dotSecretConfig: DotSecretConfig(
-          dotSize: 15.w,
-          dotBorderColor: Color(0xffDD4C4F),
-          enabledColor: Color(0xffDD4C4F),
-          padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
-        ),
-        circleInputButtonConfig: CircleInputButtonConfig(
-          backgroundColor: Color(0xffDD4C4F),
-          backgroundOpacity: 0.6,
-        ),
+        // dotSecretConfig: DotSecretConfig(
+        //   dotSize: 15.w,
+        //   dotBorderColor: Color(0xffDD4C4F),
+        //   enabledColor: Color(0xffDD4C4F),
+        //   padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
+        // ),
+        // circleInputButtonConfig: CircleInputButtonConfig(
+        //   backgroundColor: Color(0xffDD4C4F),
+        //   backgroundOpacity: 0.6,
+        // ),
       ),
     );
   }

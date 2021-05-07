@@ -48,7 +48,7 @@ class LockScreen extends StatefulWidget {
     this.canCancel = true,
     this.cancelText = 'Cancel',
     this.deleteText = 'Delete',
-    this.biometricButton = const Icon(Icons.fingerprint),
+    this.biometricButton = const Icon(Icons.fingerprint, color: Colors.black, size: 36),
     this.onCompleted,
     this.canBiometric = false,
     this.showBiometricFirst = false,
@@ -86,10 +86,10 @@ class _LockScreenState extends State<LockScreen> {
   void initState() {
     super.initState();
 
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.portraitUp,
+    //   DeviceOrientation.portraitDown,
+    // ]);
 
     if (widget.showBiometricFirst) {
       if (widget.biometricAuthenticate != null) {
@@ -506,12 +506,12 @@ class _LockScreenState extends State<LockScreen> {
     }
 
     // restore orientation.
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.portraitUp,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    //   DeviceOrientation.portraitDown,
+    //   DeviceOrientation.portraitUp,
+    // ]);
 
     super.dispose();
   }

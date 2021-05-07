@@ -109,9 +109,10 @@ class _GivnotesAppState extends State<GivnotesApp> {
         accentColorBrightness: Brightness.light,
         toggleableActiveColor: Colors.blue,
         //TODO problem with CupertinoPageRoute in NotesOptionModalSheet @Gagan
-        // pageTransitionsTheme: PageTransitionsTheme(
-        //   builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
-        // ),
+        // Solution :- use page transition instead of CupertinoPageRoute
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
+        ),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
