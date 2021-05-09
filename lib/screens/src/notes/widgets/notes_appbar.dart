@@ -55,6 +55,7 @@ class NotesOptionModalSheet extends StatelessWidget {
               navigationBar: CupertinoNavigationBar(
                 middle: Text('Notes Option'),
                 automaticallyImplyLeading: false,
+                transitionBetweenRoutes: true,
                 trailing: TextButton(
                   child: Text(
                     'Done',
@@ -119,6 +120,7 @@ class NotesOptionModalSheet extends StatelessWidget {
                               child: CupertinoPageScaffold(
                                 navigationBar: CupertinoNavigationBar(
                                   middle: Text('Sort by'),
+                                  transitionBetweenRoutes: true,
                                 ),
                                 child: SafeArea(
                                   child: Obx(

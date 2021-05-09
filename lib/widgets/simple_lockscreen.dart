@@ -5,8 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:givnotes/packages/move_to_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/widgets/dialog.dart';
 
 /// commented out all the Navigator.of(context).pop();
 /// to make it work with AppLock package
@@ -60,8 +64,10 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
   final StreamController<bool> validateStreamController = StreamController<bool>.broadcast();
   final StreamController<String> titleStreamController = StreamController<String>.broadcast();
 
-  final TextEditingController passwordController = TextEditingController();
-  final FocusNode focusNode = FocusNode();
+  final TextEditingController appLockPassController = TextEditingController();
+  final TextEditingController resetLockUserPassController = TextEditingController();
+  final TextEditingController resetLockUserEmailController = TextEditingController();
+  final FocusNode applockFocusNode = FocusNode();
 
   Animation<Offset> _animation;
   AnimationController _animationController;
@@ -103,7 +109,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         if (_isConfirmation == false) {
           _verifyConfirmPasscode = enteredValue;
           // _passcodeLength = passwordController.text.length;
-          passwordController.clear();
+          appLockPassController.clear();
           _isConfirmation = true;
           titleStreamController.add(widget.confirmTitle);
           setState(() {}); //TODO flag @Gagan
@@ -133,7 +139,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         validateStreamController.add(false);
         titleStreamController.add(_isConfirmation ? 'Passcode Does Not Match' : 'Wrong Passcode');
       }
-      passwordController.clear();
+      appLockPassController.clear();
     });
   }
 
@@ -161,26 +167,46 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                   onPressed: () => Navigator.pop(context, false),
                 )
               : Container(),
-        ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              //130.w non-bio = 60.w bio
-              padding: EdgeInsets.only(bottom: widget.canBiometric ? 60.w : 130.w),
-              child: Column(
-                children: <Widget>[
-                  //TODO Replace this image @Gagan
-                  Image.asset("assets/img/simple-lockscreen.png", width: 250),
-                  SizedBox(height: 20.h),
-                  _buildTitle(),
-                  SizedBox(height: 10.h),
-                  _buildTextField(),
-                  SizedBox(height: 40.h),
-                  widget.canBiometric ? _buildBiometric() : Container(),
-                ],
+          actions: <Widget>[
+            ConstrainedBox(
+              constraints: BoxConstraints.tightFor(width: 56.0),
+              child: IconButton(
+                icon: Icon(CupertinoIcons.question_circle),
+                color: CupertinoColors.systemGrey,
+                tooltip: "Forgot AppLock?",
+                onPressed: () => showCupertinoDialog(
+                  context: context,
+                  useRootNavigator: false,
+                  // barrierDismissible: true,
+                  builder: (context) {
+                    return _buildForgotApplockDialog();
+                  },
+                ),
+                // showDialog(
+                //   context: context,
+                //   builder: (context) => GivnotesDialog(
+                //     title: "Forgot password?",
+                //     mainButtonText: "Send email",
+                //     showCancel: true,
+                //     message: "Send your password on the registered email.",
+                //     onTap: () => Toast.show("Will be implemented", context),
+                //   ),
+                // ),
               ),
             ),
-          ),
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            //TODO Replace simple lockscreen image @Gagan
+            Image.asset("assets/img/simple-lockscreen.png", width: 220.w),
+            SizedBox(height: 10.w),
+            _buildTitle(),
+            SizedBox(height: 10.w),
+            _buildTextField(),
+            SizedBox(height: 40.w),
+            widget.canBiometric ? _buildBiometric() : Container(),
+          ],
         ),
       ),
     );
@@ -191,8 +217,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 40.w),
         child: CupertinoTextField(
-          controller: passwordController,
-          focusNode: focusNode,
+          controller: appLockPassController,
+          focusNode: applockFocusNode,
           autocorrect: false,
           autofocus: widget.isAddingLock,
           cursorColor: Colors.black,
@@ -203,7 +229,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           obscureText: true,
           placeholder: 'Enter Your Password',
           clearButtonMode: OverlayVisibilityMode.editing,
-          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
+          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
           onSubmitted: (value) {
             value = value.trim();
             if (value.isEmpty) {
@@ -215,12 +241,12 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             } else {
               _verifyCorrectString(value);
             }
-            focusNode.requestFocus();
+            applockFocusNode.requestFocus();
           },
           suffix: IconButton(
             icon: Icon(CupertinoIcons.arrow_turn_down_left),
             color: Colors.black,
-            onPressed: () => passwordController.clear(),
+            onPressed: () => appLockPassController.clear(),
           ),
           suffixMode: OverlayVisibilityMode.editing,
           decoration: BoxDecoration(
@@ -236,7 +262,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               style: BorderStyle.solid,
               width: 1.0,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
+            borderRadius: BorderRadius.all(Radius.circular(5.r)),
           ),
         ),
       ),
@@ -248,7 +274,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
-          borderRadius: BorderRadius.circular(80),
+          borderRadius: BorderRadius.circular(80.r),
           onTap: () {
             // Maintain compatibility
             if (widget.biometricAuthenticate == null) {
@@ -267,8 +293,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             }
           },
           child: Container(
-            height: 70,
-            width: 70,
+            height: 70.w,
+            width: 70.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: CupertinoColors.systemGrey6.withOpacity(0.4),
@@ -284,26 +310,10 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             child: Center(
               child: Image.asset(
                 'assets/img/faceid.png',
-                height: 35,
-                width: 35,
+                height: 35.w,
+                width: 35.w,
               ),
             ),
-
-            // Stack(
-            //   children: [
-            //     Align(
-            //       alignment: Alignment.center,
-            //       child: Icon(CupertinoIcons.viewfinder, color: Colors.black, size: 50),
-            //     ),
-            //     Align(
-            //       alignment: Alignment.center,
-            //       child: Padding(
-            //         padding: EdgeInsets.only(top: 5.0),
-            //         child: Icon(Icons.fingerprint, color: Colors.black),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ),
         ),
       ),
@@ -318,7 +328,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       child: SlideTransition(
         position: _animation,
         child: Container(
-          margin: EdgeInsets.symmetric(vertical: 20),
+          margin: EdgeInsets.symmetric(vertical: 15.h),
           child: StreamBuilder<String>(
             stream: titleStreamController.stream,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -352,7 +362,110 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
     validateStreamController.close();
     titleStreamController.close();
     _animationController.dispose();
+    appLockPassController.dispose();
+    resetLockUserEmailController.dispose();
+    resetLockUserPassController.dispose();
+    applockFocusNode.dispose();
 
     super.dispose();
+  }
+
+  Widget _buildForgotApplockDialog() {
+    return BlocListener<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          if (state.verify) {
+            if (state.verifyFailed)
+              Toast.show("Verification failed", context);
+            else
+              Toast.show("Will be implemented", context);
+          }
+        } else if (state is AuthNeedsVerification) {
+          if (state.verify) {
+            if (state.verifyFailed)
+              Toast.show("Verification failed", context);
+            else
+              Toast.show("Will be implemented", context);
+          }
+        }
+      },
+      child: CupertinoAlertDialog(
+        title: Text("Forgot AppLock?"),
+        content: Column(
+          children: <Widget>[
+            SizedBox(height: 5),
+            Text(
+              "Send applock password on your registered email. Please verify your details for security purpose.",
+            ),
+            SizedBox(height: 15),
+            BlocBuilder<AuthenticationBloc, AuthenticationState>(
+              builder: (context, state) {
+                if (state is LoginInProgress) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is AuthSuccess) {
+                  resetLockUserEmailController.text = state.user.email;
+                } else if (state is AuthNeedsVerification) {
+                  resetLockUserEmailController.text = state.user.email;
+                } else {
+                  resetLockUserEmailController.clear();
+                }
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CupertinoTextField(
+                      controller: resetLockUserEmailController,
+                      enabled: resetLockUserEmailController.text.isEmpty,
+                      placeholder: "example@email.com",
+                      decoration: BoxDecoration(
+                        color: resetLockUserEmailController.text.isEmpty
+                            ? CupertinoColors.white
+                            : CupertinoColors.systemGrey4,
+                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    CupertinoTextField(
+                      controller: resetLockUserPassController,
+                      obscureText: true,
+                      placeholder: 'enter password',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: const Text('Cancel'),
+            isDefaultAction: true,
+            onPressed: () {
+              SystemChannels.textInput.invokeMethod('TextInput.hide');
+              resetLockUserPassController.clear();
+              resetLockUserEmailController.clear();
+              Navigator.pop(context);
+            },
+          ),
+          CupertinoDialogAction(
+            child: const Text('Send mail'),
+            onPressed: () {
+              SystemChannels.textInput.invokeMethod('TextInput.hide');
+              BlocProvider.of<AuthenticationBloc>(context).add(
+                LoginButtonPressed(
+                  email: resetLockUserEmailController.text,
+                  password: resetLockUserPassController.text,
+                  verify: true,
+                ),
+              );
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

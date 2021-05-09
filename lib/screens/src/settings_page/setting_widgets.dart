@@ -10,6 +10,12 @@ import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 class SortNotesFloatModalSheet extends StatelessWidget {
+  final TextStyle _kListItemStyle = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Poppins',
+    color: Color(0xFF222222),
+    fontSize: 15.w,
+  );
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
@@ -31,7 +37,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 5.0.w),
+              padding: EdgeInsets.only(right: 5.w),
               child: Obx(
                 () => Text(
                   sortbyNames[def.value],
@@ -45,7 +51,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
             ),
             Icon(
               CupertinoIcons.forward,
-              size: 21.0.w,
+              size: 21.w,
               color: Color(0xFFDD4C4F),
             ),
           ],
@@ -59,25 +65,23 @@ class SortNotesFloatModalSheet extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AppBar(
+                CupertinoNavigationBar(
                   automaticallyImplyLeading: false,
+                  padding: EdgeInsetsDirectional.zero,
+                  border: Border.all(color: Colors.white, width: 0.0),
                   backgroundColor: Colors.white,
-                  elevation: 0.0,
-                  centerTitle: true,
-                  title: Text(
+                  middle: Text(
                     "SORT NOTES",
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       color: Color(0xFF222222),
-                      fontSize: 16.0.w,
+                      fontSize: 18.w,
                     ),
                   ),
-                  actions: [
-                    IconButton(
-                      icon: Icon(CupertinoIcons.clear, color: Color(0xFFA0A0A0)),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
+                  trailing: IconButton(
+                    icon: Icon(CupertinoIcons.clear, color: Color(0xFFA0A0A0)),
+                    onPressed: () => Navigator.pop(context),
+                  ),
                 ),
                 Obx(
                   () => Column(
@@ -87,11 +91,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Creation Date',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF222222),
-                            fontSize: 15.0.w,
-                          ),
+                          style: _kListItemStyle,
                         ),
                         tileColor: Colors.white,
                         onTap: () {
@@ -104,11 +104,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Modification Date',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF222222),
-                            fontSize: 15.0.w,
-                          ),
+                          style: _kListItemStyle,
                         ),
                         tileColor: Colors.white,
                         onTap: () {
@@ -121,12 +117,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Alphabetical (A-Z)',
-                          //TODO too much duplicate code @Gagan
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF222222),
-                            fontSize: 15.0.w,
-                          ),
+                          style: _kListItemStyle,
                         ),
                         tileColor: Colors.white,
                         onTap: () {
@@ -139,11 +130,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text(
                           'Alphabetical (Z-A)',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF222222),
-                            fontSize: 15.0.w,
-                          ),
+                          style: _kListItemStyle,
                         ),
                         tileColor: Colors.white,
                         onTap: () {
@@ -168,6 +155,35 @@ class SortNotesFloatModalSheet extends StatelessWidget {
     return Divider(
       height: 0.0,
       thickness: 1.0,
+      indent: 15.w,
     );
   }
 }
+
+// class Temp extends StatelessWidget {
+//   Temp({Key key, this.def, this.prefsCubit}) : super(key: key);
+
+//   final RxInt def;
+//   final HydratedPrefsCubit prefsCubit;
+
+//   Divider tilesDivider() {
+//     return Divider(
+//       height: 0.0,
+//       thickness: 1.0,
+//       indent: 15.w,
+//     );
+//   }
+
+//   final TextStyle _kListItemStyle = TextStyle(
+//     fontWeight: FontWeight.w400,
+//     fontFamily: 'Poppins',
+//     color: Color(0xFF222222),
+//     fontSize: 15.w,
+//   );
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final HydratedPrefsCubit _prefsCubit = prefsCubit;
+//     return
+//   }
+// }

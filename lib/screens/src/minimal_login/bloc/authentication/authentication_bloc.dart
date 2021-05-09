@@ -45,9 +45,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
 
         if (_currentUser.emailVerified) {
-          yield (AuthSuccess(user: _user));
+          yield (AuthSuccess(user: _user, verify: event.verify));
         } else {
-          yield AuthNeedsVerification(user: _user);
+          yield AuthNeedsVerification(user: _user, verify: event.verify);
         }
       } else if (event is RegisterButtonClicked) {
         yield (RegisterInProgress());
@@ -86,7 +86,20 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     } on PlatformException catch (e) {
       yield (AuthFailure(message: "Error: ${e.message}"));
     } on FirebaseAuthException catch (e) {
-      yield (AuthFailure(message: "Error: ${e.message}"));
+      if (event is LoginButtonPressed) {
+        if (event.verify) {
+          final User _currentUser = FirebaseAuth.instance.currentUser;
+
+          if (_currentUser.emailVerified) {
+            yield (AuthSuccess(user: _user, verify: event.verify, verifyFailed: true));
+          } else {
+            yield AuthNeedsVerification(user: _user, verify: event.verify, verifyFailed: true);
+          }
+        } else {
+          //TODO add code parameter also with message @Gagan
+          yield (AuthFailure(message: "Firebase Exception: ${e.code}"));
+        }
+      }
     } on TimeoutException catch (e) {
       yield (AuthFailure(message: "Timeout: ${e.message}"));
     } catch (e) {

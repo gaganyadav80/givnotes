@@ -9,6 +9,7 @@ class GivnotesDialog extends StatelessWidget {
     this.showCancel = false,
     this.mainButtonText = "Okay",
     this.onTap,
+    this.content,
   }) : super(key: key);
 
   final String title;
@@ -16,15 +17,16 @@ class GivnotesDialog extends StatelessWidget {
   final String mainButtonText;
   final bool showCancel;
   final Function onTap;
+  final Widget content;
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
       child: Container(
-        width: 350.0.w,
+        width: 350.w,
         // height: 180.0,
-        padding:  EdgeInsets.only(top: 15.0.h),
+        padding: EdgeInsets.only(top: 15.0.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.r),
           color: Colors.white,
@@ -59,6 +61,7 @@ class GivnotesDialog extends StatelessWidget {
                     ),
                   )
                 : SizedBox.shrink(),
+            content ?? SizedBox.shrink(),
             showCancel
                 ? Divider(
                     height: 0.0,

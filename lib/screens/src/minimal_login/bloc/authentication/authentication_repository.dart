@@ -51,7 +51,7 @@ class AuthenticationRepository {
     @required String name,
   }) async {
     assert(email != null && password != null && name != null);
-    try {
+    // try {
       final firebase_auth.UserCredential _authResult = await _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -60,13 +60,13 @@ class AuthenticationRepository {
       await _authResult.user.updateProfile(displayName: name);
       // await _authResult.user.reload();
       await _authResult.user.sendEmailVerification();
-    } on Exception {
-      throw SignUpFailure();
-    }
+    // } on Exception {
+    //   throw SignUpFailure();
+    // }
   }
 
   Future<void> logInWithGoogle() async {
-    try {
+    // try {
       final GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
       final firebase_auth.OAuthCredential _authCredential = firebase_auth.GoogleAuthProvider.credential(
@@ -74,9 +74,9 @@ class AuthenticationRepository {
         idToken: _googleAuth.idToken,
       );
       await _firebaseAuth.signInWithCredential(_authCredential);
-    } on Exception {
-      throw LogInWithGoogleFailure();
-    }
+    // } on Exception {
+    //   throw LogInWithGoogleFailure();
+    // }
   }
 
   Future<void> logInWithEmailAndPassword({
@@ -84,14 +84,14 @@ class AuthenticationRepository {
     @required String password,
   }) async {
     assert(email != null && password != null);
-    try {
-      await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on Exception {
-      throw LogInWithEmailAndPasswordFailure();
-    }
+    // try {
+    await _firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    // } on Exception {
+    //   throw LogInWithEmailAndPasswordFailure();
+    // }
   }
 
   Future<void> resetPassword(String email) async {
@@ -99,14 +99,14 @@ class AuthenticationRepository {
   }
 
   Future<void> logOut() async {
-    try {
+    // try {
       await Future.wait([
         _firebaseAuth.signOut(),
         _googleSignIn.signOut(),
       ]);
-    } on Exception {
-      throw LogOutFailure();
-    }
+    // } on Exception {
+    //   throw LogOutFailure();
+    // }
   }
 }
 

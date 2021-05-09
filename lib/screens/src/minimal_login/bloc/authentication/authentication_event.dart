@@ -10,12 +10,13 @@ abstract class AuthenticationEvent extends Equatable {
 class LoginButtonPressed extends AuthenticationEvent {
   final String email;
   final String password;
-  LoginButtonPressed({@required this.email, @required this.password})
+  final bool verify;
+  LoginButtonPressed({@required this.email, @required this.password, this.verify = false})
       : assert(email != null),
         assert(password != null);
 
   @override
-  List<Object> get props => [email, password];
+  List<Object> get props => [email, password, verify];
 }
 
 class RegisterButtonClicked extends AuthenticationEvent {

@@ -15,18 +15,22 @@ class RegisterInProgress extends AuthenticationState {}
 
 class AuthSuccess extends AuthenticationState {
   final UserModel user;
-  AuthSuccess({this.user});
+  final bool verify;
+  final bool verifyFailed;
+  AuthSuccess({@required this.user, this.verify = false, this.verifyFailed = false});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, verify, verifyFailed];
 }
 
 class AuthNeedsVerification extends AuthenticationState {
   final UserModel user;
-  AuthNeedsVerification({this.user});
+  final bool verify;
+  final bool verifyFailed;
+  AuthNeedsVerification({@required this.user, this.verify = false, this.verifyFailed = false});
 
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [user, verify, verifyFailed];
 }
 
 // class LoginNeedsProfileComplete extends LoginState {}

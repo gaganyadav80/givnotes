@@ -49,14 +49,7 @@ void main() async {
   await authenticationRepository.user.first;
 
   runApp(
-    ScreenUtilInit(
-      designSize: Size(414, 896),
-      builder: () => AppLock(
-        builder: (_) => App(authenticationRepository: authenticationRepository),
-        lockScreen: ShowLockscreen(changePassAuth: null),
-        enabled: prefsBox.applock,
-      ),
-    ),
+    App(authenticationRepository: authenticationRepository),
   );
 }
 
@@ -84,7 +77,14 @@ class App extends StatelessWidget {
             )..add(LoadTodos()),
           ),
         ],
-        child: GivnotesApp(),
+        child: ScreenUtilInit(
+          designSize: Size(414, 896),
+          builder: () => AppLock(
+            builder: (_) => GivnotesApp(),
+            lockScreen: ShowLockscreen(changePassAuth: null),
+            enabled: prefsBox.applock,
+          ),
+        ),
       ),
     );
   }

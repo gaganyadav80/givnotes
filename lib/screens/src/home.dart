@@ -60,14 +60,12 @@ class _HomePageState extends State<HomePage> {
             builder: (context, state) {
               return BottomNavigationBar(
                 iconSize: _kIconSize,
-                selectedFontSize: 13.0.w,
-                unselectedFontSize: 13.0.w,
+                selectedFontSize: 13.w,
+                unselectedFontSize: 13.w,
                 backgroundColor: Colors.white,
-                // selectedItemColor: Color(0xff0366d6),
                 selectedItemColor: Colors.black,
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
-                elevation: 12.0,
                 currentIndex: state.index,
                 onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
                 items: <BottomNavigationBarItem>[
