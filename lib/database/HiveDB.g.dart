@@ -17,32 +17,35 @@ class NotesModelAdapter extends TypeAdapter<NotesModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return NotesModel()
-      ..title = fields[0] as String
-      ..text = fields[1] as String
-      ..znote = fields[2] as String
-      ..trash = fields[3] as bool
-      ..created = fields[4] as DateTime
-      ..modified = fields[5] as DateTime
-      ..tagsMap = (fields[6] as Map)?.cast<String, int>();
+      ..id = fields[0] as String
+      ..title = fields[1] as String
+      ..text = fields[2] as String
+      ..znote = fields[3] as String
+      ..trash = fields[4] as bool
+      ..created = fields[5] as DateTime
+      ..modified = fields[6] as DateTime
+      ..tagsMap = (fields[7] as Map)?.cast<String, int>();
   }
 
   @override
   void write(BinaryWriter writer, NotesModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
-      ..write(obj.title)
+      ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.text)
+      ..write(obj.title)
       ..writeByte(2)
-      ..write(obj.znote)
+      ..write(obj.text)
       ..writeByte(3)
-      ..write(obj.trash)
+      ..write(obj.znote)
       ..writeByte(4)
-      ..write(obj.created)
+      ..write(obj.trash)
       ..writeByte(5)
-      ..write(obj.modified)
+      ..write(obj.created)
       ..writeByte(6)
+      ..write(obj.modified)
+      ..writeByte(7)
       ..write(obj.tagsMap);
   }
 

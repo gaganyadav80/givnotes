@@ -32,7 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final double _kIconSize = 26.0.w;
+  final double _kIconSize = 26.w;
 
   @override
   Widget build(BuildContext context) {

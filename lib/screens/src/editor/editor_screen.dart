@@ -16,6 +16,7 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:uuid/uuid.dart';
 
 import 'widgets/editor_widgets.dart';
 
@@ -44,13 +45,11 @@ class _EditorScreenState extends State<EditorScreen> {
   final GlobalKey<ScaffoldState> _editorScaffoldKey = GlobalKey();
 
   dynamic _noteIndex;
-  // bool zefyrEditMode = false;
   NoteAndSearchCubit _noteEditStore;
   ValueNotifier<NotesModel> _notesModel = ValueNotifier<NotesModel>(null);
 
   Future<qd.Document> _loadDocument() async {
     final contents = widget.note.znote;
-    // var myJSON = jsonDecode(contents);
 
     return qd.Document.fromJson(jsonDecode(contents));
   }
@@ -67,7 +66,6 @@ class _EditorScreenState extends State<EditorScreen> {
             selection: TextSelection.collapsed(offset: 0),
           );
         });
-      });
     }
 
     if (widget.noteMode == NoteMode.Adding) {
@@ -135,7 +133,7 @@ class _EditorScreenState extends State<EditorScreen> {
                               fontFamily: 'ZillaSlab',
                               color: Colors.black.withOpacity(0.7),
                               fontWeight: FontWeight.w400,
-                              fontSize: 15.h,
+                              fontSize: 20.h,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -198,7 +196,7 @@ class _EditorScreenState extends State<EditorScreen> {
                                     child: Icon(
                                       Icons.add,
                                       color: Colors.blueGrey,
-                                      size: 15.w, //TODO check icon size
+                                      size: 15.w,
                                     ),
                                   ),
                                 )
@@ -451,6 +449,7 @@ class _EditorScreenState extends State<EditorScreen> {
         if (_noteEditStore.state.noteMode == NoteMode.Adding) {
           _notesModel.value = await _dbServices.insertNote(
             NotesModel()
+              ..id = Uuid().v1()
               ..title = _title.isNotEmpty ? _title : 'Untitled'
               ..text = _note
               ..znote = jsonEncode(_quillController.document.toDelta().toJson())
@@ -463,6 +462,7 @@ class _EditorScreenState extends State<EditorScreen> {
           _notesModel.value = await _dbServices.updateNote(
             _noteIndex,
             NotesModel()
+              ..id = _notesModel.value.id
               ..title = _title.isNotEmpty ? _title : 'Untitled'
               ..text = _note
               ..znote = jsonEncode(_quillController.document.toDelta().toJson())

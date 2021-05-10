@@ -94,16 +94,18 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
   @override
   Widget build(BuildContext context) {
     final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+
     return Container(
-      height: 260.h, //260
-      width: (335.w),
+      // width: (335.w),
+      padding: EdgeInsets.all(15.w),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TextField(
             controller: _newTagTextController,
             autocorrect: false,
-            // cursorColor: isBrightnessDark(context) ? Colors.white : Colors.black,
+            cursorColor: Colors.black,
             textCapitalization: TextCapitalization.characters,
             inputFormatters: [
               TextInputFormatter.withFunction(
@@ -113,12 +115,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                 ),
               ),
             ],
-            // style: TextStyle(
-            //   color: Theme.of(context).textTheme.bodyText1.color,
-            // ),
             decoration: InputDecoration(
               filled: true,
-              // fillColor: isBrightnessDark(context) ? Theme.of(context).scaffoldBackgroundColor : Colors.white,
               fillColor: Colors.grey[200],
               focusColor: Colors.grey,
               labelText: 'Tag name',
@@ -201,7 +199,7 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Container(
-                height: 45.h,
+                height: 60.h,
                 width: 90.w,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -210,22 +208,21 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
                   ),
                   onPressed: () {
-                    Navigator.pop(context);
                     _newTagTextController.clear();
+                    Navigator.pop(context);
                   },
                   child: Text(
                     'CANCEL',
                     style: TextStyle(
                       color: Color(0xff1F1F1F),
                       fontWeight: FontWeight.w600,
-                      // letterSpacing: 0.5,
                     ),
                   ),
                 ),
               ),
               SizedBox(width: 15.w),
               Container(
-                height: 45.h,
+                height: 60.h,
                 width: 90.w,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -238,7 +235,6 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
-                      // letterSpacing: 0.5,
                     ),
                   ),
                   onPressed: () {

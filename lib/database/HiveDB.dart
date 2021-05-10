@@ -5,24 +5,27 @@ part 'HiveDB.g.dart';
 @HiveType(typeId: 0)
 class NotesModel extends HiveObject {
   @HiveField(0)
-  String title;
+  String id;
 
   @HiveField(1)
-  String text;
+  String title;
 
   @HiveField(2)
-  String znote;
+  String text;
 
   @HiveField(3)
-  bool trash = false;
+  String znote;
 
   @HiveField(4)
-  DateTime created;
+  bool trash = false;
 
   @HiveField(5)
-  DateTime modified;
+  DateTime created;
 
   @HiveField(6)
+  DateTime modified;
+
+  @HiveField(7)
   Map<String, int> tagsMap = {};
 }
 

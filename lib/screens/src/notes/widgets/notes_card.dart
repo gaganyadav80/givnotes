@@ -39,27 +39,26 @@ class _NotesCardState extends State<NotesCard> {
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    final notesState = Get.put(SelectMultiNotes());
+    final MultiSelectController notesState = Get.put(MultiSelectController());
+
     return Obx(
       () => Card(
         elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
-        ),
-        color: notesState.selectedIndexes.contains(widget.index) ? Colors.grey[300] : Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        color: notesState.selectedIndexes.contains(widget.note.id) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
           borderRadius: BorderRadius.circular(0),
           onTap: () {
-            if (notesState.selectedIndexes.length != 0) {
-              notesState.selected(n: widget.index);
+            if (notesState.isSelecting) {
+              notesState.select(widget.note.id);
             } else {
               BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
               Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },
           onLongPress: () {
-            notesState.selected(n: widget.index);
+            notesState.select(widget.note.id);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w),

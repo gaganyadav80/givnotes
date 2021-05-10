@@ -6,11 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:givnotes/packages/move_to_background.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/widgets/dialog.dart';
+import 'package:move_to_background/move_to_background.dart';
 
 /// commented out all the Navigator.of(context).pop();
 /// to make it work with AppLock package
@@ -402,7 +401,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               builder: (context, state) {
                 if (state is LoginInProgress) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(strokeWidth: 1.0),
                   );
                 } else if (state is AuthSuccess) {
                   resetLockUserEmailController.text = state.user.email;
