@@ -9,14 +9,14 @@ import 'package:flutter_quill/widgets/controller.dart';
 import 'package:flutter_quill/widgets/editor.dart';
 import 'package:flutter_quill/widgets/toolbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:uuid/uuid.dart';
 
 import 'widgets/editor_widgets.dart';
 
@@ -33,7 +33,7 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
-  QuillController _quillController = QuillController.basic();
+  final Rx<QuillController> _quillController = QuillController.basic().obs;
 
   final HiveDBServices _dbServices = HiveDBServices();
   final FlareControls controls = FlareControls();
@@ -41,8 +41,7 @@ class _EditorScreenState extends State<EditorScreen> {
   final FocusNode _titleFocus = FocusNode();
   final FocusNode _editorfocusNode = FocusNode();
 
-  final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
-  final GlobalKey<ScaffoldState> _editorScaffoldKey = GlobalKey();
+  // final GlobalKey<ScaffoldState> _editorScaffoldKey = GlobalKey();
 
   dynamic _noteIndex;
   NoteAndSearchCubit _noteEditStore;
@@ -60,12 +59,13 @@ class _EditorScreenState extends State<EditorScreen> {
 
     if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode == NoteMode.Editing) {
       _loadDocument().then((data) {
-        setState(() {
-          _quillController = QuillController(
-            document: data,
-            selection: TextSelection.collapsed(offset: 0),
-          );
-        });
+        // setState(() {
+        _quillController.value = QuillController(
+          document: data,
+          selection: TextSelection.collapsed(offset: 0),
+        );
+        // });
+      });
     }
 
     if (widget.noteMode == NoteMode.Adding) {
@@ -106,7 +106,7 @@ class _EditorScreenState extends State<EditorScreen> {
     return WillPopScope(
       onWillPop: _onPop,
       child: Scaffold(
-        key: _editorScaffoldKey,
+        // key: _editorScaffoldKey,
         backgroundColor: Colors.white,
         appBar: NoteEditorAppBar(
           saveNote: _saveNote,
@@ -120,7 +120,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: getTitleTextField(),
               ),
-              SizedBox(height: 1.sw / 100),
+              SizedBox(height: 10.w),
               _noteEditStore.state.noteMode == NoteMode.Editing
                   ? ValueListenableBuilder(
                       valueListenable: _notesModel,
@@ -141,90 +141,8 @@ class _EditorScreenState extends State<EditorScreen> {
                       },
                     )
                   : SizedBox.shrink(),
-              SizedBox(height: 1.sh / 100),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      getNoteTags(),
-                      noteTagsMap.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
-                      BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
-                        builder: (context, state) {
-                          return state.isEditing
-                              ? Container(
-                                  height: 0.04.sh,
-                                  width: 32.w,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: Colors.blueGrey,
-                                      width: 2.w,
-                                    ),
-                                  ),
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(25.r),
-                                    onTap: () {
-                                      _titleFocus.unfocus();
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            insetPadding: EdgeInsets.all(10.w),
-                                            title: Text('New tag'),
-                                            titlePadding: EdgeInsets.all(15.w),
-                                            titleTextStyle: TextStyle(
-                                              fontSize: 22.w,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              letterSpacing: 0.5.w,
-                                            ),
-                                            contentPadding: EdgeInsets.all(15.w),
-                                            content: BlocProvider(
-                                              create: (_) => NoteAndSearchCubit(),
-                                              child: AddTagsDialog(
-                                                editNoteTag: false,
-                                                editTagTitle: '',
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.blueGrey,
-                                      size: 15.w,
-                                    ),
-                                  ),
-                                )
-                              : noteTagsMap.length == 0
-                                  ? Container(
-                                      height: 30.h,
-                                      child: Center(
-                                        child: Text(
-                                          '"no tags added."',
-                                          style: TextStyle(
-                                            fontFamily: 'ZillaSlab',
-                                            color: Colors.black.withOpacity(0.7),
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 19.w,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : Container(
-                                      color: Colors.transparent,
-                                      height: 30.h,
-                                    );
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              SizedBox(height: 15.w),
+              EditorTags(),
               SizedBox(height: 8.w),
               Expanded(
                 child: _editorBody(),
@@ -235,7 +153,7 @@ class _EditorScreenState extends State<EditorScreen> {
                     width: double.infinity,
                     child: state.isEditing
                         ? QuillToolbar.basic(
-                            controller: _quillController,
+                            controller: _quillController.value,
                             showBackgroundColorButton: false,
                             showClearFormat: false,
                             showHorizontalRule: false,
@@ -282,20 +200,20 @@ class _EditorScreenState extends State<EditorScreen> {
   Widget _editorBody() {
     return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
       builder: (context, state) {
-        return (_quillController == null)
+        return (_quillController.value == null)
             ? Center(child: CupertinoActivityIndicator())
-            : QuillEditor(
-                controller: _quillController,
-                focusNode: _editorfocusNode,
-                scrollController: ScrollController(),
-                scrollable: true,
-                padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
-                autoFocus: false,
-                readOnly: !(state.isEditing || state.noteMode == NoteMode.Adding),
-                expands: true,
-                showCursor: state.isEditing || state.noteMode == NoteMode.Adding,
-                placeholder: "Your Note here...",
-              );
+            : Obx(() => QuillEditor(
+                  controller: _quillController.value,
+                  focusNode: _editorfocusNode,
+                  scrollController: ScrollController(),
+                  scrollable: true,
+                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                  autoFocus: false,
+                  readOnly: !(state.isEditing || state.noteMode == NoteMode.Adding),
+                  expands: true,
+                  showCursor: state.isEditing || state.noteMode == NoteMode.Adding,
+                  placeholder: "Your Note here...",
+                ));
       },
     );
   }
@@ -334,82 +252,11 @@ class _EditorScreenState extends State<EditorScreen> {
     );
   }
 
-  Widget getNoteTags() {
-    final List<String> noteTag = noteTagsMap.keys.toList();
-
-    return Tags(
-      key: _tagStateKey,
-      itemCount: noteTagsMap.length,
-      itemBuilder: (int index) {
-        int borderColor = noteTagsMap[noteTag[index]];
-        return ItemTags(
-          key: Key(index.toString()),
-          elevation: 0,
-          index: index,
-          title: noteTag[index],
-          active: false,
-          combine: ItemTagsCombine.withTextBefore,
-          textStyle: TextStyle(
-            fontSize: 14.w,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5.w,
-          ),
-          border: Border.all(color: Color(borderColor), width: 2),
-          textActiveColor: Color(borderColor),
-          textColor: Color(borderColor),
-          activeColor: Colors.white,
-          //
-          // removeButton: ItemTagsRemoveButton(
-          //   backgroundColor: Color(_noteTagColors[index]),
-          //   onRemoved: () {
-          //     if (Var.isEditing) {
-          //       setState(() {
-          //         _noteTags.removeAt(index);
-          //       });
-          //     } else {
-          //       showToast("Read only mode");
-          //     }
-          //     return true;
-          //   },
-          // ),
-          onPressed: (item) {
-            if (_noteEditStore.state.isEditing) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    insetPadding: EdgeInsets.all(10),
-                    title: Text('Edit tag'),
-                    titlePadding: EdgeInsets.all(15.w),
-                    titleTextStyle: TextStyle(
-                      fontSize: 22.w,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 0.5.w,
-                    ),
-                    contentPadding: EdgeInsets.all(15.w),
-                    content: BlocProvider(
-                      create: (_) => BlocProvider.of<NoteAndSearchCubit>(context),
-                      child: AddTagsDialog(
-                        editNoteTag: true,
-                        editTagTitle: item.title,
-                      ),
-                    ),
-                  );
-                },
-              );
-            }
-          },
-        );
-      },
-    );
-  }
-
   Future<bool> _onPop() async {
     FocusScope.of(context).unfocus();
 
     String title = _titleController.text;
-    String note = _quillController.document.toPlainText().trim();
+    String note = _quillController.value.document.toPlainText().trim();
 
     if (title.isEmpty && note.isEmpty) {
       showSnackBar("Can't create empty note");
@@ -433,7 +280,7 @@ class _EditorScreenState extends State<EditorScreen> {
       //
     } else if (_noteEditStore.state.isEditing) {
       String _title = _titleController.text;
-      String _note = _quillController.document.toPlainText().trim();
+      String _note = _quillController.value.document.toPlainText().trim();
 
       if (_title.isEmpty && _note.isEmpty) {
         FocusScope.of(context).unfocus();
@@ -452,7 +299,7 @@ class _EditorScreenState extends State<EditorScreen> {
               ..id = Uuid().v1()
               ..title = _title.isNotEmpty ? _title : 'Untitled'
               ..text = _note
-              ..znote = jsonEncode(_quillController.document.toDelta().toJson())
+              ..znote = jsonEncode(_quillController.value.document.toDelta().toJson())
               ..created = DateTime.now()
               ..modified = DateTime.now()
               ..tagsMap = noteTagsMap,
@@ -465,7 +312,7 @@ class _EditorScreenState extends State<EditorScreen> {
               ..id = _notesModel.value.id
               ..title = _title.isNotEmpty ? _title : 'Untitled'
               ..text = _note
-              ..znote = jsonEncode(_quillController.document.toDelta().toJson())
+              ..znote = jsonEncode(_quillController.value.document.toDelta().toJson())
               ..trash = _notesModel.value.trash
               ..created = _notesModel.value.created
               ..modified = DateTime.now()

@@ -1,21 +1,15 @@
-import 'dart:math' as math;
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttericon/typicons_icons.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/todo_timeline/todo_timeline.dart';
-import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 import 'todo_timeline/todo_home.dart';
@@ -112,49 +106,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               );
-            },
-          ),
-          floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
-            buildWhen: (previous, current) => previous != current,
-            builder: (context, state) {
-              return state.trash == false && state.index == 0
-                  ? Container(
-                      height: 65.0,
-                      width: 65.0,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFDD4C4F),
-                        shape: BoxShape.circle,
-                      ),
-                      child: FloatingActionButton(
-                        heroTag: 'fab',
-                        child: Transform(
-                          alignment: Alignment.center,
-                          transform: Matrix4.rotationY(math.pi),
-                          child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
-                        ),
-                        //TODO bear app original
-                        // DC4C4F
-                        backgroundColor: Color(0xFFDD4C4F),
-                        onPressed: () async {
-                          await HandlePermission().requestPermission().then((value) async {
-                            if (value) {
-                              BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
-                              Navigator.pushNamed(
-                                context,
-                                RouterName.editorRoute,
-                                arguments: [NoteMode.Adding, null],
-                              );
-                            } else {
-                              if (isPermanentDisabled) {
-                                HandlePermission().permanentDisabled(context);
-                              }
-                            }
-                          });
-                        },
-                      ),
-                    )
-                  : SizedBox.shrink();
             },
           ),
         ),

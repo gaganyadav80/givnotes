@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
+import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -39,26 +40,26 @@ class _NotesCardState extends State<NotesCard> {
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    final MultiSelectController notesState = Get.put(MultiSelectController());
+    final MultiSelectController multiSelectController = Get.put(MultiSelectController());
 
     return Obx(
       () => Card(
         elevation: 0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-        color: notesState.selectedIndexes.contains(widget.note.id) ? Colors.grey[300] : Colors.white,
+        color: multiSelectController.selectedIndexes.contains(widget.note.id) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
           borderRadius: BorderRadius.circular(0),
           onTap: () {
-            if (notesState.isSelecting) {
-              notesState.select(widget.note.id);
+            if (multiSelectController.isSelecting) {
+              multiSelectController.select(widget.note.id);
             } else {
               BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
               Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },
           onLongPress: () {
-            notesState.select(widget.note.id);
+            multiSelectController.select(widget.note.id);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
@@ -71,10 +72,7 @@ class _NotesCardState extends State<NotesCard> {
                     : Container(
                         margin: EdgeInsets.only(top: 6.w),
                         height: prefsCubit.state.compactTags ? 8.h : 18.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.r),
                           color: Colors.transparent,
-                        ),
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.note.tagsMap.length,

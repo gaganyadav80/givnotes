@@ -1,14 +1,22 @@
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttericon/typicons_icons.dart';
+import 'package:givnotes/screens/src/editor/editor_screen.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/routes.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'widgets/notes_widgets.dart';
 
@@ -82,22 +90,16 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                             dismissal: SlidableDismissal(
                               child: SlidableDrawerDismissal(),
                               onDismissed: (actionType) {
-                                // _multiSelectController.deselectAll();
-
                                 if (!homeState.trash) {
                                   note.trash = !note.trash;
                                   note.save();
 
                                   Toast.show("moved to trash", context);
-
-                                  // _multiSelectController.set(_notes.length);
                                 } else {
                                   note.trash = false;
                                   note.save();
 
                                   Toast.show("moved to notes", context);
-
-                                  // _multiSelectController.set(_notes.length);
                                 }
                               },
                             ),
@@ -122,6 +124,47 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                 );
               },
             );
+          },
+        ),
+        floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
+          buildWhen: (previous, current) => previous != current,
+          builder: (context, state) {
+            return state.trash == false && state.index == 0
+                ? Container(
+                    height: 65.0,
+                    width: 65.0,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFDD4C4F),
+                      shape: BoxShape.circle,
+                    ),
+                    child: FloatingActionButton(
+                      heroTag: 'fab',
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.rotationY(math.pi),
+                        child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
+                      ),
+                      backgroundColor: Color(0xFFDD4C4F),
+                      onPressed: () async {
+                        await HandlePermission().requestPermission().then((value) async {
+                          if (value) {
+                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
+                            BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
+                            Navigator.pushNamed(
+                              context,
+                              RouterName.editorRoute,
+                              arguments: [NoteMode.Adding, null],
+                            );
+                          } else {
+                            if (isPermanentDisabled) {
+                              HandlePermission().permanentDisabled(context);
+                            }
+                          }
+                        });
+                      },
+                    ),
+                  )
+                : SizedBox.shrink();
           },
         ),
       ),

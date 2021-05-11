@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/variables.dart';
 
@@ -14,10 +12,12 @@ class AddTagsDialog extends StatefulWidget {
     Key key,
     @required this.editNoteTag,
     @required this.editTagTitle,
+    @required this.updateTags,
   }) : super(key: key);
 
   final bool editNoteTag;
   final String editTagTitle;
+  final VoidCallback updateTags;
 
   @override
   _AddTagsDialogState createState() => _AddTagsDialogState();
@@ -93,11 +93,8 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
-
     return Container(
       // width: (335.w),
-      padding: EdgeInsets.all(15.w),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -274,8 +271,9 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                         }
                       }
 
-                      _noteEditStore.updateIsEditing(true);
+                      // _noteEditStore.updateIsEditing(true);
                       _newTagTextController.clear();
+                      widget.updateTags();
 
                       Navigator.pop(context);
                     }
