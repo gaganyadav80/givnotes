@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:givnotes/global/validators/validators.dart';
-import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 
@@ -50,10 +50,10 @@ class RegisterMainBody extends StatelessWidget {
       child: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
           if (state is AuthFailure) {
-            Toast.show(state.message, context);
+            Fluttertoast.showToast(msg: state.message);
           }
           if (state is AuthSuccess) {
-            Toast.show("Registration succesfull", context);
+            Fluttertoast.showToast(msg: "Registration succesfull");
             Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
           }
           if (state is AuthNeedsVerification) {
@@ -164,7 +164,7 @@ class _RegisterFormState extends State<RegisterForm> {
     // }
 
     // if (!acceptTnC) {
-    //   //TODO: complete
+    //   //TODO: add Terms and privacy policy
     //   // context.showSnackBar("Please accept Terms and Conditions");
     //   return;
     // }

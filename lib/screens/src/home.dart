@@ -1,10 +1,7 @@
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:getwidget/getwidget.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
@@ -69,21 +66,6 @@ class _HomePageState extends State<HomePage> {
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
-                    // icon: GFIconBadge(
-                    //   counterChild: BlocBuilder<TodosBloc, TodosState>(
-                    //     builder: (context, todostate) {
-                    //       if (todostate is TodosLoaded) {
-                    //         return GFBadge(
-                    //           color: Colors.black,
-                    //           text: todostate.todos.length > 0 ? "${todostate.todos.length}" : null,
-                    //         );
-                    //       } else {
-                    //         return null;
-                    //       }
-                    //     },
-                    //   ),
-                    //   child: Icon(CupertinoIcons.layers),
-                    // ),
                     icon: Icon(CupertinoIcons.layers),
                     activeIcon: Icon(CupertinoIcons.layers_fill),
                     label: 'Todo',
@@ -94,14 +76,8 @@ class _HomePageState extends State<HomePage> {
                     label: 'Tags',
                   ),
                   BottomNavigationBarItem(
-                    icon: GFIconBadge(
-                      child: Icon(CupertinoIcons.settings),
-                      counterChild: FirebaseAuth.instance.currentUser == null
-                          ? GFBadge(color: Colors.transparent)
-                          : FirebaseAuth.instance.currentUser.emailVerified
-                              ? GFBadge(color: Colors.transparent)
-                              : GFBadge(text: "!"),
-                    ),
+                    icon: Icon(CupertinoIcons.settings),
+                    activeIcon: Icon(CupertinoIcons.settings_solid),
                     label: 'Settings',
                   ),
                 ],

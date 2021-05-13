@@ -12,8 +12,7 @@ class HomeState extends Equatable {
   const HomeState({this.index = 0, this.trash = false});
 
   final int index;
-  final bool trash;
-  // final bool global;
+  final bool trash;     //TODO remove after separate page for trash @Gagan.
 
   @override
   List<Object> get props => [index, trash];
@@ -21,7 +20,6 @@ class HomeState extends Equatable {
   HomeState copyWith({
     int index,
     bool trash,
-    bool global,
   }) {
     return HomeState(
       index: index ?? this.index,

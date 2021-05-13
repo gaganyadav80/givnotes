@@ -96,7 +96,7 @@ class _CustomSearchTextFieldState extends State<CustomSearchTextField> with Rest
   @override
   Widget build(BuildContext context) {
     final BoxDecoration decoration = BoxDecoration(
-      color: widget.fillColor ?? Colors.white,
+      color: widget.fillColor ?? CupertinoColors.tertiarySystemFill,
       borderRadius: _kDefaultBorderRadius,
     );
 

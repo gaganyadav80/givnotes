@@ -7,7 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:givnotes/packages/packages.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:move_to_background/move_to_background.dart';
 
@@ -375,16 +375,16 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         if (state is AuthSuccess) {
           if (state.verify) {
             if (state.verifyFailed)
-              Toast.show("Verification failed", context);
+              Fluttertoast.showToast(msg: "Verification failed");
             else
-              Toast.show("Will be implemented", context);
+              Fluttertoast.showToast(msg: "Will be implemented");
           }
         } else if (state is AuthNeedsVerification) {
           if (state.verify) {
             if (state.verifyFailed)
-              Toast.show("Verification failed", context);
+             Fluttertoast.showToast(msg: "Verification failed");
             else
-              Toast.show("Will be implemented", context);
+              Fluttertoast.showToast(msg: "Will be implemented");
           }
         }
       },

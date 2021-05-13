@@ -32,20 +32,14 @@ class NotesModel extends HiveObject {
 @HiveType(typeId: 1)
 class PrefsModel extends HiveObject {
   @HiveField(0)
-  bool isAnonymous = false;
-
-  @HiveField(1)
-  bool firstlaunch = false;
-
-  @HiveField(2)
   bool applock = false;
 
-  @HiveField(3)
+  @HiveField(1)
   bool biometric = false;
 
-  @HiveField(4)
+  @HiveField(2)
   String passcode = '';
 
-  @HiveField(5)
+  @HiveField(3)
   Map<String, int> allTagsMap = {};
 }

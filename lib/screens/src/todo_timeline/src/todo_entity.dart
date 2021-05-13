@@ -60,7 +60,7 @@ class TodoEntity extends Equatable {
     );
   }
 
-  static TodoEntity fromSnapshot(DocumentSnapshot snap) {
+  static TodoEntity fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) {
     return TodoEntity(
       snap.data()['id'] as String,
       snap.data()['title'] as String,

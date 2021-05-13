@@ -23,5 +23,3 @@ class HydratedPrefsState extends Equatable {
     );
   }
 }
-
-// class HydratedPrefsInitial extends HydratedPrefsState {}

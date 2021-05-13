@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +8,7 @@ import 'package:flutter_quill/widgets/controller.dart';
 import 'package:flutter_quill/widgets/editor.dart';
 import 'package:flutter_quill/widgets/toolbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -16,7 +16,6 @@ import 'package:uuid/uuid.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/packages/packages.dart';
 
 import 'widgets/editor_widgets.dart';
 
@@ -36,7 +35,6 @@ class _EditorScreenState extends State<EditorScreen> {
   final Rx<QuillController> _quillController = QuillController.basic().obs;
 
   final HiveDBServices _dbServices = HiveDBServices();
-  final FlareControls controls = FlareControls();
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocus = FocusNode();
   final FocusNode _editorfocusNode = FocusNode();
@@ -44,7 +42,7 @@ class _EditorScreenState extends State<EditorScreen> {
   // final GlobalKey<ScaffoldState> _editorScaffoldKey = GlobalKey();
 
   dynamic _noteIndex;
-  NoteAndSearchCubit _noteEditStore;
+  NoteStatusCubit _noteEditStore;
   ValueNotifier<NotesModel> _notesModel = ValueNotifier<NotesModel>(null);
 
   Future<qd.Document> _loadDocument() async {
@@ -57,7 +55,7 @@ class _EditorScreenState extends State<EditorScreen> {
   void initState() {
     super.initState();
 
-    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode == NoteMode.Editing) {
+    if (BlocProvider.of<NoteStatusCubit>(context).state.noteMode == NoteMode.Editing) {
       _loadDocument().then((data) {
         // setState(() {
         _quillController.value = QuillController(
@@ -85,7 +83,7 @@ class _EditorScreenState extends State<EditorScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (BlocProvider.of<NoteAndSearchCubit>(context).state.noteMode == NoteMode.Editing) {
+    if (BlocProvider.of<NoteStatusCubit>(context).state.noteMode == NoteMode.Editing) {
       _titleController.text = widget.note.title;
     }
   }
@@ -101,17 +99,14 @@ class _EditorScreenState extends State<EditorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+    _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return WillPopScope(
       onWillPop: _onPop,
       child: Scaffold(
         // key: _editorScaffoldKey,
         backgroundColor: Colors.white,
-        appBar: NoteEditorAppBar(
-          saveNote: _saveNote,
-          controls: controls,
-        ),
+        appBar: NoteEditorAppBar(saveNote: _saveNote),
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +115,7 @@ class _EditorScreenState extends State<EditorScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 15.w),
                 child: getTitleTextField(),
               ),
-              SizedBox(height: 10.w),
+              SizedBox(height: 5.w),
               _noteEditStore.state.noteMode == NoteMode.Editing
                   ? ValueListenableBuilder(
                       valueListenable: _notesModel,
@@ -133,7 +128,7 @@ class _EditorScreenState extends State<EditorScreen> {
                               fontFamily: 'ZillaSlab',
                               color: Colors.black.withOpacity(0.7),
                               fontWeight: FontWeight.w400,
-                              fontSize: 20.h,
+                              fontSize: 16.h,
                               fontStyle: FontStyle.italic,
                             ),
                           ),
@@ -141,13 +136,13 @@ class _EditorScreenState extends State<EditorScreen> {
                       },
                     )
                   : SizedBox.shrink(),
-              SizedBox(height: 15.w),
+              SizedBox(height: 10.w),
               EditorTags(),
-              SizedBox(height: 8.w),
+              SizedBox(height: 15.w),
               Expanded(
                 child: _editorBody(),
               ),
-              BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+              BlocBuilder<NoteStatusCubit, NoteStatusState>(
                 builder: (context, state) {
                   return Container(
                     width: double.infinity,
@@ -171,7 +166,7 @@ class _EditorScreenState extends State<EditorScreen> {
           note: _notesModel.value,
           saveNote: _saveNote,
         ),
-        floatingActionButton: BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+        floatingActionButton: BlocBuilder<NoteStatusCubit, NoteStatusState>(
           bloc: _noteEditStore,
           builder: (context, state) {
             return state.noteMode == NoteMode.Editing && !state.isEditing
@@ -183,11 +178,7 @@ class _EditorScreenState extends State<EditorScreen> {
                       backgroundColor: Colors.black,
                       elevation: 5,
                       child: Icon(CupertinoIcons.pencil, color: Colors.white),
-                      onPressed: () {
-                        _noteEditStore.updateIsEditing(true);
-                        controls.play('edit');
-                        // controls.play('idle-tick');
-                      },
+                      onPressed: () => _noteEditStore.updateIsEditing(true),
                     ),
                   )
                 : SizedBox.shrink();
@@ -198,7 +189,7 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget _editorBody() {
-    return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+    return BlocBuilder<NoteStatusCubit, NoteStatusState>(
       builder: (context, state) {
         return (_quillController.value == null)
             ? Center(child: CupertinoActivityIndicator())
@@ -219,7 +210,7 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget getTitleTextField() {
-    return BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+    return BlocBuilder<NoteStatusCubit, NoteStatusState>(
       builder: (context, state) {
         return TextField(
           readOnly: !state.isEditing,
@@ -259,7 +250,7 @@ class _EditorScreenState extends State<EditorScreen> {
     String note = _quillController.value.document.toPlainText().trim();
 
     if (title.isEmpty && note.isEmpty) {
-      showSnackBar("Can't create empty note");
+      showToast("Can't create empty note");
 
       _noteEditStore.updateIsEditing(false);
       _noteEditStore.updateNoteMode(NoteMode.Adding);
@@ -285,12 +276,11 @@ class _EditorScreenState extends State<EditorScreen> {
       if (_title.isEmpty && _note.isEmpty) {
         FocusScope.of(context).unfocus();
         Navigator.pop(context);
-        showSnackBar("Can't create empty note");
+        showToast("Can't create empty note");
         _noteEditStore.updateIsEditing(false);
         _noteEditStore.updateNoteMode(NoteMode.Adding);
       } else {
         FocusScope.of(context).unfocus();
-        controls.play('save');
         _noteEditStore.updateIsEditing(false);
 
         if (_noteEditStore.state.noteMode == NoteMode.Adding) {
@@ -320,12 +310,12 @@ class _EditorScreenState extends State<EditorScreen> {
           );
         }
 
-        showSnackBar('Note saved succesfully');
+        showToast('Note saved succesfully');
       }
     }
   }
 
-  void showSnackBar(String msg) {
-    Toast.show(msg, context, duration: 3);
+  void showToast(String msg) {
+    Fluttertoast.showToast(msg: msg);
   }
 }

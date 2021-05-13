@@ -19,7 +19,7 @@ class _EditorTagsState extends State<EditorTags> {
 
   @override
   Widget build(BuildContext context) {
-    final NoteAndSearchCubit _noteEditStore = BlocProvider.of<NoteAndSearchCubit>(context);
+    final NoteStatusCubit _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -29,7 +29,7 @@ class _EditorTagsState extends State<EditorTags> {
           children: [
             _buildNoteTags(_noteEditStore),
             noteTagsMap.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
-            BlocBuilder<NoteAndSearchCubit, NoteAndSearchState>(
+            BlocBuilder<NoteStatusCubit, NoteStatusState>(
               builder: (context, state) {
                 return state.isEditing
                     ? Container(
@@ -104,7 +104,7 @@ class _EditorTagsState extends State<EditorTags> {
     );
   }
 
-  Widget _buildNoteTags(NoteAndSearchCubit _noteEditStore) {
+  Widget _buildNoteTags(NoteStatusCubit _noteEditStore) {
     final List<String> noteTag = noteTagsMap.keys.toList();
 
     return Tags(

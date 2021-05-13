@@ -40,7 +40,7 @@ class _NotesCardState extends State<NotesCard> {
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    final MultiSelectController multiSelectController = Get.put(MultiSelectController());
+    final MultiSelectController multiSelectController = Get.find<MultiSelectController>();
 
     return Obx(
       () => Card(
@@ -54,7 +54,7 @@ class _NotesCardState extends State<NotesCard> {
             if (multiSelectController.isSelecting) {
               multiSelectController.select(widget.note.id);
             } else {
-              BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Editing);
+              BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Editing);
               Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },

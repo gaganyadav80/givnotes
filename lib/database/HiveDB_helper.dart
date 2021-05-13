@@ -3,9 +3,7 @@ import 'package:hive/hive.dart';
 
 class HiveDBServices {
   String _givnotesBoxName = 'givnotes';
-  /*
-  Notes
-  */
+ 
   Future<Box> givnotesBox() async {
     var box = Hive.openBox<NotesModel>(_givnotesBoxName);
     return box;

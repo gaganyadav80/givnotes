@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:lottie/lottie.dart';
 
@@ -109,7 +110,7 @@ class SettingsPage extends StatelessWidget {
                   },
                 );
               } else {
-                Toast.show("Please enable applock first", context);
+                Fluttertoast.showToast(msg: "Please enable applock first");
               }
             },
           ),
@@ -455,7 +456,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           // leadingColor: Colors.teal,
           titleGap: 0.0,
           ondisableTap: () {
-            if (reason.isNotEmpty) Toast.show(reason, context);
+            if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
             // ScaffoldMessenger.of(context)
             //   ..removeCurrentSnackBar()
             //   ..showSnackBar(

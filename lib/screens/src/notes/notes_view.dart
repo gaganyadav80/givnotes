@@ -1,20 +1,16 @@
-import 'dart:math' as math;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fluttericon/typicons_icons.dart';
-import 'package:givnotes/screens/src/editor/editor_screen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/services/services.dart';
 
@@ -27,11 +23,9 @@ class NotesView extends StatefulWidget {
   _NotesViewState createState() => _NotesViewState();
 }
 
-class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
+class _NotesViewState extends State<NotesView> {
   int sortNotes;
   List<NotesModel> _notes = <NotesModel>[];
-
-  int noteIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +39,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
+        //TODO remove when separate page for trash
         appBar: NotesAppBar(),
         body: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => previous != current,
@@ -63,7 +58,6 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                     return CupertinoScrollbar(
                       child: ListView.builder(
                         physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                        // separatorBuilder: (context, index) => Divider(thickness: 1.0, height: 0.0),
                         itemCount: _notes.length,
                         itemBuilder: (context, index) {
                           sortNotes = prefState.sortBy;
@@ -81,8 +75,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
 
                           index = _notes.length - index - 1;
 
-                          NotesModel note = _notes[index];
+                          final NotesModel note = _notes[index];
 
+                          //TODO redesign
                           return Slidable(
                             key: UniqueKey(),
                             actionPane: SlidableBehindActionPane(),
@@ -94,12 +89,12 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                                   note.trash = !note.trash;
                                   note.save();
 
-                                  Toast.show("moved to trash", context);
+                                  Fluttertoast.showToast(msg: "moved to trash");
                                 } else {
                                   note.trash = false;
                                   note.save();
 
-                                  Toast.show("moved to notes", context);
+                                  Fluttertoast.showToast(msg: "moved to notes");
                                 }
                               },
                             ),
@@ -129,27 +124,19 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
         floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => previous != current,
           builder: (context, state) {
-            return state.trash == false && state.index == 0
+            return state.trash == false
                 ? Container(
                     height: 65.0,
                     width: 65.0,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFDD4C4F),
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
                     child: FloatingActionButton(
-                      heroTag: 'fab',
-                      child: Transform(
-                        alignment: Alignment.center,
-                        transform: Matrix4.rotationY(math.pi),
-                        child: Icon(Typicons.doc_add, color: Colors.white).rotate180(),
-                      ),
+                      child: Icon(CupertinoIcons.pencil_outline, color: Colors.white),
                       backgroundColor: Color(0xFFDD4C4F),
                       onPressed: () async {
-                        await HandlePermission().requestPermission().then((value) async {
+                        await HandlePermission.requestPermission().then((value) async {
                           if (value) {
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateIsEditing(true);
-                            BlocProvider.of<NoteAndSearchCubit>(context).updateNoteMode(NoteMode.Adding);
+                            BlocProvider.of<NoteStatusCubit>(context).updateIsEditing(true);
+                            BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Adding);
                             Navigator.pushNamed(
                               context,
                               RouterName.editorRoute,
@@ -157,7 +144,7 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
                             );
                           } else {
                             if (isPermanentDisabled) {
-                              HandlePermission().permanentDisabled(context);
+                              HandlePermission.permanentDisabled(context);
                             }
                           }
                         });
@@ -183,15 +170,9 @@ class _NotesViewState extends State<NotesView> with TickerProviderStateMixin {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  icon,
-                  color: Colors.white.withOpacity(0.9),
-                ),
+                Icon(icon, color: Colors.white.withOpacity(0.9)),
                 SizedBox(height: 15.0.w),
-                Text(
-                  caption,
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300),
-                ),
+                Text(caption, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
               ],
             ),
           )

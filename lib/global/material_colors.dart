@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//TODO Change these as per notion list
 final List<int> materialColorValues = <int>[
   Colors.red.value,
   Colors.pink.value,

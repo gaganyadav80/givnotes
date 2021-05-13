@@ -13,7 +13,11 @@ class FirebaseTodosRepository implements TodosRepository {
 
   @override
   Future<void> addNewTodo(Todo todo) {
-    return todoCollection.doc(todo.id).set(todo.toEntity().toDocument()).then((value) => print("User Added")).catchError((error) => print("Failed to add user: $error"));
+    return todoCollection
+        .doc(todo.id)
+        .set(todo.toEntity().toDocument())
+        .then((value) => print("Todo Added"))
+        .catchError((error) => print("Failed to add todo: $error"));
   }
 
   @override
@@ -24,7 +28,7 @@ class FirebaseTodosRepository implements TodosRepository {
   @override
   Stream<List<Todo>> todos() {
     return todoCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc))).toList();
+      return snapshot.docs.map((DocumentSnapshot doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc))).toList();
     });
   }
 

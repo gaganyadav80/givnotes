@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
-
-import 'package:givnotes/packages/packages.dart';
 
 class TapTapClose extends StatefulWidget {
   final Widget child;
@@ -34,12 +33,7 @@ class _TapTapCloseState extends State<TapTapClose> {
           if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
             currentBackPressTime = now;
 
-            Toast.show(
-              widget.message,
-              context,
-              duration: 2,
-              gravity: Toast.BOTTOM,
-            );
+            Fluttertoast.showToast(msg: widget.message);
             return false;
           }
 

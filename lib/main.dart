@@ -1,19 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-
-import 'package:givnotes/cubit/home_cubit/home_cubit.dart';
-import 'package:givnotes/cubit/note_search_cubit/note_search_cubit.dart';
 
 import 'cubit/cubits.dart';
 import 'global/variables.dart';
@@ -43,6 +38,7 @@ void main() async {
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
   await initHiveDb();
+  await initGetXControllers();
   await pluginInitializer();
 
   final authenticationRepository = AuthenticationRepository();
@@ -67,7 +63,7 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
           BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
-          BlocProvider<NoteAndSearchCubit>(create: (_) => NoteAndSearchCubit()),
+          BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
           BlocProvider<AuthenticationBloc>(
             create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
           ),
@@ -134,7 +130,15 @@ class CheckLogin extends StatelessWidget {
     return StreamBuilder<User>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-        if (!snapshot.hasData) return LoginPage();
+        if (snapshot.connectionState == ConnectionState.waiting)
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: CircularProgressIndicator(strokeWidth: 1.0),
+            ),
+          );
+
+        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
 
         return HomePage();
       },

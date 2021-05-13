@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class HandlePermission {
-  Future<bool> requestPermission() async {
+abstract class HandlePermission {
+  static Future<bool> requestPermission() async {
     await Permission.storage.request();
     if (await Permission.storage.isGranted) {
       return true;
@@ -17,8 +17,8 @@ class HandlePermission {
     }
   }
 
-  permanentDisabled(BuildContext context) {
-    showDialog(
+  static Future<void> permanentDisabled(BuildContext context) async {
+    await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(

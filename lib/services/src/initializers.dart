@@ -1,9 +1,17 @@
+import 'package:get/get.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
+
+Future<void> initGetXControllers() async {
+  Get.put(TagSearchController());
+  Get.put(MultiSelectController());
+}
 
 Future<void> initHiveDb() async {
   await Hive.initFlutter();

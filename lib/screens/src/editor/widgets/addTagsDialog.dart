@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/screens/screens.dart';
 
 import '../editor_screen.dart';
 
@@ -253,10 +255,18 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                         }
                         noteTagsMap[tagName] = colorValue;
                         _allTagsMap[tagName] = colorValue;
+
+                        Get.find<TagSearchController>().tagSearchList
+                          ..clear()
+                          ..addAll(_allTagsMap.keys.toList());
                         //
                       } else {
                         if (!_allTagsMap.containsKey(tagName)) {
                           _allTagsMap[tagName] = colorValue;
+
+                          Get.find<TagSearchController>().tagSearchList
+                            ..clear()
+                            ..addAll(_allTagsMap.keys.toList());
                         } else {
                           flag = _allTagsMap[tagName];
                         }
@@ -271,7 +281,6 @@ class _AddTagsDialogState extends State<AddTagsDialog> {
                         }
                       }
 
-                      // _noteEditStore.updateIsEditing(true);
                       _newTagTextController.clear();
                       widget.updateTags();
 
