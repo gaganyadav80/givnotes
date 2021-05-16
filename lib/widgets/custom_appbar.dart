@@ -2,17 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:givnotes/screens/screens.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/widgets/notes_widgets.dart';
 
-class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({Key key}) : super(key: key);
+
   @override
   Size get preferredSize => Size.fromHeight(65.0);
 
+  @override
+  _CustomAppBarState createState() => _CustomAppBarState();
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
   static const List<IconData> _appBarIcon = [
     CupertinoIcons.search,
     CupertinoIcons.calendar_today,
@@ -76,13 +83,14 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               child: InkWell(
                                 child: Icon(_appBarIcon[state.index], size: 28.w),
                                 // splashRadius: 25.0,
-                                key: key,
+                                key: widget.key,
                                 onTap: state.index == 0
                                     ? () => Navigator.pushNamed(context, RouterName.searchRoute)
                                     : () async {
                                         await showDatePicker(
                                           context: context,
-                                          initialDate: DateTime.now(),
+                                          initialDate: appBarDate,
+                                          currentDate: DateTime.now(),
                                           firstDate: DateTime(2000),
                                           lastDate: DateTime(2025),
                                           builder: (context, child) {
@@ -91,7 +99,13 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                                               child: child,
                                             );
                                           },
-                                        );
+                                        ).then((value) {
+                                          if (value != null) {
+                                            todoTimelineState.setState(() {
+                                              appBarDate = value;
+                                            });
+                                          }
+                                        });
                                       },
                               ),
                             )
@@ -102,8 +116,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                               child: Material(
                                 type: MaterialType.transparency,
                                 child: InkWell(
-                                  child: Icon(CupertinoIcons.pencil_ellipsis_rectangle, size: 22.0.w),
-                                  // splashRadius: 25.0,
+                                  child: Icon(CupertinoIcons.create),
                                   onTap: () => Navigator.pushNamed(context, RouterName.createTodoRoute,
                                       arguments: [false, null, null]),
                                 ),

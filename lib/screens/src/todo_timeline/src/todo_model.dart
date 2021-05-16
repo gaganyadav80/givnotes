@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 
 import 'todo_entity.dart';
 
-class Todo {
+class TodoModel {
   final String id;
   final String title;
   final bool completed;
@@ -12,10 +12,12 @@ class Todo {
   final Timestamp dueDate;
   final String priority;
 
-  final Map<String, dynamic> category;
+  // final Map<String, dynamic> category;
   final List<dynamic> subTask;
+  final String category;
+  final int categoryColor;
 
-  Todo({
+  TodoModel({
     String id,
     @required String title,
     this.completed,
@@ -23,11 +25,12 @@ class Todo {
     @required this.dueDate,
     this.priority,
     this.subTask,
-    this.category,
+    this.category = '',
+    this.categoryColor,
   })  : this.title = title ?? '',
         this.id = id ?? Uuid().v1();
 
-  Todo copyWith({
+  TodoModel copyWith({
     String id,
     String title,
     bool completed,
@@ -35,9 +38,10 @@ class Todo {
     Timestamp dueDate,
     String priority,
     List<dynamic> subTask,
-    Map<String, dynamic> category,
+    String category,
+    int categoryColor,
   }) {
-    return Todo(
+    return TodoModel(
       id: id ?? this.id,
       title: title ?? this.title,
       completed: completed ?? this.completed,
@@ -46,16 +50,26 @@ class Todo {
       priority: priority ?? this.priority,
       subTask: subTask ?? this.subTask,
       category: category ?? this.category,
+      categoryColor: categoryColor ?? this.categoryColor,
     );
   }
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ completed.hashCode ^ description.hashCode ^ dueDate.hashCode ^ priority.hashCode ^ subTask.hashCode ^ category.hashCode;
+  int get hashCode =>
+      id.hashCode ^
+      title.hashCode ^
+      completed.hashCode ^
+      description.hashCode ^
+      dueDate.hashCode ^
+      priority.hashCode ^
+      subTask.hashCode ^
+      category.hashCode ^
+      categoryColor.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Todo &&
+      other is TodoModel &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           title == other.title &&
@@ -64,19 +78,20 @@ class Todo {
           dueDate == other.dueDate &&
           priority == other.priority &&
           subTask == other.subTask &&
-          category == other.category;
+          category == other.category &&
+          categoryColor == other.categoryColor;
 
   @override
   String toString() {
-    return 'Todo { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category }';
+    return 'Todo { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category, categoryColor: $categoryColor }';
   }
 
   TodoEntity toEntity() {
-    return TodoEntity(id, title, completed, description, dueDate, priority, subTask, category);
+    return TodoEntity(id, title, completed, description, dueDate, priority, subTask, category, categoryColor);
   }
 
-  static Todo fromEntity(TodoEntity entity) {
-    return Todo(
+  static TodoModel fromEntity(TodoEntity entity) {
+    return TodoModel(
       id: entity.id,
       title: entity.title,
       completed: entity.completed,
@@ -85,6 +100,7 @@ class Todo {
       priority: entity.priority,
       subTask: entity.subTask,
       category: entity.category,
+      categoryColor: entity.categoryColor,
     );
   }
 

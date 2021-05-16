@@ -185,11 +185,10 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           throw Exception('List cannot be null');
         }
 
-       _tagSearchController.tagSearchList
+        _tagSearchController.tagSearchList
           ..clear()
           ..addAll(_filterList);
       } else if (text.isEmpty) {
-
         _tagSearchController.tagSearchList
           ..clear()
           ..addAll(_allTagsMap.keys.toList());

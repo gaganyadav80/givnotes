@@ -12,7 +12,7 @@ class FirebaseTodosRepository implements TodosRepository {
   );
 
   @override
-  Future<void> addNewTodo(Todo todo) {
+  Future<void> addNewTodo(TodoModel todo) {
     return todoCollection
         .doc(todo.id)
         .set(todo.toEntity().toDocument())
@@ -21,19 +21,19 @@ class FirebaseTodosRepository implements TodosRepository {
   }
 
   @override
-  Future<void> deleteTodo(Todo todo) async {
-    return todoCollection.doc(todo.id).delete();
+  Future<void> deleteTodo(String id) async {
+    return todoCollection.doc(id).delete();
   }
 
   @override
-  Stream<List<Todo>> todos() {
+  Stream<List<TodoModel>> todos() {
     return todoCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((DocumentSnapshot doc) => Todo.fromEntity(TodoEntity.fromSnapshot(doc))).toList();
+      return snapshot.docs.map((DocumentSnapshot doc) => TodoModel.fromEntity(TodoEntity.fromSnapshot(doc))).toList();
     });
   }
 
   @override
-  Future<void> updateTodo(Todo update) {
+  Future<void> updateTodo(TodoModel update) {
     return todoCollection.doc(update.id).update(update.toEntity().toDocument());
   }
 }

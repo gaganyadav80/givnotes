@@ -2,11 +2,11 @@ import 'dart:async';
 import 'todo_model.dart';
 
 abstract class TodosRepository {
-  Future<void> addNewTodo(Todo todo);
+  Future<void> addNewTodo(TodoModel todo);
 
-  Future<void> deleteTodo(Todo todo);
+  Future<void> deleteTodo(String todo);
 
-  Stream<List<Todo>> todos();
+  Stream<List<TodoModel>> todos();
 
-  Future<void> updateTodo(Todo todo);
+  Future<void> updateTodo(TodoModel todo);
 }

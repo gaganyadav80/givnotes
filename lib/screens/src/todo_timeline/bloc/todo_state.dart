@@ -11,7 +11,7 @@ abstract class TodosState extends Equatable {
 class TodosLoading extends TodosState {}
 
 class TodosLoaded extends TodosState {
-  final List<Todo> todos;
+  final List<TodoModel> todos;
 
   const TodosLoaded([this.todos = const []]);
 

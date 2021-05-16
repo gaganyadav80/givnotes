@@ -15,10 +15,12 @@ import 'package:givnotes/widgets/widgets.dart';
 class EditorEndDrawer extends StatelessWidget {
   final Function saveNote;
   final NotesModel note;
+  final BuildContext rootCtx;
 
   EditorEndDrawer({
     this.note,
     this.saveNote,
+    @required this.rootCtx,
   });
 
   final HiveDBServices _dbServices = HiveDBServices();
@@ -167,7 +169,6 @@ class EditorEndDrawer extends StatelessWidget {
                     _homeVarStore.state.trash
                         ? () async {
                             Navigator.pop(context); //? close the drawer
-                            // await _confirmDeleteAlert(context, note, _dbServices);
                             await showDialog(
                               context: context,
                               builder: (context) => GivnotesDialog(
@@ -182,7 +183,7 @@ class EditorEndDrawer extends StatelessWidget {
                                   _noteEditStore.updateNoteMode(NoteMode.Adding);
 
                                   Navigator.pop(context); //? close the dialog
-                                  Navigator.pushNamed(context, RouterName.homeRoute);
+                                  Navigator.pop(rootCtx); //? close the editor page
                                 },
                               ),
                             );

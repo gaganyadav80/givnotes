@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,10 +123,10 @@ class _NotesViewState extends State<NotesView> {
         floatingActionButton: BlocBuilder<HomeCubit, HomeState>(
           buildWhen: (previous, current) => previous != current,
           builder: (context, state) {
-            return state.trash == false
+            return state.trash == false && state.index == 0
                 ? Container(
-                    height: 65.0,
-                    width: 65.0,
+                    height: 65.w,
+                    width: 65.w,
                     decoration: BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
                     child: FloatingActionButton(
                       child: Icon(CupertinoIcons.pencil_outline, color: Colors.white),

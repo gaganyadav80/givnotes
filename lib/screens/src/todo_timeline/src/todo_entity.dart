@@ -13,7 +13,9 @@ class TodoEntity extends Equatable {
   final Timestamp dueDate;
   final String priority;
   final List<dynamic> subTask;
-  final Map<String, dynamic> category;
+  // final Map<String, dynamic> category;
+  final String category;
+  final int categoryColor;
 
   TodoEntity(
     this.id,
@@ -24,6 +26,7 @@ class TodoEntity extends Equatable {
     this.priority,
     this.subTask,
     this.category,
+    this.categoryColor
   );
 
   Map<String, Object> toJson() {
@@ -36,15 +39,16 @@ class TodoEntity extends Equatable {
       "priority": priority,
       "subTask": subTask,
       "category": category,
+      "categoryColor": categoryColor,
     };
   }
 
   @override
-  List<Object> get props => [id, title, completed, description, dueDate, priority, subTask, category];
+  List<Object> get props => [id, title, completed, description, dueDate, priority, subTask, category, categoryColor];
 
   @override
   String toString() {
-    return 'TodoEntity { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category }';
+    return 'TodoEntity { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category, categoryColor: $categoryColor }';
   }
 
   static TodoEntity fromJson(Map<String, Object> json) {
@@ -56,7 +60,8 @@ class TodoEntity extends Equatable {
       json["dueDate"] as Timestamp,
       json["priority"] as String,
       json["subTask"] as List<dynamic>,
-      json["category"] as Map<String, dynamic>,
+      json["category"] as String,
+      json["categoryColor"] as int,
     );
   }
 
@@ -69,7 +74,8 @@ class TodoEntity extends Equatable {
       snap.data()['dueDate'] as Timestamp,
       snap.data()['priority'] as String,
       snap.data()['subTask'],
-      snap.data()['category'],
+      snap.data()['category'] as String,
+      snap.data()['categoryColor'] as int,
     );
   }
 
@@ -83,6 +89,7 @@ class TodoEntity extends Equatable {
       "priority": priority,
       "subTask": subTask,
       "category": category,
+      "categoryColor": categoryColor,
     };
   }
 }

@@ -1,101 +1,76 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/widgets/widgets.dart';
+import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/screens/src/tags_view.dart';
 
-import 'bloc/todo_bloc.dart';
-import 'bloc/todo_event.dart';
+import '../editor_screen.dart';
 
-class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
-  const CreateTodoAppBar({
+class AddTagScreen extends StatefulWidget {
+  AddTagScreen({
     Key key,
     this.controller,
-    this.prevTitle,
-    this.editTodo,
-    this.id,
+    this.isEditing,
+    this.editTagTitle,
+    this.updateTags,
   }) : super(key: key);
 
   final TextEditingController controller;
-  final String prevTitle;
-  final bool editTodo;
-  final String id;
+  final bool isEditing;
+  final String editTagTitle;
+  final VoidCallback updateTags;
 
   @override
-  Size get preferredSize => Size.fromHeight(56.0);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      brightness: Brightness.light,
-      elevation: 0.0,
-      backgroundColor: Colors.white,
-      leading: InkWell(
-        onTap: () async {
-          bool val;
-          FocusScope.of(context).unfocus();
-
-          if (editTodo && controller.text == prevTitle) {
-            Navigator.pop(context);
-          } else if (controller.text.isEmpty && !editTodo) {
-            Navigator.pop(context);
-          } else {
-            await showDialog(
-              context: context,
-              builder: (context) => GivnotesDialog(
-                title: "Unsaved Changes",
-                message: "Confirm exit?",
-                mainButtonText: "Exit",
-                showCancel: true,
-              ),
-            ).then((value) => val = value);
-
-            if (val == true) Navigator.pop(context);
-          }
-        },
-        child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
-      ),
-      actions: [
-        editTodo
-            ? IconButton(
-                icon: Icon(CupertinoIcons.delete),
-                color: Colors.black,
-                splashRadius: 25.0,
-                onPressed: () {
-                  BlocProvider.of<TodosBloc>(context).add(DeleteTodo(id));
-                  Navigator.pop(context);
-                },
-              )
-            : SizedBox.shrink(),
-      ],
-    );
-  }
+  _AddTagScreenState createState() => _AddTagScreenState();
 }
 
-class SelectCategory extends StatefulWidget {
-  SelectCategory({Key key, this.controller, this.selectCategoryColors}) : super(key: key);
-
-  final TextEditingController controller;
-  final RxInt selectCategoryColors;
-
-  @override
-  _SelectCategoryState createState() => _SelectCategoryState();
-}
-
-class _SelectCategoryState extends State<SelectCategory> {
+class _AddTagScreenState extends State<AddTagScreen> {
   static const CupertinoDynamicColor _kClearButtonColor = CupertinoDynamicColor.withBrightness(
     color: Color(0x33000000),
     darkColor: Color(0x33FFFFFF),
   );
 
   final FocusNode _focusNode = FocusNode();
+  final RxInt tagColor = 0.obs;
+  Map<String, int> _allTagsMap = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _allTagsMap = prefsBox.allTagsMap;
+
+    if (widget.editTagTitle.isNotEmpty && widget.isEditing) {
+      tagColor.value = _allTagsMap[widget.editTagTitle];
+      widget.controller.text = widget.editTagTitle;
+    } else {
+      tagColor.value = materialColorValues[0];
+    }
+
+    widget.controller.addListener(() {
+      final text = widget.controller.text.trim();
+
+      if (text.isNotEmpty) {
+        final String filterTagName = _allTagsMap.keys.firstWhere(
+          (element) => element == text,
+          orElse: () => null,
+        );
+
+        if (filterTagName != null) {
+          tagColor.value = _allTagsMap[filterTagName];
+        }
+      }
+    });
+  }
 
   @override
   void dispose() {
+    prefsBox.allTagsMap = _allTagsMap;
+    prefsBox.save();
     _focusNode.dispose();
     super.dispose();
   }
@@ -104,19 +79,12 @@ class _SelectCategoryState extends State<SelectCategory> {
   Widget build(BuildContext context) {
     return Material(
       child: WillPopScope(
-        onWillPop: () async {
-          if (widget.controller.text.isEmpty)
-            Navigator.pop<bool>(context, false);
-          else
-            Navigator.pop<bool>(context, true);
-
-          return false;
-        },
+        onWillPop: onDone,
         child: CupertinoPageScaffold(
           backgroundColor: Color(0xffF7F6F2),
           navigationBar: CupertinoNavigationBar(
             automaticallyImplyLeading: false,
-            middle: Text("Category"),
+            middle: Text("Add Tag"),
             trailing: TextButton(
               child: Text(
                 'Done',
@@ -125,12 +93,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: () {
-                if (widget.controller.text.isEmpty)
-                  Navigator.pop<bool>(context, false);
-                else
-                  Navigator.pop<bool>(context, true);
-              },
+              onPressed: onDone,
             ),
           ),
           child: SafeArea(
@@ -147,7 +110,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                         controller: widget.controller,
                         focusNode: _focusNode,
                         cursorColor: Colors.black,
-                        placeholder: "Add category",
+                        placeholder: "Add tag name",
                         padding: const EdgeInsets.fromLTRB(15.0, 6.0, 6.0, 6.0),
                         textCapitalization: TextCapitalization.sentences,
                         decoration: BoxDecoration(border: Border.fromBorderSide(BorderSide.none)),
@@ -169,8 +132,16 @@ class _SelectCategoryState extends State<SelectCategory> {
                   SizedBox(height: 30.w),
                   GestureDetector(
                     onTap: () {
+                      if (widget.isEditing) {
+                        if (noteTagsMap.containsKey(widget.controller.text)) {
+                          noteTagsMap.remove(widget.controller.text);
+                        }
+                        if (_allTagsMap.containsKey(widget.controller.text)) {
+                          _allTagsMap.remove(widget.controller.text);
+                        }
+                      }
                       widget.controller.clear();
-                      widget.selectCategoryColors.value = materialColorValues[0];
+                      tagColor.value = materialColorValues[0];
                       Navigator.pop(context, false);
                     },
                     child: Container(
@@ -181,12 +152,12 @@ class _SelectCategoryState extends State<SelectCategory> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            widget.controller.text.isEmpty ? CupertinoIcons.clear : CupertinoIcons.delete,
+                            !widget.isEditing ? CupertinoIcons.clear : CupertinoIcons.delete,
                             color: Colors.black,
                             size: 21.0,
                           ),
                           SizedBox(width: 10.w),
-                          "${widget.controller.text.isEmpty ? "Cancel" : "Delete"}".text.size(16.w).make(),
+                          "${!widget.isEditing ? "Cancel" : "Delete"}".text.size(16.w).make(),
                         ],
                       ),
                     ),
@@ -207,7 +178,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                             10,
                             (index) => GestureDetector(
                               onTap: () {
-                                widget.selectCategoryColors.value = materialColorValues[index];
+                                tagColor.value = materialColorValues[index];
                               },
                               child: Container(
                                 padding: EdgeInsets.only(left: 15.0),
@@ -232,7 +203,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                                         materialColorNames[index].text.size(16.w).make(),
                                       ],
                                     ),
-                                    if (widget.selectCategoryColors.value == materialColorValues[index])
+                                    if (tagColor.value == materialColorValues[index])
                                       Icon(CupertinoIcons.checkmark_alt, color: Colors.black).pOnly(right: 15.w),
                                   ],
                                 ),
@@ -248,5 +219,51 @@ class _SelectCategoryState extends State<SelectCategory> {
         ),
       ),
     );
+  }
+
+  Future<bool> onDone() async {
+    int flag = 0;
+    String tagName = widget.controller.text.trim();
+
+    if (tagName.isEmpty) {
+      Fluttertoast.showToast(msg: "Tag name is required");
+    } else {
+      if (widget.isEditing) {
+        if (tagName != widget.editTagTitle) {
+          noteTagsMap.remove(widget.editTagTitle);
+          _allTagsMap.remove(widget.editTagTitle);
+        }
+        noteTagsMap[tagName] = tagColor.value;
+        _allTagsMap[tagName] = tagColor.value;
+
+        Get.find<TagSearchController>().tagSearchList
+          ..clear()
+          ..addAll(_allTagsMap.keys.toList());
+      } else {
+        if (!_allTagsMap.containsKey(tagName)) {
+          _allTagsMap[tagName] = tagColor.value;
+
+          Get.find<TagSearchController>().tagSearchList
+            ..clear()
+            ..addAll(_allTagsMap.keys.toList());
+        } else {
+          flag = _allTagsMap[tagName];
+        }
+
+        if (!noteTagsMap.containsKey(tagName)) {
+          if (flag == 0)
+            noteTagsMap[tagName] = tagColor.value;
+          else
+            noteTagsMap[tagName] = flag;
+        } else {
+          Fluttertoast.showToast(msg: "Tag already added");
+        }
+      }
+      widget.controller.clear();
+      widget.updateTags();
+    }
+    Navigator.pop(context);
+
+    return false;
   }
 }

@@ -11,7 +11,7 @@ abstract class TodosEvent extends Equatable {
 class LoadTodos extends TodosEvent {}
 
 class AddTodo extends TodosEvent {
-  final Todo todo;
+  final TodoModel todo;
 
   const AddTodo(this.todo);
 
@@ -23,7 +23,7 @@ class AddTodo extends TodosEvent {
 }
 
 class UpdateTodo extends TodosEvent {
-  final Todo updatedTodo;
+  final TodoModel updatedTodo;
 
   const UpdateTodo(this.updatedTodo);
 
@@ -35,15 +35,15 @@ class UpdateTodo extends TodosEvent {
 }
 
 class DeleteTodo extends TodosEvent {
-  final Todo todo;
+  final String id;
 
-  const DeleteTodo(this.todo);
-
-  @override
-  List<Object> get props => [todo];
+  const DeleteTodo(this.id);
 
   @override
-  String toString() => 'DeleteTodo { todo: $todo }';
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'DeleteTodo { todo_id: $id }';
 }
 
 class ClearCompleted extends TodosEvent {}
@@ -51,7 +51,7 @@ class ClearCompleted extends TodosEvent {}
 class ToggleAll extends TodosEvent {}
 
 class TodosUpdated extends TodosEvent {
-  final List<Todo> todos;
+  final List<TodoModel> todos;
 
   const TodosUpdated(this.todos);
 

@@ -3,8 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/packages/circular_checkbox.dart';
@@ -19,16 +22,16 @@ import 'todo_widgets.dart';
 class CreateTodoBloc extends StatefulWidget {
   const CreateTodoBloc({
     Key key,
-    this.id,
     this.isEditing = false,
+    this.id,
     this.todo,
   })  : assert(isEditing ? id != null : true),
         assert(isEditing ? todo != null : true),
         super(key: key);
 
-  final String id;
   final bool isEditing;
-  final Todo todo;
+  final String id;
+  final TodoModel todo;
 
   @override
   _CreateTodoState createState() => _CreateTodoState();
@@ -40,32 +43,32 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   final TextEditingController _subtaskController = TextEditingController();
   final TextEditingController _categoryController = TextEditingController();
 
-  // final HiveDBServices _dbServices = HiveDBServices();
-  String _priority;
-  List<dynamic> _subTasks = [];
-  List<int> _selectCategoryColors = <int>[];
-  bool _categoryAdded = false;
-  DateTime _dueDate = DateTime.now();
+  final RxString _priority = "".obs;
+  final RxList<dynamic> _subTasks = [].obs;
+  final RxInt _selectCategoryColors = 0.obs;
+  final RxBool _categoryAdded = false.obs;
+  final Rx<DateTime> _dueDate = DateTime.now().obs;
 
   @override
   void initState() {
     super.initState();
+    _selectCategoryColors.value = materialColorValues[0];
+
     if (widget.isEditing) {
-      _categoryAdded = true;
+      _categoryAdded.value = widget.todo.category.isNotEmpty;
 
       _titleController.text = widget.todo.title;
       _detailsController.text = widget.todo.description;
-      _categoryController.text = widget.todo.category.keys.first;
-      _selectCategoryColors
-        ..clear()
-        ..add(widget.todo.category.values.first);
-      _priority = widget.todo.priority;
+
+      if (_categoryAdded.value) _categoryController.text = widget.todo.category;
+      if (_categoryAdded.value) _selectCategoryColors.value = widget.todo.categoryColor;
+
+      _priority.value = widget.todo.priority;
       _subTasks
         ..clear()
         ..addAll(widget.todo.subTask);
-      _dueDate = widget.todo.dueDate.toDate();
-    } else {
-      _selectCategoryColors.addAll(materialColorValues);
+
+      _dueDate.value = widget.todo.dueDate.toDate();
     }
   }
 
@@ -80,8 +83,6 @@ class _CreateTodoState extends State<CreateTodoBloc> {
 
   @override
   Widget build(BuildContext context) {
-    print(_dueDate);
-
     return WillPopScope(
       onWillPop: () async {
         bool val = true;
@@ -107,113 +108,107 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               showCancel: true,
             ),
           ).then((value) => val = value);
+        } else if (_titleController.text.isEmpty) {
+          Fluttertoast.showToast(msg: "Please add a title");
         }
+
         return val;
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: CreateTodoAppBar(
-            controller: _titleController,
-            prevTitle: widget.isEditing ? widget.todo.title : "",
-            editTodo: widget.isEditing),
+          controller: _titleController,
+          prevTitle: widget.isEditing ? widget.todo.title : "",
+          editTodo: widget.isEditing,
+          id: widget.todo?.id ?? null,
+        ),
         floatingActionButton: _buildFab(),
         body: Padding(
           padding: EdgeInsets.all(20.0.w),
           child: ListView(
             children: [
+              Container(child: "REQUIRED".text.coolGray400.size(10.w).make()),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(CupertinoIcons.text_insert, color: Colors.black),
-                  SizedBox(width: 10.0.w),
+                  SizedBox(width: 10.w),
                   Expanded(child: _titleTextField()),
                 ],
               ),
+              SizedBox(height: 5.w),
               _detailsTextField(),
-              ListTile(
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
+              SizedBox(height: 10.w),
+              Obx(
+                () => Container(
+                  decoration: BoxDecoration(
+                    color: _categoryAdded.value ? Color(_selectCategoryColors.value).withOpacity(0.15) : Colors.white,
+                    borderRadius: BorderRadius.circular(8.r),
+                    border: _categoryAdded.value
+                        ? Border.all(color: Color(_selectCategoryColors.value).withOpacity(0.2))
+                        : null,
+                  ),
+                  child: ListTile(
+                    tileColor: Colors.transparent,
+                    leading: Icon(
                       CupertinoIcons.tag_solid,
-                      size: 24.0.w,
-                      color: _selectCategoryColors.length == 1 && _categoryAdded
-                          ? Color(_selectCategoryColors.first)
-                          : null,
+                      size: 24.w,
+                      color: _categoryAdded.value ? Colors.black.withOpacity(0.7) : null,
                     ),
-                  ],
-                ),
-                enabled: !_categoryAdded,
-                trailing: _categoryAdded
-                    ? GestureDetector(
-                        onTap: () {
-                          _categoryController.clear();
-                          _selectCategoryColors
-                            ..clear()
-                            ..addAll(materialColorValues);
-                          setState(() {
-                            _categoryAdded = false;
-                          });
-                        },
-                        child: Icon(CupertinoIcons.xmark_circle))
-                    : SizedBox.shrink(),
-                title: Text(
-                  _categoryController.text.isNotEmpty && _categoryAdded ? _categoryController.text : "Category",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: _selectCategoryColors.length == 1 && _categoryAdded
-                        ? Color(_selectCategoryColors.first)
-                        : Colors.black,
+                    trailing: _categoryAdded.value
+                        ? GestureDetector(
+                            onTap: () {
+                              _categoryController.clear();
+                              _selectCategoryColors.value = materialColorValues[0];
+                              _categoryAdded.value = false;
+                            },
+                            child: Icon(
+                              CupertinoIcons.clear_thick_circled,
+                              color: _categoryAdded.value ? Colors.black.withOpacity(0.7) : null,
+                            ))
+                        : SizedBox.shrink(),
+                    title: Text(
+                      _categoryAdded.value ? _categoryController.text : "Category",
+                      style: TextStyle(
+                        fontSize: 18.w,
+                        fontWeight: FontWeight.w500,
+                        color: _categoryAdded.value ? Colors.black : Colors.black,
+                      ),
+                    ),
+                    horizontalTitleGap: 0.0,
+                    onTap: () => Navigator.push(
+                      context,
+                      CupertinoPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => SelectCategory(
+                          controller: _categoryController,
+                          selectCategoryColors: _selectCategoryColors,
+                        ),
+                      ),
+                    ).then((value) {
+                      if (value == null) value = false;
+                      if (value && value != null) _categoryAdded.value = value;
+                    }),
                   ),
                 ),
-                horizontalTitleGap: 0.0,
-                onTap: () => showModalBottomSheet(
-                  context: context,
-                  isDismissible: true,
-                  isScrollControlled: true,
-                  useRootNavigator: true,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
-                  builder: (BuildContext context) => Padding(
-                    padding: MediaQuery.of(context).viewInsets,
-                    child: SelectCategory(
-                      controller: _categoryController,
-                      selectCategoryColors: _selectCategoryColors,
-                    ),
-                  ),
-                ).then((value) {
-                  if (value == null) value = false;
-                  if (value && value != null)
-                    _categoryAdded = value;
-                  else {
-                    _categoryAdded = false;
-                    _selectCategoryColors
-                      ..clear()
-                      ..addAll(materialColorValues);
-                    _categoryController.clear();
-                  }
-                }),
               ),
               ListTile(
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.calendar, size: 26.0.w)],
-                ),
+                leading: Icon(CupertinoIcons.calendar, size: 26.0.w),
                 title: Row(
                   children: [
                     GFButton(
                       onPressed: () async {
                         await showDatePicker(
                           context: context,
-                          initialDate: _dueDate,
+                          initialDate: _dueDate.value,
                           lastDate: DateTime(DateTime.now().year + 1),
                           firstDate: DateTime(DateTime.now().year - 1),
                         ).then((value) {
                           if (value != null)
-                            setState(() {
-                              _dueDate = DateTime(value.year, value.month, value.day, _dueDate.hour, _dueDate.minute);
-                            });
+                            _dueDate.value = DateTime(
+                                value.year, value.month, value.day, _dueDate.value.hour, _dueDate.value.minute);
                         });
                       },
                       color: Colors.black,
@@ -221,7 +216,10 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(DateFormat("EEE, dd MMM").format(_dueDate), style: TextStyle(fontSize: 16.0)),
+                      child: Obx(() => Text(
+                            DateFormat("EEE, dd MMM").format(_dueDate.value),
+                            style: TextStyle(fontSize: 16.0),
+                          )),
                     ),
                     SizedBox(width: 10.0.w),
                     GFButton(
@@ -237,17 +235,18 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                           },
                         ).then((value) {
                           if (value != null)
-                            setState(() {
-                              _dueDate =
-                                  DateTime(_dueDate.year, _dueDate.month, _dueDate.day, value.hour, value.minute);
-                            });
+                            _dueDate.value = DateTime(_dueDate.value.year, _dueDate.value.month, _dueDate.value.day,
+                                value.hour, value.minute);
                         });
                       },
                       color: Colors.black,
                       shape: GFButtonShape.pills,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(DateFormat("HH:mm").format(_dueDate), style: TextStyle(fontSize: 16.0.w)),
+                      child: Obx(() => Text(
+                            DateFormat("HH:mm").format(_dueDate.value),
+                            style: TextStyle(fontSize: 16.0.w),
+                          )),
                     ),
                   ],
                 ),
@@ -255,10 +254,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               ),
               ListTile(
                 horizontalTitleGap: 0.0,
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.bell_solid, size: 26.0.w)],
-                ),
+                leading: Icon(CupertinoIcons.bell_solid, size: 26.0.w),
                 title: Row(
                   children: [
                     GFButton(
@@ -277,27 +273,30 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               ),
               ListTile(
                 horizontalTitleGap: 0.0,
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.exclamationmark_circle_fill, size: 26.0.w)],
-                ),
+                leading: Icon(CupertinoIcons.exclamationmark_circle_fill, size: 26.0.w),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                title: Text(_priority == null ? "Set priority" : "Priority - $_priority",
-                    style: TextStyle(fontWeight: FontWeight.w500)),
-                onTap: () => showModalBottomSheet(
-                  context: context,
-                  backgroundColor: Color(0xff171C26),
-                  isDismissible: true,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
-                  builder: (context) => setPriorityModal(context),
-                ),
+                title: Obx(() => Text(
+                      _priority.value.isEmpty ? "Set priority" : "Priority - ${_priority.value}",
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    )),
+                onTap: () {
+                  FocusScope.of(context).unfocus();
+
+                  Future.delayed(
+                    Duration(milliseconds: 150),
+                    () => showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Color(0xff171C26),
+                      isDismissible: true,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
+                      builder: (context) => _buildPriorityModal(context),
+                    ),
+                  );
+                },
               ),
               ListTile(
                 horizontalTitleGap: 0.0,
-                leading: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(CupertinoIcons.list_bullet, size: 26.0.w)],
-                ),
+                leading: Icon(CupertinoIcons.list_bullet, size: 26.0.w),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
                 title: Text("Add subtask", style: TextStyle(fontWeight: FontWeight.w500)),
                 onTap: () async {
@@ -312,33 +311,33 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               ),
               Container(
                 height: 300.0.h,
-                child: ListView.builder(
-                  itemCount: _subTasks.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      leading: BlocBuilder<TodosBloc, TodosState>(
-                        builder: (context, state) {
-                          return CircularCheckBox(
-                            onChanged: (_) async {
-                              var subTask = widget.todo.subTask;
-                              subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
+                child: Obx(() => ListView.builder(
+                      itemCount: _subTasks.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          leading: BlocBuilder<TodosBloc, TodosState>(
+                            builder: (context, state) {
+                              return CircularCheckBox(
+                                onChanged: (_) async {
+                                  var subTask = widget.todo.subTask;
+                                  subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
 
-                              BlocProvider.of<TodosBloc>(context).add(
-                                UpdateTodo(widget.todo.copyWith(subTask: subTask)),
+                                  BlocProvider.of<TodosBloc>(context).add(
+                                    UpdateTodo(widget.todo.copyWith(subTask: subTask)),
+                                  );
+                                },
+                                value: _subTasks[index].values.first,
+                                inactiveColor: Colors.blue,
+                                activeColor: Colors.blue,
+                                radius: 14.0.r,
+                                width: 20.0.w,
                               );
                             },
-                            value: _subTasks[index].values.first,
-                            inactiveColor: Colors.blue,
-                            activeColor: Colors.blue,
-                            radius: 14.0.r,
-                            width: 20.0.w,
-                          );
-                        },
-                      ),
-                      title: Text(_subTasks[index].keys.first),
-                    );
-                  },
-                ),
+                          ),
+                          title: Text(_subTasks[index].keys.first),
+                        );
+                      },
+                    )),
               ),
             ],
           ),
@@ -347,221 +346,191 @@ class _CreateTodoState extends State<CreateTodoBloc> {
     );
   }
 
-  Container setPriorityModal(BuildContext context) => Container(
-        height: 400.0.h,
-        padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 10.0.h, bottom: 30.0.h),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[600],
-                    borderRadius: BorderRadius.circular(15.0.r),
+  static const List<String> _priorityName = <String>["Urgent", "High", "Medium", "Low", "No priority"];
+  static const List<String> _priorityImoji = <String>["\u{1F525}", "\u{1F9E8}", "\u{1F383}", "\u{2744}", "\u{26C4}"];
+
+  SingleChildScrollView _buildPriorityModal(BuildContext context) => SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //Build the small bar on top
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 10.h, bottom: 30.h),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[600],
+                      borderRadius: BorderRadius.circular(15.0.r),
+                    ),
+                    height: 5.0.h,
+                    width: 50.0.w,
                   ),
-                  height: 5.0.h,
-                  width: 50.0.w,
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-              child: Text(
-                "Select a priority",
-                style: TextStyle(
-                  color: Colors.grey[350],
-                  fontSize: 22.0.w,
-                  fontWeight: FontWeight.w600,
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+                child: Text(
+                  "Select a priority",
+                  style: TextStyle(
+                    color: Colors.grey[350],
+                    fontSize: 22.0.w,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            ListTile(
-              leading: Text("\u{1F525}", style: TextStyle(fontSize: 24.0.w)),
-              title: Text("Urgent", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0.w,
-              onTap: () {
-                setState(() => _priority = "Urgent");
-                Navigator.pop(context);
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-            ),
-            ListTile(
-              leading: Text("\u{1F9E8}", style: TextStyle(fontSize: 24.0.w)),
-              title: Text("High", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0.w,
-              onTap: () {
-                setState(() => _priority = "High");
-                Navigator.pop(context);
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-            ),
-            ListTile(
-              leading: Text("\u{1F383}", style: TextStyle(fontSize: 24.0.w)),
-              title: Text("Medium", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0.w,
-              onTap: () {
-                setState(() => _priority = "Medium");
-                Navigator.pop(context);
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-            ),
-            ListTile(
-              leading: Text("\u{2744}", style: TextStyle(fontSize: 24.0.w)),
-              title: Text("Low", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0.w,
-              onTap: () {
-                setState(() => _priority = "Low");
-                Navigator.pop(context);
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-            ),
-            ListTile(
-              leading: Text("\u{26C4}", style: TextStyle(fontSize: 24.0.w)),
-              title: Text("No priority", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
-              horizontalTitleGap: 10.0.w,
-              onTap: () {
-                setState(() => _priority = "None");
-                Navigator.pop(context);
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-            ),
-          ],
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  5,
+                  (index) => ListTile(
+                    leading: Text(_priorityImoji[index], style: TextStyle(fontSize: 24.0.w)),
+                    title:
+                        Text(_priorityName[index], style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
+                    horizontalTitleGap: 10.0.w,
+                    onTap: () {
+                      if (index == 4)
+                        _priority.value = "";
+                      else
+                        _priority.value = _priorityName[index];
+                      Navigator.pop(context);
+                    },
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       );
 
-  TextField _titleTextField() {
-    return TextField(
+  CupertinoTextField _titleTextField() {
+    return CupertinoTextField.borderless(
       autocorrect: false,
       controller: _titleController,
+      cursorColor: Colors.black,
       textCapitalization: TextCapitalization.sentences,
       style: TextStyle(
         fontSize: 26.0.w,
         fontWeight: FontWeight.w500,
         color: Colors.black,
       ),
-      decoration: InputDecoration(
-        border: InputBorder.none,
-        hintText: "Task title",
-        hintStyle: TextStyle(
-          fontSize: 26.0.w,
-          fontWeight: FontWeight.w500,
-          color: Colors.grey,
-        ),
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      placeholder: "Task title",
+      placeholderStyle: TextStyle(
+        fontSize: 26.0.w,
+        fontWeight: FontWeight.w500,
+        color: Colors.grey,
       ),
     );
   }
 
-  ConstrainedBox _detailsTextField() {
-    return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: 100.0.h),
-      child: TextField(
-        autocorrect: false,
-        controller: _detailsController,
-        textCapitalization: TextCapitalization.sentences,
-        style: TextStyle(fontSize: 16.0.w, color: Colors.black),
-        maxLines: null,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          hintText: "Would you like to add more details?",
-          hintStyle: TextStyle(fontSize: 16.0.w, color: Colors.grey),
-        ),
-      ),
+  Widget _detailsTextField() {
+    return CupertinoTextField.borderless(
+      autocorrect: false,
+      cursorColor: Colors.black,
+      controller: _detailsController,
+      textCapitalization: TextCapitalization.sentences,
+      style: TextStyle(fontSize: 16.0.w, color: Colors.black, fontFamily: 'Poppins'),
+      maxLines: 3,
+      minLines: 1,
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      placeholder: "Would you like to add more details?",
+      placeholderStyle: TextStyle(fontSize: 16.0.w, color: Colors.grey, fontFamily: 'Poppins'),
     );
   }
 
   Padding _buildFab() => Padding(
         padding: EdgeInsets.only(bottom: 20.0.h),
-        child: FloatingActionButton(
-          backgroundColor: Colors.black,
-          child: Icon(CupertinoIcons.floppy_disk, color: Colors.white),
-          onPressed: () {
-            if (_titleController.text.isNotEmpty && !widget.isEditing) {
-              BlocProvider.of<TodosBloc>(context).add(
-                AddTodo(Todo(
-                  title: _titleController.text,
-                  completed: false,
-                  description: _detailsController.text,
-                  dueDate: Timestamp.fromDate(_dueDate),
-                  priority: _priority,
-                  category: _categoryController.text.isNotEmpty
-                      ? {_categoryController.text: _selectCategoryColors.first}
-                      : {"": null},
-                  subTask: _subTasks,
-                )),
-              );
+        child: Container(
+          height: 65.w,
+          width: 65.w,
+          child: FloatingActionButton(
+            backgroundColor: Colors.black,
+            child: Icon(CupertinoIcons.floppy_disk, color: Colors.white),
+            onPressed: () {
+              if (_titleController.text.isNotEmpty && !widget.isEditing) {
+                BlocProvider.of<TodosBloc>(context).add(
+                  AddTodo(TodoModel(
+                    title: _titleController.text,
+                    completed: false,
+                    description: _detailsController.text,
+                    dueDate: Timestamp.fromDate(_dueDate.value),
+                    priority: _priority.value,
+                    category: _categoryController.text,
+                    categoryColor: _selectCategoryColors.value,
+                    subTask: _subTasks,
+                  )),
+                );
 
-              Navigator.pop(context);
-            } else if (widget.isEditing) {
-              BlocProvider.of<TodosBloc>(context).add(
-                UpdateTodo(widget.todo.copyWith(
-                  title: _titleController.text,
-                  description: _detailsController.text,
-                  dueDate: Timestamp.fromDate(_dueDate),
-                  priority: _priority,
-                  category: {_categoryController.text: _selectCategoryColors.first},
-                  subTask: _subTasks,
-                )),
-              );
+                Navigator.pop(context);
+              } else if (widget.isEditing) {
+                BlocProvider.of<TodosBloc>(context).add(
+                  UpdateTodo(widget.todo.copyWith(
+                    title: _titleController.text,
+                    description: _detailsController.text,
+                    dueDate: Timestamp.fromDate(_dueDate.value),
+                    priority: _priority.value,
+                    category: _categoryController.text,
+                    categoryColor: _selectCategoryColors.value,
+                    subTask: _subTasks,
+                  )),
+                );
 
-              Navigator.pop(context);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Please enter a task title.")));
-            }
-          },
+                Navigator.pop(context);
+              } else {
+                Fluttertoast.showToast(msg: "Please enter a task title.");
+              }
+            },
+          ),
         ),
       );
 
-  Padding _buildSubTaskModal() => Padding(
-        padding: MediaQuery.of(context).viewInsets,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Create new subtask',
-                style: TextStyle(
-                  fontSize: 18.w,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[600],
-                ),
+  Widget _buildSubTaskModal() => Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Create new subtask',
+              style: TextStyle(
+                fontSize: 18.w,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[600],
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _subtaskController,
-                      autofocus: true,
-                      onSubmitted: (_) {
-                        setState(() {
-                          // _subTasks.add(SubTaskModel(_subtaskController.text));
-                          _subTasks.add({_subtaskController.text: false});
-                        });
-                        // Navigator.pop(context);
-                        _subtaskController.clear();
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(CupertinoIcons.add),
-                    color: Colors.blue,
-                    iconSize: 28.0.w,
-                    onPressed: () {
-                      setState(() {
-                        _subTasks.add({_subtaskController.text: false});
-                      });
-                      // Navigator.pop(context);
+            ),
+            SizedBox(height: 10.w),
+            Row(
+              children: [
+                Expanded(
+                  child: CupertinoTextField(
+                    controller: _subtaskController,
+                    autofocus: true,
+                    cursorColor: Colors.black,
+                    style: TextStyle(fontSize: 20.w),
+                    padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
+                    onSubmitted: (_) {
+                      _subTasks.add({_subtaskController.text: false});
                       _subtaskController.clear();
                     },
                   ),
-                ],
-              ),
-            ],
-          ),
+                ),
+                IconButton(
+                  icon: Icon(CupertinoIcons.add),
+                  color: Colors.blue,
+                  iconSize: 28.0.w,
+                  onPressed: () {
+                    _subTasks.add({_subtaskController.text: false});
+                    _subtaskController.clear();
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       );
 }

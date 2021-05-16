@@ -98,8 +98,8 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
+  Widget build(BuildContext rootContext) {
+    _noteEditStore = BlocProvider.of<NoteStatusCubit>(rootContext);
 
     return WillPopScope(
       onWillPop: _onPop,
@@ -165,6 +165,7 @@ class _EditorScreenState extends State<EditorScreen> {
         endDrawer: EditorEndDrawer(
           note: _notesModel.value,
           saveNote: _saveNote,
+          rootCtx: rootContext,
         ),
         floatingActionButton: BlocBuilder<NoteStatusCubit, NoteStatusState>(
           bloc: _noteEditStore,

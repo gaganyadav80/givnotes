@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:givnotes/cubit/cubits.dart';
 
 import '../editor_screen.dart';
-import 'addTagsDialog.dart';
+import 'add_tags_page.dart';
 
 class EditorTags extends StatefulWidget {
   EditorTags({Key key}) : super(key: key);
@@ -16,6 +17,7 @@ class EditorTags extends StatefulWidget {
 
 class _EditorTagsState extends State<EditorTags> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
+  final TextEditingController _tagController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -47,27 +49,17 @@ class _EditorTagsState extends State<EditorTags> {
                           borderRadius: BorderRadius.circular(25.r),
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  insetPadding: EdgeInsets.all(10.w),
-                                  title: Text('New tag'),
-                                  titlePadding: EdgeInsets.all(15.w),
-                                  titleTextStyle: TextStyle(
-                                    fontSize: 22.w,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                    letterSpacing: 0.5.w,
-                                  ),
-                                  contentPadding: EdgeInsets.all(15.w),
-                                  content: AddTagsDialog(
-                                    editNoteTag: false,
-                                    editTagTitle: '',
-                                    updateTags: () => setState(() {}),
-                                  ),
-                                );
-                              },
+                            Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                builder: (context) => AddTagScreen(
+                                  controller: _tagController,
+                                  isEditing: false,
+                                  editTagTitle: '',
+                                  updateTags: () => setState(() {}),
+                                ),
+                                fullscreenDialog: true,
+                              ),
                             );
                           },
                           child: Icon(
@@ -144,27 +136,17 @@ class _EditorTagsState extends State<EditorTags> {
           // ),
           onPressed: (item) {
             if (_noteEditStore.state.isEditing) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    insetPadding: EdgeInsets.all(10),
-                    title: Text('Edit tag'),
-                    titlePadding: EdgeInsets.all(15.w),
-                    titleTextStyle: TextStyle(
-                      fontSize: 22.w,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 0.5.w,
-                    ),
-                    contentPadding: EdgeInsets.all(15.w),
-                    content: AddTagsDialog(
-                      editNoteTag: true,
-                      editTagTitle: item.title,
-                      updateTags: () => setState(() {}),
-                    ),
-                  );
-                },
+              Navigator.push(
+                context,
+                CupertinoPageRoute(
+                  builder: (context) => AddTagScreen(
+                    controller: _tagController,
+                    isEditing: true,
+                    editTagTitle: item.title,
+                    updateTags: () => setState(() {}),
+                  ),
+                  fullscreenDialog: true,
+                ),
               );
             }
           },
