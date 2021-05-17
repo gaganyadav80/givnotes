@@ -58,13 +58,13 @@ class _CreateTodoState extends State<CreateTodoBloc> {
     if (widget.isEditing) {
       _categoryAdded.value = widget.todo.category.isNotEmpty;
 
-      _titleController.text = widget.todo.title;
-      _detailsController.text = widget.todo.description;
+      _titleController.text = widget.todo.title.decrypt;
+      _detailsController.text = widget.todo.description.decrypt;
 
-      if (_categoryAdded.value) _categoryController.text = widget.todo.category;
+      if (_categoryAdded.value) _categoryController.text = widget.todo.category.decrypt;
       if (_categoryAdded.value) _selectCategoryColors.value = widget.todo.categoryColor;
 
-      _priority.value = widget.todo.priority;
+      _priority.value = widget.todo.priority.decrypt;
       _subTasks
         ..clear()
         ..addAll(widget.todo.subTask);
@@ -335,7 +335,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                               );
                             },
                           ),
-                          title: Text(encrypter.decrypt64(_subTasks[index].keys.first, iv: iv)),
+                          title: Text(_subTasks[index].keys.first.decrypt),
                         );
                       },
                     )),
@@ -456,10 +456,10 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               if (_titleController.text.isNotEmpty && !widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
                   AddTodo(TodoModel(
-                    title: encrypter.encrypt(_titleController.text, iv: iv).base64,
-                    description: encrypter.encrypt(_detailsController.text, iv: iv).base64,
-                    priority: encrypter.encrypt(_priority.value, iv: iv).base64,
-                    category: encrypter.encrypt(_categoryController.text, iv: iv).base64,
+                    title: _titleController.text.encrypt,
+                    description: _detailsController.text.encrypt,
+                    priority: _priority.value.encrypt,
+                    category: _categoryController.text.encrypt,
                     subTask: _subTasks,
                     //
                     completed: false,
@@ -472,10 +472,10 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               } else if (widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
                   UpdateTodo(widget.todo.copyWith(
-                    title: encrypter.encrypt(_titleController.text, iv: iv).base64,
-                    description: encrypter.encrypt(_detailsController.text, iv: iv).base64,
-                    priority: encrypter.encrypt(_priority.value, iv: iv).base64,
-                    category: encrypter.encrypt(_categoryController.text, iv: iv).base64,
+                    title: _titleController.text.encrypt,
+                    description: _detailsController.text.encrypt,
+                    priority: _priority.value.encrypt,
+                    category: _categoryController.text.encrypt,
                     subTask: _subTasks,
                     //
                     dueDate: Timestamp.fromDate(_dueDate.value),
@@ -517,8 +517,12 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                     style: TextStyle(fontSize: 20.w),
                     padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
                     onSubmitted: (_) {
-                      _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
-                      _subtaskController.clear();
+                      if (_subtaskController.text.isNotEmpty) {
+                        _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
+                        _subtaskController.clear();
+                      } else {
+                        Fluttertoast.showToast(msg: "Please enter subtask");
+                      }
                     },
                   ),
                 ),
@@ -527,8 +531,12 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   color: Colors.blue,
                   iconSize: 28.0.w,
                   onPressed: () {
-                    _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
-                    _subtaskController.clear();
+                    if (_subtaskController.text.isNotEmpty) {
+                      _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
+                      _subtaskController.clear();
+                    } else {
+                      Fluttertoast.showToast(msg: "Please enter subtask");
+                    }
                   },
                 ),
               ],

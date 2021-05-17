@@ -30,6 +30,7 @@ class SettingsPage extends StatelessWidget {
           ProfileTileSettings(),
           PreferenceTitle('General', topPadding: 10.w),
           SortNotesFloatModalSheet(),
+          SettingsTileDivider(),
           SwitchPreference(
             'Compact tags',
             'compact_tags',
@@ -42,7 +43,7 @@ class SettingsPage extends StatelessWidget {
             onEnable: () => _prefsCubit.updateCompactTags(true),
             onDisable: () => _prefsCubit.updateCompactTags(false),
           ),
-
+          SettingsTileDivider(),
           PreferenceTitle('Personalization'),
           PreferenceTitle(
             '  !! Personalization is yet to be implemented !!',
@@ -64,6 +65,7 @@ class SettingsPage extends StatelessWidget {
               print(value);
             }),
           ),
+          SettingsTileDivider(),
           DropdownPreference(
             'Dark theme',
             'dark_theme',
@@ -79,6 +81,7 @@ class SettingsPage extends StatelessWidget {
               print(value);
             }),
           ),
+          SettingsTileDivider(),
           PreferencePageLink(
             'Extensions',
             // desc: 'Extend your experience.',
@@ -90,8 +93,10 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             widgetScaffold: AboutUsPage(),
           ),
+          SettingsTileDivider(),
           PreferenceTitle('Security'),
           AppLockSwitchPrefs(),
+          SettingsTileDivider(),
           PreferenceText(
             'Change Passcode',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
@@ -114,9 +119,7 @@ class SettingsPage extends StatelessWidget {
               }
             },
           ),
-
-          // !! ========================================================
-
+          SettingsTileDivider(),
           PreferenceTitle('Details Section'),
           PreferencePageLink(
             'Application',
@@ -127,6 +130,7 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             widgetScaffold: AppDetailSection(),
           ),
+          SettingsTileDivider(),
           PreferencePageLink(
             'About Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
@@ -136,6 +140,7 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             widgetScaffold: AboutUsPage(),
           ),
+          SettingsTileDivider(),
           PreferencePageLink(
             'Contact Us',
             style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w600),
@@ -145,8 +150,8 @@ class SettingsPage extends StatelessWidget {
             titleGap: 0.0,
             widgetScaffold: ContactUsPage(),
           ),
-          SizedBox(height: 10.w),
-          //! =============================================
+          SettingsTileDivider(),
+          // SizedBox(height: 10.w),
         ]),
       ),
     );
@@ -446,6 +451,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             // setState(() {});
           },
         ),
+        SettingsTileDivider(),
         SwitchPreference(
           'Biometric authentication',
           'biometric',

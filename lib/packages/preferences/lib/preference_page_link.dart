@@ -60,19 +60,14 @@ class PreferencePageLink extends StatelessWidget {
                 style: TextStyle(color: titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300, fontSize: 12.0),
               ),
         // leading: leading,
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: leadingColor,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              height: 30.0,
-              width: 30.0,
-              child: Center(child: leading),
-            ),
-          ],
+        leading: Container(
+          decoration: BoxDecoration(
+            color: leadingColor,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          height: 30.0,
+          width: 30.0,
+          child: Center(child: leading),
         ),
         trailing: trailing,
       ),

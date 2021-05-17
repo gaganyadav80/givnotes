@@ -65,19 +65,14 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
         // enableFeedback: true,
         tileColor: widget.backgroundColor,
         // leading: widget.leading,
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: widget.leadingColor,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              height: 30.0,
-              width: 30.0,
-              child: Center(child: widget.leading),
-            ),
-          ],
+        leading: Container(
+          decoration: BoxDecoration(
+            color: widget.leadingColor,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          height: 30.0,
+          width: 30.0,
+          child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
         title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
@@ -85,15 +80,18 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
             ? null
             : Text(
                 widget.desc,
-                style: TextStyle(color: widget.titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300, fontSize: 12.0),
+                style:
+                    TextStyle(color: widget.titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300, fontSize: 12.0),
               ),
         trailing: CupertinoSwitch(
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
           activeColor: widget.switchActiveColor ?? Color(0xFFDD4C4F),
           // blurRadius: 8,
-          onChanged: widget.disabled ? (_) => widget.ondisableTap: (val) => val ? onEnable() : onDisable(),
+          onChanged: widget.disabled ? (_) => widget.ondisableTap : (val) => val ? onEnable() : onDisable(),
         ),
-        onTap: (widget.disabled || widget.ignoreTileTap) ? widget.ondisableTap : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
+        onTap: (widget.disabled || widget.ignoreTileTap)
+            ? widget.ondisableTap
+            : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
       ),
     );
   }

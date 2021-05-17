@@ -37,19 +37,14 @@ class PreferenceText extends StatelessWidget {
         tileColor: backgroundColor,
         leading: leading == null
             ? leading
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: leadingColor,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    height: 30.0,
-                    width: 30.0,
-                    child: Center(child: leading),
-                  ),
-                ],
+            : Container(
+                decoration: BoxDecoration(
+                  color: leadingColor,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                height: 30.0,
+                width: 30.0,
+                child: Center(child: leading),
               ),
         onTap: onTap,
         title: Text(

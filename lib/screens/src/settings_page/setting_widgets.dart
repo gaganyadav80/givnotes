@@ -160,30 +160,16 @@ class SortNotesFloatModalSheet extends StatelessWidget {
   }
 }
 
-// class Temp extends StatelessWidget {
-//   Temp({Key key, this.def, this.prefsCubit}) : super(key: key);
+class SettingsTileDivider extends StatelessWidget {
+  const SettingsTileDivider({Key key}) : super(key: key);
 
-//   final RxInt def;
-//   final HydratedPrefsCubit prefsCubit;
-
-//   Divider tilesDivider() {
-//     return Divider(
-//       height: 0.0,
-//       thickness: 1.0,
-//       indent: 15.w,
-//     );
-//   }
-
-//   final TextStyle _kListItemStyle = TextStyle(
-//     fontWeight: FontWeight.w400,
-//     fontFamily: 'Poppins',
-//     color: Color(0xFF222222),
-//     fontSize: 15.w,
-//   );
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final HydratedPrefsCubit _prefsCubit = prefsCubit;
-//     return
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return Divider(
+      endIndent: 20.w,
+      indent: 20.w,
+      thickness: 0.5,
+      height: 5.w,
+    );
+  }
+}

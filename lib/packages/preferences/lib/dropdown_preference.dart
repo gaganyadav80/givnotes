@@ -69,19 +69,14 @@ In release mode, the default value ($value) will silently be used.
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         enabled: !widget.disabled,
         // leading: widget.leading,
-        leading: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                color: widget.leadingColor,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              height: 30.0,
-              width: 30.0,
-              child: Center(child: widget.leading),
-            ),
-          ],
+        leading: Container(
+          decoration: BoxDecoration(
+            color: widget.leadingColor,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          height: 30.0,
+          width: 30.0,
+          child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
         title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
@@ -151,7 +146,9 @@ In release mode, the default value ($value) will silently be used.
                         Navigator.of(context, rootNavigator: true).pop(val);
                       },
                       child: Text(
-                        widget.displayValues == null ? val.toString() : widget.displayValues[widget.values.indexOf(val)],
+                        widget.displayValues == null
+                            ? val.toString()
+                            : widget.displayValues[widget.values.indexOf(val)],
                         textAlign: TextAlign.end,
                         style: TextStyle(color: Colors.black),
                       ),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -14,6 +15,7 @@ import 'package:givnotes/routes.dart';
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
 import 'bloc/todo_state.dart';
+import 'todo_widgets.dart';
 import 'src/todo_model.dart';
 
 //TODO flag - appBarDate is global
@@ -183,7 +185,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
-                                                encrypter.decrypt64(todo.title, iv: iv),
+                                                todo.title.decrypt,
                                                 style: TextStyle(
                                                   fontSize: 22.0.w,
                                                   fontWeight: FontWeight.bold,
@@ -195,8 +197,8 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    encrypter.decrypt64(todo.priority, iv: iv).isNotEmpty
-                                                        ? "\u{1F525} ${encrypter.decrypt64(todo.priority, iv: iv)}"
+                                                    todo.priority.decrypt.isNotEmpty
+                                                        ? "\u{1F525} ${todo.priority.decrypt}"
                                                         : "\u{1F525} None",
                                                   ),
                                                   SizedBox(width: 10.0.w),
@@ -209,39 +211,37 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                                   Text(DateFormat("HH:mm").format(todo.dueDate.toDate())),
                                                 ],
                                               ),
-                                              Container(
-                                                margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
-                                                padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
-                                                decoration: BoxDecoration(
-                                                  color: encrypter.decrypt64(todo.category, iv: iv).isEmpty
-                                                      ? Colors.blue.withOpacity(0.2)
-                                                      : todo.completed
-                                                          ? Color(todo.categoryColor).withOpacity(0.4)
-                                                          : Color(todo.categoryColor).withOpacity(0.6),
-                                                  borderRadius: BorderRadius.circular(5.r),
-                                                ),
-                                                child: Center(
-                                                  child: Text(
-                                                    encrypter.decrypt64(todo.category, iv: iv).isEmpty
-                                                        ? "[Uncategorised]"
-                                                        : encrypter.decrypt64(todo.category, iv: iv),
-                                                    style: TextStyle(
-                                                      color: todo.completed ? Colors.black87 : Colors.black,
-                                                      fontWeight: FontWeight.w500,
-                                                      fontSize: 12.w,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              todo.category.isNotEmpty
+                                                  ? Container(
+                                                      margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
+                                                      padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
+                                                      decoration: BoxDecoration(
+                                                        color: todo.completed
+                                                            ? Color(todo.categoryColor).withOpacity(0.4)
+                                                            : Color(todo.categoryColor).withOpacity(0.6),
+                                                        borderRadius: BorderRadius.circular(5.r),
+                                                      ),
+                                                      child: Center(
+                                                        child: Text(
+                                                          todo.category.decrypt,
+                                                          style: TextStyle(
+                                                            color: todo.completed ? Colors.black87 : Colors.black,
+                                                            fontWeight: FontWeight.w500,
+                                                            fontSize: 12.w,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
+                                                  : SizedBox.shrink(),
                                               SizedBox(height: 10.0.w),
-                                              if (encrypter.decrypt64(todo.description, iv: iv).isNotBlank)
+                                              if (todo.description.decrypt.isNotBlank)
                                                 Text(
-                                                  encrypter.decrypt64(todo.description, iv:iv),
+                                                  todo.description.decrypt,
                                                   maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,
-                                                  style: Theme.of(context).textTheme.subtitle1,
+                                                  style: Theme.of(context).textTheme.subtitle2,
                                                 ),
-                                              SizedBox(height: 5.0.w),
+                                              // SizedBox(height: 5.0.w),
                                             ],
                                           ),
                                         ),
@@ -278,7 +278,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                 );
                               },
                               connectorBuilder: (_, index, ___) => SolidLineConnector(indent: 5.0.w, endIndent: 5.0.w),
-                              lastConnectorBuilder: (context) => SolidLineConnector(indent: 5.0.w, endIndent: 20.0.w),
+                              lastConnectorBuilder: (context) => SolidLineConnector(indent: 5.0.w, endIndent: 10.0.w),
                             ),
                           ),
                         ),
@@ -327,7 +327,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  encrypter.decrypt64(subTitle, iv:iv),
+                  subTitle.decrypt,
                   style: TextStyle(
                     fontSize: 20.0.w,
                     fontWeight: FontWeight.w600,
