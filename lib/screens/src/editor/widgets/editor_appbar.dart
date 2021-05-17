@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:givnotes/cubit/cubits.dart';
 
 class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
   final Function saveNote;
@@ -18,28 +19,16 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
     // final noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
     return AppBar(
       leadingWidth: 40.w,
-      leading: IconButton(
-        icon: Icon(CupertinoIcons.back),
-        color: Colors.black,
-        iconSize: 28.0,
-        onPressed: saveNote,
+      leading: BlocBuilder<NoteStatusCubit, NoteStatusState>(
+        builder: (context, state) {
+          return IconButton(
+            icon: Icon(state.isEditing ? CupertinoIcons.checkmark_alt : CupertinoIcons.back),
+            color: Colors.black,
+            iconSize: 28.0,
+            onPressed: saveNote,
+          );
+        },
       ),
-      // leading: Padding(
-      //   padding: EdgeInsets.symmetric(horizontal: 8.5.w, vertical: 4.7.h),
-      //   child: InkWell(
-      //     onTap: () {
-      //       saveNote();
-      //     },
-      //     child: FlareActor(
-      //       'assets/animations/arrow-tick.flr',
-      //       animation: noteEditStore.state.noteMode == NoteMode.Adding ? 'idle-tick' : 'idle-arrow',
-      //       controller: controls,
-      //       alignment: Alignment.center,
-      //       fit: BoxFit.contain,
-      //       // color: Theme.of(context).iconTheme.color,
-      //     ),
-      //   ),
-      // ),
       actions: [
         IconButton(
           icon: Icon(

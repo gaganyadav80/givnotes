@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -15,7 +16,7 @@ import 'bloc/todo_event.dart';
 import 'bloc/todo_state.dart';
 import 'src/todo_model.dart';
 
-//TODO flag
+//TODO flag - appBarDate is global
 DateTime appBarDate = DateTime.now();
 TodoTimelineState todoTimelineState;
 
@@ -182,7 +183,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Text(
-                                                todo.title,
+                                                encrypter.decrypt64(todo.title, iv: iv),
                                                 style: TextStyle(
                                                   fontSize: 22.0.w,
                                                   fontWeight: FontWeight.bold,
@@ -194,7 +195,9 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "\u{1F525} ${todo.priority.isNotEmpty ? todo.priority : "None"}",
+                                                    encrypter.decrypt64(todo.priority, iv: iv).isNotEmpty
+                                                        ? "\u{1F525} ${encrypter.decrypt64(todo.priority, iv: iv)}"
+                                                        : "\u{1F525} None",
                                                   ),
                                                   SizedBox(width: 10.0.w),
                                                   Icon(Icons.check_circle_outline_outlined, size: 16.0.w),
@@ -210,7 +213,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                                 margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
                                                 padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
                                                 decoration: BoxDecoration(
-                                                  color: todo.category.isEmpty
+                                                  color: encrypter.decrypt64(todo.category, iv: iv).isEmpty
                                                       ? Colors.blue.withOpacity(0.2)
                                                       : todo.completed
                                                           ? Color(todo.categoryColor).withOpacity(0.4)
@@ -219,7 +222,9 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                                 ),
                                                 child: Center(
                                                   child: Text(
-                                                    todo.category.isEmpty ? "[Uncategorised]" : todo.category,
+                                                    encrypter.decrypt64(todo.category, iv: iv).isEmpty
+                                                        ? "[Uncategorised]"
+                                                        : encrypter.decrypt64(todo.category, iv: iv),
                                                     style: TextStyle(
                                                       color: todo.completed ? Colors.black87 : Colors.black,
                                                       fontWeight: FontWeight.w500,
@@ -229,9 +234,9 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                                 ),
                                               ),
                                               SizedBox(height: 10.0.w),
-                                              if (todo.description.isNotBlank)
+                                              if (encrypter.decrypt64(todo.description, iv: iv).isNotBlank)
                                                 Text(
-                                                  todo.description,
+                                                  encrypter.decrypt64(todo.description, iv:iv),
                                                   maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,
                                                   style: Theme.of(context).textTheme.subtitle1,
@@ -322,7 +327,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  subTitle,
+                  encrypter.decrypt64(subTitle, iv:iv),
                   style: TextStyle(
                     fontSize: 20.0.w,
                     fontWeight: FontWeight.w600,

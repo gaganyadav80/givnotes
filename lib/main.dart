@@ -38,11 +38,11 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
-  await initHiveDb();
-  await initGetXControllers();
   await pluginInitializer();
+  await initGetXControllers();
+  await initHiveDb();
 
-  final authenticationRepository = AuthenticationRepository();
+  final AuthenticationRepository authenticationRepository = AuthenticationRepository();
   await authenticationRepository.user.first;
 
   runApp(

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:givnotes/global/variables.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -334,7 +335,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                               );
                             },
                           ),
-                          title: Text(_subTasks[index].keys.first),
+                          title: Text(encrypter.decrypt64(_subTasks[index].keys.first, iv: iv)),
                         );
                       },
                     )),
@@ -455,14 +456,15 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               if (_titleController.text.isNotEmpty && !widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
                   AddTodo(TodoModel(
-                    title: _titleController.text,
-                    completed: false,
-                    description: _detailsController.text,
-                    dueDate: Timestamp.fromDate(_dueDate.value),
-                    priority: _priority.value,
-                    category: _categoryController.text,
-                    categoryColor: _selectCategoryColors.value,
+                    title: encrypter.encrypt(_titleController.text, iv: iv).base64,
+                    description: encrypter.encrypt(_detailsController.text, iv: iv).base64,
+                    priority: encrypter.encrypt(_priority.value, iv: iv).base64,
+                    category: encrypter.encrypt(_categoryController.text, iv: iv).base64,
                     subTask: _subTasks,
+                    //
+                    completed: false,
+                    dueDate: Timestamp.fromDate(_dueDate.value),
+                    categoryColor: _selectCategoryColors.value,
                   )),
                 );
 
@@ -470,13 +472,14 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               } else if (widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
                   UpdateTodo(widget.todo.copyWith(
-                    title: _titleController.text,
-                    description: _detailsController.text,
-                    dueDate: Timestamp.fromDate(_dueDate.value),
-                    priority: _priority.value,
-                    category: _categoryController.text,
-                    categoryColor: _selectCategoryColors.value,
+                    title: encrypter.encrypt(_titleController.text, iv: iv).base64,
+                    description: encrypter.encrypt(_detailsController.text, iv: iv).base64,
+                    priority: encrypter.encrypt(_priority.value, iv: iv).base64,
+                    category: encrypter.encrypt(_categoryController.text, iv: iv).base64,
                     subTask: _subTasks,
+                    //
+                    dueDate: Timestamp.fromDate(_dueDate.value),
+                    categoryColor: _selectCategoryColors.value,
                   )),
                 );
 
@@ -514,7 +517,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                     style: TextStyle(fontSize: 20.w),
                     padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
                     onSubmitted: (_) {
-                      _subTasks.add({_subtaskController.text: false});
+                      _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
                       _subtaskController.clear();
                     },
                   ),
@@ -524,7 +527,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   color: Colors.blue,
                   iconSize: 28.0.w,
                   onPressed: () {
-                    _subTasks.add({_subtaskController.text: false});
+                    _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
                     _subtaskController.clear();
                   },
                 ),

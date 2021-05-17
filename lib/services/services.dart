@@ -5,3 +5,4 @@ export 'src/simple_bloc_observer.dart';
 export 'src/disable_scrollglow.dart';
 export 'src/cache.dart';
 export 'src/multi_select_notes.dart';
+export 'src/string_process.dart';

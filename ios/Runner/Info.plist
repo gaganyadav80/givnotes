@@ -54,6 +54,6 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required for attaching images to the user created note</string>
 	<key>NSFaceIDUsageDescription</key>
-	<string>My app implements applock feature</string>
+	<string>Required for biometric applock feature</string>
 </dict>
 </plist>

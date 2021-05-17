@@ -1,12 +1,20 @@
+import 'dart:typed_data';
+
 import 'package:flash/flash.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:package_info/package_info.dart';
+import 'package:encrypt/encrypt.dart' as aes;
 
+//TODO maybe use class
 PrefsModel prefsBox;
 PackageInfo packageInfo;
 bool isPermanentDisabled = true;
+aes.Key key;
+aes.IV iv = aes.IV.fromLength(16);
+aes.Encrypter encrypter;
+String encryptionKey;
 
 const List<String> sortbyNames = ["Creation Date", "Modification Date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
 
