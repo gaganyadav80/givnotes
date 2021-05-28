@@ -1,47 +1,18 @@
-import 'dart:typed_data';
-
-import 'package:flash/flash.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:givnotes/database/HiveDB.dart';
 import 'package:package_info/package_info.dart';
 import 'package:encrypt/encrypt.dart' as aes;
 
-//TODO maybe use class
+//TODO maybe use class or more secure way to keep encryptionKey global
 PrefsModel prefsBox;
 PackageInfo packageInfo;
 bool isPermanentDisabled = true;
-aes.Key key;
+// aes.Key key;
 aes.IV iv = aes.IV.fromLength(16);
 aes.Encrypter encrypter;
-String encryptionKey;
+String encryptionKey; //global to use with hive or maybe somewhere else
+
+int randomUserProfile = 0;
 
 const List<String> sortbyNames = ["Creation Date", "Modification Date", "Alphabetical (A-Z)", "Alphabetical (Z-A)"];
 
 enum NoteMode { Adding, Editing }
-
-void showFlashToast(BuildContext context, String msg) {
-  showFlash(
-    context: context,
-    duration: Duration(seconds: 5),
-    builder: (_, controller) {
-      return Flash(
-        controller: controller,
-        backgroundColor: Colors.grey[800],
-        borderRadius: BorderRadius.circular(5),
-        position: FlashPosition.bottom,
-        style: FlashStyle.floating,
-        enableDrag: false,
-        margin: EdgeInsets.only(bottom: 10),
-        onTap: () => controller.dismiss(),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: DefaultTextStyle(
-            style: TextStyle(color: Colors.white),
-            child: Text(msg),
-          ),
-        ),
-      );
-    },
-  );
-}

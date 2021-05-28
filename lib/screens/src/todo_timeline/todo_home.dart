@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -95,7 +94,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
           builder: (context, state) {
             if (state is TodosLoading) {
               return Center(
-                child: CircularProgressIndicator(strokeWidth: 1.0),
+                child: CircularLoading(),
               );
             } else if (state is TodosLoaded) {
               //TODO maybe remove - delete todo older than 5 days

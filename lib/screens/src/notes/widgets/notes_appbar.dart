@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/widgets/widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -235,20 +236,6 @@ class NotesOptionModalSheet extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class TilesDivider extends StatelessWidget {
-  const TilesDivider({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      height: 0.0,
-      thickness: 1.0,
     );
   }
 }

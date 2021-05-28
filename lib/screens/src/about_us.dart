@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/src/minimal_login/components/blueButton.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 
 class AboutUsPage extends StatelessWidget {
   static const String aboutGivnotes = "Givnotes originated with the need for a notes app that is "

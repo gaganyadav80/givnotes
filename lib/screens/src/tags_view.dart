@@ -13,7 +13,6 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/search_text_field.dart';
 
 class TagSearchController extends GetxController {
   final RxList<String> tagSearchList = <String>[].obs;
@@ -48,97 +47,99 @@ class _TagsViewState extends State<TagsView> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            child: Obx(() {
-              _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
-                return (element.trash == false) &&
-                    _tagSearchController.selectedTagList.any((title) {
-                      return element.tagsMap.containsKey(title);
-                    });
-              }).toList();
+            child: _tagSearchController.selectedTagList.length == 0
+                ? SizedBox.shrink()
+                : Obx(() {
+                    _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
+                      return (element.trash == false) &&
+                          _tagSearchController.selectedTagList.any((title) {
+                            return element.tagsMap.containsKey(title);
+                          });
+                    }).toList();
 
-              if (_notes.length == 0) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0.w),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 50.h),
-                        Image.asset(
-                          isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                          height: 180.h,
-                        ),
-                        Text(
-                          'Search according the tags here',
-                          style: TextStyle(
-                            fontSize: 12.w,
+                    if (_notes.length == 0) {
+                      return SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0.w),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 50.h),
+                              Image.asset(
+                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                height: 180.h,
+                              ),
+                              Text(
+                                'Search according the tags here',
+                                style: TextStyle(
+                                  fontSize: 12.w,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }
+                      );
+                    }
 
-              return ListView.builder(
-                itemCount: _notes.length,
-                itemBuilder: (context, index) {
-                  index = _notes.length - index - 1;
+                    return ListView.builder(
+                      itemCount: _notes.length,
+                      itemBuilder: (context, index) {
+                        index = _notes.length - index - 1;
 
-                  var note = _notes[index];
+                        var note = _notes[index];
 
-                  _created = DateFormat.yMMMd().format(note.created);
+                        _created = DateFormat.yMMMd().format(note.created);
 
-                  return InkWell(
-                    onTap: () {
-                      _noteEditStore.updateNoteMode(NoteMode.Editing);
-                      Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
-                    },
-                    child: Card(
-                      elevation: 0,
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 6.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            index == 0 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
-                            SizedBox(height: 5.h),
-                            Text(
-                              note.title,
-                              style: TextStyle(
-                                fontSize: 17.w,
-                                fontWeight: FontWeight.w600,
+                        return InkWell(
+                          onTap: () {
+                            _noteEditStore.updateNoteMode(NoteMode.Editing);
+                            Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
+                          },
+                          child: Card(
+                            elevation: 0,
+                            color: Colors.white,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 6.w),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  index == 0 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
+                                  SizedBox(height: 5.h),
+                                  Text(
+                                    note.title,
+                                    style: TextStyle(
+                                      fontSize: 17.w,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  SizedBox(height: 1.sw / 100),
+                                  Text(
+                                    note.text,
+                                    style: TextStyle(
+                                      color: Colors.grey[800],
+                                      fontSize: 12.w,
+                                    ),
+                                    maxLines: 5,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  SizedBox(height: 1.sw / 100),
+                                  Text(
+                                    "created  $_created",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.grey,
+                                      fontSize: 12.w,
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0.h),
+                                  Divider(height: 0.0, thickness: 1.0),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 1.sw / 100),
-                            Text(
-                              note.text,
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 12.w,
-                              ),
-                              maxLines: 5,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 1.sw / 100),
-                            Text(
-                              "created  $_created",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey,
-                                fontSize: 12.w,
-                              ),
-                            ),
-                            SizedBox(height: 10.0.h),
-                            Divider(height: 0.0, thickness: 1.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            }),
+                          ),
+                        );
+                      },
+                    );
+                  }),
           ),
         ),
       ],
@@ -212,13 +213,12 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomSearchTextField(
+        CupertinoSearchTextField(
           controller: _searchTagController,
           focusNode: _searchTagFocus,
-          useCapitals: true,
+          prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
           placeholder: 'Search tags',
-          padding: EdgeInsets.fromLTRB(8.w, 10.w, 0, 10.w),
-          onClearTap: () {
+          onSuffixTap: () {
             _tagSearchController.tagSearchList
               ..clear()
               ..addAll(_allTagsMap.keys.toList());

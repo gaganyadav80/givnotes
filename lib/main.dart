@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -107,9 +108,9 @@ class _GivnotesAppState extends State<GivnotesApp> {
         toggleableActiveColor: Colors.blue,
         //TODO problem with CupertinoPageRoute in NotesOptionModalSheet @Gagan
         // Solution :- use page transition instead of CupertinoPageRoute
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
-        ),
+        // pageTransitionsTheme: PageTransitionsTheme(
+        //   builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
+        // ),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
@@ -135,7 +136,7 @@ class CheckLogin extends StatelessWidget {
           return Scaffold(
             backgroundColor: Colors.white,
             body: Center(
-              child: CircularProgressIndicator(strokeWidth: 1.0),
+              child: CircularLoading(size: 50.0),
             ),
           );
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:encrypt/encrypt.dart' as aes;
@@ -44,19 +45,17 @@ Future<void> pluginInitializer() async {
     options: StorageFileInitOptions(authenticationRequired: false),
   );
   final containsEncryptionKey = await secureStorage.read();
-  // print("containsEncryptionKey ============= $encryptionKey");
 
   if (containsEncryptionKey == null) {
     var key = Hive.generateSecureKey();
-    // print("Hive key ========= $key");
-    // print("Base64 encode ========= ${base64Encode(key)}");
     await secureStorage.write(base64Encode(key));
   }
 
   encryptionKey = await secureStorage.read();
 
-  // print("EncryptionKey ============= $encryptionKey");
-
-  key = aes.Key.fromBase64(encryptionKey);
+  aes.Key key = aes.Key.fromBase64(encryptionKey);
   encrypter = aes.Encrypter(aes.AES(key));
+
+  // Random int to use dummy profile pic
+  randomUserProfile = Random().nextInt(21) + 1;
 }

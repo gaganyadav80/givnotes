@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/widgets/search_text_field.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
@@ -318,11 +317,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget searchNoteTextField() {
-    return CustomSearchTextField(
+    return CupertinoSearchTextField(
       controller: _textController,
       focusNode: _focusNode,
-      useBorders: false,
-      padding: const EdgeInsets.fromLTRB(8, 10, 0, 10),
+      prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
       placeholder: 'Search notes',
     );
   }

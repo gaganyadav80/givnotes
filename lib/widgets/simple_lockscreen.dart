@@ -11,6 +11,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:move_to_background/move_to_background.dart';
 
+import 'circular_loading.dart';
+
 /// commented out all the Navigator.of(context).pop();
 /// to make it work with AppLock package
 
@@ -195,10 +197,11 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             ),
           ],
         ),
-        body: Column(
+        body: ListView(
+          physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             //TODO Replace simple lockscreen image @Gagan
-            Image.asset("assets/img/simple-lockscreen.png", width: 220.w),
+            Image.asset("assets/img/simple-lockscreen.png", width: 220.w, height: 238.w),
             SizedBox(height: 10.w),
             _buildTitle(),
             SizedBox(height: 10.w),
@@ -382,7 +385,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         } else if (state is AuthNeedsVerification) {
           if (state.verify) {
             if (state.verifyFailed)
-             Fluttertoast.showToast(msg: "Verification failed");
+              Fluttertoast.showToast(msg: "Verification failed");
             else
               Fluttertoast.showToast(msg: "Will be implemented");
           }
@@ -392,16 +395,16 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         title: Text("Forgot AppLock?"),
         content: Column(
           children: <Widget>[
-            SizedBox(height: 5),
+            SizedBox(height: 5.w),
             Text(
               "Send applock password on your registered email. Please verify your details for security purpose.",
             ),
-            SizedBox(height: 15),
+            SizedBox(height: 15.w),
             BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is LoginInProgress) {
                   return Center(
-                    child: CircularProgressIndicator(strokeWidth: 1.0),
+                    child: CircularLoading(),
                   );
                 } else if (state is AuthSuccess) {
                   resetLockUserEmailController.text = state.user.email;
@@ -452,7 +455,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           CupertinoDialogAction(
             child: const Text('Send mail'),
             onPressed: () {
-              SystemChannels.textInput.invokeMethod('TextInput.hide');
+              if (resetLockUserPassController.text.isNotEmpty) {
+                SystemChannels.textInput.invokeMethod('TextInput.hide');
               BlocProvider.of<AuthenticationBloc>(context).add(
                 LoginButtonPressed(
                   email: resetLockUserEmailController.text,
@@ -461,6 +465,9 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 ),
               );
               Navigator.pop(context);
+              } else {
+                Fluttertoast.showToast(msg: 'Please enter password');
+              }
             },
           ),
         ],

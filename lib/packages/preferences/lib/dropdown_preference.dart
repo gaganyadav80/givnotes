@@ -79,7 +79,7 @@ In release mode, the default value ($value) will silently be used.
           child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
-        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
+        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w500)),
         subtitle: widget.desc == null || !widget.showDesc
             ? null
             : Text(
@@ -119,7 +119,7 @@ In release mode, the default value ($value) will silently be used.
                   "$value",
                   style: TextStyle(
                     color: CupertinoColors.systemGrey,
-                    fontSize: 14,
+                    fontSize: 15,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -127,7 +127,7 @@ In release mode, the default value ($value) will silently be used.
               Icon(
                 CupertinoIcons.forward,
                 size: 21.0,
-                color: Color(0xFFDD4C4F),
+                color: Color(0xFF0A0A0A),
               ),
             ],
           ),

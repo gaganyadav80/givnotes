@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -89,7 +88,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         bool val = true;
         FocusScope.of(context).unfocus();
 
-        if (widget.isEditing && _titleController.text != widget.todo.title) {
+        if (widget.isEditing && _titleController.text != widget.todo.title.decrypt) {
           await showDialog(
             context: context,
             builder: (context) => GivnotesDialog(
@@ -120,7 +119,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         resizeToAvoidBottomInset: false,
         appBar: CreateTodoAppBar(
           controller: _titleController,
-          prevTitle: widget.isEditing ? widget.todo.title : "",
+          prevTitle: widget.isEditing ? widget.todo.title.decrypt : "",
           editTodo: widget.isEditing,
           id: widget.todo?.id ?? null,
         ),
@@ -358,20 +357,15 @@ class _CreateTodoState extends State<CreateTodoBloc> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               //Build the small bar on top
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 10.h, bottom: 30.h),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[600],
-                      borderRadius: BorderRadius.circular(15.0.r),
-                    ),
-                    height: 5.0.h,
-                    width: 50.0.w,
-                  ),
-                ],
-              ),
+              Container(
+                margin: EdgeInsets.only(top: 10.h, bottom: 30.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey[600],
+                  borderRadius: BorderRadius.circular(15.0.r),
+                ),
+                height: 5.0.h,
+                width: 50.0.w,
+              ).centered(),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20.0.w),
                 child: Text(
@@ -518,7 +512,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                     padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
                     onSubmitted: (_) {
                       if (_subtaskController.text.isNotEmpty) {
-                        _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
+                        _subTasks.add({_subtaskController.text.encrypt: false});
                         _subtaskController.clear();
                       } else {
                         Fluttertoast.showToast(msg: "Please enter subtask");
@@ -532,7 +526,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   iconSize: 28.0.w,
                   onPressed: () {
                     if (_subtaskController.text.isNotEmpty) {
-                      _subTasks.add({encrypter.encrypt(_subtaskController.text, iv: iv).base64: false});
+                      _subTasks.add({_subtaskController.text.encrypt: false});
                       _subtaskController.clear();
                     } else {
                       Fluttertoast.showToast(msg: "Please enter subtask");

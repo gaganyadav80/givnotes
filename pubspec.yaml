@@ -71,6 +71,7 @@ flutter:
     - assets/animations/
     - assets/fonts/
     - assets/giv_img/
+    - assets/user-imgs/
 
   fonts:
     - family: Abril

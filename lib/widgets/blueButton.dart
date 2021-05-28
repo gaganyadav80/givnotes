@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:givnotes/widgets/circular_loading.dart';
+import 'package:velocity_x/velocity_x.dart';
 
-import 'constants.dart';
+import '../screens/src/minimal_login/components/constants.dart';
 
 class BlueButton extends StatelessWidget {
   final Function onPressed;
   final String title;
+
+  /// If [isLoading] is [true] then it will override both
+  /// [child] and [title].
   final bool isLoading;
-  BlueButton({@required this.title, @required this.onPressed, this.isLoading = false})
-      : assert(onPressed != null),
-        assert(title != null);
+
+  /// If [child] is null then [title] will be used
+  /// Otherwise, [child] will override [title]
+  final Widget child;
+
+  BlueButton({this.title, @required this.onPressed, this.isLoading = false, this.child}) : assert(onPressed != null);
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -29,24 +38,8 @@ class BlueButton extends StatelessWidget {
           primary: Theme.of(context).primaryColor,
         ),
         child: Center(
-          child: isLoading
-              ? Container(
-                  height: 30.0.w,
-                  width: 30.0.w,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1.0,
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-                  ),
-                )
-              : Text(
-                  title,
-                  style: Theme.of(context).textTheme.button.copyWith(
-                        fontSize: 18.w,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                ),
-        ),
+            child:
+                isLoading ? CircularLoading(color: Colors.white) : child ?? title.text.size(18.w).medium.white.make()),
       ),
     );
   }

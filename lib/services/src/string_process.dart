@@ -308,7 +308,7 @@ class StringProcessor {
     var numberingIndex = 1;
     for (var i = 0; i < segments.length; i++) {
       if (segments[i].length > 0) {
-        out += '${numberingIndex}. ' + segments[i] + UNIX_NEWLINE;
+        out += '$numberingIndex. ' + segments[i] + UNIX_NEWLINE;
         numberingIndex++;
       } else if (i + 1 != segments.length) {
         out += segments[i] + UNIX_NEWLINE;

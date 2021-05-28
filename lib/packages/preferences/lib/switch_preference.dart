@@ -75,7 +75,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
           child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
-        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w600)),
+        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w500)),
         subtitle: widget.desc == null
             ? null
             : Text(
