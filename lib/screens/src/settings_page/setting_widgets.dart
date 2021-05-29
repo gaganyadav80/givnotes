@@ -170,13 +170,16 @@ class ProfileTileSettings extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 55.w,
-                      backgroundColor: Colors.transparent,
-                      child: photo != null
-                          ? NetworkImage(photo)
-                          : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
-                    ).pOnly(bottom: 5.w),
+                    Hero(
+                      tag: 'profile-pic',
+                      child: CircleAvatar(
+                        radius: 55.w,
+                        backgroundColor: Colors.transparent,
+                        child: photo != null
+                            ? NetworkImage(photo)
+                            : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
+                      ).pOnly(bottom: 5.w),
+                    ),
                     Text(user.name).text.medium.color(Color(0xff32343d)).size(22.w).make(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

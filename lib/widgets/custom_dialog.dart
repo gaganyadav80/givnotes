@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class GivnotesDialog extends StatelessWidget {
   const GivnotesDialog({
@@ -24,9 +25,8 @@ class GivnotesDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
       child: Container(
-        width: 350.w,
-        // height: 180.0,
-        padding: EdgeInsets.only(top: 15.0.h),
+        width: 300.w,
+        padding: EdgeInsets.only(top: 20.0.h, bottom: 5.0.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.r),
           color: Colors.white,
@@ -43,7 +43,7 @@ class GivnotesDialog extends StatelessWidget {
                 style: TextStyle(
                   color: Colors.black,
                   fontSize: 16.0.w,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
             ),
@@ -54,48 +54,15 @@ class GivnotesDialog extends StatelessWidget {
                       message,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.grey[700],
+                        color: Colors.grey,
                         fontSize: 14.0.w,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   )
                 : SizedBox.shrink(),
             content ?? SizedBox.shrink(),
-            showCancel
-                ? Divider(
-                    height: 0.0,
-                    color: Colors.black54,
-                    thickness: 1.0,
-                  )
-                : SizedBox.shrink(),
-            showCancel
-                ? Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context, false),
-                      child: Container(
-                        // height: 30.0,
-                        padding: EdgeInsets.symmetric(vertical: 18.0.h),
-                        child: Center(
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 14.0.w,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink(),
-            Divider(
-              height: 0.0,
-              color: Colors.black54,
-              thickness: 1.0,
-            ),
+            TilesDivider(),
             Material(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
@@ -109,17 +76,40 @@ class GivnotesDialog extends StatelessWidget {
                   padding: EdgeInsets.symmetric(vertical: 18.0.h),
                   child: Center(
                     child: Text(
-                      mainButtonText,
+                      'OK',
                       style: TextStyle(
                         color: Colors.black,
-                        fontSize: 14.0.w,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 16.0.w,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
                 ),
               ),
             ),
+            showCancel ? TilesDivider() : SizedBox.shrink(),
+            showCancel
+                ? Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => Navigator.pop(context, false),
+                      child: Container(
+                        // height: 30.0,
+                        padding: EdgeInsets.symmetric(vertical: 18.0.h),
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.0.w,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
           ],
         ),
       ),

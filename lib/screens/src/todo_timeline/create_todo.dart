@@ -44,6 +44,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   final TextEditingController _categoryController = TextEditingController();
 
   final RxString _priority = "".obs;
+
+  /// List<Map<String, bool>> where string is encrypted string.
   final RxList<dynamic> _subTasks = [].obs;
   final RxInt _selectCategoryColors = 0.obs;
   final RxBool _categoryAdded = false.obs;
@@ -144,7 +146,9 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               Obx(
                 () => Container(
                   decoration: BoxDecoration(
-                    color: _categoryAdded.value ? Color(_selectCategoryColors.value).withOpacity(0.15) : Colors.white,
+                    color: _categoryAdded.value
+                        ? Color(_selectCategoryColors.value).withOpacity(0.15)
+                        : Colors.transparent,
                     borderRadius: BorderRadius.circular(8.r),
                     border: _categoryAdded.value
                         ? Border.all(color: Color(_selectCategoryColors.value).withOpacity(0.2))
@@ -152,6 +156,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   ),
                   child: ListTile(
                     tileColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
                     leading: Icon(
                       CupertinoIcons.tag_solid,
                       size: 24.w,
@@ -314,10 +319,12 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 child: Obx(() => ListView.builder(
                       itemCount: _subTasks.length,
                       itemBuilder: (BuildContext context, int index) {
+                        String subTitle = _subTasks[index].keys.first;
+
                         return ListTile(
                           leading: BlocBuilder<TodosBloc, TodosState>(
                             builder: (context, state) {
-                              return CustomCircularCheckBox(
+                              return CustomCheckbox(
                                 onChanged: (_) async {
                                   var subTask = widget.todo.subTask;
                                   subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
@@ -327,14 +334,16 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                                   );
                                 },
                                 value: _subTasks[index].values.first,
-                                // inactiveColor: Colors.blue,
                                 activeColor: Colors.blue,
-                                // radius: 14.0.r,
-                                width: 20.0.w,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                                width: 26.w,
                               );
                             },
                           ),
-                          title: Text(_subTasks[index].keys.first.decrypt),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
+                          onTap: () {},
+                          horizontalTitleGap: 5.0,
+                          title: subTitle.decrypt.text.medium.xl.make(),
                         );
                       },
                     )),
@@ -393,7 +402,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         _priority.value = _priorityName[index];
                       Navigator.pop(context);
                     },
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0.r)),
                   ),
                 ),
               ),

@@ -259,9 +259,9 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                 TodoModel checkTodo = _todosBox[index];
 
                                 return DotIndicator(
-                                  size: 30.0.w,
+                                  size: 35.0.w,
                                   color: Colors.transparent,
-                                  child: CustomCircularCheckBox(
+                                  child: CustomCheckbox(
                                     value: checkTodo.completed,
                                     onChanged: (_) {
                                       BlocProvider.of<TodosBloc>(context).add(
@@ -269,10 +269,10 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                       );
                                     },
                                     activeColor: Colors.blue,
-                                    // inactiveColor: Colors.blue,
                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    // radius: 14.0.r,
-                                    width: 20.0.w,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                                    width: 32.w,
+                                    strokeWidth: 3.0,
                                   ),
                                 );
                               },
@@ -342,7 +342,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0.w,
           color: Colors.transparent,
-          child: CustomCircularCheckBox(
+          child: CustomCheckbox(
             value: _todo.subTask[subCheckIndex].values.first,
             onChanged: (_) async {
               var subTask = _todo.subTask;
@@ -354,9 +354,8 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: Colors.blue,
-            // inactiveColor: Colors.blue,
-            // radius: 12.0.r,
-            width: 15.0.w,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+            width: 26.w,
           ),
         ),
         connectorBuilder: (_, index, ___) => SolidLineConnector(endIndent: 8.0.w),

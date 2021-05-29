@@ -67,13 +67,16 @@ class MyProfile extends StatelessWidget {
 
             return ListView(
               children: [
-                CircleAvatar(
-                  radius: 70.r,
-                  backgroundColor: Colors.transparent,
-                  child: user.photoURL != null
-                      ? Image.network(user.photoURL)
-                      : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
-                ).pOnly(top: 40.w),
+                Hero(
+                  tag: 'profile-pic',
+                  child: CircleAvatar(
+                    radius: 70.r,
+                    backgroundColor: Colors.transparent,
+                    child: user.photoURL != null
+                        ? Image.network(user.photoURL)
+                        : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
+                  ).pOnly(top: 40.w),
+                ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: <Widget>[
@@ -119,11 +122,13 @@ class MyProfile extends StatelessWidget {
                       .color(CupertinoColors.destructiveRed.withOpacity(0.8))
                       .make()
                       .objectCenterLeft(),
-                ).onTap(() => showCupertinoDialog(
-                  context: context,
-                  useRootNavigator: false,
-                  builder: (context) => BuildDeleteAccountDialog(),
-                ),),
+                ).onTap(
+                  () => showCupertinoDialog(
+                    context: context,
+                    useRootNavigator: false,
+                    builder: (context) => BuildDeleteAccountDialog(),
+                  ),
+                ),
                 TilesDivider(),
               ],
             ).centered();
@@ -204,7 +209,7 @@ class MyProfile extends StatelessWidget {
                       },
                     ),
                   ).then((value) {
-                    if (value) Navigator.pop(rootContext); // pop profile page if logout is clicked
+                    if (value ?? false) Navigator.pop(rootContext); // pop profile page if logout is clicked
                   });
                 },
         );
