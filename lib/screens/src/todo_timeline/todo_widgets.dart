@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/material_colors.dart';
@@ -12,11 +11,6 @@ import 'package:givnotes/widgets/widgets.dart';
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
 
-extension StringEncryptExtension on String {
-  String get encrypt => this.isEmpty ? "" : encrypter.encrypt(this, iv: iv).base64;
-
-  String get decrypt => this.isEmpty ? "" : encrypter.decrypt64(this, iv: iv);
-}
 
 class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   const CreateTodoAppBar({

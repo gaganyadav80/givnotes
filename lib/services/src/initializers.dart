@@ -26,9 +26,9 @@ Future<void> initHiveDb() async {
 
   final Box<PrefsModel> box = await Hive.openBox<PrefsModel>(
     'prefs',
-    encryptionCipher: HiveAesCipher(base64Url.decode(encryptionKey)),
+    encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
   );
-  await Hive.openBox<NotesModel>('givnotes', encryptionCipher: HiveAesCipher(base64Url.decode(encryptionKey)));
+  await Hive.openBox<NotesModel>('givnotes', encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)));
 
   if (box.isEmpty) {
     await box.add(PrefsModel());
@@ -41,21 +41,24 @@ Future<void> pluginInitializer() async {
   PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(
-    'key',
+    'key:iv',
     options: StorageFileInitOptions(authenticationRequired: false),
   );
   final containsEncryptionKey = await secureStorage.read();
 
   if (containsEncryptionKey == null) {
     var key = Hive.generateSecureKey();
-    await secureStorage.write(base64Encode(key));
+    aes.IV tempIV = aes.IV.fromSecureRandom(16);
+    await secureStorage.write("${base64Encode(key)}:${tempIV.base64}");
   }
 
-  encryptionKey = await secureStorage.read();
+  String temp = await secureStorage.read();
+
+  encryptionKey = temp.split(':')[0];
+  iv = aes.IV.fromBase64(temp.split(':')[1]);
 
   aes.Key key = aes.Key.fromBase64(encryptionKey);
   encrypter = aes.Encrypter(aes.AES(key));
 
-  // Random int to use dummy profile pic
   randomUserProfile = Random().nextInt(21) + 1;
 }

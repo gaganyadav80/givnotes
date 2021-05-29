@@ -10,11 +10,11 @@ import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
 import 'bloc/todo_state.dart';
-import 'todo_widgets.dart';
 import 'src/todo_model.dart';
 
 //TODO flag - appBarDate is global
