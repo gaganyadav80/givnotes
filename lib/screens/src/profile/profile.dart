@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -15,7 +16,6 @@ import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
-import '../minimal_login/components/components.dart';
 import 'profile_widgets.dart';
 
 class MyProfile extends StatelessWidget {

@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/material_colors.dart';
-import 'package:givnotes/packages/circular_checkbox.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 import 'bloc/todo_bloc.dart';
@@ -317,7 +316,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         return ListTile(
                           leading: BlocBuilder<TodosBloc, TodosState>(
                             builder: (context, state) {
-                              return CircularCheckBox(
+                              return CustomCircularCheckBox(
                                 onChanged: (_) async {
                                   var subTask = widget.todo.subTask;
                                   subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
@@ -327,9 +326,9 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                                   );
                                 },
                                 value: _subTasks[index].values.first,
-                                inactiveColor: Colors.blue,
+                                // inactiveColor: Colors.blue,
                                 activeColor: Colors.blue,
-                                radius: 14.0.r,
+                                // radius: 14.0.r,
                                 width: 20.0.w,
                               );
                             },

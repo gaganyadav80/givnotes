@@ -4,11 +4,11 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
+import 'package:givnotes/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/packages/circular_checkbox.dart';
 import 'package:givnotes/routes.dart';
 
 import 'bloc/todo_bloc.dart';
@@ -261,7 +261,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                 return DotIndicator(
                                   size: 30.0.w,
                                   color: Colors.transparent,
-                                  child: CircularCheckBox(
+                                  child: CustomCircularCheckBox(
                                     value: checkTodo.completed,
                                     onChanged: (_) {
                                       BlocProvider.of<TodosBloc>(context).add(
@@ -269,9 +269,9 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                       );
                                     },
                                     activeColor: Colors.blue,
-                                    inactiveColor: Colors.blue,
+                                    // inactiveColor: Colors.blue,
                                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    radius: 14.0.r,
+                                    // radius: 14.0.r,
                                     width: 20.0.w,
                                   ),
                                 );
@@ -342,7 +342,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
         indicatorBuilder: (_, int subCheckIndex) => DotIndicator(
           size: 20.0.w,
           color: Colors.transparent,
-          child: CircularCheckBox(
+          child: CustomCircularCheckBox(
             value: _todo.subTask[subCheckIndex].values.first,
             onChanged: (_) async {
               var subTask = _todo.subTask;
@@ -354,8 +354,8 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
             },
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             activeColor: Colors.blue,
-            inactiveColor: Colors.blue,
-            radius: 12.0.r,
+            // inactiveColor: Colors.blue,
+            // radius: 12.0.r,
             width: 15.0.w,
           ),
         ),

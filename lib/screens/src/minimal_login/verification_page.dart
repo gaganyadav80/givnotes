@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 
 import 'bloc/verification_bloc/verification_bloc.dart';
-import 'components/components.dart';
 
 class VerificationPage extends StatelessWidget {
   @override

@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 
 import 'components/components.dart';
 

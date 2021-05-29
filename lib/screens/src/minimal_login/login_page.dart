@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 
 import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
