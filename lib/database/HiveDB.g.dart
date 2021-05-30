@@ -71,23 +71,20 @@ class PrefsModelAdapter extends TypeAdapter<PrefsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PrefsModel()
-      ..applock = fields[0] as bool
-      ..biometric = fields[1] as bool
-      ..passcode = fields[2] as String
-      ..allTagsMap = (fields[3] as Map)?.cast<String, int>();
+      ..biometric = fields[0] as bool
+      ..passcode = fields[1] as String
+      ..allTagsMap = (fields[2] as Map)?.cast<String, int>();
   }
 
   @override
   void write(BinaryWriter writer, PrefsModel obj) {
     writer
-      ..writeByte(4)
-      ..writeByte(0)
-      ..write(obj.applock)
-      ..writeByte(1)
-      ..write(obj.biometric)
-      ..writeByte(2)
-      ..write(obj.passcode)
       ..writeByte(3)
+      ..writeByte(0)
+      ..write(obj.biometric)
+      ..writeByte(1)
+      ..write(obj.passcode)
+      ..writeByte(2)
       ..write(obj.allTagsMap);
   }
 

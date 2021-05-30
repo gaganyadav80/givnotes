@@ -257,17 +257,3 @@ class ProfileTileSettings extends StatelessWidget {
     );
   }
 }
-
-class SettingsTileDivider extends StatelessWidget {
-  const SettingsTileDivider({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Divider(
-      endIndent: 20.w,
-      indent: 20.w,
-      thickness: 0.5,
-      height: 5.w,
-    );
-  }
-}

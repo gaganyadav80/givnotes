@@ -80,8 +80,7 @@ class MyProfile extends StatelessWidget {
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: <Widget>[
-                    Icon(CupertinoIcons.camera_fill, size: 18.w, color: CupertinoColors.systemBlue)
-                        .pOnly(bottom: 2.0, right: 5.w),
+                    Icon(CupertinoIcons.camera_fill, size: 18.w, color: CupertinoColors.systemBlue).pOnly(right: 5.w),
                     'Edit'.text.medium.xl.color(CupertinoColors.systemBlue).make().centered(),
                   ].hStack(),
                   onPressed: () => Fluttertoast.showToast(msg: 'Will be added'),

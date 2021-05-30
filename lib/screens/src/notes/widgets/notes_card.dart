@@ -71,7 +71,7 @@ class _NotesCardState extends State<NotesCard> {
                     : Container(
                         margin: EdgeInsets.only(top: 6.w),
                         height: prefsCubit.state.compactTags ? 8.h : 18.h,
-                          color: Colors.transparent,
+                        color: Colors.transparent,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: widget.note.tagsMap.length,
@@ -124,8 +124,7 @@ class _NotesCardState extends State<NotesCard> {
                 Text(
                   widget.note.text,
                   style: TextStyle(
-                    color: Colors.grey[800],
-                    // fontSize: 3 * wm,
+                    color: Colors.grey[800]
                   ),
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,

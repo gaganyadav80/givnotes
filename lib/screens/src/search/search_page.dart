@@ -134,7 +134,7 @@ class _SearchPageState extends State<SearchPage> {
             ValueListenableBuilder(
                 valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
                 builder: (context, Box<NotesModel> box, widget) {
-                  _notes = box.values.toList();
+                  _notes = box.values.where((element) => element.trash == false).toList();
 
                   return Obx(() => _searchList.length == 0
                       ? _textController.text.isEmpty
@@ -196,95 +196,69 @@ class _SearchPageState extends State<SearchPage> {
                                   onLongPress: () => onSearchListItemLongPress(item),
                                   child: _textController.text.isNotEmpty
                                       ? Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                                          padding: EdgeInsets.symmetric(horizontal: 10.w),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
-                                              index == 0 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
-                                              Row(
-                                                children: [
-                                                  item.tagsMap.length == 0
-                                                      ? SizedBox.shrink()
-                                                      : Expanded(
-                                                          flex: 4,
-                                                          child: Container(
-                                                            margin: EdgeInsets.only(top: 5.w),
-                                                            height: _prefsCubit.compactTags ? 8.h : 18.h,
-                                                            decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(5),
-                                                            ),
-                                                            child: ListView.builder(
-                                                              scrollDirection: Axis.horizontal,
-                                                              itemCount: item.tagsMap.length,
-                                                              itemBuilder: (cntx, index) {
-                                                                String title = item.tagsMap.keys.toList()[index];
-                                                                Color color = Color(item.tagsMap[title]);
+                                              SizedBox(height: 5.0.w),
+                                              item.tagsMap.length == 0
+                                                  ? SizedBox.shrink()
+                                                  : Container(
+                                                      margin: EdgeInsets.only(top: 6.w),
+                                                      color: Colors.transparent,
+                                                      height: _prefsCubit.compactTags ? 8.h : 18.h,
+                                                      child: ListView.builder(
+                                                        scrollDirection: Axis.horizontal,
+                                                        itemCount: item.tagsMap.length,
+                                                        itemBuilder: (cntx, index) {
+                                                          String title = item.tagsMap.keys.toList()[index];
+                                                          Color color = Color(item.tagsMap[title]);
 
-                                                                return _prefsCubit.compactTags
-                                                                    ? Container(
-                                                                        width: 30.w,
-                                                                        margin: EdgeInsets.only(right: 5.w),
-                                                                        decoration: BoxDecoration(
-                                                                          color: color,
-                                                                          borderRadius: BorderRadius.circular(5.r),
-                                                                        ),
-                                                                        child: SizedBox.shrink(),
-                                                                      )
-                                                                    : Container(
-                                                                        height: 18.h,
-                                                                        margin: EdgeInsets.only(right: 5.w),
-                                                                        padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                                                        decoration: BoxDecoration(
-                                                                          color: color,
-                                                                          borderRadius: BorderRadius.circular(5),
-                                                                        ),
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                            title,
-                                                                            style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontWeight: FontWeight.w700,
-                                                                              letterSpacing: 0.5.w,
-                                                                              fontSize: 8.w,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      );
-                                                              },
-                                                            ),
-                                                          ),
-                                                        ),
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: Padding(
-                                                      padding: EdgeInsets.only(top: 3.h),
-                                                      child: Text(
-                                                        item.trash ? 'Deleted' : '',
-                                                        style: TextStyle(
-                                                          fontWeight: FontWeight.w300,
-                                                          // color: Colors.red,
-                                                          fontSize: 12.w,
-                                                          fontStyle: FontStyle.italic,
-                                                        ),
+                                                          return _prefsCubit.compactTags
+                                                              ? Container(
+                                                                  width: 30.w,
+                                                                  margin: EdgeInsets.only(right: 5.w),
+                                                                  decoration: BoxDecoration(
+                                                                    color: color,
+                                                                    borderRadius: BorderRadius.circular(5.r),
+                                                                  ),
+                                                                  child: SizedBox.shrink(),
+                                                                )
+                                                              : Container(
+                                                                  height: 18.h,
+                                                                  margin: EdgeInsets.only(right: 5.w),
+                                                                  padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                                  decoration: BoxDecoration(
+                                                                    color: color,
+                                                                    borderRadius: BorderRadius.circular(5.r),
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                      title,
+                                                                      style: TextStyle(
+                                                                        color: Colors.white,
+                                                                        fontWeight: FontWeight.w700,
+                                                                        letterSpacing: 0.5.w,
+                                                                        fontSize: 8.w,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                        },
                                                       ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
                                               SizedBox(height: 5.w),
                                               Text(
                                                 item.title,
                                                 style: TextStyle(
-                                                  fontSize: 18.w,
+                                                  fontSize: 17.w,
                                                   fontWeight: FontWeight.w600,
                                                 ),
                                               ),
                                               SizedBox(height: 5.w),
                                               Text(
                                                 item.text,
-                                                style: TextStyle(
-                                                  color: Colors.grey[800],
-                                                ),
+                                                style: TextStyle(color: Colors.grey[800]),
                                                 maxLines: 5,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -294,7 +268,7 @@ class _SearchPageState extends State<SearchPage> {
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w300,
                                                   color: Colors.grey,
-                                                  fontSize: 12,
+                                                  fontSize: 12.w,
                                                 ),
                                               ),
                                               SizedBox(height: 10.0.w),

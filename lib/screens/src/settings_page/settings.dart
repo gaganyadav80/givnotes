@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -145,40 +146,38 @@ class AppDetailSection extends StatefulWidget {
 }
 
 class _AppDetailSectionState extends State<AppDetailSection> {
-  int selectedIndex = 0;
+  RxInt selectedIndex = 0.obs;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        title: Text("Application", style: TextStyle(color: Colors.black)),
         elevation: 0.0,
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+          icon: Icon(CupertinoIcons.back, color: Colors.black),
         ),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 50.0),
+          preferredSize: Size(double.infinity, 40.0),
           child: Container(
-            // color: Colors.white,
             padding: EdgeInsets.symmetric(horizontal: 30.w),
             width: double.infinity,
-            child: CupertinoSlidingSegmentedControl(
-              children: {
-                0: Text("App Info"),
-                1: Text("Logs"),
-              },
-              groupValue: selectedIndex,
-              onValueChanged: (value) => setState(() => selectedIndex = value),
-            ),
+            child: Obx(() => CupertinoSlidingSegmentedControl(
+                  children: {
+                    0: Text("App Info"),
+                    1: Text("Logs"),
+                  },
+                  groupValue: selectedIndex.value,
+                  onValueChanged: (value) => selectedIndex.value = value,
+                )),
           ),
         ),
       ),
       body: Padding(
         padding: EdgeInsets.fromLTRB(30.w, 30.w, 30.w, 50.w),
-        child: _bodyWidgets[selectedIndex],
+        child: Obx(() => _bodyWidgets[selectedIndex.value]),
       ),
     );
   }
@@ -219,19 +218,19 @@ class AppLockSwitchPrefs extends StatefulWidget {
 class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
   final LocalAuthentication _localAuthentication = LocalAuthentication();
 
-  bool canUseBiometric = false;
+  RxBool canUseBiometric = false.obs;
   String reason = '';
 
   void setBiometricButton() async {
-    canUseBiometric = (await _localAuthentication.isDeviceSupported());
-    if (canUseBiometric == false) {
+    canUseBiometric.value = (await _localAuthentication.isDeviceSupported());
+    if (canUseBiometric.value == false) {
       reason = 'Biometrics not enabled';
       return;
     }
 
-    canUseBiometric = (await _localAuthentication.getAvailableBiometrics()).contains(BiometricType.fingerprint);
+    canUseBiometric.value = (await _localAuthentication.getAvailableBiometrics()).contains(BiometricType.fingerprint);
 
-    if (canUseBiometric == false) {
+    if (canUseBiometric.value == false) {
       reason = 'Biometrics are not enrolled';
     }
 
@@ -249,18 +248,19 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
         SwitchPreference(
           'Enable app lock',
           'app_lock',
-          // desc: 'Add 4 digit pin',
           defaultVal: false,
           ignoreTileTap: false,
           leading: Icon(CupertinoIcons.lock, color: Colors.black, size: _kIconSize),
           // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
+          isWaitSwitch: true,
           onEnable: () {
             if (prefsBox.passcode == '') {
               Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
-                if (!value) {
-                  PrefService.setBool('app_lock', false);
-                  setState(() {});
+                if (value) {
+                  setState(() {
+                    PrefService.setBool('app_lock', true);
+                  });
                 }
               });
             }
@@ -271,48 +271,41 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
-                  Navigator.pop(context, true);
                   AppLock.of(context).disable();
                   prefsBox.passcode = '';
-                  prefsBox.applock = false;
                   prefsBox.save();
+                  Navigator.pop(context, true);
                 },
               ).then((value) {
-                if (!value) {
-                  PrefService.setBool('app_lock', true);
-                  setState(() {});
+                if (value) {
+                  setState(() {
+                    PrefService.setBool('app_lock', false);
+                  });
                 }
               });
             }
-            // setState(() {});
           },
         ),
-        SwitchPreference(
-          'Biometric authentication',
-          'biometric',
-          // desc: 'Enable Fingerprint/Face unlock',
-          defaultVal: false,
-          disabled: canUseBiometric ? !prefsBox.applock : true,
-          leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: _kIconSize),
-          // leadingColor: Colors.teal,
-          titleGap: 0.0,
-          ondisableTap: () {
-            if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
-            // ScaffoldMessenger.of(context)
-            //   ..removeCurrentSnackBar()
-            //   ..showSnackBar(
-            //     SnackBar(content: Text(reason)),
-            //   );
-          },
-          onEnable: () {
-            prefsBox.biometric = true;
-            prefsBox.save();
-          },
-          onDisable: () {
-            prefsBox.biometric = false;
-            prefsBox.save();
-          },
-        ),
+        Obx(() => SwitchPreference(
+              'Biometric authentication',
+              'biometric',
+              defaultVal: false,
+              disabled: canUseBiometric.value ? prefsBox.passcode.isEmpty : true,
+              leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: _kIconSize),
+              // leadingColor: Colors.teal,
+              titleGap: 0.0,
+              ondisableTap: () {
+                if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
+              },
+              onEnable: () {
+                prefsBox.biometric = true;
+                prefsBox.save();
+              },
+              onDisable: () {
+                prefsBox.biometric = false;
+                prefsBox.save();
+              },
+            )),
       ],
     );
   }

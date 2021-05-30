@@ -37,15 +37,15 @@ class _AddTagScreenState extends State<AddTagScreen> {
 
   final FocusNode _focusNode = FocusNode();
   final RxInt tagColor = 0.obs;
-  Map<String, int> _allTagsMap = {};
+  // Map<String, int> _allTagsMap = {};
 
   @override
   void initState() {
     super.initState();
-    _allTagsMap = prefsBox.allTagsMap;
+    // _allTagsMap = prefsBox.allTagsMap;
 
     if (widget.editTagTitle.isNotEmpty && widget.isEditing) {
-      tagColor.value = _allTagsMap[widget.editTagTitle];
+      tagColor.value = prefsBox.allTagsMap[widget.editTagTitle];
       widget.controller.text = widget.editTagTitle;
     } else {
       tagColor.value = materialColorValues[0];
@@ -55,13 +55,13 @@ class _AddTagScreenState extends State<AddTagScreen> {
       final text = widget.controller.text.trim();
 
       if (text.isNotEmpty) {
-        final String filterTagName = _allTagsMap.keys.firstWhere(
+        final String filterTagName = prefsBox.allTagsMap.keys.firstWhere(
           (element) => element == text,
           orElse: () => null,
         );
 
         if (filterTagName != null) {
-          tagColor.value = _allTagsMap[filterTagName];
+          tagColor.value = prefsBox.allTagsMap[filterTagName];
         }
       }
     });
@@ -69,7 +69,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
 
   @override
   void dispose() {
-    prefsBox.allTagsMap = _allTagsMap;
+    // prefsBox.allTagsMap = _allTagsMap;
     prefsBox.save();
     _focusNode.dispose();
     super.dispose();
@@ -136,8 +136,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         if (noteTagsMap.containsKey(widget.controller.text)) {
                           noteTagsMap.remove(widget.controller.text);
                         }
-                        if (_allTagsMap.containsKey(widget.controller.text)) {
-                          _allTagsMap.remove(widget.controller.text);
+                        if (prefsBox.allTagsMap.containsKey(widget.controller.text)) {
+                          prefsBox.allTagsMap.remove(widget.controller.text);
                         }
                       }
                       widget.controller.clear();
@@ -231,23 +231,23 @@ class _AddTagScreenState extends State<AddTagScreen> {
       if (widget.isEditing) {
         if (tagName != widget.editTagTitle) {
           noteTagsMap.remove(widget.editTagTitle);
-          _allTagsMap.remove(widget.editTagTitle);
+          prefsBox.allTagsMap.remove(widget.editTagTitle);
         }
         noteTagsMap[tagName] = tagColor.value;
-        _allTagsMap[tagName] = tagColor.value;
+        prefsBox.allTagsMap[tagName] = tagColor.value;
 
         Get.find<TagSearchController>().tagSearchList
           ..clear()
-          ..addAll(_allTagsMap.keys.toList());
+          ..addAll(prefsBox.allTagsMap.keys.toList());
       } else {
-        if (!_allTagsMap.containsKey(tagName)) {
-          _allTagsMap[tagName] = tagColor.value;
+        if (!prefsBox.allTagsMap.containsKey(tagName)) {
+          prefsBox.allTagsMap[tagName] = tagColor.value;
 
           Get.find<TagSearchController>().tagSearchList
             ..clear()
-            ..addAll(_allTagsMap.keys.toList());
+            ..addAll(prefsBox.allTagsMap.keys.toList());
         } else {
-          flag = _allTagsMap[tagName];
+          flag = prefsBox.allTagsMap[tagName];
         }
 
         if (!noteTagsMap.containsKey(tagName)) {

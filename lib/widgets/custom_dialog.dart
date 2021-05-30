@@ -26,7 +26,7 @@ class GivnotesDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
       child: Container(
         width: 300.w,
-        padding: EdgeInsets.only(top: 20.0.h, bottom: 5.0.h),
+        padding: EdgeInsets.only(top: 20.0.w),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.0.r),
           color: Colors.white,
@@ -49,7 +49,7 @@ class GivnotesDialog extends StatelessWidget {
             ),
             message.isNotEmpty
                 ? Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 8.0.h, 15.0.w, 15.0.h),
+                    padding: EdgeInsets.fromLTRB(15.0.w, 8.0.w, 15.0.w, 15.0.w),
                     child: Text(
                       message,
                       textAlign: TextAlign.center,
@@ -64,16 +64,12 @@ class GivnotesDialog extends StatelessWidget {
             content ?? SizedBox.shrink(),
             TilesDivider(),
             Material(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
-              ),
               color: Colors.transparent,
               child: InkWell(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
                 onTap: onTap == null ? () => Navigator.pop(context, true) : onTap,
                 child: Container(
                   // height: 30.0,
-                  padding: EdgeInsets.symmetric(vertical: 18.0.h),
+                  padding: EdgeInsets.symmetric(vertical: 18.0.w),
                   child: Center(
                     child: Text(
                       'OK',
@@ -91,11 +87,14 @@ class GivnotesDialog extends StatelessWidget {
             showCancel
                 ? Material(
                     color: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
+                    ),
                     child: InkWell(
                       onTap: () => Navigator.pop(context, false),
+                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
                       child: Container(
-                        // height: 30.0,
-                        padding: EdgeInsets.symmetric(vertical: 18.0.h),
+                        padding: EdgeInsets.only(top: 18.w, bottom: 23.w),
                         child: Center(
                           child: Text(
                             'Cancel',

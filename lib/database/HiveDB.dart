@@ -32,14 +32,11 @@ class NotesModel extends HiveObject {
 @HiveType(typeId: 1)
 class PrefsModel extends HiveObject {
   @HiveField(0)
-  bool applock = false;
-
-  @HiveField(1)
   bool biometric = false;
 
-  @HiveField(2)
+  @HiveField(1)
   String passcode = '';
 
-  @HiveField(3)
+  @HiveField(2)
   Map<String, int> allTagsMap = {};
 }

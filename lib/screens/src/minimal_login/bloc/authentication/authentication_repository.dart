@@ -6,13 +6,13 @@ import 'package:givnotes/services/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:meta/meta.dart';
 
-class SignUpFailure implements Exception {}
+// class SignUpFailure implements Exception {}
 
-class LogInWithEmailAndPasswordFailure implements Exception {}
+// class LogInWithEmailAndPasswordFailure implements Exception {}
 
-class LogInWithGoogleFailure implements Exception {}
+// class LogInWithGoogleFailure implements Exception {}
 
-class LogOutFailure implements Exception {}
+// class LogOutFailure implements Exception {}
 
 /// {@template authentication_repository}
 /// Repository which manages user authentication.

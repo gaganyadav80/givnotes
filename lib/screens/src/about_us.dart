@@ -25,7 +25,7 @@ class AboutUsPage extends StatelessWidget {
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+          icon: Icon(CupertinoIcons.back, color: Colors.black),
         ),
         elevation: 0.0,
         backgroundColor: Colors.white,

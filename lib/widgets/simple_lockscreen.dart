@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:move_to_background/move_to_background.dart';
 
 import 'circular_loading.dart';
 
@@ -21,18 +20,11 @@ class SimpleLockScreen extends StatefulWidget {
   final String title;
   final String confirmTitle;
   final bool confirmMode;
-  final Widget rightSideButton;
-  // final int digits;
   final bool canCancel;
-  final String cancelText;
-  final String deleteText;
-  final Widget biometricButton;
   final void Function(BuildContext, String) onCompleted;
   final bool canBiometric;
   final bool showBiometricFirst;
   final Future<bool> Function(BuildContext) biometricAuthenticate;
-  // final StreamController<void> showBiometricFirstController;
-  final Color backgroundColor;
   final void Function() onUnlocked;
 
   final bool isAddingLock;
@@ -42,17 +34,11 @@ class SimpleLockScreen extends StatefulWidget {
     this.title = 'Enter Passcode',
     this.confirmTitle = 'Enter Confirm Passcode',
     this.confirmMode = false,
-    this.rightSideButton,
     this.canCancel = true,
-    this.cancelText = 'Cancel',
-    this.deleteText = 'Delete',
-    this.biometricButton = const Icon(Icons.fingerprint, color: Colors.black, size: 36),
     this.onCompleted,
     this.canBiometric = false,
     this.showBiometricFirst = false,
     this.biometricAuthenticate,
-    // this.showBiometricFirstController,
-    this.backgroundColor = Colors.white,
     this.onUnlocked,
     this.isAddingLock = false,
   });
@@ -73,8 +59,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
   Animation<Offset> _animation;
   AnimationController _animationController;
 
-  bool _isConfirmation = false;
-  String _verifyConfirmPasscode = '';
+  RxBool _isConfirmation = false.obs;
+  RxString _verifyConfirmPasscode = ''.obs;
 
   @override
   void initState() {
@@ -103,45 +89,39 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
   }
 
   void _verifyCorrectString(String enteredValue) {
-    Future.delayed(Duration(milliseconds: 150), () {
-      var _verifyPasscode = widget.correctString;
+    // Future.delayed(Duration(milliseconds: 150), () {
+    var _verifyPasscode = widget.correctString;
 
-      if (widget.confirmMode) {
-        if (_isConfirmation == false) {
-          _verifyConfirmPasscode = enteredValue;
-          // _passcodeLength = passwordController.text.length;
-          appLockPassController.clear();
-          _isConfirmation = true;
-          titleStreamController.add(widget.confirmTitle);
-          setState(() {}); //TODO flag @Gagan
-          return;
-        }
-        _verifyPasscode = _verifyConfirmPasscode;
+    if (widget.confirmMode) {
+      if (_isConfirmation.value == false) {
+        _verifyConfirmPasscode.value = enteredValue;
+        appLockPassController.clear();
+        _isConfirmation.value = true;
+        titleStreamController.add(widget.confirmTitle);
+        return;
+      }
+      _verifyPasscode = _verifyConfirmPasscode.value;
+    }
+
+    if (enteredValue == _verifyPasscode) {
+      // send valid status to DotSecretUI
+      validateStreamController.add(true);
+      // if (!widget.canCancel) titleStreamController.add('Success');
+
+      if (widget.onCompleted != null) {
+        widget.onCompleted(context, enteredValue);
       }
 
-      if (enteredValue == _verifyPasscode) {
-        // send valid status to DotSecretUI
-        validateStreamController.add(true);
-        if (!widget.canCancel) titleStreamController.add('Success');
-
-        if (widget.onCompleted != null) {
-          widget.onCompleted(context, enteredValue);
-        }
-        // else {
-        // _needClose = true;
-        // Navigator.of(context).pop();
-        // }
-
-        if (widget.onUnlocked != null) {
-          widget.onUnlocked();
-        }
-      } else {
-        // send invalid status to DotSecretUI
-        validateStreamController.add(false);
-        titleStreamController.add(_isConfirmation ? 'Passcode Does Not Match' : 'Wrong Passcode');
+      if (widget.onUnlocked != null) {
+        widget.onUnlocked();
       }
-      appLockPassController.clear();
-    });
+    } else {
+      // send invalid status to DotSecretUI
+      validateStreamController.add(false);
+      titleStreamController.add(_isConfirmation.value ? 'Passcode Does Not Match' : 'Wrong Passcode');
+    }
+    appLockPassController.clear();
+    // });
   }
 
   @override
@@ -150,9 +130,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       onWillPop: () async {
         if (widget.canCancel) {
           Navigator.pop(context, false);
-          return true;
         }
-        if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
+        // if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
 
         return false;
       },
@@ -163,38 +142,29 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           backgroundColor: Colors.white,
           leading: widget.canCancel
               ? IconButton(
-                  icon: Icon(CupertinoIcons.arrow_left),
+                  icon: Icon(CupertinoIcons.back),
                   color: Colors.black,
                   onPressed: () => Navigator.pop(context, false),
                 )
               : Container(),
           actions: <Widget>[
-            ConstrainedBox(
-              constraints: BoxConstraints.tightFor(width: 56.0),
-              child: IconButton(
-                icon: Icon(CupertinoIcons.question_circle),
-                color: CupertinoColors.systemGrey,
-                tooltip: "Forgot AppLock?",
-                onPressed: () => showCupertinoDialog(
-                  context: context,
-                  useRootNavigator: false,
-                  // barrierDismissible: true,
-                  builder: (context) {
-                    return _buildForgotApplockDialog();
-                  },
-                ),
-                // showDialog(
-                //   context: context,
-                //   builder: (context) => GivnotesDialog(
-                //     title: "Forgot password?",
-                //     mainButtonText: "Send email",
-                //     showCancel: true,
-                //     message: "Send your password on the registered email.",
-                //     onTap: () => Toast.show("Will be implemented", context),
-                //   ),
-                // ),
-              ),
-            ),
+            !widget.isAddingLock
+                ? ConstrainedBox(
+                    constraints: BoxConstraints.tightFor(width: 56.0),
+                    child: IconButton(
+                      icon: Icon(CupertinoIcons.question_circle),
+                      color: CupertinoColors.systemGrey,
+                      tooltip: "Forgot AppLock?",
+                      onPressed: () => showCupertinoDialog(
+                        context: context,
+                        useRootNavigator: false,
+                        builder: (context) {
+                          return _buildForgotApplockDialog();
+                        },
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink(),
           ],
         ),
         body: ListView(
@@ -221,7 +191,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         child: CupertinoTextField(
           controller: appLockPassController,
           focusNode: applockFocusNode,
-          autocorrect: false,
+          // autocorrect: false,
           autofocus: widget.isAddingLock,
           cursorColor: Colors.black,
           cursorWidth: 1.5,
@@ -229,9 +199,11 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           expands: false,
           maxLines: 1,
           obscureText: true,
+          obscuringCharacter: '✱',
           placeholder: 'Enter Your Password',
           clearButtonMode: OverlayVisibilityMode.editing,
           padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.h),
+          style: TextStyle(fontSize: 18.w),
           onSubmitted: (value) {
             value = value.trim();
             if (value.isEmpty) {
@@ -348,7 +320,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 // }
               } else {
                 return Text(
-                  _isConfirmation ? widget.confirmTitle : widget.title,
+                  _isConfirmation.value ? widget.confirmTitle : widget.title,
                   style: TextStyle(fontSize: _kFontSize, fontWeight: _kFontWeight),
                 );
               }
@@ -457,14 +429,14 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             onPressed: () {
               if (resetLockUserPassController.text.isNotEmpty) {
                 SystemChannels.textInput.invokeMethod('TextInput.hide');
-              BlocProvider.of<AuthenticationBloc>(context).add(
-                LoginButtonPressed(
-                  email: resetLockUserEmailController.text,
-                  password: resetLockUserPassController.text,
-                  verify: true,
-                ),
-              );
-              Navigator.pop(context);
+                BlocProvider.of<AuthenticationBloc>(context).add(
+                  LoginButtonPressed(
+                    email: resetLockUserEmailController.text,
+                    password: resetLockUserPassController.text,
+                    verify: true,
+                  ),
+                );
+                Navigator.pop(context);
               } else {
                 Fluttertoast.showToast(msg: 'Please enter password');
               }

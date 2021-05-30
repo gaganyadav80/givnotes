@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:move_to_background/move_to_background.dart';
 import 'dot_secret_ui.dart';
 import 'circle_input_button.dart';
 
@@ -225,7 +223,7 @@ class _LockScreenState extends State<LockScreen> {
           Navigator.pop(context, false);
           return true;
         }
-        if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
+        // if (Platform.isAndroid) MoveToBackground.moveTaskToBack();
 
         return false;
       },

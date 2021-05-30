@@ -97,7 +97,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                 child: CircularLoading(),
               );
             } else if (state is TodosLoaded) {
-              //TODO maybe remove - delete todo older than 5 days
+              //! maybe remove - delete todo older than 5 days
               state.todos.forEach((element) {
                 if (element.dueDate.toDate().difference(DateTime.now()) > Duration(days: 5)) {
                   if (element.completed) {
@@ -112,6 +112,8 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                   state.todos.where((element) => element.dueDate.toDate().day < DateTime.now().day).length;
               final int upcoming =
                   state.todos.where((element) => element.dueDate.toDate().day > DateTime.now().day).length;
+
+              _todosBox.sort((a, b) => b.dueDate.compareTo(a.dueDate));
 
               return Column(
                 children: [

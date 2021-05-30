@@ -21,11 +21,14 @@ import 'package:flutter/material.dart';
 /// [backgroundLockLatency] determines how much time is allowed to pass when
 /// the app is in the background state before the [lockScreen] widget should be
 /// shown upon returning. It defaults to instantly.
+/// 
+/// Version 1.5.0
 class AppLock extends StatefulWidget {
   final Widget Function(Object) builder;
   final Widget lockScreen;
   final bool enabled;
   final Duration backgroundLockLatency;
+  final ThemeData theme;
 
   const AppLock({
     Key key,
@@ -33,9 +36,11 @@ class AppLock extends StatefulWidget {
     @required this.lockScreen,
     this.enabled = true,
     this.backgroundLockLatency = const Duration(seconds: 0),
+    this.theme,
   }) : super(key: key);
 
-  static _AppLockState of(BuildContext context) => context.findAncestorStateOfType<_AppLockState>();
+  static _AppLockState of(BuildContext context) =>
+      context.findAncestorStateOfType<_AppLockState>();
 
   @override
   _AppLockState createState() => _AppLockState();
@@ -67,8 +72,10 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       return;
     }
 
-    if (state == AppLifecycleState.paused && (!this._isLocked && this._didUnlockForAppLaunch)) {
-      this._backgroundLockLatencyTimer = Timer(this.widget.backgroundLockLatency, () => this.showLockScreen());
+    if (state == AppLifecycleState.paused &&
+        (!this._isLocked && this._didUnlockForAppLaunch)) {
+      this._backgroundLockLatencyTimer =
+          Timer(this.widget.backgroundLockLatency, () => this.showLockScreen());
     }
 
     if (state == AppLifecycleState.resumed) {
@@ -93,7 +100,12 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       home: this.widget.enabled ? this._lockScreen : this.widget.builder(null),
       navigatorKey: _navigatorKey,
-      routes: {'/lock-screen': (context) => this._lockScreen, '/unlocked': (context) => this.widget.builder(ModalRoute.of(context).settings.arguments)},
+      routes: {
+        '/lock-screen': (context) => this._lockScreen,
+        '/unlocked': (context) =>
+            this.widget.builder(ModalRoute.of(context).settings.arguments)
+      },
+      theme: this.widget.theme,
     );
   }
 
@@ -157,7 +169,8 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
 
   void _didUnlockOnAppLaunch(Object args) {
     this._didUnlockForAppLaunch = true;
-    _navigatorKey.currentState.pushReplacementNamed('/unlocked', arguments: args);
+    _navigatorKey.currentState
+        .pushReplacementNamed('/unlocked', arguments: args);
   }
 
   void _didUnlockOnAppPaused() {

@@ -8,6 +8,7 @@ import 'package:flutter_tags/flutter_tags.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
@@ -47,99 +48,97 @@ class _TagsViewState extends State<TagsView> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            child: _tagSearchController.selectedTagList.length == 0
-                ? SizedBox.shrink()
-                : Obx(() {
-                    _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
-                      return (element.trash == false) &&
-                          _tagSearchController.selectedTagList.any((title) {
-                            return element.tagsMap.containsKey(title);
-                          });
-                    }).toList();
+            child: Obx(() {
+              _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
+                return (element.trash == false) &&
+                    _tagSearchController.selectedTagList.any((title) {
+                      return element.tagsMap.containsKey(title);
+                    });
+              }).toList();
 
-                    if (_notes.length == 0) {
-                      return SingleChildScrollView(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0.w),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 50.h),
-                              Image.asset(
-                                isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                height: 180.h,
-                              ),
-                              Text(
-                                'Search according the tags here',
-                                style: TextStyle(
-                                  fontSize: 12.w,
-                                ),
-                              ),
-                            ],
+              if (_notes.length == 0) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0.w),
+                    child: Column(
+                      children: [
+                        _tagSearchController.selectedTagList.length.text.xs.make().opacity0(),
+                        SizedBox(height: 50.h),
+                        Image.asset(
+                          isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                          height: 180.h,
+                        ),
+                        Text(
+                          'Search according the tags here',
+                          style: TextStyle(
+                            fontSize: 12.w,
                           ),
                         ),
-                      );
-                    }
+                      ],
+                    ),
+                  ),
+                );
+              }
 
-                    return ListView.builder(
-                      itemCount: _notes.length,
-                      itemBuilder: (context, index) {
-                        index = _notes.length - index - 1;
+              return ListView.builder(
+                itemCount: _notes.length,
+                itemBuilder: (context, index) {
+                  index = _notes.length - index - 1;
 
-                        var note = _notes[index];
+                  var note = _notes[index];
 
-                        _created = DateFormat.yMMMd().format(note.created);
+                  _created = DateFormat.yMMMd().format(note.created);
 
-                        return InkWell(
-                          onTap: () {
-                            _noteEditStore.updateNoteMode(NoteMode.Editing);
-                            Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
-                          },
-                          child: Card(
-                            elevation: 0,
-                            color: Colors.white,
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 6.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  index == 0 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
-                                  SizedBox(height: 5.h),
-                                  Text(
-                                    note.title,
-                                    style: TextStyle(
-                                      fontSize: 17.w,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  SizedBox(height: 1.sw / 100),
-                                  Text(
-                                    note.text,
-                                    style: TextStyle(
-                                      color: Colors.grey[800],
-                                      fontSize: 12.w,
-                                    ),
-                                    maxLines: 5,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(height: 1.sw / 100),
-                                  Text(
-                                    "created  $_created",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.grey,
-                                      fontSize: 12.w,
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.0.h),
-                                  Divider(height: 0.0, thickness: 1.0),
-                                ],
+                  return InkWell(
+                    onTap: () {
+                      _noteEditStore.updateNoteMode(NoteMode.Editing);
+                      Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
+                    },
+                    child: Card(
+                      elevation: 0 ?? _tagSearchController.selectedTagList.length.text.xs.make().opacity0(),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            index == _notes.length - 1 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
+                            SizedBox(height: 5.w),
+                            Text(
+                              note.title,
+                              style: TextStyle(
+                                fontSize: 17.w,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  }),
+                            SizedBox(height: 5.w),
+                            Text(
+                              note.text,
+                              style: TextStyle(
+                                color: Colors.grey[800],
+                              ),
+                              maxLines: 5,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(height: 5.w),
+                            Text(
+                              "created  $_created",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey,
+                                fontSize: 12.w,
+                              ),
+                            ),
+                            SizedBox(height: 10.0.w),
+                            Divider(height: 0.0, thickness: 1.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              );
+            }),
           ),
         ),
       ],
@@ -242,7 +241,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   elevation: 2,
                   index: index,
                   title: noteTag,
-                  active: false,
+                  active: _tagSearchController.selectedTagList.contains(noteTag),
                   padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
                   textStyle: TextStyle(
                     fontSize: 14.w,

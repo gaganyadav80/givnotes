@@ -22,7 +22,8 @@ class SwitchPreference extends StatefulWidget {
   final Color leadingColor;
   final Color backgroundColor;
 
-  final Function ondisableTap;
+  final VoidCallback ondisableTap;
+  final bool isWaitSwitch;
 
   SwitchPreference(
     this.title,
@@ -42,6 +43,7 @@ class SwitchPreference extends StatefulWidget {
     this.leadingColor,
     this.backgroundColor = Colors.white,
     this.ondisableTap,
+    this.isWaitSwitch = false,
   });
 
   _SwitchPreferenceState createState() => _SwitchPreferenceState();
@@ -86,7 +88,6 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
         trailing: CupertinoSwitch(
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
           activeColor: widget.switchActiveColor ?? Color(0xFFDD4C4F),
-          // blurRadius: 8,
           onChanged: widget.disabled ? (_) => widget.ondisableTap : (val) => val ? onEnable() : onDisable(),
         ),
         onTap: (widget.disabled || widget.ignoreTileTap)
@@ -97,7 +98,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
   }
 
   onEnable() async {
-    setState(() => PrefService.setBool(widget.localKey, true));
+    if (!widget.isWaitSwitch) setState(() => PrefService.setBool(widget.localKey, true));
     if (widget.onChange != null) widget.onChange();
     if (widget.onEnable != null) {
       try {
@@ -113,7 +114,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
   }
 
   onDisable() async {
-    setState(() => PrefService.setBool(widget.localKey, false));
+   if (!widget.isWaitSwitch) setState(() => PrefService.setBool(widget.localKey, false));
     if (widget.onChange != null) widget.onChange();
     if (widget.onDisable != null) {
       try {

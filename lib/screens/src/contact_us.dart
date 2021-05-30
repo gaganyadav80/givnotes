@@ -15,10 +15,10 @@ class ContactUsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+          child: Icon(CupertinoIcons.back, color: Colors.black),
         ),
       ),
-      body: Column(
+      body: ListView(
         children: [
           Image.asset(
             "assets/img/contact_us.png",

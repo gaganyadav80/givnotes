@@ -80,7 +80,8 @@ class App extends StatelessWidget {
           builder: () => AppLock(
             builder: (_) => GivnotesApp(),
             lockScreen: ShowLockscreen(changePassAuth: null),
-            enabled: prefsBox.applock,
+            enabled: prefsBox.passcode.isNotEmpty,
+            // backgroundLockLatency: Duration(),
           ),
         ),
       ),

@@ -24,9 +24,8 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
 
     try {
       authenticated = await auth.authenticate(
-        // localizedReason: 'Authenticate to unlock givnotes',
+        localizedReason: 'Authenticate to unlock givnotes',
         biometricOnly: true,
-        localizedReason: '',
         useErrorDialogs: true,
         stickyAuth: false,
       );
@@ -47,7 +46,7 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
       correctString: prefsBox.passcode,
       confirmMode: false,
       canCancel: widget.changePassAuth != null ? true : false,
-      canBiometric: prefsBox.biometric,
+      canBiometric: widget.changePassAuth != null ? true : prefsBox.biometric,
       showBiometricFirst: prefsBox.biometric,
       biometricAuthenticate: biometrics,
       onUnlocked: widget.changePassAuth ??
@@ -77,33 +76,28 @@ class AddLockscreen extends StatefulWidget {
 class _AddLockscreenState extends State<AddLockscreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SimpleLockScreen(
-        title: 'Lock givnotes',
-        confirmMode: true,
-        canCancel: true,
-        canBiometric: false,
-        isAddingLock: true,
-        onCompleted: (context, passcode) {
-          prefsBox.passcode = passcode;
-          AppLock.of(context).enable();
-          prefsBox.applock = true;
-          prefsBox.save();
-
-          Navigator.pop(context, true);
-        },
-        // dotSecretConfig: DotSecretConfig(
-        //   dotSize: 15.w,
-        //   dotBorderColor: Color(0xffDD4C4F),
-        //   enabledColor: Color(0xffDD4C4F),
-        //   padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
-        // ),
-        // circleInputButtonConfig: CircleInputButtonConfig(
-        //   backgroundColor: Color(0xffDD4C4F),
-        //   backgroundOpacity: 0.6,
-        // ),
-      ),
+    return SimpleLockScreen(
+      title: 'Lock givnotes',
+      confirmMode: true,
+      canCancel: true,
+      canBiometric: false,
+      isAddingLock: true,
+      onCompleted: (ctx, passcode) {
+        prefsBox.passcode = passcode;
+        AppLock.of(context).enable();
+        prefsBox.save();
+        Navigator.pop(context, true);
+      },
+      // dotSecretConfig: DotSecretConfig(
+      //   dotSize: 15.w,
+      //   dotBorderColor: Color(0xffDD4C4F),
+      //   enabledColor: Color(0xffDD4C4F),
+      //   padding: EdgeInsets.symmetric(horizontal: 75.w, vertical: 0),
+      // ),
+      // circleInputButtonConfig: CircleInputButtonConfig(
+      //   backgroundColor: Color(0xffDD4C4F),
+      //   backgroundOpacity: 0.6,
+      // ),
     );
   }
 }
