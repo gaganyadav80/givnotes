@@ -52,6 +52,11 @@ class _NotesViewState extends State<NotesView> {
                   return NotesEmptyView(isTrash: homeState.trash);
                 }
 
+                // _notes.forEach((element) {
+                //   element.tagsNameList.clear();
+                // });
+                // prefsBox.allTagsMap.clear();
+
                 return BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
                   builder: (context, prefState) {
                     return CupertinoScrollbar(
@@ -76,7 +81,7 @@ class _NotesViewState extends State<NotesView> {
 
                           final NotesModel note = _notes[index];
 
-                          //TODO redesign
+                          //TODO redesign notes slidable
                           return Slidable(
                             key: UniqueKey(),
                             actionPane: SlidableBehindActionPane(),

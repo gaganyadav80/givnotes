@@ -26,7 +26,7 @@ class NotesModel extends HiveObject {
   DateTime modified;
 
   @HiveField(7)
-  Map<String, int> tagsMap = {};
+  List<String> tagsNameList = <String>[];
 }
 
 @HiveType(typeId: 1)

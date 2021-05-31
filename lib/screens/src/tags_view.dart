@@ -52,7 +52,7 @@ class _TagsViewState extends State<TagsView> {
               _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
                 return (element.trash == false) &&
                     _tagSearchController.selectedTagList.any((title) {
-                      return element.tagsMap.containsKey(title);
+                      return element.tagsNameList.contains(title);
                     });
               }).toList();
 

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/database/database.dart';
@@ -94,95 +95,59 @@ class _SearchPageState extends State<SearchPage> {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(CupertinoIcons.back),
+          color: Colors.black,
+          onPressed: () => Navigator.pop(context),
+        ),
+        elevation: 0.0,
+        backgroundColor: Colors.white,
+        title: 'Search'.text.xl2.black.medium.make(),
+        centerTitle: true,
+      ),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              pinned: true,
-              leading: IconButton(
-                icon: Icon(CupertinoIcons.arrow_left),
-                color: Colors.black,
-                onPressed: () {
-                  // BlocProvider.of<NoteAndSearchCubit>(context).clearSearchList();
-                  Navigator.pop(context);
-                },
-              ),
-              elevation: 0.0,
-              backgroundColor: Colors.white,
-              expandedHeight: 20.w,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text(
-                  'Search',
-                  style: TextStyle(
-                    height: 0.0,
-                    fontSize: 22.w,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            ),
-            SliverAppBar(
-              automaticallyImplyLeading: false,
-              pinned: true,
-              elevation: 0.0,
-              backgroundColor: Colors.white,
-              title: searchNoteTextField(),
-              titleSpacing: 10.0.w,
-            ),
-            ValueListenableBuilder(
-                valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
-                builder: (context, Box<NotesModel> box, widget) {
-                  _notes = box.values.where((element) => element.trash == false).toList();
+        child: Column(
+          children: <Widget>[
+            searchNoteTextField().pSymmetric(h: 15.w),
+            Expanded(
+              child: ValueListenableBuilder(
+                  valueListenable: Hive.box<NotesModel>('givnotes').listenable(),
+                  builder: (context, Box<NotesModel> box, widget) {
+                    _notes = box.values.where((element) => element.trash == false).toList();
 
-                  return Obx(() => _searchList.length == 0
-                      ? _textController.text.isEmpty
-                          ? SliverToBoxAdapter(
-                              child: Center(
-                                child: SingleChildScrollView(
-                                  physics: null,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(0.05.sw),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(height: 50.h),
-                                        Image.asset(
-                                          isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                                          height: 180.h,
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            'Search for your notes',
-                                            style: TextStyle(
-                                              fontSize: 12.w,
-                                            ),
+                    return Obx(() => _searchList.length == 0
+                        ? _textController.text.isEmpty
+                            ? SingleChildScrollView(
+                                physics: NeverScrollableScrollPhysics(),
+                                child: Padding(
+                                  padding: EdgeInsets.all(0.05.sw),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 50.h),
+                                      Image.asset(
+                                        isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
+                                        height: 180.h,
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'Search for your notes',
+                                          style: TextStyle(
+                                            fontSize: 12.w,
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                            )
-                          : SliverToBoxAdapter(
-                              child: Padding(
+                              )
+                            : Padding(
                                 padding: EdgeInsets.only(top: 20.h),
-                                child: Text(
-                                  'Ops! nothing found',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 18.w,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                              ),
-                            )
-                      : SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (context, index) {
+                                child: 'Ops! nothing found'.text.center.italic.light.lg.gray400.make(),
+                              )
+                        : ListView.builder(
+                            itemCount: _searchList.length,
+                            itemBuilder: (context, index) {
                               index = _searchList.length - index - 1;
 
                               final item = _searchList.elementAt(index);
@@ -201,7 +166,7 @@ class _SearchPageState extends State<SearchPage> {
                                             crossAxisAlignment: CrossAxisAlignment.start,
                                             children: <Widget>[
                                               SizedBox(height: 5.0.w),
-                                              item.tagsMap.length == 0
+                                              item.tagsNameList.length == 0
                                                   ? SizedBox.shrink()
                                                   : Container(
                                                       margin: EdgeInsets.only(top: 6.w),
@@ -209,10 +174,10 @@ class _SearchPageState extends State<SearchPage> {
                                                       height: _prefsCubit.compactTags ? 8.h : 18.h,
                                                       child: ListView.builder(
                                                         scrollDirection: Axis.horizontal,
-                                                        itemCount: item.tagsMap.length,
+                                                        itemCount: item.tagsNameList.length,
                                                         itemBuilder: (cntx, index) {
-                                                          String title = item.tagsMap.keys.toList()[index];
-                                                          Color color = Color(item.tagsMap[title]);
+                                                          String title = item.tagsNameList[index];
+                                                          Color color = Color(prefsBox.allTagsMap[title]);
 
                                                           return _prefsCubit.compactTags
                                                               ? Container(
@@ -280,10 +245,9 @@ class _SearchPageState extends State<SearchPage> {
                                 ),
                               );
                             },
-                            childCount: _searchList.length,
-                          ),
-                        ));
-                }),
+                          ));
+                  }),
+            ),
           ],
         ),
       ),

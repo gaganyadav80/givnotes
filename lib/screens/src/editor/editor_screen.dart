@@ -19,7 +19,7 @@ import 'package:givnotes/global/variables.dart';
 
 import 'widgets/editor_widgets.dart';
 
-Map<String, int> noteTagsMap = {};
+// List<String> noteTagsList = <String>[];
 
 class EditorScreen extends StatefulWidget {
   EditorScreen({Key key, this.noteMode, this.note}) : super(key: key);
@@ -38,8 +38,7 @@ class _EditorScreenState extends State<EditorScreen> {
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocus = FocusNode();
   final FocusNode _editorfocusNode = FocusNode();
-
-  // final GlobalKey<ScaffoldState> _editorScaffoldKey = GlobalKey();
+  final RxList<String> noteTagsList = <String>[].obs;
 
   dynamic _noteIndex;
   NoteStatusCubit _noteEditStore;
@@ -68,9 +67,11 @@ class _EditorScreenState extends State<EditorScreen> {
 
     if (widget.noteMode == NoteMode.Adding) {
       _titleFocus.requestFocus();
-      noteTagsMap = {};
+      noteTagsList.clear();
     } else if (widget.noteMode == NoteMode.Editing) {
-      noteTagsMap = widget.note.tagsMap;
+      noteTagsList
+        ..clear()
+        ..addAll(widget.note.tagsNameList);
       _noteIndex = widget.note.key;
 
       _notesModel.value = widget.note;
@@ -90,7 +91,7 @@ class _EditorScreenState extends State<EditorScreen> {
 
   @override
   void dispose() {
-    noteTagsMap = {};
+    noteTagsList.clear();
     _editorfocusNode?.dispose();
     _titleController?.dispose();
     _titleFocus?.dispose();
@@ -137,7 +138,7 @@ class _EditorScreenState extends State<EditorScreen> {
                     )
                   : SizedBox.shrink(),
               SizedBox(height: 10.w),
-              EditorTags(),
+              EditorTags(noteTagsList: noteTagsList),
               SizedBox(height: 15.w),
               Expanded(
                 child: _editorBody(),
@@ -293,7 +294,7 @@ class _EditorScreenState extends State<EditorScreen> {
               ..znote = jsonEncode(_quillController.value.document.toDelta().toJson())
               ..created = DateTime.now()
               ..modified = DateTime.now()
-              ..tagsMap = noteTagsMap,
+              ..tagsNameList = noteTagsList.toList(),
           );
           //
         } else if (_noteEditStore.state.noteMode == NoteMode.Editing) {
@@ -307,7 +308,7 @@ class _EditorScreenState extends State<EditorScreen> {
               ..trash = _notesModel.value.trash
               ..created = _notesModel.value.created
               ..modified = DateTime.now()
-              ..tagsMap = noteTagsMap,
+              ..tagsNameList = noteTagsList.toList(),
           );
         }
 

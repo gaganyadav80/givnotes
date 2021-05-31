@@ -24,7 +24,7 @@ class NotesModelAdapter extends TypeAdapter<NotesModel> {
       ..trash = fields[4] as bool
       ..created = fields[5] as DateTime
       ..modified = fields[6] as DateTime
-      ..tagsMap = (fields[7] as Map)?.cast<String, int>();
+      ..tagsNameList = (fields[7] as List)?.cast<String>();
   }
 
   @override
@@ -46,7 +46,7 @@ class NotesModelAdapter extends TypeAdapter<NotesModel> {
       ..writeByte(6)
       ..write(obj.modified)
       ..writeByte(7)
-      ..write(obj.tagsMap);
+      ..write(obj.tagsNameList);
   }
 
   @override

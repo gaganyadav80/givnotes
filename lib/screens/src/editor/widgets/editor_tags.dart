@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:get/get.dart';
 import 'package:givnotes/cubit/cubits.dart';
+import 'package:givnotes/global/variables.dart';
 
-import '../editor_screen.dart';
 import 'add_tags_page.dart';
 
 class EditorTags extends StatefulWidget {
-  EditorTags({Key key}) : super(key: key);
+  EditorTags({Key key, @required this.noteTagsList}) : super(key: key);
+
+  final RxList<String> noteTagsList;
 
   @override
   _EditorTagsState createState() => _EditorTagsState();
@@ -30,7 +33,7 @@ class _EditorTagsState extends State<EditorTags> {
         child: Row(
           children: [
             _buildNoteTags(_noteEditStore),
-            noteTagsMap.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
+            widget.noteTagsList.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
             BlocBuilder<NoteStatusCubit, NoteStatusState>(
               builder: (context, state) {
                 return state.isEditing
@@ -57,6 +60,7 @@ class _EditorTagsState extends State<EditorTags> {
                                   isEditing: false,
                                   editTagTitle: '',
                                   updateTags: () => setState(() {}),
+                                  noteTagsList: widget.noteTagsList,
                                 ),
                                 fullscreenDialog: true,
                               ),
@@ -69,17 +73,17 @@ class _EditorTagsState extends State<EditorTags> {
                           ),
                         ),
                       )
-                    : noteTagsMap.length == 0
+                    : widget.noteTagsList.length == 0
                         ? Container(
                             height: 30.h,
                             child: Center(
                               child: Text(
                                 '"no tags added."',
                                 style: TextStyle(
-                                  fontFamily: 'ZillaSlab',
-                                  color: Colors.black.withOpacity(0.7),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 19.w,
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16.w,
+                                  fontStyle: FontStyle.italic,
                                 ),
                               ),
                             ),
@@ -97,18 +101,17 @@ class _EditorTagsState extends State<EditorTags> {
   }
 
   Widget _buildNoteTags(NoteStatusCubit _noteEditStore) {
-    final List<String> noteTag = noteTagsMap.keys.toList();
-
     return Tags(
       key: _tagStateKey,
-      itemCount: noteTagsMap.length,
+      itemCount: widget.noteTagsList.length,
       itemBuilder: (int index) {
-        int borderColor = noteTagsMap[noteTag[index]];
+        int borderColor = prefsBox.allTagsMap[widget.noteTagsList[index]];
+
         return ItemTags(
           key: Key(index.toString()),
           elevation: 0,
           index: index,
-          title: noteTag[index],
+          title: widget.noteTagsList[index],
           active: false,
           combine: ItemTagsCombine.withTextBefore,
           textStyle: TextStyle(
@@ -120,20 +123,6 @@ class _EditorTagsState extends State<EditorTags> {
           textActiveColor: Color(borderColor),
           textColor: Color(borderColor),
           activeColor: Colors.white,
-          //
-          // removeButton: ItemTagsRemoveButton(
-          //   backgroundColor: Color(_noteTagColors[index]),
-          //   onRemoved: () {
-          //     if (Var.isEditing) {
-          //       setState(() {
-          //         _noteTags.removeAt(index);
-          //       });
-          //     } else {
-          //       showToast("Read only mode");
-          //     }
-          //     return true;
-          //   },
-          // ),
           onPressed: (item) {
             if (_noteEditStore.state.isEditing) {
               Navigator.push(
@@ -144,6 +133,7 @@ class _EditorTagsState extends State<EditorTags> {
                     isEditing: true,
                     editTagTitle: item.title,
                     updateTags: () => setState(() {}),
+                    noteTagsList: widget.noteTagsList,
                   ),
                   fullscreenDialog: true,
                 ),

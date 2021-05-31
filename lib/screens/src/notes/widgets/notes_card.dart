@@ -66,7 +66,7 @@ class _NotesCardState extends State<NotesCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 5.0.w),
-                widget.note.tagsMap.length == 0
+                widget.note.tagsNameList.length == 0
                     ? SizedBox(height: 5.w)
                     : Container(
                         margin: EdgeInsets.only(top: 6.w),
@@ -74,9 +74,9 @@ class _NotesCardState extends State<NotesCard> {
                         color: Colors.transparent,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.note.tagsMap.length,
+                          itemCount: widget.note.tagsNameList.length,
                           itemBuilder: (context, index) {
-                            String tagsTitle = widget.note.tagsMap.keys.toList()[index];
+                            String tagsTitle = widget.note.tagsNameList[index];
                             Color color = Color(_allTagsMap[tagsTitle]);
 
                             return prefsCubit.state.compactTags

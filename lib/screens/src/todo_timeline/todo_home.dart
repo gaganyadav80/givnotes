@@ -161,7 +161,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                 });
 
                                 return Container(
-                                  margin: EdgeInsets.only(left: 5.0.w, bottom: 10.0.w),
+                                  margin: EdgeInsets.only(left: 5.0.w, bottom: 20.0.w),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(15.0.r),
                                     color: todo.completed ? Colors.grey[300] : Colors.transparent,
@@ -242,7 +242,6 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                                   overflow: TextOverflow.ellipsis,
                                                   style: Theme.of(context).textTheme.subtitle2,
                                                 ),
-                                              // SizedBox(height: 5.0.w),
                                             ],
                                           ),
                                         ),
@@ -252,7 +251,8 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                                         padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
                                         child: _buildSubTaskTimeline(todo),
                                       ),
-                                      if (todo.subTask.length != 0) SizedBox(height: 10.0.w),
+                                      SizedBox(height: 10.0.w),
+                                      // TilesDivider().pSymmetric(h: 10.w),
                                     ],
                                   ),
                                 );
