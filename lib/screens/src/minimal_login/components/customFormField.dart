@@ -20,6 +20,7 @@ class CustomTextFormField extends StatelessWidget {
     @required TextInputAction textInputAction,
     @required String Function(String) validator,
     @required int maxLines,
+    int maxLength,
   })  : _fieldController = fieldController,
         _hintText = hintText,
         _currentNode = currentNode,
@@ -33,7 +34,8 @@ class CustomTextFormField extends StatelessWidget {
         _textCapitalization = textCapitalization,
         _inputFormatters = inputFormatters,
         _enabled = enabled,
-        _prefixIcon = prefixIcon;
+        _prefixIcon = prefixIcon,
+        _maxLength = maxLength;
 
   final TextEditingController _fieldController;
   final String _hintText;
@@ -49,6 +51,8 @@ class CustomTextFormField extends StatelessWidget {
   final List<TextInputFormatter> _inputFormatters;
   final TextCapitalization _textCapitalization;
   final Icon _prefixIcon;
+  final int _maxLength;
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -62,6 +66,8 @@ class CustomTextFormField extends StatelessWidget {
       textInputAction: _textInputAction,
       enabled: _enabled ?? true,
       maxLines: _maxLines,
+      maxLength: _maxLength,
+      maxLengthEnforcement: _maxLength != null ? MaxLengthEnforcement.enforced : null,
       controller: _fieldController,
       cursorColor: Theme.of(context).primaryColor,
       keyboardType: _keyboardType,

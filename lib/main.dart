@@ -8,7 +8,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,17 +28,11 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // To match status bar color to app bar color
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   statusBarColor: Colors.transparent,
-  // ));
-
   //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
-  await pluginInitializer();
   await initGetXControllers();
   await initHiveDb();
 
@@ -105,8 +98,6 @@ class _GivnotesAppState extends State<GivnotesApp> {
       theme: ThemeData(
         fontFamily: 'Poppins',
         accentColor: Colors.black,
-        accentColorBrightness: Brightness.light,
-        toggleableActiveColor: Colors.blue,
         //TODO problem with CupertinoPageRoute in NotesOptionModalSheet @Gagan
         // Solution :- use page transition instead of CupertinoPageRoute
         // pageTransitionsTheme: PageTransitionsTheme(
@@ -130,21 +121,36 @@ class CheckLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(
-              child: CircularLoading(size: 50.0),
-            ),
-          );
+    final User _currentUser = FirebaseAuth.instance.currentUser;
 
-        if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+    if (_currentUser == null) {
+      return LoginPage();
+    } else {
+      //TODO HomePage is returned before pluginInitialized is completed.
+      pluginInitializer(_currentUser.uid);
+      // initHiveDb();
 
-        return HomePage();
-      },
-    );
+      return HomePage();
+    }
+
+    // return StreamBuilder<User>(
+    //   stream: FirebaseAuth.instance.authStateChanges(),
+    //   builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting)
+    //       return Scaffold(
+    //         backgroundColor: Colors.white,
+    //         body: Center(
+    //           child: CircularLoading(size: 50.0),
+    //         ),
+    //       );
+
+    //     if (!snapshot.hasData || snapshot.data == null) return LoginPage();
+
+    //     pluginInitializer(snapshot.data.uid);
+    //     initHiveDb();
+
+    //     return HomePage();
+    //   },
+    // );
   }
 }

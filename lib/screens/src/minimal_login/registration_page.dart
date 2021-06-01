@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/routes.dart';
@@ -15,94 +16,62 @@ import 'components/components.dart';
 class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: InkWell(
-          onTap: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
-        ),
-      ),
-      body: RegisterMainBody(),
-    );
-  }
-}
-
-class RegisterMainBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     void _onGoogleSignUpPressed() {
       // if (!_RegisterFormState.acceptTnC) {
       //   context.showSnackBar("Please accept Terms and Conditions");
       //   return;
       // }
 
-      BlocProvider.of<AuthenticationBloc>(context).add(RegisterWithGoogle());
+      Fluttertoast.showToast(msg: 'Will be added soon');
+      // BlocProvider.of<AuthenticationBloc>(context).add(RegisterWithGoogle());
     }
 
-    // void _onSignInPressed() {
-    //   Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-    //     return LoginPage();
-    //   }));
-    // }
-
-    return SafeArea(
-      child: BlocListener<AuthenticationBloc, AuthenticationState>(
-        listener: (context, state) {
-          if (state is AuthFailure) {
-            Fluttertoast.showToast(msg: state.message);
-          }
-          if (state is AuthSuccess) {
-            Fluttertoast.showToast(msg: "Registration succesfull");
-            Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
-          }
-          if (state is AuthNeedsVerification) {
-            Navigator.of(context).pushReplacementNamed('/verification');
-          }
-          // if (state is RegisterInProgress) {
-          //   showProgress(context);
-          // }
-        },
-        child: ListView(
-          children: [
-            SizedBox(height: 50.w),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Sign Up",
-                    style: Theme.of(context).textTheme.headline1.copyWith(
-                          fontSize: 38.w,
-                          fontWeight: FontWeight.w300,
-                        ),
-                  ),
-                  SizedBox(height: 33.w),
-                  RegisterForm(),
-                  SizedBox(height: 25.w),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "or register with",
-                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 12.w),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        leading: InkWell(
+          onTap: () => Navigator.pop(context),
+          child: Icon(CupertinoIcons.back, color: Colors.black),
+        ),
+      ),
+      body: SafeArea(
+        child: BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            if (state is AuthNeedsVerification) {
+              Fluttertoast.showToast(msg: "Registration succesfull");
+              Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
+            }
+          },
+          child: ListView(
+            children: [
+              // SizedBox(height: 50.w),
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 30.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    'Sign Up'.text.headline1(context).size(38.w).light.make(),
+                    SizedBox(height: 33.w),
+                    RegisterForm(),
+                    SizedBox(height: 25.w),
+                    'or register with'.text.headline4(context).size(12.w).make().centered(),
+                    SizedBox(height: 10.w),
+                    Hero(
+                      tag: 'google-button',
+                      child: GoogleButton(
+                        title: "Continue with Google",
+                        onPressed: _onGoogleSignUpPressed,
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 10.w),
-                  GoogleButton(
-                    title: "Sign Up with Google",
-                    onPressed: _onGoogleSignUpPressed,
-                  ),
-                  SizedBox(height: 30.w),
-                ],
+                    ),
+                    SizedBox(height: 30.w),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -235,6 +204,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 nextNode: _confirmPassNode,
                 textInputAction: TextInputAction.done,
                 maxLines: 1,
+                maxLength: 32,
                 fieldController: _passtextController,
                 hintText: 'Password',
                 prefixIcon: Icon(Icons.lock_outline),
@@ -283,6 +253,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       },
                       textInputAction: TextInputAction.done,
                       maxLines: 1,
+                      maxLength: 32,
+                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
                       controller: _confirmPassTextController,
                       cursorColor: Theme.of(context).primaryColor,
                       keyboardType: TextInputType.text,
@@ -342,6 +314,18 @@ class _RegisterFormState extends State<RegisterForm> {
           //   ],
           // ),
           SizedBox(height: 22.w),
+
+          '* Please store your password safely because it acts as your '
+              .richText
+              .xs
+              .color(CupertinoColors.destructiveRed)
+              .light
+              .withTextSpanChildren(<TextSpan>[
+            'MASTER KEY. '.textSpan.medium.italic.make(),
+            'We won\'t be able to reset it for you.'.textSpan.light.make(),
+          ]).make(),
+          SizedBox(height: 22.w),
+
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is RegisterInProgress

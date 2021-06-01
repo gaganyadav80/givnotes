@@ -11,10 +11,11 @@ bool isPermanentDisabled = true;
 int randomUserProfile = 0;
 
 // encryption variables
+/// Length should be between `0 to 16` or `[0, 16]` (excluding 16). Else gives RangeError.
 aes.IV iv;
 /// base64 encoded key. If need to use a key for something else use `encryptionKey`.
 /// 
-/// Practical use case is `convert.base64.decode(encryptionKey)`.
+/// To get the UTF-8 string do `utf8.decode(base64.decode(encryptionKey))`.
 String encryptionKey;
 /// Use string extension under services to encrypt a String.
 aes.Encrypter encrypter;

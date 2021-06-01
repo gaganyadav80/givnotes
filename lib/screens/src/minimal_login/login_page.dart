@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/global/validators/validators.dart';
 import 'package:givnotes/routes.dart';
@@ -14,20 +16,18 @@ import 'components/components.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
-  void showSnackBar(String msg, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      content: Text(msg, style: TextStyle(color: Colors.white)),
-    ));
-  }
+  // void showSnackBar(String msg, BuildContext context) {
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     backgroundColor: Theme.of(context).primaryColor,
+  //     content: Text(msg, style: TextStyle(color: Colors.white)),
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignInPressed() {
-      BlocProvider.of<AuthenticationBloc>(context).add(LoginWithGoogle());
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text("Google Sign In"),
-      // ));
+      Fluttertoast.showToast(msg: 'Will be added soon');
+      // BlocProvider.of<AuthenticationBloc>(context).add(LoginWithGoogle());
     }
 
     void _onSignUpPressed() {
@@ -50,15 +50,17 @@ class LoginPage extends StatelessWidget {
         listener: (context, state) async {
           if (state is AuthFailure) {
             print(state.message);
+            
             if (state.message.contains('password is invalid'))
-              showSnackBar("Invalid password", context);
+              // showSnackBar("Invalid password", context);
+              Fluttertoast.showToast(msg: 'Invalid Password');
             else if (state.message.contains('no user record'))
-              showSnackBar("Invalid email", context);
+              Fluttertoast.showToast(msg: "Invalid email");
             else
-              showSnackBar("Login Failure", context);
+              Fluttertoast.showToast(msg: "Authentication Failure");
           }
           if (state is AuthSuccess) {
-            showSnackBar("Login successfull", context);
+            Fluttertoast.showToast(msg: "Authentication successfull");
             Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
           }
           if (state is AuthNeedsVerification) {
@@ -76,51 +78,24 @@ class LoginPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Welcome",
-                    style: Theme.of(context).textTheme.headline1.copyWith(
-                          fontSize: 38.w,
-                          fontWeight: FontWeight.w300,
-                        ),
-                  ),
+                  'Welcome'.text.headline1(context).size(38.w).light.make(),
                   SizedBox(height: 33.w),
                   LoginForm(),
                   SizedBox(height: 20.w),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "or connect with",
-                        style: Theme.of(context).textTheme.headline4.copyWith(fontSize: 13.w),
-                      ),
-                    ],
-                  ),
+                  'or connect with'.text.headline4(context).size(13.w).make().centered(),
                   SizedBox(height: 10.w),
-                  GoogleButton(
-                    title: "Continue with Google",
-                    onPressed: _onGoogleSignInPressed,
-                  ),
-                  SizedBox(height: 100.w),
-                  GestureDetector(
-                    onTap: _onSignUpPressed,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        // borderRadius: kBorderRadius,
-                        // border: Border.all(width: 1.0, color: Colors.grey[500].withOpacity(0.5)),
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                      ),
-                      padding: EdgeInsets.symmetric(vertical: 13.w), // 13.5
-                      child: Center(
-                        child: Text(
-                          "Create a new account.",
-                          style: Theme.of(context).textTheme.caption.copyWith(
-                                fontSize: 14.w,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ),
+                  Hero(
+                    tag: 'google-button',
+                    child: GoogleButton(
+                      title: "Continue with Google",
+                      onPressed: _onGoogleSignInPressed,
                     ),
                   ),
+                  SizedBox(height: 100.w),
+                  TextButton(
+                    onPressed: _onSignUpPressed,
+                    child: 'Create a new account.'.text.caption(context).size(14.w).semiBold.make(),
+                  ).centered(),
                   // SizedBox(height: screenHeight * 0.045), //30
                 ],
               ),

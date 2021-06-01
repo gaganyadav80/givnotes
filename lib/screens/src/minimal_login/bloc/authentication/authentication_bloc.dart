@@ -4,11 +4,13 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import 'package:givnotes/models/user_model.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'authentication_repository.dart';
 
@@ -43,6 +45,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
         // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
+        await pluginInitializer(_currentUser.uid, userKey: event.password);
+        // await initHiveDb();
 
         if (_currentUser.emailVerified) {
           yield (AuthSuccess(user: _user, verify: event.verify));
@@ -54,30 +58,46 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         await _authRepo.signUp(email: event.email, password: event.password, name: event.name);
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
-        if (_currentUser.emailVerified) {
-          yield (AuthSuccess(user: _user));
-        } else {
-          yield (AuthNeedsVerification(user: _user));
-        }
+        await pluginInitializer(_currentUser.uid, userKey: event.password);
+        final DatabaseReference db = FirebaseDatabase.instance.reference();
+        db.child('users').child('${_currentUser.uid}').set({
+          'name': event.name,
+          'email': event.email,
+          'photoURL': _currentUser.photoURL,
+          'full-paid': false,
+          'ads-paid': false,
+          // 'dummyEncrypt': "dummy".encrypt
+        });
+        // await initHiveDb();
+
+        // if (_currentUser.emailVerified) {
+        //   yield (AuthSuccess(user: _user));
+        // } else {
+        yield (AuthNeedsVerification(user: _user));
+        // }
       } else if (event is LoginWithGoogle) {
         yield (LoginInProgress());
 
         await _authRepo.logInWithGoogle();
-
         yield (AuthSuccess(user: _user));
+        //
       } else if (event is RegisterWithGoogle) {
         yield (RegisterInProgress());
 
         await _authRepo.logInWithGoogle();
         yield (AuthSuccess(user: _user));
+        //
       } else if (event is ForgetPassword) {
         yield (LoginInProgress());
         await _authRepo.resetPassword(event.email);
         yield (ForgetPasswordSuccess());
+        //
       } else if (event is LoginObscureEvent) {
         yield (LoginObscureState(obscure: event.obscureLogin));
+        //
       } else if (event is RegisterObscureEvent) {
         yield (RegisterObscureState(obscure: event.obscure, obscureConfirm: event.obscureConfirm));
+        //
       } else if (event is LogOutUser) {
         yield (LogoutInProgress());
         await _authRepo.logOut();

@@ -77,10 +77,10 @@ class VerificationMainBody extends StatelessWidget {
         }
         if (state is VerificationSuccess) {
           showSnackBar('Verification Successful', context);
-          Navigator.of(context).popUntil((route) => route.isFirst);
+          // Navigator.of(context).popUntil((route) => route.isFirst);
           Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
         }
-        //TODO flag @Gagan
+        //TODO handle resend and confirm verification @Gagan
         // if (state is VerificationInProgress) {
         //   showProgress(context);
         // }

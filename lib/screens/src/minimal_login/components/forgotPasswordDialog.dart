@@ -6,7 +6,6 @@ import 'package:givnotes/global/validators/validators.dart';
 import 'constants.dart';
 import 'customFormField.dart';
 
-//TODO user custom dialog
 class PassResetMailDialog extends StatelessWidget {
   final Function onPressed;
   final TextEditingController emailController;

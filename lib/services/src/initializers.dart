@@ -26,9 +26,12 @@ Future<void> initHiveDb() async {
 
   final Box<PrefsModel> box = await Hive.openBox<PrefsModel>(
     'prefs',
-    encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
+    // encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
   );
-  await Hive.openBox<NotesModel>('givnotes', encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)));
+  await Hive.openBox<NotesModel>(
+    'givnotes',
+    // encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
+  );
 
   if (box.isEmpty) {
     await box.add(PrefsModel());
@@ -36,7 +39,7 @@ Future<void> initHiveDb() async {
   prefsBox = box.values.first;
 }
 
-Future<void> pluginInitializer() async {
+Future<dynamic> pluginInitializer(String userID, {String userKey}) async {
   packageInfo = await PackageInfo.fromPlatform();
   PrefService.init(prefix: 'pref_');
 
@@ -44,18 +47,23 @@ Future<void> pluginInitializer() async {
     'key:iv',
     options: StorageFileInitOptions(authenticationRequired: false),
   );
-  final containsEncryptionKey = await secureStorage.read();
 
-  if (containsEncryptionKey == null) {
-    var key = Hive.generateSecureKey();
-    aes.IV tempIV = aes.IV.fromSecureRandom(16);
-    await secureStorage.write("${base64Encode(key)}:${tempIV.base64}");
+  String storageContent = await secureStorage.read();
+
+  if (storageContent == null || storageContent.isEmpty || storageContent.split(':')[0] != userID) {
+    // Not required to make it 32 byte
+    if (userKey.length < 32) {
+      userKey += 'X#P%5vu!w2zTPm&1#n0%zz^38^'.substring(0, 32 - userKey.length);
+    }
+
+    // Gives RangeError if length >= 16
+    aes.IV tempIV = aes.IV.fromUtf8(userKey.substring(0, 16));
+    await secureStorage.write("$userID:${userKey.stringToBase64}:${tempIV.base64}");
+    storageContent = await secureStorage.read();
   }
 
-  String temp = await secureStorage.read();
-
-  encryptionKey = temp.split(':')[0];
-  iv = aes.IV.fromBase64(temp.split(':')[1]);
+  encryptionKey = storageContent.split(':')[1];
+  iv = aes.IV.fromBase64(storageContent.split(':')[2]);
 
   aes.Key key = aes.Key.fromBase64(encryptionKey);
   encrypter = aes.Encrypter(aes.AES(key));

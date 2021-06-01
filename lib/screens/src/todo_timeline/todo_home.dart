@@ -42,6 +42,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
         titleSpacing: 0.0,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
