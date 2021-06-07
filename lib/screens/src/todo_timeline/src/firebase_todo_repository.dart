@@ -8,7 +8,7 @@ import 'todo_repository.dart';
 
 class FirebaseTodosRepository implements TodosRepository {
   final CollectionReference todoCollection = FirebaseFirestore.instance.collection(
-    "${FirebaseAuth.instance.currentUser.uid}",
+    "${FirebaseAuth.instance.currentUser?.uid ?? 'default'}",
   );
 
   @override

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/widgets/simple_lockscreen.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:flutter/services.dart';
+import 'package:local_auth/local_auth.dart';
 
-class ShowLockscreen extends StatefulWidget {
+import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/simple_lockscreen.dart';
+
+class ShowLockscreen extends StatelessWidget {
   ShowLockscreen({
     Key key,
     @required this.changePassAuth,
@@ -13,11 +14,6 @@ class ShowLockscreen extends StatefulWidget {
 
   final VoidCallback changePassAuth;
 
-  @override
-  _ShowLockscreenState createState() => new _ShowLockscreenState();
-}
-
-class _ShowLockscreenState extends State<ShowLockscreen> {
   Future<bool> biometrics(BuildContext context) async {
     final LocalAuthentication auth = new LocalAuthentication();
     bool authenticated = false;
@@ -32,24 +28,26 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
     } on PlatformException catch (e) {
       print("Error: $e");
     }
-    if (!mounted) return false;
+    // if (!mounted) return false;
     if (authenticated) {
       return true;
     }
     return false;
   }
 
+  final VariableService _variableService = VariableService();
+
   @override
   Widget build(BuildContext context) {
     return SimpleLockScreen(
       title: 'Unlock givnotes',
-      correctString: prefsBox.passcode,
+      correctString: _variableService.prefsBox.passcode,
       confirmMode: false,
-      canCancel: widget.changePassAuth != null ? true : false,
-      canBiometric: widget.changePassAuth != null ? true : prefsBox.biometric,
-      showBiometricFirst: prefsBox.biometric,
+      canCancel: changePassAuth != null ? true : false,
+      canBiometric: changePassAuth != null ? true : _variableService.prefsBox.biometric,
+      showBiometricFirst: _variableService.prefsBox.biometric,
       biometricAuthenticate: biometrics,
-      onUnlocked: widget.changePassAuth ??
+      onUnlocked: changePassAuth ??
           () {
             AppLock.of(context).didUnlock();
           },
@@ -66,14 +64,9 @@ class _ShowLockscreenState extends State<ShowLockscreen> {
   }
 }
 
-class AddLockscreen extends StatefulWidget {
+class AddLockscreen extends StatelessWidget {
   const AddLockscreen({Key key}) : super(key: key);
 
-  @override
-  _AddLockscreenState createState() => _AddLockscreenState();
-}
-
-class _AddLockscreenState extends State<AddLockscreen> {
   @override
   Widget build(BuildContext context) {
     return SimpleLockScreen(
@@ -83,9 +76,9 @@ class _AddLockscreenState extends State<AddLockscreen> {
       canBiometric: false,
       isAddingLock: true,
       onCompleted: (ctx, passcode) {
-        prefsBox.passcode = passcode;
+        VariableService().prefsBox.passcode = passcode;
         AppLock.of(context).enable();
-        prefsBox.save();
+        VariableService().prefsBox.save();
         Navigator.pop(context, true);
       },
       // dotSecretConfig: DotSecretConfig(

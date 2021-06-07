@@ -9,9 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'notes/src/notes_model.dart';
 
@@ -147,7 +147,7 @@ class SearchTagsTextField extends StatefulWidget {
 }
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
-  final Map<String, int> _allTagsMap = prefsBox.allTagsMap;
+  final Map<String, int> _allTagsMap = VariableService().prefsBox.allTagsMap;
 
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();

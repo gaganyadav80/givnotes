@@ -5,14 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:givnotes/global/variables.dart';
-import 'package:givnotes/widgets/blueButton.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/blueButton.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
@@ -74,7 +74,7 @@ class MyProfile extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                     child: user.photoURL != null
                         ? Image.network(user.photoURL)
-                        : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
+                        : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                   ).pOnly(top: 40.w),
                 ),
                 CupertinoButton(

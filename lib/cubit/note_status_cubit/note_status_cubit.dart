@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/services/services.dart';
 
 class NoteStatusCubit extends Cubit<NoteStatusState> {
   NoteStatusCubit() : super(NoteStatusState());

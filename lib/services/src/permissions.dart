@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import 'variables.dart';
 
 abstract class HandlePermission {
   static Future<bool> requestPermission() async {
@@ -10,7 +11,7 @@ abstract class HandlePermission {
       return true;
     } else {
       if (await Permission.storage.isPermanentlyDenied) {
-        isPermanentDisabled = true;
+        VariableService().isPermanentDisabled = true;
         return false;
       }
       return false;

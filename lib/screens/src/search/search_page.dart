@@ -4,14 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/screens/src/notes/src/notes_model.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/screens/src/notes/src/notes_model.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/services/services.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({Key key}) : super(key: key);
@@ -159,7 +159,7 @@ class _SearchPageState extends State<SearchPage> {
                                                   itemCount: item.tags.length,
                                                   itemBuilder: (cntx, index) {
                                                     String title = item.tags[index];
-                                                    Color color = Color(prefsBox.allTagsMap[title]);
+                                                    Color color = Color(VariableService().prefsBox.allTagsMap[title]);
 
                                                     return _prefsCubit.compactTags
                                                         ? Container(

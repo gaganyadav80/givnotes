@@ -9,11 +9,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/services/src/variables.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'cubit/cubits.dart';
-import 'global/variables.dart';
 import 'packages/packages.dart';
 import 'routes.dart' as rt;
 import 'screens/screens.dart';
@@ -72,7 +72,7 @@ class App extends StatelessWidget {
           builder: () => AppLock(
             builder: (_) => GivnotesApp(),
             lockScreen: ShowLockscreen(changePassAuth: null),
-            enabled: prefsBox.passcode.isNotEmpty,
+            enabled: VariableService().prefsBox.passcode.isNotEmpty,
             // backgroundLockLatency: Duration(),
           ),
         ),

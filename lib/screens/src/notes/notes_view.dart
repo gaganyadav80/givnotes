@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
@@ -89,7 +88,7 @@ class _NotesViewState extends State<NotesView> {
                               arguments: [NoteMode.Adding, null],
                             );
                           } else {
-                            if (isPermanentDisabled) {
+                            if (VariableService().isPermanentDisabled) {
                               HandlePermission.permanentDisabled(context);
                             }
                           }

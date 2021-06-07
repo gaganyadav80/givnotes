@@ -13,9 +13,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/services/src/variables.dart';
 
 import 'widgets/editor_widgets.dart';
 

@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
-import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/screens/src/notes/src/notes_model.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:givnotes/services/src/multi_select_notes.dart';
 
 class NotesCard extends StatefulWidget {
@@ -34,7 +34,7 @@ class _NotesCardState extends State<NotesCard> {
   void initState() {
     super.initState();
     _created = DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created));
-    _allTagsMap = prefsBox.allTagsMap;
+    _allTagsMap = VariableService().prefsBox.allTagsMap;
   }
 
   @override

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/global/material_colors.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 import 'bloc/todo_bloc.dart';
@@ -88,12 +88,13 @@ class SelectCategory extends StatefulWidget {
 }
 
 class _SelectCategoryState extends State<SelectCategory> {
-  static const CupertinoDynamicColor _kClearButtonColor = CupertinoDynamicColor.withBrightness(
+  final CupertinoDynamicColor _kClearButtonColor = CupertinoDynamicColor.withBrightness(
     color: Color(0x33000000),
     darkColor: Color(0x33FFFFFF),
   );
 
   final FocusNode _focusNode = FocusNode();
+  final MaterialColors _colors = MaterialColors();
 
   @override
   void dispose() {
@@ -171,7 +172,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                   GestureDetector(
                     onTap: () {
                       widget.controller.clear();
-                      widget.selectCategoryColors.value = materialColorValues[0];
+                      widget.selectCategoryColors.value = _colors.materialColorValues[0];
                       Navigator.pop(context, false);
                     },
                     child: Container(
@@ -208,7 +209,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                             10,
                             (index) => GestureDetector(
                               onTap: () {
-                                widget.selectCategoryColors.value = materialColorValues[index];
+                                widget.selectCategoryColors.value = _colors.materialColorValues[index];
                               },
                               child: Container(
                                 padding: EdgeInsets.only(left: 15.0),
@@ -223,17 +224,17 @@ class _SelectCategoryState extends State<SelectCategory> {
                                           height: 25.w,
                                           width: 25.w,
                                           decoration: BoxDecoration(
-                                            color: Color(materialColorValues[index]).withOpacity(0.2),
+                                            color: Color(_colors.materialColorValues[index]).withOpacity(0.2),
                                             borderRadius: BorderRadius.circular(3.r),
                                             border:
-                                                Border.all(color: Color(materialColorValues[index]).withOpacity(0.2)),
+                                                Border.all(color: Color(_colors.materialColorValues[index]).withOpacity(0.2)),
                                           ),
                                         ),
                                         SizedBox(width: 10.w),
-                                        materialColorNames[index].text.size(16.w).make(),
+                                        _colors.materialColorNames[index].text.size(16.w).make(),
                                       ],
                                     ),
-                                    if (widget.selectCategoryColors.value == materialColorValues[index])
+                                    if (widget.selectCategoryColors.value == _colors.materialColorValues[index])
                                       Icon(CupertinoIcons.checkmark_alt, color: Colors.black).pOnly(right: 15.w),
                                   ],
                                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'package:givnotes/global/validators/validators.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'constants.dart';
 import 'customFormField.dart';

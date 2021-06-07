@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/screens/src/trash_view.dart';
-import 'package:givnotes/widgets/widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/src/trash_view.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class NotesOptionModalSheet extends StatelessWidget {
   NotesOptionModalSheet({Key key}) : super(key: key);
@@ -60,7 +60,7 @@ class NotesOptionModalSheet extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(right: 5.0.w),
                               child: Obx(
-                                () => sortbyNames[sortby.value]
+                                () => VariableService().sortbyNames[sortby.value]
                                     .text
                                     .size(15.w)
                                     .light

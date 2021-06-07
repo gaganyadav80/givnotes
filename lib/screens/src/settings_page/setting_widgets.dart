@@ -4,16 +4,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/models/models.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
-import 'package:lottie/lottie.dart';
 
 class SortNotesFloatModalSheet extends StatelessWidget {
   final TextStyle _kListItemStyle = TextStyle(
@@ -46,7 +46,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
               padding: EdgeInsets.only(right: 5.w),
               child: Obx(
                 () => Text(
-                  sortbyNames[def.value],
+                  VariableService().sortbyNames[def.value],
                   style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 15.w, fontWeight: FontWeight.w300),
                 ),
               ),
@@ -177,7 +177,7 @@ class ProfileTileSettings extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         child: photo != null
                             ? NetworkImage(photo)
-                            : SvgPicture.asset('assets/user-imgs/user$randomUserProfile.svg'),
+                            : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                       ).pOnly(bottom: 5.w),
                     ),
                     Text(user.name).text.medium.color(Color(0xff32343d)).size(22.w).make(),

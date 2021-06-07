@@ -7,10 +7,10 @@ import 'package:get/get.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'setting_widgets.dart';
 
@@ -90,7 +90,7 @@ class SettingsPage extends StatelessWidget {
           // leadingColor: Colors.lightGreen,
           titleGap: 0.0,
           onTap: () {
-            if (prefsBox.passcode != '') {
+            if (VariableService().prefsBox.passcode != '') {
               Navigator.pushNamed(
                 context,
                 RouterName.lockscreenRoute,
@@ -138,15 +138,8 @@ class SettingsPage extends StatelessWidget {
   }
 }
 
-class AppDetailSection extends StatefulWidget {
-  AppDetailSection({Key key}) : super(key: key);
-
-  @override
-  _AppDetailSectionState createState() => _AppDetailSectionState();
-}
-
-class _AppDetailSectionState extends State<AppDetailSection> {
-  RxInt selectedIndex = 0.obs;
+class AppDetailSection extends StatelessWidget {
+  final RxInt selectedIndex = 0.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -182,21 +175,21 @@ class _AppDetailSectionState extends State<AppDetailSection> {
     );
   }
 
-  List<Widget> _bodyWidgets = [
+  final List<Widget> _bodyWidgets = [
     Column(
       children: [
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("App name: "), Text("${packageInfo.appName}")]),
+            children: [Text("App name: "), Text("${VariableService().packageInfo.appName}")]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Package: "), Text("${packageInfo.packageName}")]),
+            children: [Text("Package: "), Text("${VariableService().packageInfo.packageName}")]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Build_no: "), Text("${packageInfo.buildNumber}")]),
+            children: [Text("Build_no: "), Text("${VariableService().packageInfo.buildNumber}")]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Release version: "), Text("v${packageInfo.version}-beta")]),
+            children: [Text("Release version: "), Text("v${VariableService().packageInfo.version}-beta")]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [Text("Development version: "), Text("v2.0.0")]),
@@ -238,6 +231,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
   }
 
   final double _kIconSize = 26.w;
+  final VariableService _variableService = VariableService();
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +249,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           titleGap: 0.0,
           isWaitSwitch: true,
           onEnable: () {
-            if (prefsBox.passcode == '') {
+            if (_variableService.prefsBox.passcode == '') {
               Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
                 if (value) {
                   setState(() {
@@ -266,14 +260,14 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             }
           },
           onDisable: () {
-            if (prefsBox.passcode != '') {
+            if (_variableService.prefsBox.passcode != '') {
               Navigator.pushNamed(
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
                   AppLock.of(context).disable();
-                  prefsBox.passcode = '';
-                  prefsBox.save();
+                  _variableService.prefsBox.passcode = '';
+                  _variableService.prefsBox.save();
                   Navigator.pop(context, true);
                 },
               ).then((value) {
@@ -290,7 +284,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
               'Biometric authentication',
               'biometric',
               defaultVal: false,
-              disabled: canUseBiometric.value ? prefsBox.passcode.isEmpty : true,
+              disabled: canUseBiometric.value ? _variableService.prefsBox.passcode.isEmpty : true,
               leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.teal,
               titleGap: 0.0,
@@ -298,12 +292,12 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
                 if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
               },
               onEnable: () {
-                prefsBox.biometric = true;
-                prefsBox.save();
+                _variableService.prefsBox.biometric = true;
+                _variableService.prefsBox.save();
               },
               onDisable: () {
-                prefsBox.biometric = false;
-                prefsBox.save();
+                _variableService.prefsBox.biometric = false;
+                _variableService.prefsBox.save();
               },
             )),
       ],

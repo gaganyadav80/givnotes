@@ -3,15 +3,14 @@ import 'dart:math';
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:encrypt/encrypt.dart' as aes;
 import 'package:get/get.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
 
 import 'package:givnotes/database/database.dart';
-import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
 Future<void> initGetXControllers() async {
@@ -32,11 +31,11 @@ Future<void> initHiveDb() async {
   if (box.isEmpty) {
     await box.add(PrefsModel());
   }
-  prefsBox = box.values.first;
+  VariableService().prefsBox = box.values.first;
 }
 
 Future<dynamic> pluginInitializer(String userID, {String userKey}) async {
-  packageInfo = await PackageInfo.fromPlatform();
+  VariableService().packageInfo = await PackageInfo.fromPlatform();
   PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(
@@ -58,11 +57,11 @@ Future<dynamic> pluginInitializer(String userID, {String userKey}) async {
     storageContent = await secureStorage.read();
   }
 
-  encryptionKey = storageContent.split(':')[1];
-  iv = aes.IV.fromBase64(storageContent.split(':')[2]);
+  VariableService().encryptionKey = storageContent.split(':')[1];
+  VariableService().iv = aes.IV.fromBase64(storageContent.split(':')[2]);
 
-  aes.Key key = aes.Key.fromBase64(encryptionKey);
-  encrypter = aes.Encrypter(aes.AES(key));
+  aes.Key key = aes.Key.fromBase64(VariableService().encryptionKey);
+  VariableService().encrypter = aes.Encrypter(aes.AES(key));
 
-  randomUserProfile = Random().nextInt(21);
+  VariableService().randomUserProfile = Random().nextInt(21);
 }

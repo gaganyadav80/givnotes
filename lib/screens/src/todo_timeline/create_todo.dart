@@ -9,7 +9,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/global/material_colors.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
@@ -54,7 +53,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   @override
   void initState() {
     super.initState();
-    _selectCategoryColors.value = materialColorValues[0];
+    _selectCategoryColors.value = MaterialColors().materialColorValues[0];
 
     if (widget.isEditing) {
       _categoryAdded.value = widget.todo.category.isNotEmpty;
@@ -166,7 +165,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         ? GestureDetector(
                             onTap: () {
                               _categoryController.clear();
-                              _selectCategoryColors.value = materialColorValues[0];
+                              _selectCategoryColors.value = MaterialColors().materialColorValues[0];
                               _categoryAdded.value = false;
                             },
                             child: Icon(
