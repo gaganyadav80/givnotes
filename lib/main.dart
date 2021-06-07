@@ -39,9 +39,7 @@ void main() async {
   final AuthenticationRepository authenticationRepository = AuthenticationRepository();
   await authenticationRepository.user.first;
 
-  runApp(
-    App(authenticationRepository: authenticationRepository),
-  );
+  runApp(App(authenticationRepository: authenticationRepository));
 }
 
 class App extends StatelessWidget {
@@ -98,11 +96,6 @@ class _GivnotesAppState extends State<GivnotesApp> {
       theme: ThemeData(
         fontFamily: 'Poppins',
         accentColor: Colors.black,
-        //TODO problem with CupertinoPageRoute in NotesOptionModalSheet @Gagan
-        // Solution :- use page transition instead of CupertinoPageRoute
-        // pageTransitionsTheme: PageTransitionsTheme(
-        //   builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()},
-        // ),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
@@ -127,6 +120,7 @@ class CheckLogin extends StatelessWidget {
       return LoginPage();
     } else {
       //TODO HomePage is returned before pluginInitialized is completed.
+      // Solution is to make both the functions synchronous
       pluginInitializer(_currentUser.uid);
       // initHiveDb();
 

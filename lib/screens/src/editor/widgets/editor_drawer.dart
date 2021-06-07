@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
+import 'package:givnotes/screens/src/notes/src/notes_model.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
@@ -15,19 +18,20 @@ class EditorEndDrawer extends StatelessWidget {
   final Function saveNote;
   final NotesModel note;
   final BuildContext rootCtx;
+  final bool isTrash;
 
   EditorEndDrawer({
     this.note,
     this.saveNote,
     @required this.rootCtx,
+    this.isTrash = false,
   });
 
-  final HiveDBServices _dbServices = HiveDBServices();
+  // final HiveDBServices _dbServices = HiveDBServices();
   final StringProcessor _sp = StringProcessor();
 
   @override
   Widget build(BuildContext context) {
-    final _homeVarStore = BlocProvider.of<HomeCubit>(context);
     final _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return SafeArea(
@@ -36,7 +40,7 @@ class EditorEndDrawer extends StatelessWidget {
         child: Drawer(
           child: PreferencePage([
             // PreferenceTitle('Options'),
-            _homeVarStore.state.trash == false
+            isTrash == false
                 ? myEndDrawerListTheme(
                     'Save note',
                     Icons.save_alt,
@@ -51,8 +55,8 @@ class EditorEndDrawer extends StatelessWidget {
                     'Restore note',
                     Icons.arrow_upward,
                     () async {
-                      note.trash = !note.trash;
-                      await note.save();
+                      // note.trash = !note.trash;
+                      Get.find<NotesController>().updateNote(note.copyWith(trash: false));
 
                       _noteEditStore.updateNoteMode(NoteMode.Adding);
 
@@ -163,9 +167,9 @@ class EditorEndDrawer extends StatelessWidget {
             //
             _noteEditStore.state.noteMode == NoteMode.Editing
                 ? myEndDrawerListTheme(
-                    _homeVarStore.state.trash ? 'Delete note' : 'Trash note',
+                    isTrash ? 'Delete note' : 'Trash note',
                     CupertinoIcons.delete,
-                    _homeVarStore.state.trash
+                    isTrash
                         ? () async {
                             Navigator.pop(context); //? close the drawer
                             await showDialog(
@@ -178,7 +182,8 @@ class EditorEndDrawer extends StatelessWidget {
                                 onTap: () async {
                                   final _noteEditStore = context.read<NoteStatusCubit>();
 
-                                  _dbServices.deleteNote(note.key);
+                                  // _dbServices.deleteNote(note.key);
+                                  Get.find<NotesController>().deleteNote(note.id);
                                   _noteEditStore.updateNoteMode(NoteMode.Adding);
 
                                   Navigator.pop(context); //? close the dialog
@@ -188,8 +193,7 @@ class EditorEndDrawer extends StatelessWidget {
                             );
                           }
                         : () async {
-                            note.trash = !note.trash;
-                            await note.save();
+                            Get.find<NotesController>().updateNote(note.copyWith(trash: true));
 
                             _noteEditStore.updateNoteMode(NoteMode.Adding);
 
@@ -215,53 +219,14 @@ class EditorEndDrawer extends StatelessWidget {
       onTap: onPressed,
       child: Column(
         children: [
-          // SizedBox(height: hm * 2),
           GFListTile(
             padding: EdgeInsets.fromLTRB(10.w, 15.h, 20.w, 15.h),
             margin: EdgeInsets.zero,
-            icon: Icon(
-              icon,
-              size: 20.w,
-            ),
-            title: Text(
-              title,
-              style: TextStyle(
-                fontSize: 18.w,
-                fontWeight: FontWeight.w300,
-              ),
-            ),
+            icon: Icon(icon, size: 20.w),
+            title: title.text.size(18.w).light.make(),
           ),
         ],
       ),
     );
   }
 }
-
-// _confirmDeleteAlert(context, NotesModel note, HiveDBServices _dbServices) async {
-//   await showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         content: Text('Are you sure you permanently want to delete this note?'),
-//         actions: [
-//           TextButton(
-//             onPressed: () => Navigator.pop(context), //? Close the dialog
-//             child: Text('Cancel'),
-//           ),
-//           TextButton(
-//             child: Text('Delete'),
-//             onPressed: () async {
-//               final _noteEditStore = context.read<NoteAndSearchCubit>();
-
-//               _dbServices.deleteNote(note.key);
-//               _noteEditStore.updateNoteMode(NoteMode.Adding);
-
-//               Navigator.pop(context); //? close the dialog
-//               Navigator.pushNamed(context, RouterName.homeRoute);
-//             },
-//           ),
-//         ],
-//       );
-//     },
-//   );
-// }

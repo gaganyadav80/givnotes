@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+
+import 'notes/src/notes_model.dart';
 
 class TagSearchController extends GetxController {
   final RxList<String> tagSearchList = <String>[].obs;
@@ -33,7 +33,6 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
     final NoteStatusCubit _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return Column(
@@ -49,10 +48,10 @@ class _TagsViewState extends State<TagsView> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
             child: Obx(() {
-              _notes = Hive.box<NotesModel>('givnotes').values.where((element) {
+              _notes = Get.find<NotesController>().notes.where((element) {
                 return (element.trash == false) &&
-                    _tagSearchController.selectedTagList.any((title) {
-                      return element.tagsNameList.contains(title);
+                    _tagSearchController.selectedTagList.any((tag) {
+                      return element.tags.contains(tag);
                     });
               }).toList();
 
@@ -64,16 +63,8 @@ class _TagsViewState extends State<TagsView> {
                       children: [
                         _tagSearchController.selectedTagList.length.text.xs.make().opacity0(),
                         SizedBox(height: 50.h),
-                        Image.asset(
-                          isDark ? 'assets/giv_img/search_dark.png' : 'assets/giv_img/search_light.png',
-                          height: 180.h,
-                        ),
-                        Text(
-                          'Search according the tags here',
-                          style: TextStyle(
-                            fontSize: 12.w,
-                          ),
-                        ),
+                        Image.asset('assets/giv_img/search_light.png', height: 180.h),
+                        'Search according the tags here'.text.size(12.w).make(),
                       ],
                     ),
                   ),
@@ -83,11 +74,11 @@ class _TagsViewState extends State<TagsView> {
               return ListView.builder(
                 itemCount: _notes.length,
                 itemBuilder: (context, index) {
-                  index = _notes.length - index - 1;
+                  // index = _notes.length - index - 1;
 
                   var note = _notes[index];
 
-                  _created = DateFormat.yMMMd().format(note.created);
+                  _created = DateFormat.yMMMd().format(DateTime.parse(note.created));
 
                   return InkWell(
                     onTap: () {
@@ -196,7 +187,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
     });
 
     _searchTagFocus.addListener(() {
-      if (BlocProvider.of<HomeCubit>(context).state.index != 2) {
+      if (BlocProvider.of<HomeCubit>(context).state != 2) {
         _searchTagFocus.unfocus();
       }
     });
@@ -225,55 +216,45 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             _searchTagController.clear();
             _searchTagFocus.unfocus();
           },
-          onSubmitted: (_) {
-            _searchTagFocus.unfocus();
-          },
+          onSubmitted: (_) => _searchTagFocus.unfocus(),
         ),
-        Obx(() => Tags(
-              key: widget.tagStateKey,
-              itemCount: _tagSearchController.tagSearchList.length,
-              horizontalScroll: true,
-              itemBuilder: (int index) {
-                final noteTag = _tagSearchController.tagSearchList[index];
+        Obx(
+          () => Tags(
+            key: widget.tagStateKey,
+            itemCount: _tagSearchController.tagSearchList.length,
+            horizontalScroll: true,
+            itemBuilder: (int index) {
+              final noteTag = _tagSearchController.tagSearchList[index];
 
-                return ItemTags(
-                  key: Key(index.toString()),
-                  elevation: 2,
-                  index: index,
-                  title: noteTag,
-                  active: _tagSearchController.selectedTagList.contains(noteTag),
-                  padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
-                  textStyle: TextStyle(
-                    fontSize: 14.w,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 0.5,
-                    color: Colors.white,
-                  ),
-
-                  border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
-                  textActiveColor: Colors.white,
-                  textColor: Color(_allTagsMap[noteTag]),
-                  combine: ItemTagsCombine.withTextBefore,
-                  activeColor: Color(_allTagsMap[noteTag]),
-                  //
-                  //
-                  // removeButton: ItemTagsRemoveButton(
-                  //   backgroundColor: Color(_allTagColors[index]),
-                  //   onRemoved: () {
-                  //     showToast("Long press to delete Tag");
-                  //     return true;
-                  //   },
-                  // ),
-                  onPressed: (item) {
-                    if (item.active) {
-                      _tagSearchController.selectedTagList.add(item.title);
-                    } else {
-                      _tagSearchController.selectedTagList.remove(item.title);
-                    }
-                  },
-                );
-              },
-            )),
+              return ItemTags(
+                key: Key(index.toString()),
+                elevation: 2,
+                index: index,
+                title: noteTag,
+                active: _tagSearchController.selectedTagList.contains(noteTag),
+                padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
+                textStyle: TextStyle(
+                  fontSize: 14.w,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.5,
+                  color: Colors.white,
+                ),
+                border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
+                textActiveColor: Colors.white,
+                textColor: Color(_allTagsMap[noteTag]),
+                combine: ItemTagsCombine.withTextBefore,
+                activeColor: Color(_allTagsMap[noteTag]),
+                onPressed: (item) {
+                  if (item.active) {
+                    _tagSearchController.selectedTagList.add(item.title);
+                  } else {
+                    _tagSearchController.selectedTagList.remove(item.title);
+                  }
+                },
+              );
+            },
+          ),
+        ),
       ],
     );
   }

@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
+import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/services/src/multi_select_notes.dart';
@@ -28,18 +28,18 @@ class NotesCard extends StatefulWidget {
 class _NotesCardState extends State<NotesCard> {
   String _created;
   Map<String, int> _allTagsMap;
+  final MultiSelectController multiSelectController = Get.find<MultiSelectController>();
 
   @override
   void initState() {
     super.initState();
-    _created = DateFormat.yMMMd().add_jm().format(widget.note.created);
+    _created = DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created));
     _allTagsMap = prefsBox.allTagsMap;
   }
 
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
-    final MultiSelectController multiSelectController = Get.find<MultiSelectController>();
 
     return Obx(
       () => Card(
@@ -54,7 +54,8 @@ class _NotesCardState extends State<NotesCard> {
               multiSelectController.select(widget.note.id);
             } else {
               BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Editing);
-              Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
+              Navigator.pushNamed(context, RouterName.editorRoute,
+                  arguments: [NoteMode.Editing, widget.note]);
             }
           },
           onLongPress: () {
@@ -66,7 +67,7 @@ class _NotesCardState extends State<NotesCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 SizedBox(height: 5.0.w),
-                widget.note.tagsNameList.length == 0
+                widget.note.tags.length == 0
                     ? SizedBox(height: 5.w)
                     : Container(
                         margin: EdgeInsets.only(top: 6.w),
@@ -74,9 +75,9 @@ class _NotesCardState extends State<NotesCard> {
                         color: Colors.transparent,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
-                          itemCount: widget.note.tagsNameList.length,
+                          itemCount: widget.note.tags.length,
                           itemBuilder: (context, index) {
-                            String tagsTitle = widget.note.tagsNameList[index];
+                            String tagsTitle = widget.note.tags[index];
                             Color color = Color(_allTagsMap[tagsTitle]);
 
                             return prefsCubit.state.compactTags
@@ -123,9 +124,7 @@ class _NotesCardState extends State<NotesCard> {
                 SizedBox(height: 5.w),
                 Text(
                   widget.note.text,
-                  style: TextStyle(
-                    color: Colors.grey[800]
-                  ),
+                  style: TextStyle(color: Colors.grey[800]),
                   maxLines: 5,
                   overflow: TextOverflow.ellipsis,
                 ),

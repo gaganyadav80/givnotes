@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:biometric_storage/biometric_storage.dart';
 import 'package:encrypt/encrypt.dart' as aes;
 import 'package:get/get.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:package_info/package_info.dart';
@@ -17,21 +17,17 @@ import 'package:givnotes/services/services.dart';
 Future<void> initGetXControllers() async {
   Get.put(TagSearchController());
   Get.put(MultiSelectController());
+  Get.put(NotesController());
 }
 
 Future<void> initHiveDb() async {
   await Hive.initFlutter();
-  Hive.registerAdapter<NotesModel>(NotesModelAdapter());
+  // Hive.registerAdapter<NotesModel>(NotesModelAdapter());
   Hive.registerAdapter<PrefsModel>(PrefsModelAdapter());
 
-  final Box<PrefsModel> box = await Hive.openBox<PrefsModel>(
-    'prefs',
-    // encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
-  );
-  await Hive.openBox<NotesModel>(
-    'givnotes',
-    // encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
-  );
+  // encryptionCipher: HiveAesCipher(base64.decode(encryptionKey)),
+  final Box<PrefsModel> box = await Hive.openBox<PrefsModel>('prefs');
+  // await Hive.openBox<NotesModel>('givnotes');
 
   if (box.isEmpty) {
     await box.add(PrefsModel());
@@ -68,5 +64,5 @@ Future<dynamic> pluginInitializer(String userID, {String userKey}) async {
   aes.Key key = aes.Key.fromBase64(encryptionKey);
   encrypter = aes.Encrypter(aes.AES(key));
 
-  randomUserProfile = Random().nextInt(21) + 1;
+  randomUserProfile = Random().nextInt(21);
 }

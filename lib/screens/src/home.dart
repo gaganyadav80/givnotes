@@ -30,26 +30,22 @@ class _HomePageState extends State<HomePage> {
     return TapTapClose(
       child: DefaultTabController(
         length: 4,
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: CustomAppBar(),
-          body: BlocBuilder<HomeCubit, HomeState>(
-            builder: (context, state) {
-              return IndexedStack(
-                index: state.index,
+        child: BlocBuilder<HomeCubit, int>(
+          buildWhen: (previous, current) => previous != current,
+          builder: (_, int state) {
+            return Scaffold(
+              backgroundColor: Colors.white,
+              appBar: CustomAppBar(index: state),
+              body: IndexedStack(
+                index: state,
                 children: <Widget>[
                   NotesView(),
                   TodoTimelineBloc(),
                   TagsView(),
                   SettingsPage(),
                 ],
-              );
-            },
-          ),
-          bottomNavigationBar: BlocBuilder<HomeCubit, HomeState>(
-            buildWhen: (previous, current) => previous != current,
-            builder: (context, state) {
-              return BottomNavigationBar(
+              ),
+              bottomNavigationBar: BottomNavigationBar(
                 iconSize: _kIconSize,
                 selectedFontSize: 13.w,
                 unselectedFontSize: 13.w,
@@ -57,8 +53,8 @@ class _HomePageState extends State<HomePage> {
                 selectedItemColor: Colors.black,
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
-                currentIndex: state.index,
-                onTap: (index) => BlocProvider.of<HomeCubit>(context).updateIndex(index),
+                currentIndex: state,
+                onTap: (index) => BlocProvider.of<HomeCubit>(context).update(index),
                 items: <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(CupertinoIcons.house),
@@ -81,9 +77,9 @@ class _HomePageState extends State<HomePage> {
                     label: 'Settings',
                   ),
                 ],
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

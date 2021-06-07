@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:get/get.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 part 'hydrated_prefs_state.dart';
@@ -6,7 +8,10 @@ part 'hydrated_prefs_state.dart';
 class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
   HydratedPrefsCubit() : super(const HydratedPrefsState());
 
-  void updateSortBy(int value) => emit(state.copyWith(sortBy: value));
+  void updateSortBy(int value) {
+    Get.find<NotesController>().sort(value);
+    emit(state.copyWith(sortBy: value));
+  }
   void updateCompactTags(bool value) => emit(state.copyWith(compactTags: value));
 
   @override

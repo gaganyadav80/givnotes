@@ -11,15 +11,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/global/variables.dart';
+import 'package:givnotes/screens/src/notes/src/notes_model.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 
 import 'widgets/editor_widgets.dart';
-
-// List<String> noteTagsList = <String>[];
 
 class EditorScreen extends StatefulWidget {
   EditorScreen({Key key, this.noteMode, this.note}) : super(key: key);
@@ -34,13 +32,13 @@ class EditorScreen extends StatefulWidget {
 class _EditorScreenState extends State<EditorScreen> {
   final Rx<QuillController> _quillController = QuillController.basic().obs;
 
-  final HiveDBServices _dbServices = HiveDBServices();
+  // final HiveDBServices _dbServices = HiveDBServices();
   final TextEditingController _titleController = TextEditingController();
   final FocusNode _titleFocus = FocusNode();
   final FocusNode _editorfocusNode = FocusNode();
   final RxList<String> noteTagsList = <String>[].obs;
 
-  dynamic _noteIndex;
+  // dynamic _noteIndex;
   NoteStatusCubit _noteEditStore;
   ValueNotifier<NotesModel> _notesModel = ValueNotifier<NotesModel>(null);
 
@@ -71,8 +69,8 @@ class _EditorScreenState extends State<EditorScreen> {
     } else if (widget.noteMode == NoteMode.Editing) {
       noteTagsList
         ..clear()
-        ..addAll(widget.note.tagsNameList);
-      _noteIndex = widget.note.key;
+        ..addAll(widget.note.tags);
+      // _noteIndex = widget.note.key;
 
       _notesModel.value = widget.note;
     }
@@ -124,7 +122,7 @@ class _EditorScreenState extends State<EditorScreen> {
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15.w),
                           child: Text(
-                            'modified ${DateFormat.yMMMd().add_Hm().format(value.modified)}',
+                            'modified ${DateFormat.yMMMd().add_Hm().format(DateTime.parse(value.modified))}',
                             style: TextStyle(
                               fontFamily: 'ZillaSlab',
                               color: Colors.black.withOpacity(0.7),
@@ -286,30 +284,29 @@ class _EditorScreenState extends State<EditorScreen> {
         _noteEditStore.updateIsEditing(false);
 
         if (_noteEditStore.state.noteMode == NoteMode.Adding) {
-          _notesModel.value = await _dbServices.insertNote(
-            NotesModel()
-              ..id = Uuid().v1()
-              ..title = _title.isNotEmpty ? _title : 'Untitled'
-              ..text = _note
-              ..znote = jsonEncode(_quillController.value.document.toDelta().toJson())
-              ..created = DateTime.now()
-              ..modified = DateTime.now()
-              ..tagsNameList = noteTagsList.toList(),
+          _notesModel.value = NotesModel(
+            title: _title.isNotEmpty ? _title : 'Untitled',
+            text: _note,
+            znote: jsonEncode(_quillController.value.document.toDelta().toJson()),
+            created: DateTime.now().toString(),
+            modified: DateTime.now().toString(),
+            tags: noteTagsList.toList(),
           );
+
+          Get.find<NotesController>().addNewNote(_notesModel.value);
           //
         } else if (_noteEditStore.state.noteMode == NoteMode.Editing) {
-          _notesModel.value = await _dbServices.updateNote(
-            _noteIndex,
-            NotesModel()
-              ..id = _notesModel.value.id
-              ..title = _title.isNotEmpty ? _title : 'Untitled'
-              ..text = _note
-              ..znote = jsonEncode(_quillController.value.document.toDelta().toJson())
-              ..trash = _notesModel.value.trash
-              ..created = _notesModel.value.created
-              ..modified = DateTime.now()
-              ..tagsNameList = noteTagsList.toList(),
+          _notesModel.value = _notesModel.value.copyWith(
+            id: _notesModel.value.id,
+            title: _title.isNotEmpty ? _title : 'Untitled',
+            text: _note,
+            znote: jsonEncode(_quillController.value.document.toDelta().toJson()),
+            trash: _notesModel.value.trash,
+            created: _notesModel.value.created,
+            modified: DateTime.now().toString(),
+            tags: noteTagsList.toList(),
           );
+          Get.find<NotesController>().updateNote(_notesModel.value);
         }
 
         showToast('Note saved succesfully');

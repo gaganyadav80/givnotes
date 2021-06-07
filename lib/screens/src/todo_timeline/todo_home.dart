@@ -95,7 +95,7 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
           builder: (context, state) {
             if (state is TodosLoading) {
               return Center(
-                child: CircularLoading(),
+                child: CircularLoading(size: 50.w),
               );
             } else if (state is TodosLoaded) {
               //! maybe remove - delete todo older than 5 days

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/screens/src/trash_view.dart';
 import 'package:givnotes/widgets/widgets.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:page_transition/page_transition.dart';
@@ -11,34 +12,6 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/global/variables.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/routes.dart';
-
-class NotesAppBar extends StatelessWidget with PreferredSizeWidget {
-  @override
-  Size get preferredSize => Size.fromHeight(56.0);
-
-  @override
-  Widget build(BuildContext context) {
-    final HomeCubit _homeCubit = BlocProvider.of<HomeCubit>(context);
-
-    return SafeArea(
-      child: _homeCubit.state.trash
-          ? AppBar(
-              elevation: 0.0,
-              backgroundColor: Colors.white,
-              title: "Trash".text.size(24.0.w).black.fontWeight(FontWeight.w500).make(),
-              leading: InkWell(
-                onTap: () async {
-                  _homeCubit.updateTrash(false);
-                  Navigator.pop(context);
-                },
-                child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
-              ),
-            )
-          : SizedBox.shrink(),
-    );
-  }
-}
 
 class NotesOptionModalSheet extends StatelessWidget {
   NotesOptionModalSheet({Key key}) : super(key: key);
@@ -46,28 +19,20 @@ class NotesOptionModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext rootContext) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(rootContext);
-    var sortby = prefsCubit.state.sortBy.obs;
+    final RxInt sortby = prefsCubit.state.sortBy.obs;
 
     return Material(
       child: Navigator(
         onGenerateRoute: (_) => MaterialPageRoute(
-          builder: (context2) => Builder(
+          builder: (_) => Builder(
             builder: (context) => CupertinoPageScaffold(
               navigationBar: CupertinoNavigationBar(
                 middle: Text('Notes Option'),
                 automaticallyImplyLeading: false,
                 transitionBetweenRoutes: true,
                 trailing: TextButton(
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.of(rootContext).pop();
-                  },
+                  child: 'Done'.text.color(Colors.blue).bold.make(),
+                  onPressed: () => Navigator.of(rootContext).pop(),
                 ),
               ),
               child: SafeArea(
@@ -84,7 +49,7 @@ class NotesOptionModalSheet extends StatelessWidget {
                       titleGap: 0.0,
                       leading: Icon(
                         CupertinoIcons.square_arrow_right,
-                        color: Theme.of(rootContext).textTheme.bodyText1.color,
+                        color: Colors.black,
                       ),
                       trailing: Container(
                         width: 200.w,
@@ -95,14 +60,12 @@ class NotesOptionModalSheet extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(right: 5.0.w),
                               child: Obx(
-                                () => Text(
-                                  sortbyNames[sortby.value],
-                                  style: TextStyle(
-                                    color: CupertinoColors.systemGrey,
-                                    fontSize: 15.w,
-                                    fontWeight: FontWeight.w300,
-                                  ),
-                                ),
+                                () => sortbyNames[sortby.value]
+                                    .text
+                                    .size(15.w)
+                                    .light
+                                    .color(CupertinoColors.systemGrey)
+                                    .make(),
                               ),
                             ),
                             Icon(
@@ -113,80 +76,12 @@ class NotesOptionModalSheet extends StatelessWidget {
                           ],
                         ),
                       ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          PageTransition(
-                            type: PageTransitionType.rightToLeft,
-                            child: Material(
-                              child: CupertinoPageScaffold(
-                                navigationBar: CupertinoNavigationBar(
-                                  middle: Text('Sort by'),
-                                  transitionBetweenRoutes: true,
-                                ),
-                                child: SafeArea(
-                                  child: Obx(
-                                    () => Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 10.0.w),
-                                        TilesDivider(),
-                                        ListTile(
-                                          title: Text('Creation Date'),
-                                          tileColor: Colors.white,
-                                          onTap: () {
-                                            prefsCubit.updateSortBy(0);
-                                            sortby.value = 0;
-                                          },
-                                          trailing: sortby.value == 0
-                                              ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
-                                              : null,
-                                        ),
-                                        TilesDivider(),
-                                        ListTile(
-                                          title: Text('Modification Date'),
-                                          tileColor: Colors.white,
-                                          onTap: () {
-                                            prefsCubit.updateSortBy(1);
-                                            sortby.value = 1;
-                                          },
-                                          trailing: sortby.value == 1
-                                              ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
-                                              : null,
-                                        ),
-                                        TilesDivider(),
-                                        ListTile(
-                                          title: Text('Alphabetical (A-Z)'),
-                                          tileColor: Colors.white,
-                                          onTap: () {
-                                            prefsCubit.updateSortBy(2);
-                                            sortby.value = 2;
-                                          },
-                                          trailing: sortby.value == 2
-                                              ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
-                                              : null,
-                                        ),
-                                        TilesDivider(),
-                                        ListTile(
-                                          title: Text('Alphabetical (Z-A)'),
-                                          tileColor: Colors.white,
-                                          onTap: () {
-                                            prefsCubit.updateSortBy(3);
-                                            sortby.value = 3;
-                                          },
-                                          trailing: sortby.value == 3
-                                              ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
-                                              : null,
-                                        ),
-                                        TilesDivider(),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                      onTap: () => Navigator.of(context).push(
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: SortByModalPage(rootContext: rootContext, sortby: sortby),
+                        ),
+                      ),
                     ),
                     TilesDivider(),
                     ListTile(tileColor: Colors.transparent, dense: true),
@@ -194,11 +89,11 @@ class NotesOptionModalSheet extends StatelessWidget {
                     SwitchPreference(
                       'Compact Tags',
                       'compact_tags',
-                      titleColor: Theme.of(rootContext).textTheme.bodyText1.color,
+                      titleColor: Colors.black,
                       titleGap: 0.0,
                       leading: Icon(
                         CupertinoIcons.bars,
-                        color: Theme.of(rootContext).textTheme.bodyText1.color,
+                        color: Colors.black,
                       ),
                       desc: 'Enable compact tags in notes view',
                       defaultVal: prefsCubit.state.compactTags,
@@ -214,7 +109,7 @@ class NotesOptionModalSheet extends StatelessWidget {
                       backgroundColor: Colors.white,
                       leading: Icon(
                         CupertinoIcons.delete,
-                        color: Theme.of(rootContext).textTheme.bodyText1.color,
+                        color: Colors.black,
                         size: 20.0.w,
                       ),
                       trailing: Icon(
@@ -223,15 +118,96 @@ class NotesOptionModalSheet extends StatelessWidget {
                         color: Color(0xFFDD4C4F),
                       ),
                       titleGap: 0.0,
-                      onTap: () {
-                        BlocProvider.of<HomeCubit>(rootContext).updateTrash(true);
-                        Navigator.pushNamed(rootContext, RouterName.notesviewRoute);
-                      },
+                      onTap: () => Navigator.of(context).push(
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: TrashView(
+                            modalController: ModalScrollController.of(context),
+                            rootContext: rootContext,
+                          ),
+                        ),
+                      ),
                     ),
                     TilesDivider(),
                   ],
                 ),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SortByModalPage extends StatelessWidget {
+  const SortByModalPage({Key key, @required this.rootContext, @required this.sortby}) : super(key: key);
+
+  final BuildContext rootContext;
+  final RxInt sortby;
+
+  @override
+  Widget build(BuildContext context) {
+    final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(rootContext);
+
+    return Material(
+      child: CupertinoPageScaffold(
+        navigationBar: CupertinoNavigationBar(
+          middle: Text('Sort by'),
+          transitionBetweenRoutes: true,
+          trailing: TextButton(
+            child: 'Done'.text.color(Colors.blue).bold.make(),
+            onPressed: () => Navigator.of(rootContext).pop(),
+          ),
+        ),
+        child: SafeArea(
+          child: Obx(
+            () => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(height: 10.0.w),
+                TilesDivider(),
+                ListTile(
+                  title: Text('Creation Date'),
+                  tileColor: Colors.white,
+                  onTap: () {
+                    prefsCubit.updateSortBy(0);
+                    sortby.value = 0;
+                  },
+                  trailing: sortby.value == 0 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                ),
+                TilesDivider(),
+                ListTile(
+                  title: Text('Modification Date'),
+                  tileColor: Colors.white,
+                  onTap: () {
+                    prefsCubit.updateSortBy(1);
+                    sortby.value = 1;
+                  },
+                  trailing: sortby.value == 1 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                ),
+                TilesDivider(),
+                ListTile(
+                  title: Text('Alphabetical (A-Z)'),
+                  tileColor: Colors.white,
+                  onTap: () {
+                    prefsCubit.updateSortBy(2);
+                    sortby.value = 2;
+                  },
+                  trailing: sortby.value == 2 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                ),
+                TilesDivider(),
+                ListTile(
+                  title: Text('Alphabetical (Z-A)'),
+                  tileColor: Colors.white,
+                  onTap: () {
+                    prefsCubit.updateSortBy(3);
+                    sortby.value = 3;
+                  },
+                  trailing: sortby.value == 3 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                ),
+                TilesDivider(),
+              ],
             ),
           ),
         ),
