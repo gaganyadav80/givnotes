@@ -38,7 +38,9 @@ class _SearchPageState extends State<SearchPage> {
 
         final filterList = Get.find<NotesController>()
             .notes
-            .where((element) => (element.title + ' ' + element.text).toLowerCase().contains(text.toLowerCase()))
+            .where((element) =>
+                (element.title + ' ' + element.text).toLowerCase().contains(text.toLowerCase()) &&
+                element.trash == false)
             .toList();
 
         _searchList

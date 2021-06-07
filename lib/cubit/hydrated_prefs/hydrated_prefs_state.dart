@@ -3,22 +3,22 @@ part of 'hydrated_prefs_cubit.dart';
 class HydratedPrefsState extends Equatable {
   const HydratedPrefsState({
     this.compactTags = false,
-    this.sortBy = 0,
+    this.sortby = 0,
   });
 
   // 0: created, 1: modified, 2: a-z, 3: z-a
-  final int sortBy;
+  final int sortby;
   final bool compactTags;
 
   @override
-  List<Object> get props => [sortBy, compactTags];
+  List<Object> get props => [sortby, compactTags];
 
   HydratedPrefsState copyWith({
-    int sortBy,
+    int sortby,
     bool compactTags,
   }) {
     return HydratedPrefsState(
-      sortBy: sortBy ?? this.sortBy,
+      sortby: sortby ?? this.sortby,
       compactTags: compactTags ?? this.compactTags,
     );
   }

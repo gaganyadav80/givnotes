@@ -29,7 +29,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
 
-    var def = _prefsCubit.state.sortBy.obs;
+    var def = _prefsCubit.state.sortby.obs;
 
     return PreferenceText(
       "Sort Notes",

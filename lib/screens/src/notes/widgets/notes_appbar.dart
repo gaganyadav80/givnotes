@@ -19,7 +19,7 @@ class NotesOptionModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext rootContext) {
     final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(rootContext);
-    final RxInt sortby = prefsCubit.state.sortBy.obs;
+    final RxInt sortby = prefsCubit.state.sortby.obs;
 
     return Material(
       child: Navigator(

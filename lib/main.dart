@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -96,6 +97,7 @@ class _GivnotesAppState extends State<GivnotesApp> {
       theme: ThemeData(
         fontFamily: 'Poppins',
         accentColor: Colors.black,
+        pageTransitionsTheme: PageTransitionsTheme(builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
@@ -110,18 +112,19 @@ class _GivnotesAppState extends State<GivnotesApp> {
 }
 
 class CheckLogin extends StatelessWidget {
-  const CheckLogin({Key key}) : super(key: key);
+  final User _currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final User _currentUser = FirebaseAuth.instance.currentUser;
+    Get.find<NotesController>().sortby = BlocProvider.of<HydratedPrefsCubit>(context).state.sortby;
 
     if (_currentUser == null) {
       return LoginPage();
     } else {
+      pluginInitializer(_currentUser.uid);
+
       //TODO HomePage is returned before pluginInitialized is completed.
       // Solution is to make both the functions synchronous
-      pluginInitializer(_currentUser.uid);
       // initHiveDb();
 
       return HomePage();

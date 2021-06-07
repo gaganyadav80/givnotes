@@ -7,16 +7,20 @@ import 'notes_model.dart';
 
 class NotesController extends GetxController {
   List<NotesModel> notes = <NotesModel>[];
+  int _sortby = 0;
 
   @override
   void onInit() {
-    getAllNotes();
+    _getAllNotes();
     super.onInit();
   }
 
-  bool get isEmpty => notes.isEmpty;
+  set sortby(int value) {
+    _sortby = value;
+    sort(value);
+  }
 
-  void getAllNotes() {
+  void _getAllNotes() {
     directory.then((value) {
       notes.clear();
       notes.addAll(value
@@ -24,30 +28,17 @@ class NotesController extends GetxController {
           .map((e) => NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
           .where((element) => element.trash == false)
           .toList());
-      notes.sort((a, b) => b.created.compareTo(a.created));
     });
   }
 
-  void getTrashNotes() {
-    directory.then((value) {
-      notes.clear();
-      notes.addAll(value
-          .listSync()
-          .map((e) => NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
-          .where((element) => element.trash == true)
-          .toList());
+  void sort(int value) {
+    if (value == 0)
       notes.sort((a, b) => b.created.compareTo(a.created));
-    });
-  }
-
-  void sort(int sortBy) {
-    if (sortBy == 0)
-      notes.sort((a, b) => b.created.compareTo(a.created));
-    else if (sortBy == 1)
+    else if (value == 1)
       notes.sort((a, b) => b.modified.compareTo(a.modified));
-    else if (sortBy == 2)
+    else if (value == 2)
       notes.sort((a, b) => a.title.compareTo(b.title));
-    else if (sortBy == 3) {
+    else if (value == 3) {
       notes.sort((a, b) => b.title.compareTo(a.title));
     } else
       notes.sort((a, b) => b.created.compareTo(a.created));
@@ -66,7 +57,7 @@ class NotesController extends GetxController {
 
   Future<void> addNewNote(NotesModel note) async {
     notes.add(note);
-    sort(2);
+    sort(_sortby);
     update();
     return (await getFile(note.id)).writeAsString(json.encode(note.toJson()));
   }
@@ -79,9 +70,9 @@ class NotesController extends GetxController {
 
   Future<void> updateNote(NotesModel note) async {
     notes.removeWhere((element) => element.id == note.id);
-    notes.add(note);
-    sort(2);
-    update();
+    notes.add(note); //update note
+    sort(_sortby); //sort the updated list
+    update(); //update the UI
     return (await getFile(note.id)).writeAsString(json.encode(note.toJson()));
   }
 }
