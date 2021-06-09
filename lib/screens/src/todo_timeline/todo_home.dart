@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 import 'package:intl/intl.dart';
@@ -17,23 +18,25 @@ import 'bloc/todo_event.dart';
 import 'bloc/todo_state.dart';
 import 'src/todo_model.dart';
 
-//TODO flag - appBarDate is global
-DateTime appBarDate = DateTime.now();
-TodoTimelineState todoTimelineState;
+class TodoDateController extends GetxController {
+  final Rx<DateTime> _appBarDate = DateTime.now().obs;
+  final DateTime _today = DateTime.now();
 
-class TodoTimelineBloc extends StatefulWidget {
-  TodoTimelineBloc({Key key}) : super(key: key);
+  DateTime get date => _appBarDate.value;
+  set date(DateTime value) => _appBarDate.value = value;
 
-  @override
-  TodoTimelineState createState() => TodoTimelineState();
+  Rx<DateTime> get appBarDate => _appBarDate;
+
+  bool get isToday => (date.day == _today.day && date.month == _today.month);
 }
 
-class TodoTimelineState extends State<TodoTimelineBloc> {
+class TodoTimelineBloc extends StatefulWidget {
   @override
-  void initState() {
-    super.initState();
-    todoTimelineState = this;
-  }
+  _TodoTimelineBlocState createState() => _TodoTimelineBlocState();
+}
+
+class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
+  final TodoDateController _dateController = Get.find<TodoDateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -42,50 +45,35 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
         titleSpacing: 0.0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              splashRadius: 25.0,
-              icon: Icon(CupertinoIcons.back, color: Colors.black),
-              onPressed: () {
-                //TODO flag use getX @Gagan
-                setState(() => appBarDate = appBarDate.subtract(Duration(days: 1)));
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0.w),
-              child: Text(
-                DateFormat('dd-MMM-yyyy - EEEE').format(appBarDate),
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16.0.w,
-                  color: appBarDate.day == DateTime.now().day && appBarDate.month == DateTime.now().month
-                      ? const Color(0xff32343D)
-                      : appBarDate.isAfter(DateTime.now())
-                          ? Colors.green
-                          : Colors.red,
-                ),
-              ),
-            ),
-            IconButton(
-              splashRadius: 25.0,
-              icon: Icon(CupertinoIcons.forward, color: Colors.black),
-              onPressed: () {
-                setState(() => appBarDate = appBarDate.add(Duration(days: 1)));
-              },
-            ),
-          ],
+        leading: IconButton(
+          splashRadius: 25.0,
+          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          onPressed: () {
+            _dateController.date = _dateController.date.subtract(Duration(days: 1));
+          },
         ),
+        title: Obx(() => Text(
+              DateFormat('dd-MMM-yyyy - EEEE').format(_dateController.appBarDate.value),
+              style: TextStyle(
+                fontFamily: 'Roboto',
+                fontWeight: FontWeight.w700,
+                fontSize: 16.0.w,
+                color: _dateController.isToday
+                    ? const Color(0xff32343D)
+                    : _dateController.date.isAfter(DateTime.now())
+                        ? Colors.green
+                        : Colors.red,
+              ),
+            )),
+        centerTitle: true,
         actions: [
           IconButton(
-            iconSize: 18.0.w,
             splashRadius: 25.0,
-            icon: Icon(Icons.view_agenda_outlined, color: Colors.black),
-            onPressed: () {},
+            icon: Icon(CupertinoIcons.forward, color: Colors.black),
+            onPressed: () {
+              _dateController.date = _dateController.date.add(Duration(days: 1));
+            },
           ),
         ],
       ),
@@ -98,193 +86,200 @@ class TodoTimelineState extends State<TodoTimelineBloc> {
                 child: CircularLoading(size: 50.w),
               );
             } else if (state is TodosLoaded) {
-              //! maybe remove - delete todo older than 5 days
-              state.todos.forEach((element) {
-                if (element.dueDate.toDate().difference(DateTime.now()) > Duration(days: 5)) {
-                  if (element.completed) {
-                    BlocProvider.of<TodosBloc>(context).add(DeleteTodo(element.id));
-                  }
-                }
-              });
+              return Obx(
+                () {
+                  state.todos.forEach((element) {
+                    if (element.dueDate.toDate().difference(DateTime.now()) > Duration(days: 5)) {
+                      if (element.completed) {
+                        BlocProvider.of<TodosBloc>(context).add(DeleteTodo(element.id));
+                      }
+                    }
+                  });
 
-              final List<TodoModel> _todosBox =
-                  state.todos.where((element) => element.dueDate.toDate().day == appBarDate.day).toList();
-              final int pending =
-                  state.todos.where((element) => element.dueDate.toDate().day < DateTime.now().day).length;
-              final int upcoming =
-                  state.todos.where((element) => element.dueDate.toDate().day > DateTime.now().day).length;
+                  final List<TodoModel> _todosBox =
+                      state.todos.where((element) => element.dueDate.toDate().day == _dateController.date.day).toList();
+                  final int pending =
+                      state.todos.where((element) => element.dueDate.toDate().day < DateTime.now().day).length;
+                  final int upcoming =
+                      state.todos.where((element) => element.dueDate.toDate().day > DateTime.now().day).length;
 
-              _todosBox.sort((a, b) => b.dueDate.compareTo(a.dueDate));
+                  _todosBox.sort((a, b) => b.dueDate.compareTo(a.dueDate));
 
-              return Column(
-                children: [
-                  appBarDate.day == DateTime.now().day && appBarDate.month == DateTime.now().month
-                      ? Hero(
-                          tag: "today-view",
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 5.0.w, bottom: 10.0.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildTodayView(pending, "Pending"),
-                                _buildTodayView(_todosBox.length, "Today"),
-                                _buildTodayView(upcoming, "Upcoming"),
-                              ],
-                            ),
-                          ),
-                        )
-                      : Hero(tag: "today-view", child: SizedBox.shrink()),
-                  SizedBox(height: 10.w),
-                  _todosBox.length == 0
-                      ? Expanded(
-                          child: Center(
-                            child: Image.asset(
-                              "assets/giv_img/empty_todo_light.png",
-                              width: 300.0.w,
-                            ).pOnly(bottom: 30.h),
-                          ),
-                        )
-                      : Expanded(
-                          child: Timeline.tileBuilder(
-                            theme: TimelineThemeData(
-                              nodePosition: 0,
-                              indicatorTheme: IndicatorThemeData(position: 0, size: 28.0.w),
-                            ),
-                            builder: TimelineTileBuilder.connected(
-                              connectionDirection: ConnectionDirection.before,
-                              itemCount: _todosBox.length,
-                              contentsBuilder: (_, int index) {
-                                final TodoModel todo = _todosBox[index];
+                  return Column(
+                    children: [
+                      _dateController.date.day == DateTime.now().day &&
+                              _dateController.date.month == DateTime.now().month
+                          ? Hero(
+                              tag: "today-view",
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 5.0.w, bottom: 10.0.w),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildTodayView(pending, "Pending"),
+                                    _buildTodayView(_todosBox.length, "Today"),
+                                    _buildTodayView(upcoming, "Upcoming"),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : Hero(tag: "today-view", child: SizedBox.shrink()),
+                      SizedBox(height: 10.w),
+                      _todosBox.length == 0
+                          ? Expanded(
+                              child: Center(
+                                child: Image.asset(
+                                  "assets/giv_img/empty_todo_light.png",
+                                  width: 300.0.w,
+                                ).pOnly(bottom: 30.h),
+                              ),
+                            )
+                          : Expanded(
+                              child: Timeline.tileBuilder(
+                                theme: TimelineThemeData(
+                                  nodePosition: 0,
+                                  indicatorTheme: IndicatorThemeData(position: 0, size: 28.0.w),
+                                ),
+                                builder: TimelineTileBuilder.connected(
+                                  connectionDirection: ConnectionDirection.before,
+                                  itemCount: _todosBox.length,
+                                  contentsBuilder: (_, int index) {
+                                    final TodoModel todo = _todosBox[index];
 
-                                int taskCompleted = 0;
-                                todo.subTask.forEach((element) {
-                                  if (element.containsValue(true)) taskCompleted++;
-                                });
+                                    int taskCompleted = 0;
+                                    todo.subTask.forEach((element) {
+                                      if (element.containsValue(true)) taskCompleted++;
+                                    });
 
-                                return Container(
-                                  margin: EdgeInsets.only(left: 5.0.w, bottom: 20.0.w),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15.0.r),
-                                    color: todo.completed ? Colors.grey[300] : Colors.transparent,
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            RouterName.createTodoRoute,
-                                            arguments: [true, todo.id, todo],
-                                          );
-                                        },
-                                        borderRadius: BorderRadius.circular(15.0),
-                                        child: Padding(
-                                          padding: EdgeInsets.only(left: 5.0.w, top: 5.0.w, right: 10.0.w),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                todo.title.decrypt,
-                                                style: TextStyle(
-                                                  fontSize: 22.0.w,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontFamily: "Roboto",
-                                                  decoration:
-                                                      todo.completed ? TextDecoration.lineThrough : TextDecoration.none,
-                                                ),
-                                              ),
-                                              Row(
+                                    return Container(
+                                      margin: EdgeInsets.only(left: 5.0.w, bottom: 20.0.w),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15.0.r),
+                                        color: todo.completed ? Colors.grey[300] : Colors.transparent,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              Navigator.pushNamed(
+                                                context,
+                                                RouterName.createTodoRoute,
+                                                arguments: [true, todo.id, todo],
+                                              );
+                                            },
+                                            borderRadius: BorderRadius.circular(15.0),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 5.0.w, top: 5.0.w, right: 10.0.w),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   Text(
-                                                    todo.priority.decrypt.isNotEmpty
-                                                        ? "\u{1F525} ${todo.priority.decrypt}"
-                                                        : "\u{1F525} None",
+                                                    todo.title.decrypt,
+                                                    style: TextStyle(
+                                                      fontSize: 22.0.w,
+                                                      fontWeight: FontWeight.bold,
+                                                      fontFamily: "Roboto",
+                                                      decoration: todo.completed
+                                                          ? TextDecoration.lineThrough
+                                                          : TextDecoration.none,
+                                                    ),
                                                   ),
-                                                  SizedBox(width: 10.0.w),
-                                                  Icon(Icons.check_circle_outline_outlined, size: 16.0.w),
-                                                  SizedBox(width: 5.0.w),
-                                                  Text("$taskCompleted/${todo.subTask.length}"),
-                                                  SizedBox(width: 10.0.w),
-                                                  Icon(Icons.access_time_outlined, size: 16.0.w),
-                                                  SizedBox(width: 5.0.w),
-                                                  Text(DateFormat("HH:mm").format(todo.dueDate.toDate())),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        todo.priority.decrypt.isNotEmpty
+                                                            ? "\u{1F525} ${todo.priority.decrypt}"
+                                                            : "\u{1F525} None",
+                                                      ),
+                                                      SizedBox(width: 10.0.w),
+                                                      Icon(Icons.check_circle_outline_outlined, size: 16.0.w),
+                                                      SizedBox(width: 5.0.w),
+                                                      Text("$taskCompleted/${todo.subTask.length}"),
+                                                      SizedBox(width: 10.0.w),
+                                                      Icon(Icons.access_time_outlined, size: 16.0.w),
+                                                      SizedBox(width: 5.0.w),
+                                                      Text(DateFormat("HH:mm").format(todo.dueDate.toDate())),
+                                                    ],
+                                                  ),
+                                                  todo.category.isNotEmpty
+                                                      ? Container(
+                                                          margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
+                                                          padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
+                                                          decoration: BoxDecoration(
+                                                            color: todo.completed
+                                                                ? Color(todo.categoryColor).withOpacity(0.4)
+                                                                : Color(todo.categoryColor).withOpacity(0.6),
+                                                            borderRadius: BorderRadius.circular(5.r),
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              todo.category.decrypt,
+                                                              style: TextStyle(
+                                                                color: todo.completed ? Colors.black87 : Colors.black,
+                                                                fontWeight: FontWeight.w500,
+                                                                fontSize: 12.w,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                  SizedBox(height: 10.0.w),
+                                                  if (todo.description.decrypt.isNotBlank)
+                                                    Text(
+                                                      todo.description.decrypt,
+                                                      maxLines: 3,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Theme.of(context).textTheme.subtitle2,
+                                                    ),
                                                 ],
                                               ),
-                                              todo.category.isNotEmpty
-                                                  ? Container(
-                                                      margin: EdgeInsets.fromLTRB(0, 8.w, 5.w, 0),
-                                                      padding: EdgeInsets.fromLTRB(5.w, 2.w, 5.w, 2.w),
-                                                      decoration: BoxDecoration(
-                                                        color: todo.completed
-                                                            ? Color(todo.categoryColor).withOpacity(0.4)
-                                                            : Color(todo.categoryColor).withOpacity(0.6),
-                                                        borderRadius: BorderRadius.circular(5.r),
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          todo.category.decrypt,
-                                                          style: TextStyle(
-                                                            color: todo.completed ? Colors.black87 : Colors.black,
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 12.w,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : SizedBox.shrink(),
-                                              SizedBox(height: 10.0.w),
-                                              if (todo.description.decrypt.isNotBlank)
-                                                Text(
-                                                  todo.description.decrypt,
-                                                  maxLines: 3,
-                                                  overflow: TextOverflow.ellipsis,
-                                                  style: Theme.of(context).textTheme.subtitle2,
-                                                ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                          if (todo.subTask.length != 0) SizedBox(height: 5.0.w),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
+                                            child: _buildSubTaskTimeline(todo),
+                                          ),
+                                          SizedBox(height: 10.0.w),
+                                          // TilesDivider().pSymmetric(h: 10.w),
+                                        ],
                                       ),
-                                      if (todo.subTask.length != 0) SizedBox(height: 5.0.w),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
-                                        child: _buildSubTaskTimeline(todo),
-                                      ),
-                                      SizedBox(height: 10.0.w),
-                                      // TilesDivider().pSymmetric(h: 10.w),
-                                    ],
-                                  ),
-                                );
-                              },
-                              indicatorBuilder: (_, index) {
-                                TodoModel checkTodo = _todosBox[index];
+                                    );
+                                  },
+                                  indicatorBuilder: (_, index) {
+                                    TodoModel checkTodo = _todosBox[index];
 
-                                return DotIndicator(
-                                  size: 35.0.w,
-                                  color: Colors.transparent,
-                                  child: CustomCheckbox(
-                                    value: checkTodo.completed,
-                                    onChanged: (_) {
-                                      BlocProvider.of<TodosBloc>(context).add(
-                                        UpdateTodo(checkTodo.copyWith(completed: !(checkTodo.completed))),
-                                      );
-                                    },
-                                    activeColor: Colors.blue,
-                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
-                                    width: 32.w,
-                                    strokeWidth: 3.0,
-                                  ),
-                                );
-                              },
-                              connectorBuilder: (_, index, ___) => SolidLineConnector(indent: 5.0.w, endIndent: 5.0.w),
-                              lastConnectorBuilder: (context) => SolidLineConnector(indent: 5.0.w, endIndent: 10.0.w),
+                                    return DotIndicator(
+                                      size: 35.0.w,
+                                      color: Colors.transparent,
+                                      child: CustomCheckbox(
+                                        value: checkTodo.completed,
+                                        onChanged: (_) {
+                                          BlocProvider.of<TodosBloc>(context).add(
+                                            UpdateTodo(checkTodo.copyWith(completed: !(checkTodo.completed))),
+                                          );
+                                        },
+                                        activeColor: Colors.blue,
+                                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                                        width: 32.w,
+                                        strokeWidth: 3.0,
+                                      ),
+                                    );
+                                  },
+                                  connectorBuilder: (_, index, ___) =>
+                                      SolidLineConnector(indent: 5.0.w, endIndent: 5.0.w),
+                                  lastConnectorBuilder: (context) =>
+                                      SolidLineConnector(indent: 5.0.w, endIndent: 10.0.w),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                ],
+                    ],
+                  );
+                },
               );
             } else {
               return Container(

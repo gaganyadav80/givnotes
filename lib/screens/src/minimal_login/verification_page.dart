@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/widgets/blueButton.dart';
@@ -19,26 +21,19 @@ class VerificationPage extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 30.0.w),
-            child: InkWell(
-              onTap: () {
-                // Navigator.of(context).popUntil((route) => route.isFirst);
+            padding: EdgeInsets.only(right: 20.0.w),
+            child: TextButton.icon(
+              onPressed: () {
                 Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
               },
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Do it later?",
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyText1.color,
-                      fontSize: 16.w,
-                    ),
-                  ),
-                  SizedBox(width: 5.0.w),
-                  Icon(Icons.fast_forward, color: Colors.black),
-                ],
+              icon: Text(
+                "Skip",
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                  fontSize: 16.w,
+                ),
               ),
+              label: Icon(Icons.fast_forward, color: Colors.black),
             ),
           ),
         ],
@@ -52,16 +47,8 @@ class VerificationPage extends StatelessWidget {
 }
 
 class VerificationMainBody extends StatelessWidget {
-  void showSnackBar(String msg, BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: Theme.of(context).primaryColor,
-      content: Text(msg, style: TextStyle(color: Colors.white)),
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
-    // bool isDark = Theme.of(context).brightness == Brightness.dark;
     void _onConfirmButtonPressed() {
       BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
     }
@@ -73,20 +60,13 @@ class VerificationMainBody extends StatelessWidget {
     return BlocListener<VerificationBloc, VerificationState>(
       listener: (context, state) {
         if (state is VerificationFailed) {
-          print("VERIFICATION ERROR ++++++ ${state.message}");
-        }
-        if (state is VerificationSuccess) {
-          showSnackBar('Verification Successful', context);
-          // Navigator.of(context).popUntil((route) => route.isFirst);
+          Fluttertoast.showToast(msg: state.message);
+        } else if (state is VerificationSuccess) {
+          Fluttertoast.showToast(msg: 'verification successful');
           Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
+        } else if (state is ResendVerification) {
+          Fluttertoast.showToast(msg: 'verification mail sent');
         }
-        //TODO handle resend and confirm verification @Gagan
-        // if (state is VerificationInProgress) {
-        //   showProgress(context);
-        // }
-        // if (state is ResendVerification) {
-        //   BlocProvider.of<VerificationBloc>(context).add(VerificationInitiated());
-        // }
       },
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -105,13 +85,7 @@ class VerificationMainBody extends StatelessWidget {
                   width: 180.w,
                 )),
                 SizedBox(height: 40.w),
-                Text(
-                  "Waiting for Verification",
-                  style: Theme.of(context).textTheme.headline1.copyWith(
-                        fontSize: 27.w,
-                        fontWeight: FontWeight.w300,
-                      ),
-                ),
+                'Waiting for Verification'.text.headline1(context).xl3.light.make(),
                 SizedBox(height: 27.w),
                 Text(
                   "A verification email has been sent to your email",
@@ -125,7 +99,7 @@ class VerificationMainBody extends StatelessWidget {
                 BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
                     return state is VerificationInProgress
-                        ? BlueButton(title: "loading", onPressed: () {}, isLoading: true)
+                        ? BlueButton(title: "loading", onPressed: null, isLoading: true)
                         : BlueButton(title: "Confirm Verification", onPressed: _onConfirmButtonPressed);
                   },
                 ),

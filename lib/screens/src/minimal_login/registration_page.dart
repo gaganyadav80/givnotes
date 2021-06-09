@@ -133,9 +133,9 @@ class _RegisterFormState extends State<RegisterForm> {
     //   return;
     // }
 
+    //MAYBE add Terms and privacy policy
     // if (!acceptTnC) {
-    //   //TODO: add Terms and privacy policy
-    //   // context.showSnackBar("Please accept Terms and Conditions");
+    //   context.showSnackBar("Please accept Terms and Conditions");
     //   return;
     // }
 

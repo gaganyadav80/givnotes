@@ -1,6 +1,10 @@
 import 'package:flutter/foundation.dart';
 
 class Validator {
+  static final Validator _singleton = Validator._internal();
+  factory Validator() => _singleton;
+  Validator._internal();
+  
   String validateEmail(String email) {
     Pattern pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 

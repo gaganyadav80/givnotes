@@ -5,7 +5,6 @@ import 'package:encrypt/encrypt.dart' as aes;
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:package_info/package_info.dart';
 
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/packages.dart';
@@ -17,6 +16,7 @@ Future<void> initGetXControllers() async {
   Get.put(TagSearchController());
   Get.put(MultiSelectController());
   Get.put(NotesController());
+  Get.put(TodoDateController());
 }
 
 Future<void> initHiveDb() async {
@@ -34,8 +34,8 @@ Future<void> initHiveDb() async {
   VariableService().prefsBox = box.values.first;
 }
 
-Future<dynamic> pluginInitializer(String userID, {String userKey}) async {
-  VariableService().packageInfo = await PackageInfo.fromPlatform();
+Future<void> pluginInitializer(String userID, {String userKey}) async {
+  // VariableService().packageInfo = await PackageInfo.fromPlatform();
   PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(

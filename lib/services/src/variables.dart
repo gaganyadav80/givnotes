@@ -8,8 +8,9 @@ class VariableService {
   static final VariableService _singleton = VariableService._internal();
   factory VariableService() => _singleton;
   VariableService._internal() {
-    _randomUserProfile = 0;
-    _isPermanentDisabled = false;
+    this._randomUserProfile = 0;
+    this._isPermanentDisabled = false;
+    PackageInfo.fromPlatform().then((value) => this._packageInfo = value);
   }
 
   PrefsModel _prefsBox;

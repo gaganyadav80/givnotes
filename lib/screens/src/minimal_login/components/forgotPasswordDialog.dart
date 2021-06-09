@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/services/services.dart';
 
@@ -46,26 +48,13 @@ class PassResetMailDialog extends StatelessWidget {
                 validator: Validator().validateEmail,
                 maxLines: 1,
               ),
-              SizedBox(height: 20.w),
-              Text(
-                "A link will be sent to your registered email Id. Click on the link to reset your password",
-                style: Theme.of(context).textTheme.caption,
-              ),
-              // SizedBox(height: screenHeight * 0.025),
-              // FlatButton(
-              //   padding: EdgeInsets.zero,
-              //   onPressed: () async {
-              //     await CustomerSupport.mailToSupport(
-              //       subject: "Trouble Signing In",
-              //       body: "Please%20explain%20your%20issue%briefly",
-              //     );
-              //     await FirebaseAnalytics().logEvent(name: 'trouble_signing_in');
-              //   },
-              //   child: Text(
-              //     "Trouble signing in? Contact Us",
-              //     style: Theme.of(context).textTheme.caption.copyWith(fontWeight: FontWeight.w600),
-              //   ),
-              // ),
+              SizedBox(height: 10.w),
+              '* You will not be able to access your data. Resetting your password also '
+                  .richText
+                  .caption(context)
+                  .withTextSpanChildren(<TextSpan>[
+                'RESETS YOUR MASTER KEY.'.textSpan.semiBold.italic.make(),
+              ]).make(),
             ],
           ),
         ),

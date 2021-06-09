@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -20,19 +21,11 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  static const List<IconData> _appBarIcon = [
-    CupertinoIcons.search,
-    CupertinoIcons.calendar_today,
-    null,
-    null,
-  ];
+  static const List<IconData> _appBarIcon = [CupertinoIcons.search, CupertinoIcons.calendar_today, null, null];
 
-  static const List<String> _appBarTitle = [
-    'Notes',
-    'Todos',
-    'Tags',
-    'Settings',
-  ];
+  static const List<String> _appBarTitle = ['Notes', 'Todos', 'Tags', 'Settings'];
+
+  final TodoDateController _dateController = Get.find<TodoDateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +80,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                 : () async {
                                     await showDatePicker(
                                       context: context,
-                                      initialDate: appBarDate,
+                                      initialDate: _dateController.date,
                                       currentDate: DateTime.now(),
                                       firstDate: DateTime(2000),
                                       lastDate: DateTime(2025),
@@ -99,8 +92,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                                       },
                                     ).then((value) {
                                       if (value != null) {
-                                        todoTimelineState.setState(() {
-                                          appBarDate = value;
+                                        Future.delayed(Duration(milliseconds: 300), () {
+                                          _dateController.appBarDate.value = value;
                                         });
                                       }
                                     });

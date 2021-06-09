@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
@@ -17,7 +18,10 @@ class BlueButton extends StatelessWidget {
   /// Otherwise, [child] will override [title]
   final Widget child;
 
-  BlueButton({this.title, @required this.onPressed, this.isLoading = false, this.child}) : assert(onPressed != null);
+  /// Default value is 60.
+  final double height;
+
+  const BlueButton({this.title, @required this.onPressed, this.isLoading = false, this.child, this.height});
 
   @override
   Widget build(BuildContext context) {
@@ -26,20 +30,21 @@ class BlueButton extends StatelessWidget {
       color: Colors.transparent,
       elevation: 0.0,
       shadowColor: Theme.of(context).primaryColor.withOpacity(0.5),
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          onPrimary: Theme.of(context).splashColor,
-          elevation: 0.0,
-          shape: RoundedRectangleBorder(
-            borderRadius: kBorderRadius,
+      child: Container(
+        height: height ?? 60.w,
+        child: TextButton(
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            elevation: 0.0,
+            backgroundColor: Theme.of(context).primaryColor,
+            shape: RoundedRectangleBorder(borderRadius: kBorderRadius),
+            padding: EdgeInsets.symmetric(vertical: 15.w),
+            primary: Colors.lightBlue[900],
           ),
-          padding: EdgeInsets.symmetric(vertical: 15.w),
-          primary: Theme.of(context).primaryColor,
+          child: Center(
+            child: isLoading ? CircularLoading(color: Colors.white) : child ?? title.text.xl.light.white.make(),
+          ),
         ),
-        child: Center(
-            child:
-                isLoading ? CircularLoading(color: Colors.white) : child ?? title.text.size(18.w).medium.white.make()),
       ),
     );
   }

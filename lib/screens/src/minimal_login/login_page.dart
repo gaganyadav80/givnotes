@@ -16,13 +16,6 @@ import 'components/components.dart';
 class LoginPage extends StatelessWidget {
   const LoginPage({Key key}) : super(key: key);
 
-  // void showSnackBar(String msg, BuildContext context) {
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     backgroundColor: Theme.of(context).primaryColor,
-  //     content: Text(msg, style: TextStyle(color: Colors.white)),
-  //   ));
-  // }
-
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignInPressed() {
@@ -49,15 +42,7 @@ class LoginPage extends StatelessWidget {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) async {
           if (state is AuthFailure) {
-            print(state.message);
-            
-            if (state.message.contains('password is invalid'))
-              // showSnackBar("Invalid password", context);
-              Fluttertoast.showToast(msg: 'Invalid Password');
-            else if (state.message.contains('no user record'))
-              Fluttertoast.showToast(msg: "Invalid email");
-            else
-              Fluttertoast.showToast(msg: "Authentication Failure");
+            Fluttertoast.showToast(msg: state.message);
           }
           if (state is AuthSuccess) {
             Fluttertoast.showToast(msg: "Authentication successfull");
@@ -141,9 +126,10 @@ class _LoginFormState extends State<LoginForm> {
         formKey: _formKey,
         emailController: _emailController,
         onPressed: () {
-          if (!_formKey.currentState.validate()) return;
+          Fluttertoast.showToast(msg: 'TODO: Will be added soon');
+          // if (!_formKey.currentState.validate()) return;
 
-          BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
+          // BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
         },
       ),
     );

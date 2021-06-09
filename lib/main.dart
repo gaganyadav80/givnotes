@@ -123,7 +123,7 @@ class CheckLogin extends StatelessWidget {
     } else {
       pluginInitializer(_currentUser.uid);
 
-      //TODO HomePage is returned before pluginInitialized is completed.
+      //MAYBE HomePage is returned before pluginInitialized is completed.
       // Solution is to make both the functions synchronous
       // initHiveDb();
 

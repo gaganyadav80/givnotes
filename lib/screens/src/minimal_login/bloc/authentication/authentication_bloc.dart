@@ -44,7 +44,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         await _authRepo.logInWithEmailAndPassword(email: event.email, password: event.password);
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
-        // if (_currentUser != null) user = UserModel(email: _currentUser.email, name: _currentUser.displayName, id: _currentUser.uid, photo: _currentUser.photoURL);
         await pluginInitializer(_currentUser.uid, userKey: event.password);
         // await initHiveDb();
 
@@ -66,7 +65,6 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           'photoURL': _currentUser.photoURL,
           'full-paid': false,
           'ads-paid': false,
-          // 'dummyEncrypt': "dummy".encrypt
         });
         // await initHiveDb();
 
@@ -116,8 +114,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
             yield AuthNeedsVerification(user: _user, verify: event.verify, verifyFailed: true);
           }
         } else {
-          //TODO add code parameter also with message @Gagan
-          yield (AuthFailure(message: "Firebase Exception: ${e.code}"));
+          yield (AuthFailure(message: "auth failure: ${e.code}"));
         }
       }
     } on TimeoutException catch (e) {

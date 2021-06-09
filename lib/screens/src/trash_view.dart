@@ -50,7 +50,6 @@ class TrashView extends StatelessWidget {
               itemBuilder: (context, index) {
                 final NotesModel note = _notes[index];
 
-                //TODO redesign notes slidable
                 return Slidable(
                   key: UniqueKey(),
                   actionPane: SlidableBehindActionPane(),
