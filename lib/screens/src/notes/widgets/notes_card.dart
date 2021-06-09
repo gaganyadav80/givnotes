@@ -54,8 +54,7 @@ class _NotesCardState extends State<NotesCard> {
               multiSelectController.select(widget.note.id);
             } else {
               BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Editing);
-              Navigator.pushNamed(context, RouterName.editorRoute,
-                  arguments: [NoteMode.Editing, widget.note]);
+              Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },
           onLongPress: () {

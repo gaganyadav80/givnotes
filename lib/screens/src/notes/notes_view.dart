@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
@@ -44,21 +45,19 @@ class _NotesViewState extends State<NotesView> {
                 itemBuilder: (context, index) {
                   final NotesModel note = _notes[index];
 
-                  //TODO redesign notes slidable
                   return Slidable(
                     key: UniqueKey(),
-                    actionPane: SlidableBehindActionPane(),
-                    actionExtentRatio: 1.0,
-                    dismissal: SlidableDismissal(
-                      child: SlidableDrawerDismissal(),
-                      onDismissed: (actionType) {
-                        controller.updateNote(note.copyWith(trash: true));
-                        Fluttertoast.showToast(msg: "moved to trash");
-                      },
+                    endActionPane: ActionPane(
+                      extentRatio: 0.25, // 0.25 * total items
+                      motion: DrawerMotion(),
+                      // dismissible: ,
+                      children: <Widget>[
+                        iconSlideAction(Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH', () {
+                          controller.updateNote(note.copyWith(trash: true));
+                          Fluttertoast.showToast(msg: "moved to trash");
+                        }),
+                      ],
                     ),
-                    secondaryActions: <Widget>[
-                      iconSlideAction(Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH'),
-                    ],
                     child: NotesCard(note: note, index: index),
                   );
                 },
@@ -103,27 +102,15 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 
-  IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
-    return IconSlideAction(
-      color: color,
-      iconWidget: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: 40.0.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.white.withOpacity(0.9)),
-                SizedBox(height: 15.0.w),
-                Text(caption, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
-              ],
-            ),
-          )
-        ],
-      ),
-      onTap: () => print('moved to Trash'),
+  CustomSlidableAction iconSlideAction(Color color, IconData icon, String caption, VoidCallback onTap) {
+    return CustomSlidableAction(
+      backgroundColor: color,
+      child: <Widget>[
+        Icon(icon),
+        SizedBox(height: 8.w),
+        caption.text.light.make(),
+      ].vStack(axisSize: MainAxisSize.min),
+      onPressed: (_) => onTap(),
     );
   }
 }

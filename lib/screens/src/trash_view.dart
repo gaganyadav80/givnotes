@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -52,18 +51,16 @@ class TrashView extends StatelessWidget {
 
                 return Slidable(
                   key: UniqueKey(),
-                  actionPane: SlidableBehindActionPane(),
-                  actionExtentRatio: 1.0,
-                  dismissal: SlidableDismissal(
-                    child: SlidableDrawerDismissal(),
-                    onDismissed: (actionType) {
-                      controller.updateNote(note.copyWith(trash: false));
-                      Fluttertoast.showToast(msg: "moved to notes");
-                    },
+                  endActionPane: ActionPane(
+                    motion: DrawerMotion(),
+                    extentRatio: 0.25,
+                    children: <Widget>[
+                      iconSlideAction(Color(0xFF82C8F6), CupertinoIcons.arrow_up_bin, 'RESTORE', () {
+                        controller.updateNote(note.copyWith(trash: false));
+                        Fluttertoast.showToast(msg: "moved to notes");
+                      }),
+                    ],
                   ),
-                  secondaryActions: <Widget>[
-                    iconSlideAction(Color(0xFF82C8F6), CupertinoIcons.arrow_up_bin, 'RESTORE'),
-                  ],
                   child: NotesCard(note: note, index: index),
                 );
               },
@@ -74,27 +71,15 @@ class TrashView extends StatelessWidget {
     );
   }
 
-  IconSlideAction iconSlideAction(Color color, IconData icon, String caption) {
-    return IconSlideAction(
-      color: color,
-      iconWidget: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: 40.0.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.white.withOpacity(0.9)),
-                SizedBox(height: 15.0.w),
-                Text(caption, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w300)),
-              ],
-            ),
-          )
-        ],
-      ),
-      onTap: () => print('moved to Trash'),
+  CustomSlidableAction iconSlideAction(Color color, IconData icon, String caption, VoidCallback onTap) {
+    return CustomSlidableAction(
+      backgroundColor: color,
+      child: <Widget>[
+        Icon(icon),
+        SizedBox(height: 8),
+        caption.text.light.make(),
+      ].vStack(axisSize: MainAxisSize.min),
+      onPressed: (_) => onTap(),
     );
   }
 }
