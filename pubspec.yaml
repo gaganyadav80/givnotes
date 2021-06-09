@@ -84,6 +84,10 @@ flutter:
         - asset: assets/fonts/Pacifico/Pacifico-Regular.ttf
     - family: Poppins
       fonts:
+        - asset: assets/fonts/Poppins/Poppins-Black.ttf
+          weight: 900
+        - asset: assets/fonts/Poppins/Poppins-ExtraBold.ttf
+          weight: 800
         - asset: assets/fonts/Poppins/Poppins-Bold.ttf
           weight: 700
         - asset: assets/fonts/Poppins/Poppins-SemiBold.ttf
@@ -94,6 +98,8 @@ flutter:
           weight: 400
         - asset: assets/fonts/Poppins/Poppins-Light.ttf
           weight: 300
+        - asset: assets/fonts/Poppins/Poppins-ExtraLight.ttf
+          weight: 200
         - asset: assets/fonts/Poppins/Poppins-Thin.ttf
           weight: 100
 
@@ -105,23 +111,3 @@ flutter:
           weight: 600
         - asset: assets/fonts/ZillaSlab/ZillaSlab-Regular.ttf
           weight: 400
-    - family: SFMono
-      fonts:
-        - asset: assets/fonts/SFMono/SFMono-Bold.ttf
-          weight: 700
-        - asset: assets/fonts/SFMono/SFMono-Regular.ttf
-          weight: 400
-    #    - family: SFPro
-    #      fonts:
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Bold.ttf
-    #          weight: 700
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Semibold.ttf
-    #          weight: 600
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Medium.ttf
-    #          weight: 500
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Regular.ttf
-    #          weight: 400
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Light.ttf
-    #          weight: 300
-    #        - asset: assets/fonts/SFPro/SFProDisplay-Thin.ttf
-    #          weight: 100

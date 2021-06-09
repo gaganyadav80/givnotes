@@ -496,6 +496,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
 
   Widget _buildSubTaskModal() => Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.w),
+        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:velocity_x/velocity_x.dart';
+
 import 'package:givnotes/screens/screens.dart';
 
 import 'circular_loading.dart';
@@ -28,6 +31,9 @@ class SimpleLockScreen extends StatefulWidget {
   final void Function() onUnlocked;
 
   final bool isAddingLock;
+  final bool isSuperSimple;
+  final String simpleTitle;
+  final String simpleConfirmTitle;
 
   SimpleLockScreen({
     this.correctString,
@@ -41,6 +47,9 @@ class SimpleLockScreen extends StatefulWidget {
     this.biometricAuthenticate,
     this.onUnlocked,
     this.isAddingLock = false,
+    this.isSuperSimple = true,
+    this.simpleTitle,
+    this.simpleConfirmTitle,
   });
 
   @override
@@ -73,19 +82,29 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       }
     });
 
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 80));
+    titleStreamController.stream.listen((event) {
+      if (event.isNotBlank && !titleStreamController.isClosed)
+        Future.delayed(Duration(seconds: 3), () {
+          if (!titleStreamController.isClosed) titleStreamController.add('');
+        });
+    });
 
-    _animation = _animationController
-        .drive(CurveTween(curve: Curves.elasticIn))
-        .drive(Tween<Offset>(begin: Offset.zero, end: const Offset(0.050, 0)))
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _animationController.reverse();
-            }
-          });
+    _animationController =
+        widget.isSuperSimple ? null : AnimationController(vsync: this, duration: Duration(milliseconds: 80));
+
+    _animation = widget.isSuperSimple
+        ? null
+        : (_animationController
+            .drive(CurveTween(curve: Curves.elasticIn))
+            .drive(Tween<Offset>(begin: Offset.zero, end: const Offset(0.050, 0)))
+              ..addListener(() {
+                setState(() {});
+              })
+              ..addStatusListener((status) {
+                if (status == AnimationStatus.completed) {
+                  _animationController.reverse();
+                }
+              }));
   }
 
   void _verifyCorrectString(String enteredValue) {
@@ -97,7 +116,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         _verifyConfirmPasscode.value = enteredValue;
         appLockPassController.clear();
         _isConfirmation.value = true;
-        titleStreamController.add(widget.confirmTitle);
+        // titleStreamController.add(widget.confirmTitle);
         return;
       }
       _verifyPasscode = _verifyConfirmPasscode.value;
@@ -118,7 +137,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
     } else {
       // send invalid status to DotSecretUI
       validateStreamController.add(false);
-      titleStreamController.add(_isConfirmation.value ? 'Passcode Does Not Match' : 'Wrong Passcode');
+      titleStreamController.add(_isConfirmation.value ? 'PIN does not match' : 'Wrong PIN');
     }
     appLockPassController.clear();
     // });
@@ -167,19 +186,38 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 : SizedBox.shrink(),
           ],
         ),
-        body: ListView(
-          physics: NeverScrollableScrollPhysics(),
-          children: <Widget>[
-            //TODO Replace simple lockscreen image @Gagan
-            Image.asset("assets/img/simple-lockscreen.png", width: 220.w, height: 238.w),
-            SizedBox(height: 10.w),
-            _buildTitle(),
-            SizedBox(height: 10.w),
-            _buildTextField(),
-            SizedBox(height: 40.w),
-            widget.canBiometric ? _buildBiometric() : Container(),
-          ],
-        ),
+        body: widget.isSuperSimple
+            ? ListView(
+                physics: NeverScrollableScrollPhysics(),
+                children: [
+                  Icon(CupertinoIcons.lock, size: 32.w, color: Vx.coolGray800).objectTopLeft(),
+                  SizedBox(height: 10.w),
+                  Obx(() => (_isConfirmation.value ? widget.simpleConfirmTitle : widget.simpleTitle)
+                      .text
+                      .xl5
+                      .light
+                      .coolGray800
+                      .make()),
+                  SizedBox(height: 80.w),
+                  'Enter your givnotes PIN to continue'.text.light.coolGray800.make().centered(),
+                  _buildSimpleTitle(),
+                  _buildSimpleTextField(),
+                  SizedBox(height: 20.w),
+                  widget.canBiometric ? _buildBiometric() : Container(),
+                ],
+              ).pSymmetric(h: 20.w)
+            : ListView(
+                physics: NeverScrollableScrollPhysics(),
+                children: <Widget>[
+                  Image.asset("assets/img/simple-lockscreen.png", width: 220.w, height: 238.w),
+                  SizedBox(height: 10.w),
+                  _buildTitle(),
+                  SizedBox(height: 10.w),
+                  _buildTextField(),
+                  SizedBox(height: 40.w),
+                  widget.canBiometric ? _buildBiometric() : Container(),
+                ],
+              ),
       ),
     );
   }
@@ -191,7 +229,6 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         child: CupertinoTextField(
           controller: appLockPassController,
           focusNode: applockFocusNode,
-          // autocorrect: false,
           autofocus: widget.isAddingLock,
           cursorColor: Colors.black,
           cursorWidth: 1.5,
@@ -206,12 +243,14 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           style: TextStyle(fontSize: 18.w),
           onSubmitted: (value) {
             value = value.trim();
-            if (value.isEmpty) {
-              validateStreamController.add(false);
-              titleStreamController.add("Enter a password");
-            } else if (value.length < 4) {
-              validateStreamController.add(false);
-              titleStreamController.add("Password too short");
+            if (widget.isAddingLock) {
+              if (value.isEmpty) {
+                validateStreamController.add(false);
+                titleStreamController.add("Enter PIN");
+              } else if (value.length < 4) {
+                validateStreamController.add(false);
+                titleStreamController.add("PIN too short");
+              }
             } else {
               _verifyCorrectString(value);
             }
@@ -243,6 +282,46 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
     );
   }
 
+  Widget _buildSimpleTextField() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 30.w),
+        child: TextField(
+          controller: appLockPassController,
+          focusNode: applockFocusNode,
+          autofocus: widget.isAddingLock,
+          cursorColor: Colors.black,
+          cursorWidth: 1.5,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+          expands: false,
+          maxLines: 1,
+          obscureText: true,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 24.w),
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 2),
+            focusedBorder: UnderlineInputBorder(),
+          ),
+          onSubmitted: (value) {
+            if (widget.isAddingLock) {
+              if (value.isEmpty) {
+                // validateStreamController.add(false);
+                titleStreamController.add("Enter a PIN");
+              } else if (value.length < 4) {
+                // validateStreamController.add(false);
+                titleStreamController.add("PIN too short");
+              }
+            }
+            if (value.isNotEmpty && value.length >= 4) _verifyCorrectString(value);
+
+            applockFocusNode.requestFocus();
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _buildBiometric() {
     return Center(
       child: Material(
@@ -250,7 +329,6 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         child: InkWell(
           borderRadius: BorderRadius.circular(80.r),
           onTap: () {
-            // Maintain compatibility
             if (widget.biometricAuthenticate == null) {
               throw Exception('specify biometricFunction or biometricAuthenticate.');
             } else {
@@ -260,7 +338,6 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                     if (widget.onUnlocked != null) {
                       widget.onUnlocked();
                     }
-                    // Navigator.of(context).pop();
                   }
                 });
               }
@@ -281,21 +358,12 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 width: 1.0,
               ),
             ),
-            child: Center(
-              child: Image.asset(
-                'assets/img/faceid.png',
-                height: 35.w,
-                width: 35.w,
-              ),
-            ),
+            child: Image.asset('assets/img/faceid.png', height: 35.w, width: 35.w).centered(),
           ),
         ),
       ),
     );
   }
-
-  final double _kFontSize = 22.w;
-  final FontWeight _kFontWeight = FontWeight.w500;
 
   Widget _buildTitle() {
     return Center(
@@ -307,25 +375,29 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             stream: titleStreamController.stream,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
-                // if (snapshot.data != false) {
-                return Text(
-                  snapshot.data,
-                  style: TextStyle(fontSize: _kFontSize, fontWeight: _kFontWeight),
-                );
-                // } else {
-                //   return Text(
-                //     _isConfirmation ? 'Passcode Does Not Match' : 'Wrong Passcode',
-                //     style: TextStyle(fontSize: _kFontSize, fontWeight: _kFontWeight),
-                //   );
-                // }
+                return snapshot.data.text.size(22.w).medium.make();
               } else {
-                return Text(
-                  _isConfirmation.value ? widget.confirmTitle : widget.title,
-                  style: TextStyle(fontSize: _kFontSize, fontWeight: _kFontWeight),
-                );
+                return (_isConfirmation.value ? widget.confirmTitle : widget.title).text.size(22.w).medium.make();
               }
             },
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSimpleTitle() {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.only(top: 20.w),
+        child: StreamBuilder<String>(
+          stream: titleStreamController.stream,
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.hasData)
+              return snapshot.data.text.light.coolGray800.make();
+            else
+              return ''.text.light.coolGray800.make();
+          },
         ),
       ),
     );
@@ -335,7 +407,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
   void dispose() {
     validateStreamController.close();
     titleStreamController.close();
-    _animationController.dispose();
+    _animationController?.dispose();
     appLockPassController.dispose();
     resetLockUserEmailController.dispose();
     resetLockUserPassController.dispose();

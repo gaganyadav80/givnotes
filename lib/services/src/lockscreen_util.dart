@@ -41,6 +41,7 @@ class ShowLockscreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SimpleLockScreen(
       title: 'Unlock givnotes',
+      simpleTitle: 'Re-enter your \nPIN',
       correctString: _variableService.prefsBox.passcode,
       confirmMode: false,
       canCancel: changePassAuth != null ? true : false,
@@ -70,7 +71,8 @@ class AddLockscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SimpleLockScreen(
-      title: 'Lock givnotes',
+      simpleTitle: 'Enter your new\nPIN',
+      simpleConfirmTitle: 'Confirm your \nPIN',
       confirmMode: true,
       canCancel: true,
       canBiometric: false,

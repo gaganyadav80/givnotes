@@ -95,9 +95,7 @@ class SettingsPage extends StatelessWidget {
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
-                  Navigator.of(context)
-                    ..pop()
-                    ..pushNamed(RouterName.addlockRoute); //TODO disrupts the view with zoom effect. FIX @Gagan
+                  Navigator.of(context).pushReplacementNamed(RouterName.addlockRoute);
                 },
               );
             } else {
