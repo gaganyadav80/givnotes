@@ -30,71 +30,72 @@ class _EditorTagsState extends State<EditorTags> {
       padding: EdgeInsets.symmetric(horizontal: 15.w),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _buildNoteTags(_noteEditStore),
-            widget.noteTagsList.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
-            BlocBuilder<NoteStatusCubit, NoteStatusState>(
-              builder: (context, state) {
-                return state.isEditing
-                    ? Container(
-                        height: 32.w,
-                        width: 32.w,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.blueGrey,
-                            width: 2.w,
-                          ),
-                        ),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(25.r),
-                          onTap: () {
-                            FocusScope.of(context).unfocus();
-                            Navigator.push(
-                              context,
-                              CupertinoPageRoute(
-                                builder: (context) => AddTagScreen(
-                                  controller: _tagController,
-                                  isEditing: false,
-                                  editTagTitle: '',
-                                  updateTags: () => setState(() {}),
-                                  noteTagsList: widget.noteTagsList,
-                                ),
-                                fullscreenDialog: true,
-                              ),
-                            );
-                          },
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.blueGrey,
-                            size: 15.w,
-                          ),
-                        ),
-                      )
-                    : widget.noteTagsList.length == 0
-                        ? Container(
-                            height: 30.h,
-                            child: Center(
-                              child: Text(
-                                '"no tags added."',
-                                style: TextStyle(
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 16.w,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
+        child: Obx(
+          () => Row(
+            children: [
+              _buildNoteTags(_noteEditStore),
+              widget.noteTagsList.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
+              BlocBuilder<NoteStatusCubit, NoteStatusState>(
+                builder: (context, state) {
+                  return state.isEditing
+                      ? Container(
+                          height: 32.w,
+                          width: 32.w,
+                          decoration: BoxDecoration(
                             color: Colors.transparent,
-                            height: 30.h,
-                          );
-              },
-            )
-          ],
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.blueGrey,
+                              width: 2.w,
+                            ),
+                          ),
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(25.r),
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                              Navigator.push(
+                                context,
+                                CupertinoPageRoute(
+                                  builder: (context) => AddTagScreen(
+                                    controller: _tagController,
+                                    isEditing: false,
+                                    editTagTitle: '',
+                                    noteTagsList: widget.noteTagsList,
+                                  ),
+                                  fullscreenDialog: true,
+                                ),
+                              );
+                            },
+                            child: Icon(
+                              Icons.add,
+                              color: Colors.blueGrey,
+                              size: 15.w,
+                            ),
+                          ),
+                        )
+                      : widget.noteTagsList.length == 0
+                          ? Container(
+                              height: 30.h,
+                              child: Center(
+                                child: Text(
+                                  '"no tags added."',
+                                  style: TextStyle(
+                                    color: Colors.black54,
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 16.w,
+                                    fontStyle: FontStyle.italic,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              color: Colors.transparent,
+                              height: 30.h,
+                            );
+                },
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -132,7 +133,6 @@ class _EditorTagsState extends State<EditorTags> {
                     controller: _tagController,
                     isEditing: true,
                     editTagTitle: item.title,
-                    updateTags: () => setState(() {}),
                     noteTagsList: widget.noteTagsList,
                   ),
                   fullscreenDialog: true,

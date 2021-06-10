@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
 import 'dot_secret_ui.dart';
 import 'circle_input_button.dart';
 
@@ -72,7 +73,7 @@ class _LockScreenState extends State<LockScreen> {
   // bool _needClose = false;
 
   // confirm flag
-  bool _isConfirmation = false;
+  final RxBool _isConfirmation = false.obs;
 
   // confirm verify passcode
   String _verifyConfirmPasscode = '';
@@ -163,12 +164,12 @@ class _LockScreenState extends State<LockScreen> {
       var _verifyPasscode = widget.correctString;
 
       if (widget.confirmMode) {
-        if (_isConfirmation == false) {
+        if (_isConfirmation.value == false) {
           _verifyConfirmPasscode = enteredValue;
           enteredValues.clear();
           enteredLengthStream.add(enteredValues.length);
-          _isConfirmation = true;
-          setState(() {});
+          _isConfirmation.value = true;
+          // setState(() {});
           return;
         }
         _verifyPasscode = _verifyConfirmPasscode;
@@ -367,16 +368,16 @@ class _LockScreenState extends State<LockScreen> {
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
               );
             } else {
-              return Text(
-                _isConfirmation ? 'Passcode Does Not Match' : 'Wrong Passcode',
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-              );
+              return Obx(() => Text(
+                    _isConfirmation.value ? 'Passcode Does Not Match' : 'Wrong Passcode',
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                  ));
             }
           } else {
-            return Text(
-              _isConfirmation ? widget.confirmTitle : widget.title,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
-            );
+            return Obx(() => Text(
+                  _isConfirmation.value ? widget.confirmTitle : widget.title,
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                ));
           }
         },
       ),

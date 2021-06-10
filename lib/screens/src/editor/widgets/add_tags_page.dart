@@ -14,14 +14,12 @@ class AddTagScreen extends StatefulWidget {
     this.controller,
     this.isEditing,
     this.editTagTitle,
-    this.updateTags,
     @required this.noteTagsList,
   }) : super(key: key);
 
   final TextEditingController controller;
   final bool isEditing;
   final String editTagTitle;
-  final VoidCallback updateTags;
   final RxList<String> noteTagsList;
 
   @override
@@ -149,8 +147,6 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         // if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text)) {
                         //   _global.prefsBox.allTagsMap.remove(widget.controller.text);
                         // }
-
-                        widget.updateTags();
                       }
                       widget.controller.clear();
                       tagColor.value = _colors.materialColorValues[0];
@@ -279,7 +275,6 @@ class _AddTagScreenState extends State<AddTagScreen> {
         }
       }
       widget.controller.clear();
-      widget.updateTags();
     }
     Navigator.pop(context);
 
