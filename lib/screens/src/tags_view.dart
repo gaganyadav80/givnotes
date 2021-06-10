@@ -16,8 +16,35 @@ import 'package:givnotes/services/services.dart';
 import 'notes/src/notes_model.dart';
 
 class TagSearchController extends GetxController {
-  final RxList<String> tagSearchList = <String>[].obs;
-  final RxList<String> selectedTagList = <String>[].obs;
+  List<String> tagSearchList = <String>[];
+  List<String> selectedTagList = <String>[];
+
+  void resetSearchList() {
+    this.tagSearchList
+      ..clear()
+      ..addAll(VariableService().prefsBox.allTagsMap.keys.toList());
+
+    update(['tagSearchList']);
+  }
+
+  void clearSearchListNOUP() => this.tagSearchList.clear();
+
+  void addAllSearchList(List<String> value) {
+    this.tagSearchList
+      ..clear()
+      ..addAll(value);
+    update(['tagSearchList']);
+  }
+
+  void addSelectedList(String value) {
+    this.selectedTagList.add(value);
+    update(['selectedTagList']);
+  }
+
+  void removeSelectedList(String value) {
+    this.selectedTagList.remove(value);
+    update(['selectedTagList']);
+  }
 }
 
 class TagsView extends StatefulWidget {
@@ -29,7 +56,14 @@ class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List<NotesModel> _notes = <NotesModel>[];
   String _created;
-  final TagSearchController _tagSearchController = Get.find<TagSearchController>();
+
+  @override
+  void initState() {
+    super.initState();
+    Get.find<TagSearchController>().tagSearchList
+      ..clear()
+      ..addAll(VariableService().prefsBox.allTagsMap.keys.toList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,89 +81,91 @@ class _TagsViewState extends State<TagsView> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 6.w),
-            child: Obx(() {
-              _notes = Get.find<NotesController>().notes.where((element) {
-                return (element.trash == false) &&
-                    _tagSearchController.selectedTagList.any((tag) {
-                      return element.tags.contains(tag);
-                    });
-              }).toList();
+            child: GetBuilder<TagSearchController>(
+              // init: TagSearchController(),
+              id: 'selectedTagList',
+              builder: (TagSearchController controller) {
+                _notes = Get.find<NotesController>().notes.where((element) {
+                  return (element.trash == false) &&
+                      controller.selectedTagList.any((tag) {
+                        return element.tags.contains(tag);
+                      });
+                }).toList();
 
-              if (_notes.length == 0) {
-                return SingleChildScrollView(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0.w),
-                    child: Column(
-                      children: [
-                        _tagSearchController.selectedTagList.length.text.xs.make().opacity0(),
-                        SizedBox(height: 50.h),
-                        Image.asset('assets/giv_img/search_light.png', height: 180.h),
-                        'Search according the tags here'.text.size(12.w).make(),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              return ListView.builder(
-                itemCount: _notes.length,
-                itemBuilder: (context, index) {
-                  // index = _notes.length - index - 1;
-
-                  var note = _notes[index];
-
-                  _created = DateFormat.yMMMd().format(DateTime.parse(note.created));
-
-                  return InkWell(
-                    onTap: () {
-                      _noteEditStore.updateNoteMode(NoteMode.Editing);
-                      Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
-                    },
-                    child: Card(
-                      elevation: 0 ?? _tagSearchController.selectedTagList.length.text.xs.make().opacity0(),
-                      color: Colors.white,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            index == _notes.length - 1 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
-                            SizedBox(height: 5.w),
-                            Text(
-                              note.title,
-                              style: TextStyle(
-                                fontSize: 17.w,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(height: 5.w),
-                            Text(
-                              note.text,
-                              style: TextStyle(
-                                color: Colors.grey[800],
-                              ),
-                              maxLines: 5,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 5.w),
-                            Text(
-                              "created  $_created",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey,
-                                fontSize: 12.w,
-                              ),
-                            ),
-                            SizedBox(height: 10.0.w),
-                            Divider(height: 0.0, thickness: 1.0),
-                          ],
-                        ),
+                if (controller.selectedTagList.length == 0) {
+                  return SingleChildScrollView(
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0.w),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 50.h),
+                          Image.asset('assets/giv_img/search_light.png', height: 180.h),
+                          'Search according the tags here'.text.size(12.w).make(),
+                        ],
                       ),
                     ),
                   );
-                },
-              );
-            }),
+                }
+
+                return ListView.builder(
+                  itemCount: _notes.length,
+                  itemBuilder: (context, index) {
+                    // index = _notes.length - index - 1;
+
+                    NotesModel note = _notes[index];
+                    _created = DateFormat.yMMMd().format(DateTime.parse(note.created));
+
+                    return InkWell(
+                      onTap: () {
+                        _noteEditStore.updateNoteMode(NoteMode.Editing);
+                        Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
+                      },
+                      child: Card(
+                        elevation: 0.0,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              index == _notes.length - 1 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
+                              SizedBox(height: 5.w),
+                              Text(
+                                note.title,
+                                style: TextStyle(
+                                  fontSize: 17.w,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              SizedBox(height: 5.w),
+                              Text(
+                                note.text,
+                                style: TextStyle(
+                                  color: Colors.grey[800],
+                                ),
+                                maxLines: 5,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 5.w),
+                              Text(
+                                "created  $_created",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.grey,
+                                  fontSize: 12.w,
+                                ),
+                              ),
+                              SizedBox(height: 10.0.w),
+                              Divider(height: 0.0, thickness: 1.0),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       ],
@@ -158,16 +194,10 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   void initState() {
     super.initState();
 
-    _tagSearchController.tagSearchList
-      ..clear()
-      ..addAll(_allTagsMap.keys.toList());
-
     _searchTagController.addListener(() {
       final text = _searchTagController.text;
 
       if (text.isNotEmpty) {
-        _tagSearchController.tagSearchList.clear();
-
         final _filterList = _allTagsMap.keys.toList().where((element) {
           return element.toLowerCase().contains(text.toLowerCase());
         }).toList();
@@ -176,13 +206,9 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           throw Exception('List cannot be null');
         }
 
-        _tagSearchController.tagSearchList
-          ..clear()
-          ..addAll(_filterList);
+        _tagSearchController.addAllSearchList(_filterList);
       } else if (text.isEmpty) {
-        _tagSearchController.tagSearchList
-          ..clear()
-          ..addAll(_allTagsMap.keys.toList());
+        _tagSearchController.resetSearchList();
       }
     });
 
@@ -191,12 +217,6 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
         _searchTagFocus.unfocus();
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _searchTagFocus?.dispose();
-    super.dispose();
   }
 
   @override
@@ -209,29 +229,28 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
           prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
           placeholder: 'Search tags',
           onSuffixTap: () {
-            _tagSearchController.tagSearchList
-              ..clear()
-              ..addAll(_allTagsMap.keys.toList());
+            _tagSearchController.resetSearchList();
 
             _searchTagController.clear();
             _searchTagFocus.unfocus();
           },
           onSubmitted: (_) => _searchTagFocus.unfocus(),
         ),
-        Obx(
-          () => Tags(
+        GetBuilder<TagSearchController>(
+          id: 'tagSearchList',
+          builder: (TagSearchController controller) => Tags(
             key: widget.tagStateKey,
-            itemCount: _tagSearchController.tagSearchList.length,
+            itemCount: controller.tagSearchList.length,
             horizontalScroll: true,
             itemBuilder: (int index) {
-              final noteTag = _tagSearchController.tagSearchList[index];
+              final noteTag = controller.tagSearchList[index];
 
               return ItemTags(
                 key: Key(index.toString()),
                 elevation: 2,
                 index: index,
                 title: noteTag,
-                active: _tagSearchController.selectedTagList.contains(noteTag),
+                active: controller.selectedTagList.contains(noteTag),
                 padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
                 textStyle: TextStyle(
                   fontSize: 14.w,
@@ -246,9 +265,9 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 activeColor: Color(_allTagsMap[noteTag]),
                 onPressed: (item) {
                   if (item.active) {
-                    _tagSearchController.selectedTagList.add(item.title);
+                    controller.addSelectedList(item.title);
                   } else {
-                    _tagSearchController.selectedTagList.remove(item.title);
+                    controller.removeSelectedList(item.title);
                   }
                 },
               );

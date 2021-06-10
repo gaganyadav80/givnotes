@@ -143,9 +143,14 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         if (widget.noteTagsList.contains(widget.controller.text)) {
                           widget.noteTagsList.remove(widget.controller.text);
                         }
-                        if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text)) {
-                          _global.prefsBox.allTagsMap.remove(widget.controller.text);
-                        }
+                        // if (Get.find<TagSearchController>().tagSearchList.contains(widget.controller.text)) {
+                        //   Get.find<TagSearchController>().tagSearchList.remove(widget.controller.text);
+                        // }
+                        // if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text)) {
+                        //   _global.prefsBox.allTagsMap.remove(widget.controller.text);
+                        // }
+
+                        widget.updateTags();
                       }
                       widget.controller.clear();
                       tagColor.value = _colors.materialColorValues[0];
@@ -208,8 +213,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
                                           decoration: BoxDecoration(
                                             color: Color(_colors.materialColorValues[index]).withOpacity(0.2),
                                             borderRadius: BorderRadius.circular(3.r),
-                                            border:
-                                                Border.all(color: Color(_colors.materialColorValues[index]).withOpacity(0.2)),
+                                            border: Border.all(
+                                                color: Color(_colors.materialColorValues[index]).withOpacity(0.2)),
                                           ),
                                         ),
                                         SizedBox(width: 10.w),
@@ -219,7 +224,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
                                     if (tagColor.value == _colors.materialColorValues[index])
                                       Icon(CupertinoIcons.checkmark_alt, color: Colors.black).pOnly(right: 15.w)
                                     else if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text) &&
-                                        _colors.materialColorValues[index] == _global.prefsBox.allTagsMap[widget.controller.text])
+                                        _colors.materialColorValues[index] ==
+                                            _global.prefsBox.allTagsMap[widget.controller.text])
                                       'Current'.text.xs.gray400.make().pOnly(right: 15.w),
                                   ],
                                 ),

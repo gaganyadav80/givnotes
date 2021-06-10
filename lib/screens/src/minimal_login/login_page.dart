@@ -208,13 +208,12 @@ class _LoginFormState extends State<LoginForm> {
           SizedBox(height: 22.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
-              return state is LoginInProgress
-                  ? BlueButton(
-                      title: "loading",
-                      onPressed: () {},
-                      isLoading: true,
-                    )
-                  : BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed);
+              return BlueButton(
+                title: state is LoginInProgress ? "loading" : "Sign In",
+                onPressed: state is LoginInProgress ? () {} : _onLoginButtonPressed,
+                isLoading: state is LoginInProgress ? true : false,
+              );
+              //  BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed);
             },
           )
         ],
