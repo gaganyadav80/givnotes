@@ -44,7 +44,9 @@ class _NotesCardState extends State<NotesCard> {
     return Obx(
       () => Card(
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+        shape: multiSelectController.isSelected(widget.note.id)
+            ? Border(left: BorderSide(width: 5.w, color: Color(0xFFDD4C4F)))
+            : null,
         color: multiSelectController.selectedIndexes.contains(widget.note.id) ? Colors.grey[300] : Colors.white,
         margin: EdgeInsets.zero,
         child: InkWell(
@@ -57,9 +59,7 @@ class _NotesCardState extends State<NotesCard> {
               Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
             }
           },
-          onLongPress: () {
-            multiSelectController.select(widget.note.id);
-          },
+          onLongPress: () => multiSelectController.select(widget.note.id),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: Column(

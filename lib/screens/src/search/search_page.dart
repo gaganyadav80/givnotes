@@ -1,3 +1,4 @@
+import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -132,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                   : ListView.builder(
                       itemCount: _searchList.length,
                       itemBuilder: (context, index) {
-                        final item = _searchList.elementAt(index);
+                        final item = _searchList[index];
                         String _created = DateFormat.yMMMd().format(DateTime.parse(item.created));
 
                         return Card(
@@ -195,19 +196,28 @@ class _SearchPageState extends State<SearchPage> {
                                                 ),
                                               ),
                                         SizedBox(height: 5.w),
-                                        Text(
-                                          item.title,
+                                        DynamicTextHighlighting(
+                                          caseSensitive: false,
+                                          highlights: [_textController.text],
+                                          text: item.title,
                                           style: TextStyle(
-                                            fontSize: 17.w,
-                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18.w,
+                                            fontFamily: 'Poppins',
+                                            fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                         SizedBox(height: 5.w),
-                                        Text(
-                                          item.text,
-                                          style: TextStyle(color: Colors.grey[800]),
+                                        DynamicTextHighlighting(
+                                          caseSensitive: false,
+                                          highlights: [_textController.text],
+                                          text: item.text,
                                           maxLines: 5,
                                           overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.grey[800],
+                                            fontWeight: FontWeight.w300,
+                                            fontFamily: 'Poppins',
+                                          ),
                                         ),
                                         SizedBox(height: 5.w),
                                         Text(
