@@ -18,8 +18,15 @@ class TodosLoaded extends TodosState {
   @override
   List<Object> get props => [todos];
 
-  @override
-  String toString() => 'TodosLoaded { todos: $todos }';
+  // @override
+  // String toString() => 'TodosLoaded { todos: $todos }';
 }
 
-class TodosNotLoaded extends TodosState {}
+class TodosNotLoaded extends TodosState {
+  final String message;
+
+  const TodosNotLoaded([this.message]);
+
+  @override
+  List<Object> get props => [message];
+}

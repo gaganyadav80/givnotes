@@ -12,7 +12,7 @@ import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
-Future<void> initGetXControllers() async {
+void initGetXControllers() {
   Get.put(TagSearchController());
   Get.put(MultiSelectController());
   Get.put(NotesController());
@@ -35,7 +35,6 @@ Future<void> initHiveDb() async {
 }
 
 Future<void> pluginInitializer(String userID, {String userKey}) async {
-  // VariableService().packageInfo = await PackageInfo.fromPlatform();
   PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(
@@ -46,7 +45,7 @@ Future<void> pluginInitializer(String userID, {String userKey}) async {
   String storageContent = await secureStorage.read();
 
   if (storageContent == null || storageContent.isEmpty || storageContent.split(':')[0] != userID) {
-    // Not required to make it 32 byte
+    // Not required to make it 32 byte. Was required for hive db.
     if (userKey.length < 32) {
       userKey += 'X#P%5vu!w2zTPm&1#n0%zz^38^'.substring(0, 32 - userKey.length);
     }
@@ -63,5 +62,6 @@ Future<void> pluginInitializer(String userID, {String userKey}) async {
   aes.Key key = aes.Key.fromBase64(VariableService().encryptionKey);
   VariableService().encrypter = aes.Encrypter(aes.AES(key));
 
+  // Extra initializations after User Login
   VariableService().randomUserProfile = Random().nextInt(21);
 }

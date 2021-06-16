@@ -13,6 +13,7 @@ import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/blueButton.dart';
+import 'package:givnotes/widgets/circular_animation.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
@@ -67,15 +68,18 @@ class MyProfile extends StatelessWidget {
 
             return ListView(
               children: [
+                SizedBox(height: 10.w),
                 Hero(
                   tag: 'profile-pic',
-                  child: CircleAvatar(
-                    radius: 70.r,
-                    backgroundColor: Colors.transparent,
-                    child: user.photoURL != null
-                        ? Image.network(user.photoURL)
-                        : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
-                  ).pOnly(top: 40.w),
+                  child: WidgetCircularAnimator(
+                    child: CircleAvatar(
+                      // radius: 70.r,
+                      backgroundColor: Colors.transparent,
+                      child: user.photoURL != null
+                          ? Image.network(user.photoURL)
+                          : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
+                    ),
+                  ),
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
@@ -202,9 +206,9 @@ class MyProfile extends StatelessWidget {
                       message: 'Do you really want to log out?',
                       mainButtonText: 'Sign Out',
                       showCancel: true,
-                      onTap: () async {
+                      onTap: () {
                         Navigator.pop(ctx, true); // close the dialog
-                        BlocProvider.of<AuthenticationBloc>(rootContext).add(LogOutUser()); //send logout event
+                        BlocProvider.of<AuthenticationBloc>(rootContext).add(LogOutUser(rootContext));
                       },
                     ),
                   ).then((value) {

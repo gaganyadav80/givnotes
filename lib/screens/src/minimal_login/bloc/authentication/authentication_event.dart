@@ -60,4 +60,10 @@ class LoginWithGoogle extends AuthenticationEvent {}
 
 class RegisterWithGoogle extends AuthenticationEvent {}
 
-class LogOutUser extends AuthenticationEvent {}
+class LogOutUser extends AuthenticationEvent {
+  final BuildContext ctx;
+  LogOutUser([this.ctx]);
+
+  @override
+  List<Object> get props => [ctx];
+}

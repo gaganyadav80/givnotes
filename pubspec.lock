@@ -919,6 +919,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.4+1"
+  show_up_animation:
+    dependency: "direct main"
+    description:
+      name: show_up_animation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1008,6 +1015,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  timeago:
+    dependency: "direct main"
+    description:
+      name: timeago
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
   timelines:
     dependency: "direct main"
     description:

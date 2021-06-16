@@ -61,7 +61,7 @@ class TrashView extends StatelessWidget {
                       }),
                     ],
                   ),
-                  child: NotesCard(note: note, index: index),
+                  child: NotesCard(note: note, showTags: true),
                 );
               },
             ),

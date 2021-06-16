@@ -11,19 +11,8 @@ import 'package:givnotes/widgets/widgets.dart';
 
 import 'todo_timeline/todo_home.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
-
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => HomePage());
-  }
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final double _kIconSize = 26.w;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +23,7 @@ class _HomePageState extends State<HomePage> {
           buildWhen: (previous, current) => previous != current,
           builder: (_, int state) {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Colors.white,
               appBar: CustomAppBar(index: state),
               body: IndexedStack(
@@ -46,7 +36,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               bottomNavigationBar: BottomNavigationBar(
-                iconSize: _kIconSize,
+                iconSize: 26.w,
                 selectedFontSize: 13.w,
                 unselectedFontSize: 13.w,
                 backgroundColor: Colors.white,

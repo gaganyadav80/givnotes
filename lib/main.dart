@@ -8,10 +8,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
-import 'package:givnotes/services/src/variables.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 
 import 'cubit/cubits.dart';
 import 'packages/packages.dart';
@@ -34,7 +34,7 @@ void main() async {
   Bloc.observer = SimpleBlocObserver();
   HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
-  await initGetXControllers();
+  initGetXControllers();
   await initHiveDb();
 
   final AuthenticationRepository authenticationRepository = AuthenticationRepository();
@@ -122,10 +122,6 @@ class CheckLogin extends StatelessWidget {
       return LoginPage();
     } else {
       pluginInitializer(_currentUser.uid);
-
-      //MAYBE HomePage is returned before pluginInitialized is completed.
-      // Solution is to make both the functions synchronous
-      // initHiveDb();
 
       return HomePage();
     }

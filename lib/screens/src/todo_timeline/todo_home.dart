@@ -45,6 +45,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.white,
+        toolbarHeight: 56.h,
         titleSpacing: 0.0,
         leading: IconButton(
           splashRadius: 25.0,

@@ -5,6 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:show_up_animation/show_up_animation.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -23,80 +25,185 @@ class NotesView extends StatefulWidget {
 }
 
 class _NotesViewState extends State<NotesView> {
+  final RxBool _showSearch = false.obs;
+  final FocusNode _focusNode = FocusNode();
+  final RxList<NotesModel> _searchList = <NotesModel>[].obs;
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textController.addListener(() {
+      final text = _textController.text;
+
+      if (text.trim().isNotEmpty) {
+        _searchList.value = Get.find<NotesController>().notes.where((element) {
+          return (element.title + ' ' + element.text + element.tags.join(' '))
+                  .toLowerCase()
+                  .contains(text.toLowerCase()) &&
+              element.trash == false;
+        }).toList();
+
+        // _searchList
+        //   ..clear()
+        //   ..addAll(filterList);
+        // Get.find<NotesController>().update();
+        //
+      } else if (text.isEmpty) {
+        _searchList
+          ..clear()
+          ..addAll(Get.find<NotesController>().notes.where((element) => element.trash == false).toList());
+        // Get.find<NotesController>().update();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _textController?.dispose();
+    _focusNode?.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: GetBuilder<NotesController>(
-          init: NotesController(),
-          builder: (NotesController controller) {
-            List<NotesModel> _notes = controller.notes.where((element) => element.trash == false).toList();
-
-            if ((_notes.isEmpty)) {
-              return NotesEmptyView(isTrash: false);
-            }
-
-            return CupertinoScrollbar(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                itemCount: _notes.length,
-                itemBuilder: (context, index) {
-                  final NotesModel note = _notes[index];
-
-                  return Slidable(
-                    key: UniqueKey(),
-                    endActionPane: ActionPane(
-                      extentRatio: 0.25, // 0.25 * total items
-                      motion: DrawerMotion(),
-                      // dismissible: ,
-                      children: <Widget>[
-                        iconSlideAction(Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH', () {
-                          controller.updateNote(note.copyWith(trash: true));
-                          Fluttertoast.showToast(msg: "moved to trash");
-                        }),
+      child: SafeArea(
+        child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(56.h),
+            child: Obx(() => _showSearch.value
+                ? ShowUpAnimation(
+                    animationDuration: Duration(milliseconds: 200),
+                    direction: Direction.vertical,
+                    offset: -0.2,
+                    child: AppBar(
+                      backgroundColor: Colors.white,
+                      elevation: 0.0,
+                      automaticallyImplyLeading: false,
+                      title: CupertinoSearchTextField(
+                        controller: _textController,
+                        focusNode: _focusNode,
+                        prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
+                        placeholder: 'Search notes',
+                      ),
+                      actions: [
+                        CupertinoButton(
+                          padding: EdgeInsets.only(right: 15.w),
+                          child: 'Cancel'.text.semiBold.color(CupertinoColors.systemGrey).make(),
+                          onPressed: () {
+                            _showSearch.value = false;
+                            _textController.clear();
+                            _focusNode.unfocus();
+                          },
+                        )
                       ],
                     ),
-                    child: NotesCard(note: note, index: index),
-                  );
-                },
-              ),
-            );
-          },
-        ),
-        floatingActionButton: BlocBuilder<HomeCubit, int>(
-          buildWhen: (previous, current) => previous != current,
-          builder: (_, state) {
-            return state == 0
-                ? Container(
-                    height: 65.w,
-                    width: 65.w,
-                    decoration: BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
-                    child: FloatingActionButton(
-                      child: Icon(CupertinoIcons.pencil_outline, color: Colors.white),
-                      backgroundColor: Color(0xFFDD4C4F),
-                      onPressed: () async {
-                        await HandlePermission.requestPermission().then((value) async {
-                          if (value) {
-                            BlocProvider.of<NoteStatusCubit>(context).updateIsEditing(true);
-                            BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Adding);
-                            Navigator.pushNamed(
-                              context,
-                              RouterName.editorRoute,
-                              arguments: [NoteMode.Adding, null],
-                            );
-                          } else {
-                            if (VariableService().isPermanentDisabled) {
-                              HandlePermission.permanentDisabled(context);
-                            }
-                          }
-                        });
+                  )
+                : AppBar(
+                    elevation: 0.0,
+                    backgroundColor: Colors.white,
+                    automaticallyImplyLeading: false,
+                    title: 'Notes'.text.heightRelaxed.size(36.w).semiBold.color(Color(0xff32343D)).make(),
+                    actions: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 8.w),
+                        child: IconButton(
+                          splashRadius: 25.0,
+                          iconSize: 22.0.w,
+                          icon: Icon(CupertinoIcons.collections, color: Colors.black),
+                          onPressed: () => showCupertinoModalBottomSheet(
+                            expand: true,
+                            context: context,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) => NotesOptionModalSheet(),
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        child: Icon(CupertinoIcons.search, size: 28.w, color: Colors.black),
+                        // splashRadius: 25.0,
+                        key: widget.key,
+                        onTap: () {
+                          _showSearch.value = true;
+                          _focusNode.requestFocus();
+                        },
+                      ),
+                      SizedBox(width: 20.w),
+                    ],
+                  )),
+          ),
+          backgroundColor: Colors.white,
+          body: GetBuilder<NotesController>(
+            init: NotesController(),
+            builder: (NotesController controller) {
+              _searchList.value = controller.notes.where((element) => element.trash == false).toList();
+              print(controller.directory);
+
+              if ((controller.notes.isEmpty)) {
+                return NotesEmptyView(isTrash: false);
+              } else if (_searchList.isEmpty) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 20.h),
+                  child: 'Ops! nothing found'.text.center.italic.light.lg.gray400.make(),
+                );
+              }
+
+              return Obx(() => CupertinoScrollbar(
+                    child: ListView.builder(
+                      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      itemCount: _searchList.length,
+                      itemBuilder: (context, index) {
+                        final NotesModel note = _searchList[index];
+
+                        return Slidable(
+                          key: UniqueKey(),
+                          endActionPane: ActionPane(
+                            extentRatio: 0.25, // 0.25 or 0.20 * total items
+                            motion: DrawerMotion(),
+                            // dismissible: ,
+                            children: <Widget>[
+                              iconSlideAction(Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH', () {
+                                controller.updateNote(note.copyWith(trash: true));
+                                Fluttertoast.showToast(msg: "moved to trash");
+                              }),
+                            ],
+                          ),
+                          child: NotesCard(note: note, showTags: true, searchText: _textController.text),
+                        );
                       },
                     ),
-                  )
-                : SizedBox.shrink();
-          },
+                  ));
+            },
+          ),
+          floatingActionButton: Container(
+            height: 65.w,
+            width: 65.w,
+            decoration: BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
+            child: FloatingActionButton(
+              child: Icon(CupertinoIcons.pencil_outline, color: Colors.white),
+              backgroundColor: Color(0xFFDD4C4F),
+              onPressed: () async {
+                await HandlePermission.requestPermission().then((value) async {
+                  if (value) {
+                    BlocProvider.of<NoteStatusCubit>(context).updateIsEditing(true);
+                    BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Adding);
+                    Navigator.pushNamed(
+                      context,
+                      RouterName.editorRoute,
+                      arguments: [NoteMode.Adding, null],
+                    );
+                  } else {
+                    if (VariableService().isPermanentDisabled) {
+                      HandlePermission.permanentDisabled(context);
+                    }
+                  }
+                });
+              },
+            ),
+          ),
         ),
       ),
     );

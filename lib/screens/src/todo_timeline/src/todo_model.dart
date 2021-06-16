@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
-import 'todo_entity.dart';
-
-class TodoModel {
+class TodoModel extends Equatable {
   final String id;
   final String title;
   final bool completed;
@@ -55,54 +54,109 @@ class TodoModel {
   }
 
   @override
+  List<Object> get props => [
+        this.id,
+        this.title,
+        this.completed,
+        this.description,
+        this.dueDate,
+        this.priority,
+        this.subTask,
+        this.category,
+        this.categoryColor
+      ];
+
+  @override
   int get hashCode =>
-      id.hashCode ^
-      title.hashCode ^
-      completed.hashCode ^
-      description.hashCode ^
-      dueDate.hashCode ^
-      priority.hashCode ^
-      subTask.hashCode ^
-      category.hashCode ^
-      categoryColor.hashCode;
+      this.id.hashCode ^
+      this.title.hashCode ^
+      this.completed.hashCode ^
+      this.description.hashCode ^
+      this.dueDate.hashCode ^
+      this.priority.hashCode ^
+      this.subTask.hashCode ^
+      this.category.hashCode ^
+      this.categoryColor.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoModel &&
           runtimeType == other.runtimeType &&
-          id == other.id &&
-          title == other.title &&
-          completed == other.completed &&
-          description == other.description &&
-          dueDate == other.dueDate &&
-          priority == other.priority &&
-          subTask == other.subTask &&
-          category == other.category &&
-          categoryColor == other.categoryColor;
+          this.id == other.id &&
+          this.title == other.title &&
+          this.completed == other.completed &&
+          this.description == other.description &&
+          this.dueDate == other.dueDate &&
+          this.priority == other.priority &&
+          this.subTask == other.subTask &&
+          this.category == other.category &&
+          this.categoryColor == other.categoryColor;
 
   @override
   String toString() {
-    return 'Todo { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category, categoryColor: $categoryColor }';
+    return 'TodoModel { id: $id, title: $title, completed: $completed, description: $description, dueDate: $dueDate, priority: $priority, subTask: $subTask, category: $category, categoryColor: $categoryColor }';
   }
 
-  TodoEntity toEntity() {
-    return TodoEntity(id, title, completed, description, dueDate, priority, subTask, category, categoryColor);
-  }
-
-  static TodoModel fromEntity(TodoEntity entity) {
+  static TodoModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) {
     return TodoModel(
-      id: entity.id,
-      title: entity.title,
-      completed: entity.completed,
-      description: entity.description,
-      dueDate: entity.dueDate,
-      priority: entity.priority,
-      subTask: entity.subTask,
-      category: entity.category,
-      categoryColor: entity.categoryColor,
+      id: snap.data()['id'] as String,
+      title: snap.data()['title'] as String,
+      completed: snap.data()['completed'] as bool,
+      description: snap.data()['description'] as String,
+      dueDate: snap.data()['dueDate'] as Timestamp,
+      priority: snap.data()['priority'] as String,
+      subTask: snap.data()['subTask'],
+      category: snap.data()['category'] as String,
+      categoryColor: snap.data()['categoryColor'] as int,
     );
   }
+
+  Map<String, Object> toDocument() {
+    return {
+      "id": this.id,
+      "title": this.title,
+      "completed": this.completed,
+      "description": this.description,
+      "dueDate": this.dueDate,
+      "priority": this.priority,
+      "subTask": this.subTask,
+      "category": this.category,
+      "categoryColor": this.categoryColor,
+    };
+  }
+
+  // static TodoEntity fromJson(Map<String, Object> json) {
+  //   return TodoEntity(
+  //     json["id"] as String,
+  //     json["title"] as String,
+  //     json["completed"] as bool,
+  //     json["description"] as String,
+  //     json["dueDate"] as Timestamp,
+  //     json["priority"] as String,
+  //     json["subTask"] as List<dynamic>,
+  //     json["category"] as String,
+  //     json["categoryColor"] as int,
+  //   );
+  // }
+
+  // _TodoEntity toEntity() {
+  //   return TodoEntity(id, title, completed, description, dueDate, priority, subTask, category, categoryColor);
+  // }
+
+  // static TodoModel fromEntity(TodoEntity entity) {
+  //   return TodoModel(
+  //     id: entity.id,
+  //     title: entity.title,
+  //     completed: entity.completed,
+  //     description: entity.description,
+  //     dueDate: entity.dueDate,
+  //     priority: entity.priority,
+  //     subTask: entity.subTask,
+  //     category: entity.category,
+  //     categoryColor: entity.categoryColor,
+  //   );
+  // }
 
   // Future<List<dynamic>> updateSubTask(int index) async {
   //   var subMap = subTask[index];

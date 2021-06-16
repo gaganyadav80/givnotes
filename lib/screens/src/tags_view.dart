@@ -5,15 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
 import 'notes/src/notes_model.dart';
+import 'notes/widgets/notes_card.dart';
 
 class TagSearchController extends GetxController {
   List<String> tagSearchList = <String>[];
@@ -55,7 +54,6 @@ class TagsView extends StatefulWidget {
 class _TagsViewState extends State<TagsView> {
   final GlobalKey<TagsState> _tagStateKey = GlobalKey<TagsState>();
   List<NotesModel> _notes = <NotesModel>[];
-  String _created;
 
   @override
   void initState() {
@@ -67,8 +65,6 @@ class _TagsViewState extends State<TagsView> {
 
   @override
   Widget build(BuildContext context) {
-    final NoteStatusCubit _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
-
     return Column(
       children: [
         Padding(
@@ -110,57 +106,12 @@ class _TagsViewState extends State<TagsView> {
                 return ListView.builder(
                   itemCount: _notes.length,
                   itemBuilder: (context, index) {
-                    // index = _notes.length - index - 1;
-
                     NotesModel note = _notes[index];
-                    _created = DateFormat.yMMMd().format(DateTime.parse(note.created));
 
-                    return InkWell(
-                      onTap: () {
-                        _noteEditStore.updateNoteMode(NoteMode.Editing);
-                        Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, note]);
-                      },
-                      child: Card(
-                        elevation: 0.0,
-                        color: Colors.white,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              index == _notes.length - 1 ? Divider(height: 0.0, thickness: 1.0) : SizedBox.shrink(),
-                              SizedBox(height: 5.w),
-                              Text(
-                                note.title,
-                                style: TextStyle(
-                                  fontSize: 17.w,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(height: 5.w),
-                              Text(
-                                note.text,
-                                style: TextStyle(
-                                  color: Colors.grey[800],
-                                ),
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              SizedBox(height: 5.w),
-                              Text(
-                                "created  $_created",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey,
-                                  fontSize: 12.w,
-                                ),
-                              ),
-                              SizedBox(height: 10.0.w),
-                              Divider(height: 0.0, thickness: 1.0),
-                            ],
-                          ),
-                        ),
-                      ),
+                    return NotesCard(
+                      note: note,
+                      showTags: false,
+                      canMultiSelect: false,
                     );
                   },
                 );
