@@ -52,7 +52,6 @@ dependencies:
   permission_handler: ^7.1.0
   shared_preferences: ^2.0.5
   show_up_animation: ^2.0.0
-  timeago: ^3.1.0
   timelines: ^0.1.0
   uuid: ^3.0.4
   velocity_x: ^3.0.0
@@ -114,3 +113,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/ZillaSlab/ZillaSlab-Regular.ttf
           weight: 400
+
+## For other languages [localization]
+# timeago: ^3.1.0

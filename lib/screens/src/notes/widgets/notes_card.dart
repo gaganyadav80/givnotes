@@ -6,12 +6,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/services/services.dart';
+// For localizations use [timeago] package
+import 'package:givnotes/packages/timeago-3.1.0/timeago.dart' as timeago;
 import 'package:givnotes/services/src/multi_select_notes.dart';
 
 class NotesCard extends StatefulWidget {
@@ -87,7 +88,7 @@ class _NotesCardState extends State<NotesCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Obx(() => Text(
-                        createdAgo.contains('now') ? '0s' : createdAgo,
+                        createdAgo.value,
                         style: TextStyle(
                           fontSize: 12.w,
                           color: Colors.grey,
