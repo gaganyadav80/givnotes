@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/blueButton.dart';
+import 'package:givnotes/widgets/blue_button.dart';
 
 class AboutUsPage extends StatelessWidget {
-  static const String aboutGivnotes = "Givnotes originated with the need for a notes app that is "
+  static const String aboutGivnotes =
+      "Givnotes originated with the need for a notes app that is "
       "functional but also at the same time looks minimal and aesthetic. But wait, "
       "now you think you can name some apps which match this profile and even we "
       "can too, then why a new notes app? The answer is because you don't get it all. "
@@ -17,6 +18,8 @@ class AboutUsPage extends StatelessWidget {
       "And at this point, we almost gave up which eventually motivated us to build something "
       "on our own, which lead to the origin of givnotes.";
 
+  const AboutUsPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +28,7 @@ class AboutUsPage extends StatelessWidget {
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          icon: const Icon(CupertinoIcons.back, color: Colors.black),
         ),
         elevation: 0.0,
         backgroundColor: Colors.white,
@@ -68,7 +71,7 @@ class AboutUsPage extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(aboutGivnotes),
+                const Text(aboutGivnotes),
                 SizedBox(height: 30.0.h),
                 Text(
                   "Where are my notes stored?",
@@ -79,7 +82,7 @@ class AboutUsPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.0.h),
-                Text(
+                const Text(
                   "Well for a starter we say it's your choice. Yes! you read it right. "
                   // "You can either use our servers which obviously encryptes your data before "
                   // "handing it over to us, or"
@@ -110,12 +113,15 @@ class AboutUsPage extends StatelessWidget {
                           fontSize: 18.0.w,
                         ),
                       ),
-                      Icon(CupertinoIcons.forward, color: Colors.blue),
+                      const Icon(CupertinoIcons.forward, color: Colors.blue),
                     ],
                   ),
                 ),
                 SizedBox(height: 30.0.h),
-                BlueButton(title: "Contact Us", onPressed: () => Navigator.pushNamed(context, RouterName.contactRoute)),
+                BlueButton(
+                    title: "Contact Us",
+                    onPressed: () =>
+                        Navigator.pushNamed(context, RouterName.contactRoute)),
                 SizedBox(height: 50.0.h),
               ],
             ),

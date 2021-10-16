@@ -10,8 +10,15 @@ class PreferenceDialog extends StatefulWidget {
 
   final bool onlySaveOnSubmit;
 
-  PreferenceDialog(this.preferences, {this.title, this.submitText, this.onlySaveOnSubmit = false, this.cancelText});
+  const PreferenceDialog(this.preferences,
+      {Key key,
+      this.title,
+      this.submitText,
+      this.onlySaveOnSubmit = false,
+      this.cancelText})
+      : super(key: key);
 
+  @override
   PreferenceDialogState createState() => PreferenceDialogState();
 }
 
@@ -49,8 +56,8 @@ class PreferenceDialogState extends State<PreferenceDialog> {
           );
         },
       ),
-      actions: <Widget>[]
-        ..addAll(widget.cancelText == null
+      actions: <Widget>[
+        ...widget.cancelText == null
             ? []
             : [
                 TextButton(
@@ -59,8 +66,8 @@ class PreferenceDialogState extends State<PreferenceDialog> {
                     Navigator.of(context).pop();
                   },
                 )
-              ])
-        ..addAll(widget.submitText == null
+              ],
+        ...widget.submitText == null
             ? []
             : [
                 TextButton(
@@ -72,7 +79,8 @@ class PreferenceDialogState extends State<PreferenceDialog> {
                     Navigator.of(context).pop();
                   },
                 )
-              ]),
+              ]
+      ],
     );
   }
 }

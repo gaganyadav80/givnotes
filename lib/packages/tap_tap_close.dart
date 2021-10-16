@@ -30,7 +30,9 @@ class _TapTapCloseState extends State<TapTapClose> {
       return WillPopScope(
         onWillPop: () async {
           DateTime now = DateTime.now();
-          if (currentBackPressTime == null || now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime) >
+                  const Duration(seconds: 2)) {
             currentBackPressTime = now;
 
             Fluttertoast.showToast(msg: widget.message);

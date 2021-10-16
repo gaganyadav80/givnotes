@@ -15,7 +15,7 @@ class ShowLockscreen extends StatelessWidget {
   final VoidCallback changePassAuth;
 
   Future<bool> biometrics(BuildContext context) async {
-    final LocalAuthentication auth = new LocalAuthentication();
+    final LocalAuthentication auth = LocalAuthentication();
     bool authenticated = false;
 
     try {
@@ -45,7 +45,8 @@ class ShowLockscreen extends StatelessWidget {
       correctString: _variableService.prefsBox.passcode,
       confirmMode: false,
       canCancel: changePassAuth != null ? true : false,
-      canBiometric: changePassAuth != null ? true : _variableService.prefsBox.biometric,
+      canBiometric:
+          changePassAuth != null ? true : _variableService.prefsBox.biometric,
       showBiometricFirst: _variableService.prefsBox.biometric,
       biometricAuthenticate: biometrics,
       onUnlocked: changePassAuth ??

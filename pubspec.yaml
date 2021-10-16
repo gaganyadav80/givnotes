@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   avatar_glow: ^2.0.1
   biometric_storage: ^2.0.2
   bloc: ^7.0.0
@@ -60,13 +61,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+  flutter_lints: ^1.0.0
   build_runner: ^1.12.2
   hive_generator: ^1.1.0
   json_serializable: ^4.1.1
   pedantic: ^1.9.2
 
 flutter:
-
   uses-material-design: true
 
   assets:

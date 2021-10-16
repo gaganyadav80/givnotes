@@ -16,7 +16,7 @@ import 'package:givnotes/packages/timeago-3.1.0/timeago.dart' as timeago;
 import 'package:givnotes/services/src/multi_select_notes.dart';
 
 class NotesCard extends StatefulWidget {
-  NotesCard({
+  const NotesCard({
     Key key,
     @required this.note,
     @required this.showTags,
@@ -44,8 +44,9 @@ class _NotesCardState extends State<NotesCard> {
   void initState() {
     super.initState();
     timeago.format(DateTime.parse(widget.note.created), locale: 'en_short');
-    timer = Timer.periodic(Duration(minutes: 1), (Timer t) {
-      createdAgo.value = timeago.format(DateTime.parse(widget.note.created), locale: 'en_short');
+    timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
+      createdAgo.value = timeago.format(DateTime.parse(widget.note.created),
+          locale: 'en_short');
     });
   }
 
@@ -57,16 +58,19 @@ class _NotesCardState extends State<NotesCard> {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
+    final HydratedPrefsCubit prefsCubit =
+        BlocProvider.of<HydratedPrefsCubit>(context);
 
     return GetX<MultiSelectController>(
       builder: (MultiSelectController controller) {
         return Card(
           elevation: 0,
           shape: controller.isSelected(widget.note.id) && widget.canMultiSelect
-              ? Border(left: BorderSide(width: 3.w, color: Color(0xFFDD4C4F)))
+              ? Border(
+                  left: BorderSide(width: 3.w, color: const Color(0xFFDD4C4F)))
               : null,
-          color: controller.selectedIndexes.contains(widget.note.id) && widget.canMultiSelect
+          color: controller.selectedIndexes.contains(widget.note.id) &&
+                  widget.canMultiSelect
               ? Colors.grey[300]
               : Colors.white,
           margin: EdgeInsets.zero,
@@ -76,11 +80,15 @@ class _NotesCardState extends State<NotesCard> {
               if (controller.isSelecting && widget.canMultiSelect) {
                 controller.select(widget.note.id);
               } else {
-                BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Editing);
-                Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, widget.note]);
+                BlocProvider.of<NoteStatusCubit>(context)
+                    .updateNoteMode(NoteMode.editing);
+                Navigator.pushNamed(context, RouterName.editorRoute,
+                    arguments: [NoteMode.editing, widget.note]);
               }
             },
-            onLongPress: !widget.canMultiSelect ? null : () => controller.select(widget.note.id),
+            onLongPress: !widget.canMultiSelect
+                ? null
+                : () => controller.select(widget.note.id),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: Row(
@@ -101,10 +109,11 @@ class _NotesCardState extends State<NotesCard> {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         SizedBox(height: 10.w),
-                        widget.note.tags.length == 0 || !widget.showTags
+                        widget.note.tags.isEmpty || !widget.showTags
                             ? SizedBox(height: 5.w)
                             : Container(
-                                height: prefsCubit.state.compactTags ? 8.h : 18.h,
+                                height:
+                                    prefsCubit.state.compactTags ? 8.h : 18.h,
                                 color: Colors.transparent,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
@@ -119,16 +128,19 @@ class _NotesCardState extends State<NotesCard> {
                                             margin: EdgeInsets.only(right: 5.w),
                                             decoration: BoxDecoration(
                                               color: color,
-                                              borderRadius: BorderRadius.circular(3.r),
+                                              borderRadius:
+                                                  BorderRadius.circular(3.r),
                                             ),
-                                            child: SizedBox.shrink(),
+                                            child: const SizedBox.shrink(),
                                           )
                                         : Container(
                                             margin: EdgeInsets.only(right: 5.w),
-                                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 5.w),
                                             decoration: BoxDecoration(
                                               color: color,
-                                              borderRadius: BorderRadius.circular(5.r),
+                                              borderRadius:
+                                                  BorderRadius.circular(5.r),
                                             ),
                                             child: Center(
                                               child: Text(
@@ -148,7 +160,11 @@ class _NotesCardState extends State<NotesCard> {
                         SizedBox(height: 5.w),
                         DynamicTextHighlighting(
                           caseSensitive: false,
-                          highlights: [widget.searchText.isEmpty ? 'null' : widget.searchText],
+                          highlights: [
+                            widget.searchText.isEmpty
+                                ? 'null'
+                                : widget.searchText
+                          ],
                           text: widget.note.title,
                           style: TextStyle(
                             fontSize: 18.w,
@@ -159,11 +175,15 @@ class _NotesCardState extends State<NotesCard> {
                         // SizedBox(height: 5.w),
                         DynamicTextHighlighting(
                           caseSensitive: false,
-                          highlights: [widget.searchText.isEmpty ? 'null' : widget.searchText],
+                          highlights: [
+                            widget.searchText.isEmpty
+                                ? 'null'
+                                : widget.searchText
+                          ],
                           text: widget.note.text,
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.grey,
                             fontWeight: FontWeight.w300,
                             fontFamily: 'Poppins',
@@ -171,7 +191,7 @@ class _NotesCardState extends State<NotesCard> {
                         ),
                         SizedBox(height: 5.0.w),
                         prefsCubit.state.compactTags
-                            ? SizedBox.shrink()
+                            ? const SizedBox.shrink()
                             : Text(
                                 "created  ${DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created))}",
                                 style: TextStyle(
@@ -182,7 +202,7 @@ class _NotesCardState extends State<NotesCard> {
                                 ),
                               ),
                         SizedBox(height: 10.0.w),
-                        Divider(height: 0.0, thickness: 1.0),
+                        const Divider(height: 0.0, thickness: 1.0),
                       ],
                     ),
                   ),

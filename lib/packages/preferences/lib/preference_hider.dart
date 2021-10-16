@@ -7,7 +7,9 @@ class PreferenceHider extends StatelessWidget {
   final String hidePref;
   final bool defaultVal;
 
-  PreferenceHider(this.preferences, this.hidePref, {this.defaultVal = true});
+  const PreferenceHider(this.preferences, this.hidePref,
+      {Key key, this.defaultVal = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

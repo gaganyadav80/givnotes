@@ -5,24 +5,24 @@ class MultiSelectController extends GetxController {
   bool isSelecting = false;
 
   Future<void> select(String n) async {
-    if (this.selectedIndexes.contains(n)) {
-      this.selectedIndexes.remove(n);
+    if (selectedIndexes.contains(n)) {
+      selectedIndexes.remove(n);
     } else {
-      this.selectedIndexes.add(n);
+      selectedIndexes.add(n);
     }
 
-    if (this.selectedIndexes.isEmpty) {
-      this.isSelecting = false;
+    if (selectedIndexes.isEmpty) {
+      isSelecting = false;
     } else {
-      this.isSelecting = true;
+      isSelecting = true;
     }
   }
 
   void clearSelectedList() {
-    this.selectedIndexes.clear();
+    selectedIndexes.clear();
   }
 
-  bool isSelected(String n) => this.selectedIndexes.contains(n); 
+  bool isSelected(String n) => selectedIndexes.contains(n);
 
-  int get selectedLength => this.selectedIndexes.length;
+  int get selectedLength => selectedIndexes.length;
 }

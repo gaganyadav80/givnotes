@@ -6,6 +6,8 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/getwidget.dart';
 
 class ContactUsPage extends StatelessWidget {
+  const ContactUsPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +17,7 @@ class ContactUsPage extends StatelessWidget {
         backgroundColor: Colors.white,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.back, color: Colors.black),
+          child: const Icon(CupertinoIcons.back, color: Colors.black),
         ),
       ),
       body: ListView(
@@ -55,8 +57,10 @@ class ContactUsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _contactTiles(CupertinoIcons.chat_bubble_2_fill, "Chat to us", context),
-                    _contactTiles(CupertinoIcons.mail_solid, "Email us", context),
+                    _contactTiles(CupertinoIcons.chat_bubble_2_fill,
+                        "Chat to us", context),
+                    _contactTiles(
+                        CupertinoIcons.mail_solid, "Email us", context),
                   ],
                 ),
                 SizedBox(height: 30.w),
@@ -87,10 +91,10 @@ class ContactUsPage extends StatelessWidget {
     );
   }
 
-  final Color blueColor = Color(0xff017CFD);
+  final Color blueColor = const Color(0xff017CFD);
 
-  Container _socialButtons(IconData icon, Function onPressed) {
-    return Container(
+  SizedBox _socialButtons(IconData icon, Function onPressed) {
+    return SizedBox(
       height: 60.w,
       width: 60.w,
       child: GFIconButton(
@@ -122,7 +126,7 @@ class ContactUsPage extends StatelessWidget {
               ..removeCurrentSnackBar()
               ..showSnackBar(SnackBar(
                 backgroundColor: blueColor,
-                content: Text("Will be added soon."),
+                content: const Text("Will be added soon."),
               )),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

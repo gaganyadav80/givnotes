@@ -19,7 +19,7 @@ class ResendVerificationInProgress extends VerificationState {}
 
 class VerificationFailed extends VerificationState {
   final String message;
-  VerificationFailed({this.message});
+  const VerificationFailed({this.message});
 
   @override
   List<Object> get props => [message];

@@ -20,11 +20,12 @@ class EditorEndDrawer extends StatelessWidget {
   final bool isTrash;
 
   EditorEndDrawer({
+    Key key,
     this.note,
     this.saveNote,
     @required this.rootCtx,
     this.isTrash = false,
-  });
+  }) : super(key: key);
 
   // final HiveDBServices _dbServices = HiveDBServices();
   final StringProcessor _sp = StringProcessor();
@@ -34,7 +35,7 @@ class EditorEndDrawer extends StatelessWidget {
     final _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return SafeArea(
-      child: Container(
+      child: SizedBox(
         width: 280.w,
         child: Drawer(
           child: PreferencePage([
@@ -55,11 +56,14 @@ class EditorEndDrawer extends StatelessWidget {
                     Icons.arrow_upward,
                     () async {
                       // note.trash = !note.trash;
-                      Get.find<NotesController>().updateNote(note.copyWith(trash: false));
+                      Get.find<NotesController>()
+                          .updateNote(note.copyWith(trash: false));
 
-                      _noteEditStore.updateNoteMode(NoteMode.Adding);
+                      _noteEditStore.updateNoteMode(NoteMode.adding);
 
-                      if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                      if (Scaffold.of(context).isEndDrawerOpen) {
+                        Navigator.pop(context);
+                      }
                       Navigator.pop(context);
                     },
                     context,
@@ -77,9 +81,10 @@ class EditorEndDrawer extends StatelessWidget {
                     return AlertDialog(
                       insetPadding: EdgeInsets.all(30.w),
                       // contentPadding: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                      title: Text('Statistics'),
-                      content: Container(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(0)),
+                      title: const Text('Statistics'),
+                      content: SizedBox(
                         height: 160.h,
                         width: 335.w,
                         child: Column(
@@ -87,7 +92,7 @@ class EditorEndDrawer extends StatelessWidget {
                           children: [
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Words: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -96,7 +101,7 @@ class EditorEndDrawer extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Characters (With Spaces): ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -105,7 +110,7 @@ class EditorEndDrawer extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Lines: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -114,7 +119,7 @@ class EditorEndDrawer extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Text(
+                                const Text(
                                   'Paragraphs: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
@@ -124,19 +129,21 @@ class EditorEndDrawer extends StatelessWidget {
                             SizedBox(height: 10.0.h),
                             Align(
                               alignment: Alignment.topRight,
-                              child: Container(
+                              child: SizedBox(
                                 height: 45.0.h,
                                 width: 90.0.w,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0.0,
                                     primary: Colors.grey[200],
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.r)),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(5.r)),
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
                                   },
-                                  child: Text(
+                                  child: const Text(
                                     'OKAY',
                                     style: TextStyle(
                                       color: Color(0xff1F1F1F),
@@ -164,7 +171,7 @@ class EditorEndDrawer extends StatelessWidget {
             ),
 
             //
-            _noteEditStore.state.noteMode == NoteMode.Editing
+            _noteEditStore.state.noteMode == NoteMode.editing
                 ? myEndDrawerListTheme(
                     isTrash ? 'Delete note' : 'Trash note',
                     CupertinoIcons.delete,
@@ -176,32 +183,40 @@ class EditorEndDrawer extends StatelessWidget {
                               builder: (context) => GivnotesDialog(
                                 title: "Delete Note",
                                 mainButtonText: "Delete",
-                                message: 'Are you sure to permanently delete this note?',
+                                message:
+                                    'Are you sure to permanently delete this note?',
                                 showCancel: true,
                                 onTap: () async {
-                                  final _noteEditStore = context.read<NoteStatusCubit>();
+                                  final _noteEditStore =
+                                      context.read<NoteStatusCubit>();
 
                                   // _dbServices.deleteNote(note.key);
-                                  Get.find<NotesController>().deleteNote(note.id);
-                                  _noteEditStore.updateNoteMode(NoteMode.Adding);
+                                  Get.find<NotesController>()
+                                      .deleteNote(note.id);
+                                  _noteEditStore
+                                      .updateNoteMode(NoteMode.adding);
 
                                   Navigator.pop(context); //? close the dialog
-                                  Navigator.pop(rootCtx); //? close the editor page
+                                  Navigator.pop(
+                                      rootCtx); //? close the editor page
                                 },
                               ),
                             );
                           }
                         : () async {
-                            Get.find<NotesController>().updateNote(note.copyWith(trash: true));
+                            Get.find<NotesController>()
+                                .updateNote(note.copyWith(trash: true));
 
-                            _noteEditStore.updateNoteMode(NoteMode.Adding);
+                            _noteEditStore.updateNoteMode(NoteMode.adding);
 
-                            if (Scaffold.of(context).isEndDrawerOpen) Navigator.pop(context);
+                            if (Scaffold.of(context).isEndDrawerOpen) {
+                              Navigator.pop(context);
+                            }
                             Navigator.pop(context);
                           },
                     context,
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ]),
         ),
       ),

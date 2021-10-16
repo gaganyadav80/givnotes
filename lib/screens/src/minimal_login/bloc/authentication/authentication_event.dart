@@ -11,7 +11,8 @@ class LoginButtonPressed extends AuthenticationEvent {
   final String email;
   final String password;
   final bool verify;
-  LoginButtonPressed({@required this.email, @required this.password, this.verify = false})
+  const LoginButtonPressed(
+      {@required this.email, @required this.password, this.verify = false})
       : assert(email != null),
         assert(password != null);
 
@@ -23,7 +24,8 @@ class RegisterButtonClicked extends AuthenticationEvent {
   final String name;
   final String email;
   final String password;
-  RegisterButtonClicked({@required this.name, @required this.email, @required this.password})
+  const RegisterButtonClicked(
+      {@required this.name, @required this.email, @required this.password})
       : assert(email != null),
         assert(password != null);
 
@@ -33,7 +35,7 @@ class RegisterButtonClicked extends AuthenticationEvent {
 
 class ForgetPassword extends AuthenticationEvent {
   final String email;
-  ForgetPassword({this.email});
+  const ForgetPassword({this.email});
 
   @override
   List<Object> get props => [email];
@@ -41,7 +43,7 @@ class ForgetPassword extends AuthenticationEvent {
 
 class LoginObscureEvent extends AuthenticationEvent {
   final bool obscureLogin;
-  LoginObscureEvent({this.obscureLogin});
+  const LoginObscureEvent({this.obscureLogin});
 
   @override
   List<Object> get props => [obscureLogin];
@@ -50,7 +52,7 @@ class LoginObscureEvent extends AuthenticationEvent {
 class RegisterObscureEvent extends AuthenticationEvent {
   final bool obscure;
   final bool obscureConfirm;
-  RegisterObscureEvent({this.obscure, this.obscureConfirm});
+  const RegisterObscureEvent({this.obscure, this.obscureConfirm});
 
   @override
   List<Object> get props => [obscure, obscureConfirm];
@@ -62,7 +64,7 @@ class RegisterWithGoogle extends AuthenticationEvent {}
 
 class LogOutUser extends AuthenticationEvent {
   final BuildContext ctx;
-  LogOutUser([this.ctx]);
+  const LogOutUser([this.ctx]);
 
   @override
   List<Object> get props => [ctx];

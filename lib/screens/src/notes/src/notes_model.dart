@@ -21,8 +21,8 @@ class NotesModel extends Equatable {
     @required this.created,
     @required this.modified,
     List<String> tags,
-  })  : this.tags = tags ?? <String>[],
-        this.id = id ?? Uuid().v1();
+  })  : tags = tags ?? <String>[],
+        id = id ?? const Uuid().v1();
 
   NotesModel copyWith({
     String id,
@@ -47,7 +47,8 @@ class NotesModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, title, text, znote, trash, created, modified, tags];
+  List<Object> get props =>
+      [id, title, text, znote, trash, created, modified, tags];
 
   @override
   int get hashCode =>

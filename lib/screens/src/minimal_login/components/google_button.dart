@@ -7,9 +7,10 @@ import 'constants.dart';
 class GoogleButton extends StatelessWidget {
   final Function onPressed;
   final String title;
-  GoogleButton({@required this.title, @required this.onPressed})
+  const GoogleButton({Key key, @required this.title, @required this.onPressed})
       : assert(onPressed != null),
-        assert(title != null);
+        assert(title != null),
+        super(key: key);
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -45,7 +46,8 @@ class GoogleButton extends StatelessWidget {
             SizedBox(width: 21.w),
             Text(
               title,
-              style: Theme.of(context).textTheme.caption.copyWith(fontSize: 16.w),
+              style:
+                  Theme.of(context).textTheme.caption.copyWith(fontSize: 16.w),
             )
           ],
         ),

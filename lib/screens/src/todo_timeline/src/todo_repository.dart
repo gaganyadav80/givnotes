@@ -18,7 +18,7 @@ abstract class TodosRepository {
 class FirebaseTodosRepository implements TodosRepository {
   final CollectionReference todoCollection = FirebaseFirestore.instance
       .collection("users")
-      .doc("${FirebaseAuth.instance.currentUser?.uid}")
+      .doc(FirebaseAuth.instance.currentUser?.uid)
       .collection("todos");
 
   @override
@@ -34,7 +34,9 @@ class FirebaseTodosRepository implements TodosRepository {
   @override
   Stream<List<TodoModel>> todos() {
     return todoCollection.snapshots().map((snapshot) {
-      return snapshot.docs.map((DocumentSnapshot doc) => TodoModel.fromSnapshot(doc)).toList();
+      return snapshot.docs
+          .map((DocumentSnapshot doc) => TodoModel.fromSnapshot(doc))
+          .toList();
     });
   }
 

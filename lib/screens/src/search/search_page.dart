@@ -65,11 +65,11 @@ class _SearchPageState extends State<SearchPage> {
           padding: EdgeInsets.symmetric(horizontal: 0.035.sw, vertical: 0.025.sh),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [],
+            children: const [],
           ),
         );
       },
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
     );
@@ -78,8 +78,8 @@ class _SearchPageState extends State<SearchPage> {
   void onSearchListItemSelected(NotesModel item) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-    BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Editing);
-    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.Editing, item]);
+    BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.editing);
+    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.editing, item]);
   }
 
   @override
@@ -97,7 +97,7 @@ class _SearchPageState extends State<SearchPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(CupertinoIcons.back),
+          icon: const Icon(CupertinoIcons.back),
           color: Colors.black,
           onPressed: () => Navigator.pop(context),
         ),
@@ -111,10 +111,10 @@ class _SearchPageState extends State<SearchPage> {
           children: <Widget>[
             searchNoteTextField().pSymmetric(h: 15.w),
             Expanded(
-              child: Obx(() => _searchList.length == 0
+              child: Obx(() => _searchList.isEmpty
                   ? _textController.text.isEmpty
                       ? SingleChildScrollView(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           child: Padding(
                             padding: EdgeInsets.all(0.05.sw),
                             child: Column(
@@ -149,8 +149,8 @@ class _SearchPageState extends State<SearchPage> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         SizedBox(height: 5.0.w),
-                                        item.tags.length == 0
-                                            ? SizedBox.shrink()
+                                        item.tags.isEmpty
+                                            ? const SizedBox.shrink()
                                             : Container(
                                                 margin: EdgeInsets.only(top: 6.w),
                                                 color: Colors.transparent,
@@ -170,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
                                                               color: color,
                                                               borderRadius: BorderRadius.circular(5.r),
                                                             ),
-                                                            child: SizedBox.shrink(),
+                                                            child: const SizedBox.shrink(),
                                                           )
                                                         : Container(
                                                             height: 18.h,
@@ -229,11 +229,11 @@ class _SearchPageState extends State<SearchPage> {
                                           ),
                                         ),
                                         SizedBox(height: 10.0.w),
-                                        Divider(height: 0.0, thickness: 1.0),
+                                        const Divider(height: 0.0, thickness: 1.0),
                                       ],
                                     ),
                                   )
-                                : SizedBox.shrink(),
+                                : const SizedBox.shrink(),
                           ),
                         );
                       },

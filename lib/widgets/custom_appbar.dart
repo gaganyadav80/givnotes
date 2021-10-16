@@ -28,13 +28,18 @@ class _CustomAppBarState extends State<CustomAppBar> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: widget.index == 0
-          ? SizedBox.shrink()
+          ? const SizedBox.shrink()
           : AppBar(
               elevation: 0.0,
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
-              title:
-                  _appBarTitle[widget.index - 1].text.heightRelaxed.size(36.w).semiBold.color(Color(0xff32343D)).make(),
+              title: _appBarTitle[widget.index - 1]
+                  .text
+                  .heightRelaxed
+                  .size(36.w)
+                  .semiBold
+                  .color(const Color(0xff32343D))
+                  .make(),
               // title: Text(
               //   _appBarTitle[widget.index - 1],
               //   style: TextStyle(
@@ -48,7 +53,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
               actions: widget.index == 1
                   ? [
                       InkWell(
-                        child: Icon(CupertinoIcons.calendar_today, size: 28.w, color: Colors.black),
+                        child: Icon(CupertinoIcons.calendar_today,
+                            size: 28.w, color: Colors.black),
                         // splashRadius: 25.0,
                         key: widget.key,
                         onTap: () async {
@@ -66,7 +72,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             },
                           ).then((value) {
                             if (value != null) {
-                              Future.delayed(Duration(milliseconds: 300), () {
+                              Future.delayed(const Duration(milliseconds: 300),
+                                  () {
                                 _dateController.appBarDate.value = value;
                               });
                             }
@@ -76,9 +83,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       Padding(
                         padding: EdgeInsets.only(left: 20.0.w),
                         child: InkWell(
-                          child: Icon(CupertinoIcons.create, color: Colors.black),
-                          onTap: () =>
-                              Navigator.pushNamed(context, RouterName.createTodoRoute, arguments: [false, null, null]),
+                          child: const Icon(CupertinoIcons.create,
+                              color: Colors.black),
+                          onTap: () => Navigator.pushNamed(
+                              context, RouterName.createTodoRoute,
+                              arguments: [false, null, null]),
                         ),
                       ),
                       SizedBox(width: 20.w),

@@ -15,12 +15,13 @@ class RadioPreference<T> extends StatefulWidget {
 
   final bool disabled;
 
-  final leading;
+  final Widget leading;
 
-  RadioPreference(
+  const RadioPreference(
     this.title,
     this.val,
     this.localGroupKey, {
+    Key key,
     this.desc,
     this.selected = false,
     this.ignoreTileTap = false,
@@ -28,12 +29,14 @@ class RadioPreference<T> extends StatefulWidget {
     this.onSelect,
     this.disabled = false,
     this.leading,
-  });
+  }) : super(key: key);
 
+  @override
   _RadioPreferenceState createState() => _RadioPreferenceState();
 }
 
 class _RadioPreferenceState<T> extends State<RadioPreference<T>> {
+  @override
   BuildContext context;
 
   @override
@@ -70,7 +73,9 @@ class _RadioPreferenceState<T> extends State<RadioPreference<T>> {
         groupValue: PrefService.get(widget.localGroupKey),
         onChanged: widget.disabled ? null : (var val) => onChange(widget.val),
       ),
-      onTap: (widget.ignoreTileTap || widget.disabled) ? null : () => onChange(widget.val),
+      onTap: (widget.ignoreTileTap || widget.disabled)
+          ? null
+          : () => onChange(widget.val),
     );
   }
 

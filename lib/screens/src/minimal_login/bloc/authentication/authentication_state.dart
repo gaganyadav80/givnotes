@@ -17,7 +17,8 @@ class AuthSuccess extends AuthenticationState {
   final UserModel user;
   final bool verify;
   final bool verifyFailed;
-  AuthSuccess({@required this.user, this.verify = false, this.verifyFailed = false});
+  const AuthSuccess(
+      {@required this.user, this.verify = false, this.verifyFailed = false});
 
   @override
   List<Object> get props => [user, verify, verifyFailed];
@@ -27,7 +28,8 @@ class AuthNeedsVerification extends AuthenticationState {
   final UserModel user;
   final bool verify;
   final bool verifyFailed;
-  AuthNeedsVerification({@required this.user, this.verify = false, this.verifyFailed = false});
+  const AuthNeedsVerification(
+      {@required this.user, this.verify = false, this.verifyFailed = false});
 
   @override
   List<Object> get props => [user, verify, verifyFailed];
@@ -39,7 +41,7 @@ class ForgetPasswordSuccess extends AuthenticationState {}
 
 class LoginObscureState extends AuthenticationState {
   final bool obscure;
-  LoginObscureState({this.obscure});
+  const LoginObscureState({this.obscure});
 
   @override
   List<Object> get props => [obscure];
@@ -48,15 +50,15 @@ class LoginObscureState extends AuthenticationState {
 class RegisterObscureState extends AuthenticationState {
   final bool obscure;
   final bool obscureConfirm;
-  RegisterObscureState({this.obscure, this.obscureConfirm});
+  const RegisterObscureState({this.obscure, this.obscureConfirm});
 
   @override
-  List<Object> get props => [obscure, this.obscureConfirm];
+  List<Object> get props => [obscure, obscureConfirm];
 }
 
 class AuthFailure extends AuthenticationState {
   final String message;
-  AuthFailure({this.message});
+  const AuthFailure({this.message});
 
   @override
   List<Object> get props => [message];
@@ -66,7 +68,7 @@ class LogoutInProgress extends AuthenticationState {}
 
 class LogoutSuccess extends AuthenticationState {
   final UserModel user;
-  LogoutSuccess({this.user});
+  const LogoutSuccess({this.user});
 
   @override
   List<Object> get props => [user];

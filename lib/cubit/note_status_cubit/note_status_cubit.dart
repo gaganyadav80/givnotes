@@ -3,14 +3,15 @@ import 'package:equatable/equatable.dart';
 import 'package:givnotes/services/services.dart';
 
 class NoteStatusCubit extends Cubit<NoteStatusState> {
-  NoteStatusCubit() : super(NoteStatusState());
+  NoteStatusCubit() : super(const NoteStatusState());
 
   void updateNoteMode(NoteMode value) => emit(state.copyWith(noteMode: value));
   void updateIsEditing(bool value) => emit(state.copyWith(isEditing: value));
 }
 
 class NoteStatusState extends Equatable {
-  const NoteStatusState({this.noteMode = NoteMode.Adding, this.isEditing = false});
+  const NoteStatusState(
+      {this.noteMode = NoteMode.adding, this.isEditing = false});
 
   final NoteMode noteMode;
   final bool isEditing;

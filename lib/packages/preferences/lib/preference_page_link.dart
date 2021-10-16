@@ -14,8 +14,9 @@ class PreferencePageLink extends StatelessWidget {
   final Color leadingColor;
   final bool disabled;
   final Color titleColor;
-  PreferencePageLink(
+  const PreferencePageLink(
     this.title, {
+    Key key,
     this.page,
     this.desc,
     this.pageTitle,
@@ -27,7 +28,7 @@ class PreferencePageLink extends StatelessWidget {
     this.widgetScaffold,
     this.disabled = false,
     this.titleColor = Colors.black,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,10 @@ class PreferencePageLink extends StatelessWidget {
             ? null
             : Text(
                 desc,
-                style: TextStyle(color: titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300, fontSize: 12.0),
+                style: TextStyle(
+                    color: titleColor?.withOpacity(0.6),
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12.0),
               ),
         // leading: leading,
         leading: Container(

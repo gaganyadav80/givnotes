@@ -26,7 +26,7 @@ class TrashView extends StatelessWidget {
     return CupertinoPageScaffold(
       // backgroundColor: Colors.white,
       navigationBar: CupertinoNavigationBar(
-        middle: Text('Trash'),
+        middle: const Text('Trash'),
         transitionBetweenRoutes: true,
         trailing: TextButton(
           child: 'Done'.text.color(Colors.blue).bold.make(),
@@ -35,15 +35,18 @@ class TrashView extends StatelessWidget {
       ),
       child: GetBuilder<NotesController>(
         builder: (NotesController controller) {
-          List<NotesModel> _notes = controller.notes.where((element) => element.trash == true).toList();
+          List<NotesModel> _notes = controller.notes
+              .where((element) => element.trash == true)
+              .toList();
 
           if ((_notes.isEmpty)) {
-            return NotesEmptyView(isTrash: true);
+            return const NotesEmptyView(isTrash: true);
           }
 
           return CupertinoScrollbar(
             child: ListView.builder(
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics()),
               controller: modalController,
               itemCount: _notes.length,
               itemBuilder: (context, index) {
@@ -52,10 +55,11 @@ class TrashView extends StatelessWidget {
                 return Slidable(
                   key: UniqueKey(),
                   endActionPane: ActionPane(
-                    motion: DrawerMotion(),
+                    motion: const DrawerMotion(),
                     extentRatio: 0.25,
                     children: <Widget>[
-                      iconSlideAction(Color(0xFF82C8F6), CupertinoIcons.arrow_up_bin, 'RESTORE', () {
+                      iconSlideAction(const Color(0xFF82C8F6),
+                          CupertinoIcons.arrow_up_bin, 'RESTORE', () {
                         controller.updateNote(note.copyWith(trash: false));
                         Fluttertoast.showToast(msg: "moved to notes");
                       }),
@@ -71,12 +75,13 @@ class TrashView extends StatelessWidget {
     );
   }
 
-  CustomSlidableAction iconSlideAction(Color color, IconData icon, String caption, VoidCallback onTap) {
+  CustomSlidableAction iconSlideAction(
+      Color color, IconData icon, String caption, VoidCallback onTap) {
     return CustomSlidableAction(
       backgroundColor: color,
       child: <Widget>[
         Icon(icon),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         caption.text.light.make(),
       ].vStack(axisSize: MainAxisSize.min),
       onPressed: (_) => onTap(),

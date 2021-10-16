@@ -12,7 +12,7 @@ class TilesDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Divider(
+    return const Divider(
       height: 0.0,
       thickness: 0.5,
     );

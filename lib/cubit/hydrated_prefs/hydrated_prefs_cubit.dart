@@ -12,7 +12,9 @@ class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
     Get.find<NotesController>().sortby = value;
     emit(state.copyWith(sortby: value));
   }
-  void updateCompactTags(bool value) => emit(state.copyWith(compactTags: value));
+
+  void updateCompactTags(bool value) =>
+      emit(state.copyWith(compactTags: value));
 
   @override
   HydratedPrefsState fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
   }
 
   @override
+  // ignore: avoid_renaming_method_parameters
   Map<String, dynamic> toJson(HydratedPrefsState value) => <String, dynamic>{
         'compact': value.compactTags ?? state.compactTags,
         'sortby': value.sortby ?? state.compactTags,

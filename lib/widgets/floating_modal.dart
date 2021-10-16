@@ -8,7 +8,8 @@ class FloatingModal extends StatelessWidget {
   final Widget child;
   final Color backgroundColor;
 
-  const FloatingModal({Key key, @required this.child, this.backgroundColor}) : super(key: key);
+  const FloatingModal({Key key, @required this.child, this.backgroundColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class FloatingModal extends StatelessWidget {
       child: Padding(
         padding: !Platform.isIOS
             ? const EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 20.0)
-            : EdgeInsets.symmetric(horizontal: 20.0),
+            : const EdgeInsets.symmetric(horizontal: 20.0),
         child: Material(
           color: backgroundColor,
           clipBehavior: Clip.antiAlias,

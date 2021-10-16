@@ -12,13 +12,24 @@ class PreferenceDialogLink extends StatelessWidget {
 
   final Function onPop;
 
-  PreferenceDialogLink(this.title, {@required this.dialog, this.desc, this.leading, this.trailing, this.onPop, this.barrierDismissible = true});
+  const PreferenceDialogLink(this.title,
+      {Key key,
+      @required this.dialog,
+      this.desc,
+      this.leading,
+      this.trailing,
+      this.onPop,
+      this.barrierDismissible = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () async {
-        await showDialog(context: context, builder: (context) => dialog, barrierDismissible: barrierDismissible);
+        await showDialog(
+            context: context,
+            builder: (context) => dialog,
+            barrierDismissible: barrierDismissible);
         if (onPop != null) onPop();
       },
       title: Text(title),

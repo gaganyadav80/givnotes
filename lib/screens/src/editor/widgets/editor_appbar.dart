@@ -12,7 +12,7 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
   }) : super(key: key);
 
   @override
-  Size get preferredSize => Size.fromHeight(50);
+  Size get preferredSize => const Size.fromHeight(50);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,9 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
       leading: BlocBuilder<NoteStatusCubit, NoteStatusState>(
         builder: (context, state) {
           return IconButton(
-            icon: Icon(state.isEditing ? CupertinoIcons.checkmark_alt : CupertinoIcons.back),
+            icon: Icon(state.isEditing
+                ? CupertinoIcons.checkmark_alt
+                : CupertinoIcons.back),
             color: Colors.black,
             iconSize: 28.0,
             onPressed: saveNote,
@@ -31,7 +33,7 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.more_vert_outlined,
             color: Colors.black,
           ),

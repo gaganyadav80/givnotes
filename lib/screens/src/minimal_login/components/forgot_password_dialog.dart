@@ -6,18 +6,19 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:givnotes/services/services.dart';
 
 import 'constants.dart';
-import 'customFormField.dart';
+import 'custom_form_field.dart';
 
 class PassResetMailDialog extends StatelessWidget {
   final Function onPressed;
   final TextEditingController emailController;
   final GlobalKey<FormState> formKey;
 
-  PassResetMailDialog({
+  const PassResetMailDialog({
+    Key key,
     @required this.onPressed,
     @required this.formKey,
     @required this.emailController,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +31,7 @@ class PassResetMailDialog extends StatelessWidget {
               fontWeight: FontWeight.w300,
             ),
       ),
-      content: Container(
+      content: SizedBox(
         width: 315.w,
         child: Form(
           key: formKey,
@@ -42,7 +43,7 @@ class PassResetMailDialog extends StatelessWidget {
               CustomTextFormField(
                 fieldController: emailController,
                 hintText: "Enter registered email",
-                prefixIcon: Icon(Icons.email_outlined),
+                prefixIcon: const Icon(Icons.email_outlined),
                 keyboardType: TextInputType.emailAddress,
                 textInputAction: TextInputAction.done,
                 validator: Validator().validateEmail,
@@ -64,11 +65,11 @@ class PassResetMailDialog extends StatelessWidget {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("CANCEL"),
+          child: const Text("CANCEL"),
         ),
         TextButton(
           onPressed: onPressed,
-          child: Text("CONFIRM"),
+          child: const Text("CONFIRM"),
         ),
       ],
     );

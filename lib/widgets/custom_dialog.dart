@@ -23,7 +23,8 @@ class GivnotesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
+      shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0.r)),
       child: Container(
         width: 300.w,
         padding: EdgeInsets.only(top: 20.0.w),
@@ -60,13 +61,13 @@ class GivnotesDialog extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox.shrink(),
-            content ?? SizedBox.shrink(),
-            TilesDivider(),
+                : const SizedBox.shrink(),
+            content ?? const SizedBox.shrink(),
+            const TilesDivider(),
             Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: onTap == null ? () => Navigator.pop(context, true) : onTap,
+                onTap: onTap ?? () => Navigator.pop(context, true),
                 child: Container(
                   // height: 30.0,
                   padding: EdgeInsets.symmetric(vertical: 18.0.w),
@@ -83,16 +84,18 @@ class GivnotesDialog extends StatelessWidget {
                 ),
               ),
             ),
-            showCancel ? TilesDivider() : SizedBox.shrink(),
+            showCancel ? const TilesDivider() : const SizedBox.shrink(),
             showCancel
                 ? Material(
                     color: Colors.transparent,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
+                      borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(12.0.r)),
                     ),
                     child: InkWell(
                       onTap: () => Navigator.pop(context, false),
-                      borderRadius: BorderRadius.vertical(bottom: Radius.circular(12.0.r)),
+                      borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(12.0.r)),
                       child: Container(
                         padding: EdgeInsets.only(top: 18.w, bottom: 23.w),
                         child: Center(
@@ -108,7 +111,7 @@ class GivnotesDialog extends StatelessWidget {
                       ),
                     ),
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
         ),
       ),

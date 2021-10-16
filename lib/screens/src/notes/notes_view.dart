@@ -52,7 +52,10 @@ class _NotesViewState extends State<NotesView> {
       } else if (text.isEmpty) {
         _searchList
           ..clear()
-          ..addAll(Get.find<NotesController>().notes.where((element) => element.trash == false).toList());
+          ..addAll(Get.find<NotesController>()
+              .notes
+              .where((element) => element.trash == false)
+              .toList());
         // Get.find<NotesController>().update();
       }
     });
@@ -76,7 +79,7 @@ class _NotesViewState extends State<NotesView> {
             preferredSize: Size.fromHeight(56.h),
             child: Obx(() => _showSearch.value
                 ? ShowUpAnimation(
-                    animationDuration: Duration(milliseconds: 200),
+                    animationDuration: const Duration(milliseconds: 200),
                     direction: Direction.vertical,
                     offset: -0.2,
                     child: AppBar(
@@ -86,13 +89,18 @@ class _NotesViewState extends State<NotesView> {
                       title: CupertinoSearchTextField(
                         controller: _textController,
                         focusNode: _focusNode,
-                        prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
+                        prefixInsets:
+                            const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
                         placeholder: 'Search notes',
                       ),
                       actions: [
                         CupertinoButton(
                           padding: EdgeInsets.only(right: 15.w),
-                          child: 'Cancel'.text.semiBold.color(CupertinoColors.systemGrey).make(),
+                          child: 'Cancel'
+                              .text
+                              .semiBold
+                              .color(CupertinoColors.systemGrey)
+                              .make(),
                           onPressed: () {
                             _showSearch.value = false;
                             _textController.clear();
@@ -106,24 +114,32 @@ class _NotesViewState extends State<NotesView> {
                     elevation: 0.0,
                     backgroundColor: Colors.white,
                     automaticallyImplyLeading: false,
-                    title: 'Notes'.text.heightRelaxed.size(36.w).semiBold.color(Color(0xff32343D)).make(),
+                    title: 'Notes'
+                        .text
+                        .heightRelaxed
+                        .size(36.w)
+                        .semiBold
+                        .color(const Color(0xff32343D))
+                        .make(),
                     actions: [
                       Padding(
                         padding: EdgeInsets.only(right: 8.w),
                         child: IconButton(
                           splashRadius: 25.0,
                           iconSize: 22.0.w,
-                          icon: Icon(CupertinoIcons.collections, color: Colors.black),
+                          icon: const Icon(CupertinoIcons.collections,
+                              color: Colors.black),
                           onPressed: () => showCupertinoModalBottomSheet(
                             expand: true,
                             context: context,
                             backgroundColor: Colors.transparent,
-                            builder: (context) => NotesOptionModalSheet(),
+                            builder: (context) => const NotesOptionModalSheet(),
                           ),
                         ),
                       ),
                       InkWell(
-                        child: Icon(CupertinoIcons.search, size: 28.w, color: Colors.black),
+                        child: Icon(CupertinoIcons.search,
+                            size: 28.w, color: Colors.black),
                         // splashRadius: 25.0,
                         key: widget.key,
                         onTap: () {
@@ -139,21 +155,31 @@ class _NotesViewState extends State<NotesView> {
           body: GetBuilder<NotesController>(
             init: NotesController(),
             builder: (NotesController controller) {
-              _searchList.value = controller.notes.where((element) => element.trash == false).toList();
+              _searchList.value = controller.notes
+                  .where((element) => element.trash == false)
+                  .toList();
               print(controller.directory);
 
               if ((controller.notes.isEmpty)) {
-                return NotesEmptyView(isTrash: false);
+                return const NotesEmptyView(isTrash: false);
               } else if (_searchList.isEmpty) {
                 return Padding(
                   padding: EdgeInsets.only(top: 20.h),
-                  child: 'Ops! nothing found'.text.center.italic.light.lg.gray400.make(),
+                  child: 'Ops! nothing found'
+                      .text
+                      .center
+                      .italic
+                      .light
+                      .lg
+                      .gray400
+                      .make(),
                 );
               }
 
               return Obx(() => CupertinoScrollbar(
                     child: ListView.builder(
-                      physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      physics: const BouncingScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
                       itemCount: _searchList.length,
                       itemBuilder: (context, index) {
                         final NotesModel note = _searchList[index];
@@ -162,16 +188,21 @@ class _NotesViewState extends State<NotesView> {
                           key: UniqueKey(),
                           endActionPane: ActionPane(
                             extentRatio: 0.25, // 0.25 or 0.20 * total items
-                            motion: DrawerMotion(),
+                            motion: const DrawerMotion(),
                             // dismissible: ,
                             children: <Widget>[
-                              iconSlideAction(Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH', () {
-                                controller.updateNote(note.copyWith(trash: true));
+                              iconSlideAction(const Color(0xFFDD4C4F),
+                                  CupertinoIcons.trash, 'TRASH', () {
+                                controller
+                                    .updateNote(note.copyWith(trash: true));
                                 Fluttertoast.showToast(msg: "moved to trash");
                               }),
                             ],
                           ),
-                          child: NotesCard(note: note, showTags: true, searchText: _textController.text),
+                          child: NotesCard(
+                              note: note,
+                              showTags: true,
+                              searchText: _textController.text),
                         );
                       },
                     ),
@@ -181,19 +212,23 @@ class _NotesViewState extends State<NotesView> {
           floatingActionButton: Container(
             height: 65.w,
             width: 65.w,
-            decoration: BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
+            decoration: const BoxDecoration(
+                color: Color(0xFFDD4C4F), shape: BoxShape.circle),
             child: FloatingActionButton(
-              child: Icon(CupertinoIcons.pencil_outline, color: Colors.white),
-              backgroundColor: Color(0xFFDD4C4F),
+              child: const Icon(CupertinoIcons.pencil_outline,
+                  color: Colors.white),
+              backgroundColor: const Color(0xFFDD4C4F),
               onPressed: () async {
                 await HandlePermission.requestPermission().then((value) async {
                   if (value) {
-                    BlocProvider.of<NoteStatusCubit>(context).updateIsEditing(true);
-                    BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.Adding);
+                    BlocProvider.of<NoteStatusCubit>(context)
+                        .updateIsEditing(true);
+                    BlocProvider.of<NoteStatusCubit>(context)
+                        .updateNoteMode(NoteMode.adding);
                     Navigator.pushNamed(
                       context,
                       RouterName.editorRoute,
-                      arguments: [NoteMode.Adding, null],
+                      arguments: [NoteMode.adding, null],
                     );
                   } else {
                     if (VariableService().isPermanentDisabled) {
@@ -209,7 +244,8 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 
-  CustomSlidableAction iconSlideAction(Color color, IconData icon, String caption, VoidCallback onTap) {
+  CustomSlidableAction iconSlideAction(
+      Color color, IconData icon, String caption, VoidCallback onTap) {
     return CustomSlidableAction(
       backgroundColor: color,
       child: <Widget>[

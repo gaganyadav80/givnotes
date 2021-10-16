@@ -21,9 +21,10 @@ class TextFieldPreference extends StatefulWidget {
 
   final bool disabled;
 
-  TextFieldPreference(
+  const TextFieldPreference(
     this.label,
     this.localKey, {
+    Key key,
     this.defaultVal,
     this.onChange,
     this.validator,
@@ -37,8 +38,9 @@ class TextFieldPreference extends StatefulWidget {
     this.labelStyle,
     this.decoration,
     this.disabled = false,
-  });
+  }) : super(key: key);
 
+  @override
   _TextFieldPreferenceState createState() => _TextFieldPreferenceState();
 }
 
@@ -48,17 +50,20 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
 
   @override
   void initState() {
-    if (PrefService.getString(widget.localKey) == null && widget.defaultVal != null) {
+    if (PrefService.getString(widget.localKey) == null &&
+        widget.defaultVal != null) {
       PrefService.setString(widget.localKey, widget.defaultVal);
     }
-    controller.text = PrefService.getString(widget.localKey) ?? widget.defaultVal ?? '';
+    controller.text =
+        PrefService.getString(widget.localKey) ?? widget.defaultVal ?? '';
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: widget.padding ??
+          const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: Form(
         key: _formKey,
         child: TextFormField(
@@ -67,7 +72,7 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
                 hintText: widget.hintText,
                 labelText: widget.label,
                 labelStyle: widget.labelStyle,
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
           controller: controller,
           onChanged: (val) {

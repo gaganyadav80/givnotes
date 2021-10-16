@@ -9,11 +9,13 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:givnotes/services/src/validators.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/widgets/blueButton.dart';
+import 'package:givnotes/widgets/blue_button.dart';
 
 import 'components/components.dart';
 
 class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignUpPressed() {
@@ -32,7 +34,7 @@ class RegisterPage extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: Icon(CupertinoIcons.back, color: Colors.black),
+          child: const Icon(CupertinoIcons.back, color: Colors.black),
         ),
       ),
       body: SafeArea(
@@ -40,7 +42,8 @@ class RegisterPage extends StatelessWidget {
           listener: (context, state) {
             if (state is AuthNeedsVerification) {
               Fluttertoast.showToast(msg: "Registration succesfull");
-              Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
+              Navigator.of(context)
+                  .pushReplacementNamed(RouterName.verificationRoute);
             }
           },
           child: ListView(
@@ -55,9 +58,14 @@ class RegisterPage extends StatelessWidget {
                   children: [
                     'Sign Up'.text.headline1(context).size(38.w).light.make(),
                     SizedBox(height: 33.w),
-                    RegisterForm(),
+                    const RegisterForm(),
                     SizedBox(height: 25.w),
-                    'or register with'.text.headline4(context).size(12.w).make().centered(),
+                    'or register with'
+                        .text
+                        .headline4(context)
+                        .size(12.w)
+                        .make()
+                        .centered(),
                     SizedBox(height: 10.w),
                     Hero(
                       tag: 'google-button',
@@ -79,6 +87,8 @@ class RegisterPage extends StatelessWidget {
 }
 
 class RegisterForm extends StatefulWidget {
+  const RegisterForm({Key key}) : super(key: key);
+
   @override
   _RegisterFormState createState() => _RegisterFormState();
 }
@@ -99,7 +109,7 @@ class _RegisterFormState extends State<RegisterForm> {
   bool _isObscure = true;
   bool _isConfirmObscure = true;
 
-  ValueNotifier<String> _passwordMatch = ValueNotifier<String>(null);
+  final ValueNotifier<String> _passwordMatch = ValueNotifier<String>(null);
 
   @override
   void dispose() {
@@ -150,14 +160,14 @@ class _RegisterFormState extends State<RegisterForm> {
 
   void _onObscurePressed() {
     _isObscure = !_isObscure;
-    BlocProvider.of<AuthenticationBloc>(context)
-        .add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(
+        obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   void _onConfirmObscurePressed() {
     _isConfirmObscure = !_isConfirmObscure;
-    BlocProvider.of<AuthenticationBloc>(context)
-        .add(RegisterObscureEvent(obscure: _isObscure, obscureConfirm: _isConfirmObscure));
+    BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(
+        obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   @override
@@ -174,7 +184,7 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _nametextController,
             hintText: 'Name',
-            prefixIcon: Icon(Icons.person_outline_outlined),
+            prefixIcon: const Icon(Icons.person_outline_outlined),
             keyboardType: TextInputType.name,
             validator: _validator.validateName,
           ),
@@ -186,7 +196,7 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _emailTextController,
             hintText: 'Email',
-            prefixIcon: Icon(Icons.email_outlined),
+            prefixIcon: const Icon(Icons.email_outlined),
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
           ),
@@ -207,13 +217,17 @@ class _RegisterFormState extends State<RegisterForm> {
                 maxLength: 32,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: Icon(Icons.lock_outline),
+                prefixIcon: const Icon(Icons.lock_outline),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure
-                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+                    ? GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: const Icon(Icons.visibility_off_outlined))
+                    : GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: const Icon(Icons.visibility_outlined)),
               );
             },
           ),
@@ -228,54 +242,64 @@ class _RegisterFormState extends State<RegisterForm> {
               return ValueListenableBuilder(
                 valueListenable: _passwordMatch,
                 builder: (context, value, child) {
-                  return Container(
-                    child: TextFormField(
-                      focusNode: _confirmPassNode,
-                      onFieldSubmitted: (value) {
-                        if (_passtextController.text.isNotEmpty) {
-                          return _passwordMatch.value = _validator.validateConfirmPassword(
-                            confirmPassword: value,
-                            newPassword: _passtextController.text,
-                          );
-                        }
+                  return TextFormField(
+                    focusNode: _confirmPassNode,
+                    onFieldSubmitted: (value) {
+                      if (_passtextController.text.isNotEmpty) {
+                        return _passwordMatch.value =
+                            _validator.validateConfirmPassword(
+                          confirmPassword: value,
+                          newPassword: _passtextController.text,
+                        );
+                      }
 
-                        if (_confirmPassNode != null) {
-                          _confirmPassNode.unfocus();
-                        }
-                      },
-                      onChanged: (value) {
-                        if (_passtextController.text.isNotEmpty) {
-                          return _passwordMatch.value = _validator.validateConfirmPassword(
-                            confirmPassword: value,
-                            newPassword: _passtextController.text,
-                          );
-                        }
-                      },
-                      textInputAction: TextInputAction.done,
-                      maxLines: 1,
-                      maxLength: 32,
-                      maxLengthEnforcement: MaxLengthEnforcement.enforced,
-                      controller: _confirmPassTextController,
-                      cursorColor: Theme.of(context).primaryColor,
-                      keyboardType: TextInputType.text,
-                      obscureText: _isConfirmObscure,
-                      textCapitalization: TextCapitalization.none,
-                      textAlignVertical: TextAlignVertical.center,
-                      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
-                      decoration: InputDecoration(
-                        suffixIcon: _isConfirmObscure
-                            ? GestureDetector(
-                                onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                            : GestureDetector(onTap: _onConfirmObscurePressed, child: Icon(Icons.visibility_outlined)),
-                        border: kInputBorderStyle,
-                        focusedBorder: kInputBorderStyle,
-                        enabledBorder: kInputBorderStyle,
-                        hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 20.w),
-                        hintText: 'Confirm Password',
-                        prefixIcon: Icon(Icons.lock_outline),
-                        errorText: _passwordMatch.value,
-                      ),
+                      if (_confirmPassNode != null) {
+                        _confirmPassNode.unfocus();
+                      }
+                    },
+                    onChanged: (value) {
+                      if (_passtextController.text.isNotEmpty) {
+                        return _passwordMatch.value =
+                            _validator.validateConfirmPassword(
+                          confirmPassword: value,
+                          newPassword: _passtextController.text,
+                        );
+                      }
+                    },
+                    textInputAction: TextInputAction.done,
+                    maxLines: 1,
+                    maxLength: 32,
+                    maxLengthEnforcement: MaxLengthEnforcement.enforced,
+                    controller: _confirmPassTextController,
+                    cursorColor: Theme.of(context).primaryColor,
+                    keyboardType: TextInputType.text,
+                    obscureText: _isConfirmObscure,
+                    textCapitalization: TextCapitalization.none,
+                    textAlignVertical: TextAlignVertical.center,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontSize: 14.w),
+                    decoration: InputDecoration(
+                      suffixIcon: _isConfirmObscure
+                          ? GestureDetector(
+                              onTap: _onConfirmObscurePressed,
+                              child: const Icon(Icons.visibility_off_outlined))
+                          : GestureDetector(
+                              onTap: _onConfirmObscurePressed,
+                              child: const Icon(Icons.visibility_outlined)),
+                      border: kInputBorderStyle,
+                      focusedBorder: kInputBorderStyle,
+                      enabledBorder: kInputBorderStyle,
+                      hintStyle: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(fontSize: 14.w),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 15.w, vertical: 20.w),
+                      hintText: 'Confirm Password',
+                      prefixIcon: const Icon(Icons.lock_outline),
+                      errorText: _passwordMatch.value,
                     ),
                   );
                 },
@@ -334,7 +358,8 @@ class _RegisterFormState extends State<RegisterForm> {
                       onPressed: () {},
                       isLoading: true,
                     )
-                  : BlueButton(title: "Sign Up", onPressed: _onRegisterButtonPressed);
+                  : BlueButton(
+                      title: "Sign Up", onPressed: _onRegisterButtonPressed);
             },
           )
         ],

@@ -31,6 +31,8 @@ class TodoDateController extends GetxController {
 }
 
 class TodoTimelineBloc extends StatefulWidget {
+  const TodoTimelineBloc({Key key}) : super(key: key);
+
   @override
   _TodoTimelineBlocState createState() => _TodoTimelineBlocState();
 }
@@ -49,9 +51,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
         titleSpacing: 0.0,
         leading: IconButton(
           splashRadius: 25.0,
-          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          icon: const Icon(CupertinoIcons.back, color: Colors.black),
           onPressed: () {
-            _dateController.date = _dateController.date.subtract(Duration(days: 1));
+            _dateController.date = _dateController.date.subtract(const Duration(days: 1));
           },
         ),
         title: Obx(() => Text(
@@ -71,9 +73,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
         actions: [
           IconButton(
             splashRadius: 25.0,
-            icon: Icon(CupertinoIcons.forward, color: Colors.black),
+            icon: const Icon(CupertinoIcons.forward, color: Colors.black),
             onPressed: () {
-              _dateController.date = _dateController.date.add(Duration(days: 1));
+              _dateController.date = _dateController.date.add(const Duration(days: 1));
             },
           ),
         ],
@@ -89,13 +91,13 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
             } else if (state is TodosLoaded) {
               return Obx(
                 () {
-                  state.todos.forEach((element) {
-                    if (element.dueDate.toDate().difference(DateTime.now()) > Duration(days: 5)) {
+                  for (var element in state.todos) {
+                    if (element.dueDate.toDate().difference(DateTime.now()) > const Duration(days: 5)) {
                       if (element.completed) {
                         BlocProvider.of<TodosBloc>(context).add(DeleteTodo(element.id));
                       }
                     }
-                  });
+                  }
 
                   final List<TodoModel> _todosBox =
                       state.todos.where((element) => element.dueDate.toDate().day == _dateController.date.day).toList();
@@ -124,9 +126,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                 ),
                               ),
                             )
-                          : Hero(tag: "today-view", child: SizedBox.shrink()),
+                          : const Hero(tag: "today-view", child: SizedBox.shrink()),
                       SizedBox(height: 10.w),
-                      _todosBox.length == 0
+                      _todosBox.isEmpty
                           ? Expanded(
                               child: Center(
                                 child: Image.asset(
@@ -148,9 +150,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                     final TodoModel todo = _todosBox[index];
 
                                     int taskCompleted = 0;
-                                    todo.subTask.forEach((element) {
+                                    for (var element in todo.subTask) {
                                       if (element.containsValue(true)) taskCompleted++;
-                                    });
+                                    }
 
                                     return Container(
                                       margin: EdgeInsets.only(left: 5.0.w, bottom: 20.0.w),
@@ -226,7 +228,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                             ),
                                                           ),
                                                         )
-                                                      : SizedBox.shrink(),
+                                                      : const SizedBox.shrink(),
                                                   SizedBox(height: 10.0.w),
                                                   if (todo.description.decrypt.isNotBlank)
                                                     Text(
@@ -239,7 +241,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                               ),
                                             ),
                                           ),
-                                          if (todo.subTask.length != 0) SizedBox(height: 5.0.w),
+                                          if (todo.subTask.isNotEmpty) SizedBox(height: 5.0.w),
                                           Padding(
                                             padding: EdgeInsets.only(left: 10.0.w, right: 10.0.w),
                                             child: _buildSubTaskTimeline(todo),
@@ -283,10 +285,8 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                 },
               );
             } else {
-              return Container(
-                child: Center(
-                  child: Text("Error Loading your Todos."),
-                ),
+              return const Center(
+                child: Text("Error Loading your Todos."),
               );
             }
           },

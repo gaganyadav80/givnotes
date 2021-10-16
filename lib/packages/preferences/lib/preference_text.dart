@@ -13,8 +13,9 @@ class PreferenceText extends StatelessWidget {
   final Widget trailing;
   final Color backgroundColor;
 
-  PreferenceText(
+  const PreferenceText(
     this.text, {
+    Key key,
     this.style,
     this.decoration,
     this.leading,
@@ -25,7 +26,7 @@ class PreferenceText extends StatelessWidget {
     this.leadingColor,
     this.trailing,
     this.backgroundColor = Colors.white,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

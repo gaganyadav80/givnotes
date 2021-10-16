@@ -15,19 +15,20 @@ import 'package:givnotes/services/services.dart';
 import 'setting_widgets.dart';
 
 class SettingsPage extends StatelessWidget {
-  SettingsPage({Key key}) : super(key: key);
+  const SettingsPage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
+    final HydratedPrefsCubit _prefsCubit =
+        BlocProvider.of<HydratedPrefsCubit>(context);
     final double _kIconSize = 24.w;
-    final Color _kIconColor = Color(0xff606060);
-    final Color _kTrailingColor = Color(0xFF0A0A0A);
+    const Color _kIconColor = Color(0xff606060);
+    const Color _kTrailingColor = Color(0xFF0A0A0A);
 
     return SafeArea(
       child: PreferencePage([
-        ProfileTileSettings(),
-        PreferenceTitle('GENERAL'),
+        const ProfileTileSettings(),
+        const PreferenceTitle('GENERAL'),
         SortNotesFloatModalSheet(),
         SwitchPreference(
           'Compact tags',
@@ -35,20 +36,22 @@ class SettingsPage extends StatelessWidget {
           // desc: "For the minimalistic.",
           defaultVal: _prefsCubit.state.compactTags,
           titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.rectangle, color: _kIconColor, size: _kIconSize),
+          leading: Icon(CupertinoIcons.rectangle,
+              color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.blue,
           titleGap: 0.0,
           onEnable: () => _prefsCubit.updateCompactTags(true),
           onDisable: () => _prefsCubit.updateCompactTags(false),
         ),
-        PreferenceTitle('PERSONALIZATION'),
+        const PreferenceTitle('PERSONALIZATION'),
         SwitchPreference(
           'Dark mode',
           'dark_mode',
           disabled: true,
           // desc: "So now the fun begins.",
           titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.moon, color: _kIconColor, size: _kIconSize),
+          leading:
+              Icon(CupertinoIcons.moon, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.purple,
           titleGap: 0.0,
           onChange: ((value) {
@@ -61,9 +64,10 @@ class SettingsPage extends StatelessWidget {
           disabled: true,
           // desc: "Spice up your theme",
           defaultVal: 'Darkish grey',
-          values: ['Darkish grey', 'Blueberry black', 'Shades of purple'],
+          values: const ['Darkish grey', 'Blueberry black', 'Shades of purple'],
           titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.at, color: _kIconColor, size: _kIconSize),
+          leading:
+              Icon(CupertinoIcons.at, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.pink,
           titleGap: 0.0,
           onChange: ((value) {
@@ -74,19 +78,24 @@ class SettingsPage extends StatelessWidget {
           'Extensions',
           // desc: 'Extend your experience.',
           disabled: true,
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.bolt, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(
+              color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading:
+              Icon(CupertinoIcons.bolt, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.brown,
-          trailing: Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward,
+              color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
-          widgetScaffold: AboutUsPage(),
+          widgetScaffold: const AboutUsPage(),
         ),
-        PreferenceTitle('SECURITY'),
-        AppLockSwitchPrefs(),
+        const PreferenceTitle('SECURITY'),
+        const AppLockSwitchPrefs(),
         PreferenceText(
           'Change Passcode',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.lock_shield, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(
+              color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.lock_shield,
+              color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.lightGreen,
           titleGap: 0.0,
           onTap: () {
@@ -95,7 +104,8 @@ class SettingsPage extends StatelessWidget {
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
-                  Navigator.of(context).pushReplacementNamed(RouterName.addlockRoute);
+                  Navigator.of(context)
+                      .pushReplacementNamed(RouterName.addlockRoute);
                 },
               );
             } else {
@@ -103,33 +113,42 @@ class SettingsPage extends StatelessWidget {
             }
           },
         ),
-        PreferenceTitle('DETAILS SECTION'),
+        const PreferenceTitle('DETAILS SECTION'),
         PreferencePageLink(
           'Application',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.app_badge, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(
+              color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.app_badge,
+              color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.grey,
-          trailing: Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward,
+              color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
           widgetScaffold: AppDetailSection(),
         ),
         PreferencePageLink(
           'About Us',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.person, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(
+              color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading:
+              Icon(CupertinoIcons.person, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.brown,
-          trailing: Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward,
+              color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
-          widgetScaffold: AboutUsPage(),
+          widgetScaffold: const AboutUsPage(),
         ),
         PreferencePageLink(
           'Contact Us',
-          style: TextStyle(color: const Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.chat_bubble, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(
+              color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.chat_bubble,
+              color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.blueGrey,
-          trailing: Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward,
+              color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
-          widgetScaffold: ContactUsPage(),
+          widgetScaffold: const ContactUsPage(),
         ),
       ]),
     );
@@ -138,6 +157,8 @@ class SettingsPage extends StatelessWidget {
 
 class AppDetailSection extends StatelessWidget {
   final RxInt selectedIndex = 0.obs;
+
+  AppDetailSection({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -148,15 +169,15 @@ class AppDetailSection extends StatelessWidget {
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          icon: const Icon(CupertinoIcons.back, color: Colors.black),
         ),
         bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 40.0),
+          preferredSize: const Size(double.infinity, 40.0),
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 30.w),
             width: double.infinity,
             child: Obx(() => CupertinoSlidingSegmentedControl(
-                  children: {
+                  children: const {
                     0: Text("App Info"),
                     1: Text("Logs"),
                   },
@@ -176,31 +197,36 @@ class AppDetailSection extends StatelessWidget {
   final List<Widget> _bodyWidgets = [
     Column(
       children: [
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("App name: "),
+          Text(VariableService().packageInfo.appName)
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("Package: "),
+          Text(VariableService().packageInfo.packageName)
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("Build_no: "),
+          Text(VariableService().packageInfo.buildNumber)
+        ]),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          const Text("Release version: "),
+          Text("v${VariableService().packageInfo.version}-beta")
+        ]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("App name: "), Text("${VariableService().packageInfo.appName}")]),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Package: "), Text("${VariableService().packageInfo.packageName}")]),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Build_no: "), Text("${VariableService().packageInfo.buildNumber}")]),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Release version: "), Text("v${VariableService().packageInfo.version}-beta")]),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [Text("Development version: "), Text("v2.0.0")]),
+            children: const [Text("Development version: "), Text("v2.0.0")]),
       ],
     ),
-    Align(
+    const Align(
         alignment: Alignment.topCenter,
-        child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
+        child: Text("Logs",
+            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
   ];
 }
 
 class AppLockSwitchPrefs extends StatefulWidget {
-  AppLockSwitchPrefs({Key key}) : super(key: key);
+  const AppLockSwitchPrefs({Key key}) : super(key: key);
 
   @override
   _AppLockSwitchPrefsState createState() => _AppLockSwitchPrefsState();
@@ -219,7 +245,9 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
       return;
     }
 
-    canUseBiometric.value = (await _localAuthentication.getAvailableBiometrics()).contains(BiometricType.fingerprint);
+    canUseBiometric.value =
+        (await _localAuthentication.getAvailableBiometrics())
+            .contains(BiometricType.fingerprint);
 
     if (canUseBiometric.value == false) {
       reason = 'Biometrics are not enrolled';
@@ -242,13 +270,15 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           'app_lock',
           defaultVal: false,
           ignoreTileTap: false,
-          leading: Icon(CupertinoIcons.lock, color: Colors.black, size: _kIconSize),
+          leading:
+              Icon(CupertinoIcons.lock, color: Colors.black, size: _kIconSize),
           // leadingColor: Colors.orangeAccent,
           titleGap: 0.0,
           isWaitSwitch: true,
           onEnable: () {
             if (_variableService.prefsBox.passcode == '') {
-              Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
+              Navigator.pushNamed(context, RouterName.addlockRoute)
+                  .then((value) {
                 if (value) {
                   setState(() {
                     PrefService.setBool('app_lock', true);
@@ -282,8 +312,11 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
               'Biometric authentication',
               'biometric',
               defaultVal: false,
-              disabled: canUseBiometric.value ? _variableService.prefsBox.passcode.isEmpty : true,
-              leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: _kIconSize),
+              disabled: canUseBiometric.value
+                  ? _variableService.prefsBox.passcode.isEmpty
+                  : true,
+              leading: Icon(Icons.fingerprint_outlined,
+                  color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.teal,
               titleGap: 0.0,
               ondisableTap: () {

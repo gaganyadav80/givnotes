@@ -17,9 +17,19 @@ class CheckboxPreference extends StatefulWidget {
   final Function onDisable;
   final Function onChange;
 
-  CheckboxPreference(this.title, this.localKey,
-      {this.desc, this.defaultVal = false, this.ignoreTileTap = false, this.resetOnException = true, this.onEnable, this.onDisable, this.onChange, this.disabled = false});
+  const CheckboxPreference(this.title, this.localKey,
+      {Key key,
+      this.desc,
+      this.defaultVal = false,
+      this.ignoreTileTap = false,
+      this.resetOnException = true,
+      this.onEnable,
+      this.onDisable,
+      this.onChange,
+      this.disabled = false})
+      : super(key: key);
 
+  @override
   _CheckboxPreferenceState createState() => _CheckboxPreferenceState();
 }
 
@@ -39,9 +49,14 @@ class _CheckboxPreferenceState extends State<CheckboxPreference> {
       subtitle: widget.desc == null ? null : Text(widget.desc),
       trailing: Checkbox(
         value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
-        onChanged: widget.disabled ? null : (val) => val ? onEnable() : onDisable(),
+        onChanged:
+            widget.disabled ? null : (val) => val ? onEnable() : onDisable(),
       ),
-      onTap: (widget.ignoreTileTap || widget.disabled) ? null : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
+      onTap: (widget.ignoreTileTap || widget.disabled)
+          ? null
+          : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal)
+              ? onDisable()
+              : onEnable(),
     );
   }
 

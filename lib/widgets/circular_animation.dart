@@ -7,6 +7,7 @@ import 'package:meta/meta.dart';
 
 class WidgetCircularAnimator extends StatefulWidget {
   const WidgetCircularAnimator({
+    Key key,
     @required this.child,
     this.innerColor = Colors.deepOrange,
     this.outerColor = Colors.deepOrange,
@@ -18,7 +19,8 @@ class WidgetCircularAnimator extends StatefulWidget {
     this.innerAnimationSeconds = 30,
     this.outerAnimationSeconds = 30,
     this.reverse = true,
-  }) : assert(child != null);
+  })  : assert(child != null),
+        super(key: key);
 
   final Color innerColor;
   final Color outerColor;
@@ -36,7 +38,8 @@ class WidgetCircularAnimator extends StatefulWidget {
   _WidgetAnimatorState createState() => _WidgetAnimatorState();
 }
 
-class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProviderStateMixin {
+class _WidgetAnimatorState extends State<WidgetCircularAnimator>
+    with TickerProviderStateMixin {
   Animation<double> animation1;
   Animation<double> animation2;
   AnimationController controller2;
@@ -50,15 +53,13 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProv
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        alignment: AlignmentDirectional.center,
-        children: <Widget>[
-          _firstArc(),
-          _secondArc(),
-          _child(),
-        ],
-      ),
+    return Stack(
+      alignment: AlignmentDirectional.center,
+      children: <Widget>[
+        _firstArc(),
+        _secondArc(),
+        _child(),
+      ],
     );
   }
 
@@ -71,7 +72,7 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProv
 
   Center _child() {
     return Center(
-      child: Container(
+      child: SizedBox(
         width: widget.size * 0.7,
         height: widget.size * 0.7,
         child: widget.child,
@@ -84,8 +85,9 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProv
       child: RotationTransition(
         turns: animation2,
         child: CustomPaint(
-          painter: Arc2Painter(color: widget.outerColor, iconsSize: widget.innerIconsSize),
-          child: Container(
+          painter: Arc2Painter(
+              color: widget.outerColor, iconsSize: widget.innerIconsSize),
+          child: SizedBox(
             width: widget.size,
             height: widget.size,
           ),
@@ -99,8 +101,9 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProv
       child: RotationTransition(
         turns: animation1,
         child: CustomPaint(
-          painter: Arc1Painter(color: widget.innerColor, iconsSize: widget.outerIconsSize),
-          child: Container(
+          painter: Arc1Painter(
+              color: widget.innerColor, iconsSize: widget.outerIconsSize),
+          child: SizedBox(
             width: 0.85 * widget.size,
             height: 0.85 * widget.size,
           ),
@@ -110,18 +113,25 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator> with TickerProv
   }
 
   void initAnimations() {
-    controller1 = AnimationController(duration: Duration(seconds: widget.innerAnimationSeconds), vsync: this);
+    controller1 = AnimationController(
+        duration: Duration(seconds: widget.innerAnimationSeconds), vsync: this);
 
-    controller2 = AnimationController(duration: Duration(seconds: widget.outerAnimationSeconds), vsync: this);
+    controller2 = AnimationController(
+        duration: Duration(seconds: widget.outerAnimationSeconds), vsync: this);
 
-    animation1 = Tween<double>(begin: 0.0, end: 1.0)
-        .animate(CurvedAnimation(parent: controller1, curve: Interval(0.0, 1.0, curve: widget.innerAnimation)));
+    animation1 = Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: controller1,
+        curve: Interval(0.0, 1.0, curve: widget.innerAnimation)));
 
-    final secondAnimation = Tween<double>(begin: -1.0, end: 0.0)
-        .animate(CurvedAnimation(parent: controller2, curve: Interval(0.0, 1.0, curve: widget.outerAnimation)));
+    final secondAnimation = Tween<double>(begin: -1.0, end: 0.0).animate(
+        CurvedAnimation(
+            parent: controller2,
+            curve: Interval(0.0, 1.0, curve: widget.outerAnimation)));
 
     // reverse or same direction animation
-    widget.reverse ? animation2 = ReverseAnimation(secondAnimation) : animation2 = secondAnimation;
+    widget.reverse
+        ? animation2 = ReverseAnimation(secondAnimation)
+        : animation2 = secondAnimation;
 
     controller2.repeat();
     controller1.repeat();
@@ -151,23 +161,27 @@ class Arc2Painter extends CustomPainter {
 
     //first shape
     canvas.drawRect(
-        Rect.fromLTWH(size.width * 0.2 - iconsSize, size.width * 0.9 - iconsSize, iconsSize * 2, iconsSize * 2), p);
+        Rect.fromLTWH(size.width * 0.2 - iconsSize,
+            size.width * 0.9 - iconsSize, iconsSize * 2, iconsSize * 2),
+        p);
 
     //second shape
     //draw the inner cross
     final centerX = size.width * 0.385;
     final centerY = size.width * 0.015;
     final lineLength = iconsSize / 2;
-    canvas.drawLine(
-        Offset(centerX - lineLength, centerY + lineLength), Offset(centerX + lineLength, centerY - lineLength), p);
-    canvas.drawLine(
-        Offset(centerX + lineLength, centerY + lineLength), Offset(centerX - lineLength, centerY - lineLength), p);
+    canvas.drawLine(Offset(centerX - lineLength, centerY + lineLength),
+        Offset(centerX + lineLength, centerY - lineLength), p);
+    canvas.drawLine(Offset(centerX + lineLength, centerY + lineLength),
+        Offset(centerX - lineLength, centerY - lineLength), p);
     // the circle
     canvas.drawCircle(Offset(centerX, centerY), iconsSize + 1, p);
 
     // third shape
     canvas.drawOval(
-        Rect.fromLTWH(size.width - iconsSize * 1.5, size.width * 0.445 - iconsSize, iconsSize * 3, iconsSize * 2), p);
+        Rect.fromLTWH(size.width - iconsSize * 1.5,
+            size.width * 0.445 - iconsSize, iconsSize * 3, iconsSize * 2),
+        p);
   }
 
   @override
@@ -198,8 +212,10 @@ class Arc1Painter extends CustomPainter {
 
     // draw the cross
     final centerY = size.width / 2;
-    canvas.drawLine(Offset(-iconsSize, centerY - iconsSize), Offset(iconsSize, centerY + iconsSize), p);
-    canvas.drawLine(Offset(iconsSize, centerY - iconsSize), Offset(-iconsSize, centerY + iconsSize), p);
+    canvas.drawLine(Offset(-iconsSize, centerY - iconsSize),
+        Offset(iconsSize, centerY + iconsSize), p);
+    canvas.drawLine(Offset(iconsSize, centerY - iconsSize),
+        Offset(-iconsSize, centerY + iconsSize), p);
 
     // draw the circle
     canvas.drawCircle(Offset(size.width, centerY), iconsSize, p);

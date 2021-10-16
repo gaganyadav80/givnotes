@@ -10,7 +10,7 @@ import 'package:givnotes/services/services.dart';
 import 'add_tags_page.dart';
 
 class EditorTags extends StatefulWidget {
-  EditorTags({Key key, @required this.noteTagsList}) : super(key: key);
+  const EditorTags({Key key, @required this.noteTagsList}) : super(key: key);
 
   final RxList<String> noteTagsList;
 
@@ -24,7 +24,8 @@ class _EditorTagsState extends State<EditorTags> {
 
   @override
   Widget build(BuildContext context) {
-    final NoteStatusCubit _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
+    final NoteStatusCubit _noteEditStore =
+        BlocProvider.of<NoteStatusCubit>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -34,7 +35,9 @@ class _EditorTagsState extends State<EditorTags> {
           () => Row(
             children: [
               _buildNoteTags(_noteEditStore),
-              widget.noteTagsList.length == 0 ? SizedBox.shrink() : SizedBox(width: 10.w),
+              widget.noteTagsList.isEmpty
+                  ? const SizedBox.shrink()
+                  : SizedBox(width: 10.w),
               BlocBuilder<NoteStatusCubit, NoteStatusState>(
                 builder: (context, state) {
                   return state.isEditing
@@ -73,8 +76,8 @@ class _EditorTagsState extends State<EditorTags> {
                             ),
                           ),
                         )
-                      : widget.noteTagsList.length == 0
-                          ? Container(
+                      : widget.noteTagsList.isEmpty
+                          ? SizedBox(
                               height: 30.h,
                               child: Center(
                                 child: Text(
@@ -106,7 +109,8 @@ class _EditorTagsState extends State<EditorTags> {
       key: _tagStateKey,
       itemCount: widget.noteTagsList.length,
       itemBuilder: (int index) {
-        int borderColor = VariableService().prefsBox.allTagsMap[widget.noteTagsList[index]];
+        int borderColor =
+            VariableService().prefsBox.allTagsMap[widget.noteTagsList[index]];
 
         return ItemTags(
           key: Key(index.toString()),

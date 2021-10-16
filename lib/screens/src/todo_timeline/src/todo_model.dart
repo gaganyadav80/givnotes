@@ -26,8 +26,8 @@ class TodoModel extends Equatable {
     this.subTask,
     this.category = '',
     this.categoryColor,
-  })  : this.title = title ?? '',
-        this.id = id ?? Uuid().v1();
+  })  : title = title ?? '',
+        id = id ?? const Uuid().v1();
 
   TodoModel copyWith({
     String id,
@@ -55,43 +55,43 @@ class TodoModel extends Equatable {
 
   @override
   List<Object> get props => [
-        this.id,
-        this.title,
-        this.completed,
-        this.description,
-        this.dueDate,
-        this.priority,
-        this.subTask,
-        this.category,
-        this.categoryColor
+        id,
+        title,
+        completed,
+        description,
+        dueDate,
+        priority,
+        subTask,
+        category,
+        categoryColor
       ];
 
   @override
   int get hashCode =>
-      this.id.hashCode ^
-      this.title.hashCode ^
-      this.completed.hashCode ^
-      this.description.hashCode ^
-      this.dueDate.hashCode ^
-      this.priority.hashCode ^
-      this.subTask.hashCode ^
-      this.category.hashCode ^
-      this.categoryColor.hashCode;
+      id.hashCode ^
+      title.hashCode ^
+      completed.hashCode ^
+      description.hashCode ^
+      dueDate.hashCode ^
+      priority.hashCode ^
+      subTask.hashCode ^
+      category.hashCode ^
+      categoryColor.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TodoModel &&
           runtimeType == other.runtimeType &&
-          this.id == other.id &&
-          this.title == other.title &&
-          this.completed == other.completed &&
-          this.description == other.description &&
-          this.dueDate == other.dueDate &&
-          this.priority == other.priority &&
-          this.subTask == other.subTask &&
-          this.category == other.category &&
-          this.categoryColor == other.categoryColor;
+          id == other.id &&
+          title == other.title &&
+          completed == other.completed &&
+          description == other.description &&
+          dueDate == other.dueDate &&
+          priority == other.priority &&
+          subTask == other.subTask &&
+          category == other.category &&
+          categoryColor == other.categoryColor;
 
   @override
   String toString() {
@@ -114,15 +114,15 @@ class TodoModel extends Equatable {
 
   Map<String, Object> toDocument() {
     return {
-      "id": this.id,
-      "title": this.title,
-      "completed": this.completed,
-      "description": this.description,
-      "dueDate": this.dueDate,
-      "priority": this.priority,
-      "subTask": this.subTask,
-      "category": this.category,
-      "categoryColor": this.categoryColor,
+      "id": id,
+      "title": title,
+      "completed": completed,
+      "description": description,
+      "dueDate": dueDate,
+      "priority": priority,
+      "subTask": subTask,
+      "category": category,
+      "categoryColor": categoryColor,
     };
   }
 

@@ -9,7 +9,7 @@ import 'package:givnotes/screens/src/tags_view.dart';
 import 'package:givnotes/services/services.dart';
 
 class AddTagScreen extends StatefulWidget {
-  AddTagScreen({
+  const AddTagScreen({
     Key key,
     this.controller,
     this.isEditing,
@@ -27,7 +27,8 @@ class AddTagScreen extends StatefulWidget {
 }
 
 class _AddTagScreenState extends State<AddTagScreen> {
-  static const CupertinoDynamicColor _kClearButtonColor = CupertinoDynamicColor.withBrightness(
+  static const CupertinoDynamicColor _kClearButtonColor =
+      CupertinoDynamicColor.withBrightness(
     color: Color(0x33000000),
     darkColor: Color(0x33FFFFFF),
   );
@@ -51,7 +52,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
       final text = widget.controller.text.trim();
 
       if (text.isNotEmpty) {
-        final String filterTagName = _global.prefsBox.allTagsMap.keys.firstWhere(
+        final String filterTagName =
+            _global.prefsBox.allTagsMap.keys.firstWhere(
           (element) => element == text,
           orElse: () => null,
         );
@@ -76,22 +78,22 @@ class _AddTagScreenState extends State<AddTagScreen> {
       child: WillPopScope(
         onWillPop: onDone,
         child: CupertinoPageScaffold(
-          backgroundColor: Color(0xffF7F6F2),
+          backgroundColor: const Color(0xffF7F6F2),
           navigationBar: CupertinoNavigationBar(
             automaticallyImplyLeading: false,
-            middle: Text("Add Tag"),
+            middle: const Text("Add Tag"),
             leading: widget.isEditing
                 ? IconButton(
-                    icon: Icon(CupertinoIcons.xmark_circle_fill),
+                    icon: const Icon(CupertinoIcons.xmark_circle_fill),
                     color: CupertinoColors.systemGrey3,
                     onPressed: () {
                       widget.controller.clear();
                       Navigator.pop(context, false);
                     },
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
             trailing: TextButton(
-              child: Text(
+              child: const Text(
                 'Done',
                 style: TextStyle(
                   color: Colors.blue,
@@ -118,16 +120,19 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         placeholder: "Add tag name",
                         padding: const EdgeInsets.fromLTRB(15.0, 6.0, 6.0, 6.0),
                         textCapitalization: TextCapitalization.sentences,
-                        decoration: BoxDecoration(border: Border.fromBorderSide(BorderSide.none)),
+                        decoration: const BoxDecoration(
+                            border: Border.fromBorderSide(BorderSide.none)),
                         suffixMode: OverlayVisibilityMode.editing,
                         suffix: GestureDetector(
                           onTap: () => widget.controller.clear(),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Icon(
                               CupertinoIcons.clear_thick_circled,
                               size: 18.0,
-                              color: CupertinoDynamicColor.resolve(_kClearButtonColor, context),
+                              color: CupertinoDynamicColor.resolve(
+                                  _kClearButtonColor, context),
                             ),
                           ),
                         ),
@@ -138,7 +143,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
                   GestureDetector(
                     onTap: () {
                       if (widget.isEditing) {
-                        if (widget.noteTagsList.contains(widget.controller.text)) {
+                        if (widget.noteTagsList
+                            .contains(widget.controller.text)) {
                           widget.noteTagsList.remove(widget.controller.text);
                         }
                         // if (Get.find<TagSearchController>().tagSearchList.contains(widget.controller.text)) {
@@ -153,27 +159,32 @@ class _AddTagScreenState extends State<AddTagScreen> {
                       Navigator.pop(context, false);
                     },
                     child: Container(
-                      padding: EdgeInsets.only(left: 15.0),
+                      padding: const EdgeInsets.only(left: 15.0),
                       height: 45.w,
                       color: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            !widget.isEditing ? CupertinoIcons.clear : CupertinoIcons.delete,
+                            !widget.isEditing
+                                ? CupertinoIcons.clear
+                                : CupertinoIcons.delete,
                             color: Colors.black,
                             size: 21.0,
                           ),
                           SizedBox(width: 10.w),
-                          "${!widget.isEditing ? "Cancel" : "Delete"}".text.size(16.w).make(),
+                          (!widget.isEditing ? "Cancel" : "Delete")
+                              .text
+                              .size(16.w)
+                              .make(),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.0),
+                  const SizedBox(height: 30.0),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
+                    child: SizedBox(
                       height: 20.w,
                       child: "COLORS".text.coolGray400.size(10.w).make(),
                     ).pSymmetric(h: 15.0),
@@ -186,20 +197,26 @@ class _AddTagScreenState extends State<AddTagScreen> {
                             10,
                             (index) => GestureDetector(
                               onTap: () {
-                                tagColor.value = _colors.materialColorValues[index];
-                                if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text) &&
-                                    tagColor.value != _global.prefsBox.allTagsMap[widget.controller.text] &&
+                                tagColor.value =
+                                    _colors.materialColorValues[index];
+                                if (_global.prefsBox.allTagsMap
+                                        .containsKey(widget.controller.text) &&
+                                    tagColor.value !=
+                                        _global.prefsBox.allTagsMap[
+                                            widget.controller.text] &&
                                     !widget.isEditing) {
                                   Fluttertoast.showToast(
-                                      msg: 'Tag already exists. This will change the color of the existing tag');
+                                      msg:
+                                          'Tag already exists. This will change the color of the existing tag');
                                 }
                               },
                               child: Container(
-                                padding: EdgeInsets.only(left: 15.0),
+                                padding: const EdgeInsets.only(left: 15.0),
                                 height: 45.w,
                                 color: Colors.white,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -207,22 +224,41 @@ class _AddTagScreenState extends State<AddTagScreen> {
                                           height: 25.w,
                                           width: 25.w,
                                           decoration: BoxDecoration(
-                                            color: Color(_colors.materialColorValues[index]).withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(3.r),
+                                            color: Color(_colors
+                                                    .materialColorValues[index])
+                                                .withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(3.r),
                                             border: Border.all(
-                                                color: Color(_colors.materialColorValues[index]).withOpacity(0.2)),
+                                                color: Color(_colors
+                                                            .materialColorValues[
+                                                        index])
+                                                    .withOpacity(0.2)),
                                           ),
                                         ),
                                         SizedBox(width: 10.w),
-                                        _colors.materialColorNames[index].text.size(16.w).make(),
+                                        _colors.materialColorNames[index].text
+                                            .size(16.w)
+                                            .make(),
                                       ],
                                     ),
-                                    if (tagColor.value == _colors.materialColorValues[index])
-                                      Icon(CupertinoIcons.checkmark_alt, color: Colors.black).pOnly(right: 15.w)
-                                    else if (_global.prefsBox.allTagsMap.containsKey(widget.controller.text) &&
+                                    if (tagColor.value ==
+                                        _colors.materialColorValues[index])
+                                      const Icon(CupertinoIcons.checkmark_alt,
+                                              color: Colors.black)
+                                          .pOnly(right: 15.w)
+                                    else if (_global.prefsBox.allTagsMap
+                                            .containsKey(
+                                                widget.controller.text) &&
                                         _colors.materialColorValues[index] ==
-                                            _global.prefsBox.allTagsMap[widget.controller.text])
-                                      'Current'.text.xs.gray400.make().pOnly(right: 15.w),
+                                            _global.prefsBox.allTagsMap[
+                                                widget.controller.text])
+                                      'Current'
+                                          .text
+                                          .xs
+                                          .gray400
+                                          .make()
+                                          .pOnly(right: 15.w),
                                   ],
                                 ),
                               ),
@@ -251,7 +287,9 @@ class _AddTagScreenState extends State<AddTagScreen> {
           _global.prefsBox.allTagsMap.remove(widget.editTagTitle);
         }
         // noteTagsMap[tagName] = tagColor.value;
-        if (!widget.noteTagsList.contains(tagName)) widget.noteTagsList.add(tagName);
+        if (!widget.noteTagsList.contains(tagName)) {
+          widget.noteTagsList.add(tagName);
+        }
         _global.prefsBox.allTagsMap[tagName] = tagColor.value;
 
         Get.find<TagSearchController>().tagSearchList

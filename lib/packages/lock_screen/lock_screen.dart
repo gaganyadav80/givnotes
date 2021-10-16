@@ -34,7 +34,8 @@ class LockScreen extends StatefulWidget {
   final double backgroundColorOpacity;
   final void Function() onUnlocked;
 
-  LockScreen({
+  const LockScreen({
+    Key key,
     this.correctString,
     this.title = 'Enter Passcode',
     this.confirmTitle = 'Enter Confirm Passcode',
@@ -46,7 +47,8 @@ class LockScreen extends StatefulWidget {
     this.canCancel = true,
     this.cancelText = 'Cancel',
     this.deleteText = 'Delete',
-    this.biometricButton = const Icon(Icons.fingerprint, color: Colors.black, size: 36),
+    this.biometricButton =
+        const Icon(Icons.fingerprint, color: Colors.black, size: 36),
     this.onCompleted,
     this.canBiometric = false,
     this.showBiometricFirst = false,
@@ -56,7 +58,7 @@ class LockScreen extends StatefulWidget {
     this.backgroundColor = Colors.white,
     this.backgroundColorOpacity = 0.5,
     this.onUnlocked,
-  });
+  }) : super(key: key);
 
   @override
   _LockScreenState createState() => _LockScreenState();
@@ -65,9 +67,12 @@ class LockScreen extends StatefulWidget {
 class _LockScreenState extends State<LockScreen> {
   // receive from circle input button
   final StreamController<String> enteredStream = StreamController<String>();
-  final StreamController<void> removedStreamController = StreamController<void>();
-  final StreamController<int> enteredLengthStream = StreamController<int>.broadcast();
-  final StreamController<bool> validateStreamController = StreamController<bool>.broadcast();
+  final StreamController<void> removedStreamController =
+      StreamController<void>();
+  final StreamController<int> enteredLengthStream =
+      StreamController<int>.broadcast();
+  final StreamController<bool> validateStreamController =
+      StreamController<bool>.broadcast();
 
   // control for Android back button
   // bool _needClose = false;
@@ -107,7 +112,7 @@ class _LockScreenState extends State<LockScreen> {
         } else {
           // It is executed by a certain time.
           Future.delayed(
-            Duration(milliseconds: 350),
+            const Duration(milliseconds: 350),
             () {
               widget.biometricAuthenticate(context).then((unlocked) {
                 if (unlocked) {
@@ -151,16 +156,16 @@ class _LockScreenState extends State<LockScreen> {
       // the same number of digits was entered.
       if (enteredValues.length == widget.digits) {
         var buffer = StringBuffer();
-        enteredValues.forEach((value) {
+        for (var value in enteredValues) {
           buffer.write(value);
-        });
+        }
         _verifyCorrectString(buffer.toString());
       }
     });
   }
 
   void _verifyCorrectString(String enteredValue) {
-    Future.delayed(Duration(milliseconds: 150), () {
+    Future.delayed(const Duration(milliseconds: 150), () {
       var _verifyPasscode = widget.correctString;
 
       if (widget.confirmMode) {
@@ -229,7 +234,8 @@ class _LockScreenState extends State<LockScreen> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: widget.backgroundColor.withOpacity(widget.backgroundColorOpacity),
+        backgroundColor:
+            widget.backgroundColor.withOpacity(widget.backgroundColorOpacity),
         body: SafeArea(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
@@ -256,7 +262,8 @@ class _LockScreenState extends State<LockScreen> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
+                        margin:
+                            EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -267,7 +274,8 @@ class _LockScreenState extends State<LockScreen> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
+                        margin:
+                            EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -278,7 +286,8 @@ class _LockScreenState extends State<LockScreen> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
+                        margin:
+                            EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
@@ -289,18 +298,23 @@ class _LockScreenState extends State<LockScreen> {
                         ),
                       ),
                       Container(
-                        margin: EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
+                        margin:
+                            EdgeInsets.symmetric(vertical: _rowMarginSize - 3),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             _heightLess
                                 ? widget.canCancel
-                                    ? _buildBothSidesButton(context, _cancleSideButton())
-                                    : _buildBothSidesButton(context, _biometricButton())
-                                : _buildBothSidesButton(context, _biometricButton()),
+                                    ? _buildBothSidesButton(
+                                        context, _cancleSideButton())
+                                    : _buildBothSidesButton(
+                                        context, _biometricButton())
+                                : _buildBothSidesButton(
+                                    context, _biometricButton()),
                             _buildNumberTextButton(context, '0'),
                             _heightLess
-                                ? _buildBothSidesButton(context, _deleteSideButton())
+                                ? _buildBothSidesButton(
+                                    context, _deleteSideButton())
                                 : _buildBothSidesButton(context, Container()),
                           ],
                         ),
@@ -317,7 +331,10 @@ class _LockScreenState extends State<LockScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        widget.canCancel ? _buildBothSidesButton(context, _cancleSideButton()) : SizedBox.shrink(),
+                        widget.canCancel
+                            ? _buildBothSidesButton(
+                                context, _cancleSideButton())
+                            : const SizedBox.shrink(),
                         _buildBothSidesButton(context, _deleteSideButton()),
                       ],
                     ),
@@ -335,7 +352,7 @@ class _LockScreenState extends State<LockScreen> {
     String number,
   ) {
     final buttonSize = MediaQuery.of(context).size.width * 0.215;
-    return Container(
+    return SizedBox(
       width: buttonSize - 5,
       height: buttonSize - 5,
       child: CircleInputButton(
@@ -348,7 +365,7 @@ class _LockScreenState extends State<LockScreen> {
 
   Widget _buildBothSidesButton(BuildContext context, Widget button) {
     final buttonSize = MediaQuery.of(context).size.width * 0.215;
-    return Container(
+    return SizedBox(
       width: buttonSize,
       height: buttonSize,
       child: button,
@@ -357,26 +374,30 @@ class _LockScreenState extends State<LockScreen> {
 
   Widget _buildTitle() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 20),
+      margin: const EdgeInsets.symmetric(vertical: 20),
       child: StreamBuilder<bool>(
         stream: validateStreamController.stream,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data != false) {
-              return Text(
+              return const Text(
                 'Success',
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
               );
             } else {
               return Obx(() => Text(
-                    _isConfirmation.value ? 'Passcode Does Not Match' : 'Wrong Passcode',
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                    _isConfirmation.value
+                        ? 'Passcode Does Not Match'
+                        : 'Wrong Passcode',
+                    style: const TextStyle(
+                        fontSize: 20.0, fontWeight: FontWeight.w300),
                   ));
             }
           } else {
             return Obx(() => Text(
                   _isConfirmation.value ? widget.confirmTitle : widget.title,
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300),
+                  style: const TextStyle(
+                      fontSize: 20.0, fontWeight: FontWeight.w300),
                 ));
           }
         },
@@ -390,7 +411,7 @@ class _LockScreenState extends State<LockScreen> {
     return TextButton(
       style: TextButton.styleFrom(
         padding: const EdgeInsets.all(0.0),
-        shape: CircleBorder(
+        shape: const CircleBorder(
           side: BorderSide(
             color: Colors.transparent,
             style: BorderStyle.solid,
@@ -402,7 +423,8 @@ class _LockScreenState extends State<LockScreen> {
       onPressed: () {
         // Maintain compatibility
         if (widget.biometricAuthenticate == null) {
-          throw Exception('specify biometricFunction or biometricAuthenticate.');
+          throw Exception(
+              'specify biometricFunction or biometricAuthenticate.');
         } else {
           // if (widget.biometricFunction != null) {
           //   widget.biometricFunction(context);
@@ -427,8 +449,8 @@ class _LockScreenState extends State<LockScreen> {
   Widget _cancleSideButton() {
     return TextButton(
       style: TextButton.styleFrom(
-        padding: EdgeInsets.all(0),
-        shape: CircleBorder(
+        padding: const EdgeInsets.all(0),
+        shape: const CircleBorder(
           side: BorderSide(
             color: Colors.transparent,
             style: BorderStyle.solid,
@@ -460,8 +482,8 @@ class _LockScreenState extends State<LockScreen> {
         builder: (context, snapshot) {
           return TextButton(
             style: TextButton.styleFrom(
-              padding: EdgeInsets.all(0),
-              shape: CircleBorder(
+              padding: const EdgeInsets.all(0),
+              shape: const CircleBorder(
                 side: BorderSide(
                   color: Colors.transparent,
                   style: BorderStyle.solid,

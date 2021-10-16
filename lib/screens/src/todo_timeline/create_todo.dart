@@ -61,8 +61,12 @@ class _CreateTodoState extends State<CreateTodoBloc> {
       _titleController.text = widget.todo.title.decrypt;
       _detailsController.text = widget.todo.description.decrypt;
 
-      if (_categoryAdded.value) _categoryController.text = widget.todo.category.decrypt;
-      if (_categoryAdded.value) _selectCategoryColors.value = widget.todo.categoryColor;
+      if (_categoryAdded.value) {
+        _categoryController.text = widget.todo.category.decrypt;
+      }
+      if (_categoryAdded.value) {
+        _selectCategoryColors.value = widget.todo.categoryColor;
+      }
 
       _priority.value = widget.todo.priority.decrypt;
       _subTasks
@@ -89,10 +93,11 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         bool val = true;
         FocusScope.of(context).unfocus();
 
-        if (widget.isEditing && _titleController.text != widget.todo.title.decrypt) {
+        if (widget.isEditing &&
+            _titleController.text != widget.todo.title.decrypt) {
           await showDialog(
             context: context,
-            builder: (context) => GivnotesDialog(
+            builder: (context) => const GivnotesDialog(
               title: "Unsaved Changes",
               message: "Confirm exit?",
               mainButtonText: "Exit",
@@ -102,7 +107,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
         } else if (!widget.isEditing && _titleController.text.isNotEmpty) {
           await showDialog(
             context: context,
-            builder: (context) => GivnotesDialog(
+            builder: (context) => const GivnotesDialog(
               title: "Unsaved Changes",
               message: "Confirm exit?",
               mainButtonText: "Exit",
@@ -122,7 +127,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
           controller: _titleController,
           prevTitle: widget.isEditing ? widget.todo.title.decrypt : "",
           editTodo: widget.isEditing,
-          id: widget.todo?.id ?? null,
+          id: widget.todo?.id,
         ),
         floatingActionButton: _buildFab(),
         body: Padding(
@@ -134,7 +139,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(CupertinoIcons.text_insert, color: Colors.black),
+                  const Icon(CupertinoIcons.text_insert, color: Colors.black),
                   SizedBox(width: 10.w),
                   Expanded(child: _titleTextField()),
                 ],
@@ -150,35 +155,46 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8.r),
                     border: _categoryAdded.value
-                        ? Border.all(color: Color(_selectCategoryColors.value).withOpacity(0.2))
+                        ? Border.all(
+                            color: Color(_selectCategoryColors.value)
+                                .withOpacity(0.2))
                         : null,
                   ),
                   child: ListTile(
                     tileColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0.r)),
                     leading: Icon(
                       CupertinoIcons.tag_solid,
                       size: 24.w,
-                      color: _categoryAdded.value ? Colors.black.withOpacity(0.7) : null,
+                      color: _categoryAdded.value
+                          ? Colors.black.withOpacity(0.7)
+                          : null,
                     ),
                     trailing: _categoryAdded.value
                         ? GestureDetector(
                             onTap: () {
                               _categoryController.clear();
-                              _selectCategoryColors.value = MaterialColors().materialColorValues[0];
+                              _selectCategoryColors.value =
+                                  MaterialColors().materialColorValues[0];
                               _categoryAdded.value = false;
                             },
                             child: Icon(
                               CupertinoIcons.clear_thick_circled,
-                              color: _categoryAdded.value ? Colors.black.withOpacity(0.7) : null,
+                              color: _categoryAdded.value
+                                  ? Colors.black.withOpacity(0.7)
+                                  : null,
                             ))
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     title: Text(
-                      _categoryAdded.value ? _categoryController.text : "Category",
+                      _categoryAdded.value
+                          ? _categoryController.text
+                          : "Category",
                       style: TextStyle(
                         fontSize: 18.w,
                         fontWeight: FontWeight.w500,
-                        color: _categoryAdded.value ? Colors.black : Colors.black,
+                        color:
+                            _categoryAdded.value ? Colors.black : Colors.black,
                       ),
                     ),
                     horizontalTitleGap: 0.0,
@@ -192,7 +208,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         ),
                       ),
                     ).then((value) {
-                      if (value == null) value = false;
+                      value ??= false;
                       if (value && value != null) _categoryAdded.value = value;
                     }),
                   ),
@@ -210,9 +226,14 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                           lastDate: DateTime(DateTime.now().year + 1),
                           firstDate: DateTime(DateTime.now().year - 1),
                         ).then((value) {
-                          if (value != null)
+                          if (value != null) {
                             _dueDate.value = DateTime(
-                                value.year, value.month, value.day, _dueDate.value.hour, _dueDate.value.minute);
+                                value.year,
+                                value.month,
+                                value.day,
+                                _dueDate.value.hour,
+                                _dueDate.value.minute);
+                          }
                         });
                       },
                       color: Colors.black,
@@ -222,7 +243,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                       type: GFButtonType.outline2x,
                       child: Obx(() => Text(
                             DateFormat("EEE, dd MMM").format(_dueDate.value),
-                            style: TextStyle(fontSize: 16.0),
+                            style: const TextStyle(fontSize: 16.0),
                           )),
                     ),
                     SizedBox(width: 10.0.w),
@@ -233,14 +254,20 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                           initialTime: TimeOfDay.now(),
                           builder: (BuildContext context, Widget child) {
                             return MediaQuery(
-                              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
                               child: child,
                             );
                           },
                         ).then((value) {
-                          if (value != null)
-                            _dueDate.value = DateTime(_dueDate.value.year, _dueDate.value.month, _dueDate.value.day,
-                                value.hour, value.minute);
+                          if (value != null) {
+                            _dueDate.value = DateTime(
+                                _dueDate.value.year,
+                                _dueDate.value.month,
+                                _dueDate.value.day,
+                                value.hour,
+                                value.minute);
+                          }
                         });
                       },
                       color: Colors.black,
@@ -270,29 +297,36 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                       color: Colors.black,
                       size: GFSize.SMALL,
                       type: GFButtonType.outline2x,
-                      child: Text(TimeOfDay.now().format(context), style: TextStyle(fontSize: 16.0.w)),
+                      child: Text(TimeOfDay.now().format(context),
+                          style: TextStyle(fontSize: 16.0.w)),
                     ),
                   ],
                 ),
               ),
               ListTile(
                 horizontalTitleGap: 0.0,
-                leading: Icon(CupertinoIcons.exclamationmark_circle_fill, size: 26.0.w),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                leading: Icon(CupertinoIcons.exclamationmark_circle_fill,
+                    size: 26.0.w),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0)),
                 title: Obx(() => Text(
-                      _priority.value.isEmpty ? "Set priority" : "Priority - ${_priority.value}",
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      _priority.value.isEmpty
+                          ? "Set priority"
+                          : "Priority - ${_priority.value}",
+                      style: const TextStyle(fontWeight: FontWeight.w500),
                     )),
                 onTap: () {
                   FocusScope.of(context).unfocus();
 
                   Future.delayed(
-                    Duration(milliseconds: 150),
+                    const Duration(milliseconds: 150),
                     () => showModalBottomSheet(
                       context: context,
-                      backgroundColor: Color(0xff171C26),
+                      backgroundColor: const Color(0xff171C26),
                       isDismissible: true,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(25.0.r))),
                       builder: (context) => _buildPriorityModal(context),
                     ),
                   );
@@ -301,19 +335,23 @@ class _CreateTodoState extends State<CreateTodoBloc> {
               ListTile(
                 horizontalTitleGap: 0.0,
                 leading: Icon(CupertinoIcons.list_bullet, size: 26.0.w),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
-                title: Text("Add subtask", style: TextStyle(fontWeight: FontWeight.w500)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0.r)),
+                title: const Text("Add subtask",
+                    style: TextStyle(fontWeight: FontWeight.w500)),
                 onTap: () async {
                   await showModalBottomSheet(
                     context: context,
                     isDismissible: true,
                     isScrollControlled: true,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(25.0.r))),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(25.0.r))),
                     builder: (BuildContext context) => _buildSubTaskModal(),
                   );
                 },
               ),
-              Container(
+              SizedBox(
                 height: 300.0.h,
                 child: Obx(() => ListView.builder(
                       itemCount: _subTasks.length,
@@ -326,20 +364,24 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                               return CustomCheckbox(
                                 onChanged: (_) async {
                                   var subTask = widget.todo.subTask;
-                                  subTask[index][subTask[index].keys.first] = !subTask[index].values.first;
+                                  subTask[index][subTask[index].keys.first] =
+                                      !subTask[index].values.first;
 
                                   BlocProvider.of<TodosBloc>(context).add(
-                                    UpdateTodo(widget.todo.copyWith(subTask: subTask)),
+                                    UpdateTodo(
+                                        widget.todo.copyWith(subTask: subTask)),
                                   );
                                 },
                                 value: _subTasks[index].values.first,
                                 activeColor: Colors.blue,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24.r)),
                                 width: 26.w,
                               );
                             },
                           ),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0.r)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0.r)),
                           onTap: () {},
                           horizontalTitleGap: 5.0,
                           title: subTitle.decrypt.text.medium.xl.make(),
@@ -354,10 +396,23 @@ class _CreateTodoState extends State<CreateTodoBloc> {
     );
   }
 
-  static const List<String> _priorityName = <String>["Urgent", "High", "Medium", "Low", "No priority"];
-  static const List<String> _priorityImoji = <String>["\u{1F525}", "\u{1F9E8}", "\u{1F383}", "\u{2744}", "\u{26C4}"];
+  static const List<String> _priorityName = <String>[
+    "Urgent",
+    "High",
+    "Medium",
+    "Low",
+    "No priority"
+  ];
+  static const List<String> _priorityImoji = <String>[
+    "\u{1F525}",
+    "\u{1F9E8}",
+    "\u{1F383}",
+    "\u{2744}",
+    "\u{26C4}"
+  ];
 
-  SingleChildScrollView _buildPriorityModal(BuildContext context) => SingleChildScrollView(
+  SingleChildScrollView _buildPriorityModal(BuildContext context) =>
+      SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Column(
@@ -390,18 +445,22 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 children: List.generate(
                   5,
                   (index) => ListTile(
-                    leading: Text(_priorityImoji[index], style: TextStyle(fontSize: 24.0.w)),
-                    title:
-                        Text(_priorityName[index], style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white)),
+                    leading: Text(_priorityImoji[index],
+                        style: TextStyle(fontSize: 24.0.w)),
+                    title: Text(_priorityName[index],
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w500, color: Colors.white)),
                     horizontalTitleGap: 10.0.w,
                     onTap: () {
-                      if (index == 4)
+                      if (index == 4) {
                         _priority.value = "";
-                      else
+                      } else {
                         _priority.value = _priorityName[index];
+                      }
                       Navigator.pop(context);
                     },
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.0.r)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0.r)),
                   ),
                 ),
               ),
@@ -437,23 +496,25 @@ class _CreateTodoState extends State<CreateTodoBloc> {
       cursorColor: Colors.black,
       controller: _detailsController,
       textCapitalization: TextCapitalization.sentences,
-      style: TextStyle(fontSize: 16.0.w, color: Colors.black, fontFamily: 'Poppins'),
+      style: TextStyle(
+          fontSize: 16.0.w, color: Colors.black, fontFamily: 'Poppins'),
       maxLines: 3,
       minLines: 1,
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       placeholder: "Would you like to add more details?",
-      placeholderStyle: TextStyle(fontSize: 16.0.w, color: Colors.grey, fontFamily: 'Poppins'),
+      placeholderStyle: TextStyle(
+          fontSize: 16.0.w, color: Colors.grey, fontFamily: 'Poppins'),
     );
   }
 
   Padding _buildFab() => Padding(
         padding: EdgeInsets.only(bottom: 20.0.h),
-        child: Container(
+        child: SizedBox(
           height: 65.w,
           width: 65.w,
           child: FloatingActionButton(
             backgroundColor: Colors.black,
-            child: Icon(CupertinoIcons.floppy_disk, color: Colors.white),
+            child: const Icon(CupertinoIcons.floppy_disk, color: Colors.white),
             onPressed: () {
               if (_titleController.text.isNotEmpty && !widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
@@ -496,7 +557,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
 
   Widget _buildSubTaskModal() => Container(
         padding: EdgeInsets.symmetric(horizontal: 20.0.w, vertical: 20.0.w),
-        margin: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -518,7 +580,8 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                     autofocus: true,
                     cursorColor: Colors.black,
                     style: TextStyle(fontSize: 20.w),
-                    padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 6.0, vertical: 10.0),
                     onSubmitted: (_) {
                       if (_subtaskController.text.isNotEmpty) {
                         _subTasks.add({_subtaskController.text.encrypt: false});
@@ -530,7 +593,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                   ),
                 ),
                 IconButton(
-                  icon: Icon(CupertinoIcons.add),
+                  icon: const Icon(CupertinoIcons.add),
                   color: Colors.blue,
                   iconSize: 28.0.w,
                   onPressed: () {

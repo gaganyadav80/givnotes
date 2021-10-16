@@ -32,7 +32,9 @@ class PrefService {
         sharedPreferences.setInt(prefix + key, val);
       } else if (val is String) {
         sharedPreferences.setString(prefix + key, val);
-      } else if (val is List<String>) sharedPreferences.setStringList(key, val);
+      } else if (val is List<String>) {
+        sharedPreferences.setStringList(key, val);
+      }
     }
   }
 

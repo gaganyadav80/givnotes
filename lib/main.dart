@@ -32,19 +32,21 @@ void main() async {
   //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
+  HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: await getApplicationDocumentsDirectory());
 
   initGetXControllers();
   await initHiveDb();
 
-  final AuthenticationRepository authenticationRepository = AuthenticationRepository();
+  final AuthenticationRepository authenticationRepository =
+      AuthenticationRepository();
   await authenticationRepository.user.first;
 
   runApp(App(authenticationRepository: authenticationRepository));
 }
 
 class App extends StatelessWidget {
-  const App({Key key, this.authenticationRepository})
+  const App({Key key, @required this.authenticationRepository})
       : assert(authenticationRepository != null),
         super(key: key);
   final AuthenticationRepository authenticationRepository;
@@ -59,7 +61,8 @@ class App extends StatelessWidget {
           BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
           BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
           BlocProvider<AuthenticationBloc>(
-            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
+            create: (_) => AuthenticationBloc(
+                authenticationRepository: authenticationRepository),
           ),
           BlocProvider<TodosBloc>(
             create: (context) => TodosBloc(
@@ -68,9 +71,9 @@ class App extends StatelessWidget {
           ),
         ],
         child: ScreenUtilInit(
-          designSize: Size(414, 896),
+          designSize: const Size(414, 896),
           builder: () => AppLock(
-            builder: (_) => GivnotesApp(),
+            builder: (_) => const GivnotesApp(),
             lockScreen: ShowLockscreen(changePassAuth: null),
             enabled: VariableService().prefsBox.passcode.isNotEmpty,
             // backgroundLockLatency: Duration(),
@@ -96,8 +99,11 @@ class _GivnotesAppState extends State<GivnotesApp> {
       title: 'Givnotes',
       theme: ThemeData(
         fontFamily: 'Poppins',
-        accentColor: Colors.black,
-        pageTransitionsTheme: PageTransitionsTheme(builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
+        colorScheme: ThemeData().colorScheme.copyWith(
+              secondary: Colors.black, // accent color
+            ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
       ),
       builder: (context, child) {
         return ScrollConfiguration(
@@ -114,16 +120,19 @@ class _GivnotesAppState extends State<GivnotesApp> {
 class CheckLogin extends StatelessWidget {
   final User _currentUser = FirebaseAuth.instance.currentUser;
 
+  CheckLogin({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    Get.find<NotesController>().sortby = BlocProvider.of<HydratedPrefsCubit>(context).state.sortby;
+    Get.find<NotesController>().sortby =
+        BlocProvider.of<HydratedPrefsCubit>(context).state.sortby;
 
     if (_currentUser == null) {
-      return LoginPage();
+      return const LoginPage();
     } else {
       pluginInitializer(_currentUser.uid);
 
-      return HomePage();
+      return const HomePage();
     }
 
     // return StreamBuilder<User>(

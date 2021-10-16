@@ -15,9 +15,16 @@ export 'src/validators.dart';
 export 'src/variables.dart';
 
 extension StringEncryptExtension on String {
-  String get encrypt => this.isEmpty ? "" : VariableService().encrypter.encrypt(this, iv: VariableService().iv).base64;
+  String get encrypt => isEmpty
+      ? ""
+      : VariableService()
+          .encrypter
+          .encrypt(this, iv: VariableService().iv)
+          .base64;
 
-  String get decrypt => this.isEmpty ? "" : VariableService().encrypter.decrypt64(this, iv: VariableService().iv);
+  String get decrypt => isEmpty
+      ? ""
+      : VariableService().encrypter.decrypt64(this, iv: VariableService().iv);
 
   String get stringToBase64 => base64Encode(utf8.encode(this));
 }

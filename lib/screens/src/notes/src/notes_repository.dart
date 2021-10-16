@@ -21,10 +21,11 @@ class NotesController extends GetxController {
 
   @override
   void onInit() {
-    _getDirectory(null).then((value) => this._directory = value);
-    _dirSubscription = FirebaseAuth.instance.userChanges().listen((User event) async {
-      this._directory = await _getDirectory(event?.uid ?? null);
-      this.getAllNotes();
+    _getDirectory(null).then((value) => _directory = value);
+    _dirSubscription =
+        FirebaseAuth.instance.userChanges().listen((User event) async {
+      _directory = await _getDirectory(event?.uid);
+      getAllNotes();
     });
     super.onInit();
   }
@@ -36,16 +37,17 @@ class NotesController extends GetxController {
   }
 
   Future<Directory> _getDirectory(String userID) async {
-    return Directory((await getApplicationDocumentsDirectory()).path + "/givnotesdb/${userID ?? "default"}")
+    return Directory((await getApplicationDocumentsDirectory()).path +
+            "/givnotesdb/${userID ?? "default"}")
         .create(recursive: true);
   }
 
-  Directory get directory => this._directory;
+  Directory get directory => _directory;
   // Directory("/data/user/0/com.gaganyadav.givnotes/app_flutter/").create(recursive: true);
 
   Future<File> _getFile(String noteid) async {
     // Directory dir = await directory;
-    return File(this._directory.path + "/$noteid.json").create();
+    return File(_directory.path + "/$noteid.json").create();
   }
 
   //Sort on init inside CheckLogin build method
@@ -59,7 +61,8 @@ class NotesController extends GetxController {
     notes.clear();
     notes.addAll(_directory
         .listSync()
-        .map((e) => NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
+        .map((e) =>
+            NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
         .where((element) => element.trash == false)
         .toList());
 
@@ -67,16 +70,17 @@ class NotesController extends GetxController {
   }
 
   void sort() {
-    if (_sortby == 0)
+    if (_sortby == 0) {
       notes.sort((a, b) => b.created.compareTo(a.created));
-    else if (_sortby == 1)
+    } else if (_sortby == 1) {
       notes.sort((a, b) => b.modified.compareTo(a.modified));
-    else if (_sortby == 2)
+    } else if (_sortby == 2) {
       notes.sort((a, b) => a.title.compareTo(b.title));
-    else if (_sortby == 3) {
+    } else if (_sortby == 3) {
       notes.sort((a, b) => b.title.compareTo(a.title));
-    } else
+    } else {
       notes.sort((a, b) => b.created.compareTo(a.created));
+    }
 
     update();
   }

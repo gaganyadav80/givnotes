@@ -25,9 +25,10 @@ class SwitchPreference extends StatefulWidget {
   final VoidCallback ondisableTap;
   final bool isWaitSwitch;
 
-  SwitchPreference(
+  const SwitchPreference(
     this.title,
     this.localKey, {
+    Key key,
     this.desc,
     this.defaultVal = false,
     this.ignoreTileTap = false,
@@ -44,8 +45,9 @@ class SwitchPreference extends StatefulWidget {
     this.backgroundColor = Colors.white,
     this.ondisableTap,
     this.isWaitSwitch = false,
-  });
+  }) : super(key: key);
 
+  @override
   _SwitchPreferenceState createState() => _SwitchPreferenceState();
 }
 
@@ -77,28 +79,38 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
           child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
-        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w500)),
+        title: Text(widget.title,
+            style: TextStyle(
+                color: widget.titleColor, fontWeight: FontWeight.w500)),
         subtitle: widget.desc == null
             ? null
             : Text(
                 widget.desc,
-                style:
-                    TextStyle(color: widget.titleColor?.withOpacity(0.6), fontWeight: FontWeight.w300, fontSize: 12.0),
+                style: TextStyle(
+                    color: widget.titleColor?.withOpacity(0.6),
+                    fontWeight: FontWeight.w300,
+                    fontSize: 12.0),
               ),
         trailing: CupertinoSwitch(
           value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
-          activeColor: widget.switchActiveColor ?? Color(0xFFDD4C4F),
-          onChanged: widget.disabled ? (_) => widget.ondisableTap : (val) => val ? onEnable() : onDisable(),
+          activeColor: widget.switchActiveColor ?? const Color(0xFFDD4C4F),
+          onChanged: widget.disabled
+              ? (_) => widget.ondisableTap
+              : (val) => val ? onEnable() : onDisable(),
         ),
         onTap: (widget.disabled || widget.ignoreTileTap)
             ? widget.ondisableTap
-            : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal) ? onDisable() : onEnable(),
+            : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal)
+                ? onDisable()
+                : onEnable(),
       ),
     );
   }
 
   onEnable() async {
-    if (!widget.isWaitSwitch) setState(() => PrefService.setBool(widget.localKey, true));
+    if (!widget.isWaitSwitch) {
+      setState(() => PrefService.setBool(widget.localKey, true));
+    }
     if (widget.onChange != null) widget.onChange();
     if (widget.onEnable != null) {
       try {
@@ -114,7 +126,9 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
   }
 
   onDisable() async {
-   if (!widget.isWaitSwitch) setState(() => PrefService.setBool(widget.localKey, false));
+    if (!widget.isWaitSwitch) {
+      setState(() => PrefService.setBool(widget.localKey, false));
+    }
     if (widget.onChange != null) widget.onChange();
     if (widget.onDisable != null) {
       try {

@@ -20,9 +20,10 @@ class DropdownPreference<T> extends StatefulWidget {
   final Color leadingColor;
   final bool showDesc;
 
-  DropdownPreference(
+  const DropdownPreference(
     this.title,
     this.localKey, {
+    Key key,
     this.desc,
     @required this.defaultVal,
     @required this.values,
@@ -34,8 +35,9 @@ class DropdownPreference<T> extends StatefulWidget {
     this.titleGap,
     this.leadingColor,
     this.showDesc = true,
-  });
+  }) : super(key: key);
 
+  @override
   _DropdownPreferenceState<T> createState() => _DropdownPreferenceState<T>();
 }
 
@@ -79,7 +81,9 @@ In release mode, the default value ($value) will silently be used.
           child: Center(child: widget.leading),
         ),
         horizontalTitleGap: widget.titleGap,
-        title: Text(widget.title, style: TextStyle(color: widget.titleColor, fontWeight: FontWeight.w500)),
+        title: Text(widget.title,
+            style: TextStyle(
+                color: widget.titleColor, fontWeight: FontWeight.w500)),
         subtitle: widget.desc == null || !widget.showDesc
             ? null
             : Text(
@@ -107,7 +111,7 @@ In release mode, the default value ($value) will silently be used.
         //         },
         //   value: value,
         // ),
-        trailing: Container(
+        trailing: SizedBox(
           width: 200,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -117,14 +121,14 @@ In release mode, the default value ($value) will silently be used.
                 padding: const EdgeInsets.only(right: 5.0),
                 child: Text(
                   "$value",
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: CupertinoColors.systemGrey,
                     fontSize: 15,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
               ),
-              Icon(
+              const Icon(
                 CupertinoIcons.forward,
                 size: 21.0,
                 color: Color(0xFF0A0A0A),
@@ -150,13 +154,15 @@ In release mode, the default value ($value) will silently be used.
                             ? val.toString()
                             : widget.displayValues[widget.values.indexOf(val)],
                         textAlign: TextAlign.end,
-                        style: TextStyle(color: Colors.black),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     );
                   }).toList(),
                   cancelButton: CupertinoActionSheetAction(
-                    child: Text('Cancle', style: TextStyle(color: Colors.black)),
-                    onPressed: () => Navigator.of(context, rootNavigator: true).pop("cancle"),
+                    child: const Text('Cancle',
+                        style: TextStyle(color: Colors.black)),
+                    onPressed: () => Navigator.of(context, rootNavigator: true)
+                        .pop("cancle"),
                   ),
                 ),
               ),
@@ -166,13 +172,13 @@ In release mode, the default value ($value) will silently be used.
 
   onChange(T val) {
     if (val is String) {
-      this.setState(() => PrefService.setString(widget.localKey, val));
+      setState(() => PrefService.setString(widget.localKey, val));
     } else if (val is int) {
-      this.setState(() => PrefService.setInt(widget.localKey, val));
+      setState(() => PrefService.setInt(widget.localKey, val));
     } else if (val is double) {
-      this.setState(() => PrefService.setDouble(widget.localKey, val));
+      setState(() => PrefService.setDouble(widget.localKey, val));
     } else if (val is bool) {
-      this.setState(() => PrefService.setBool(widget.localKey, val));
+      setState(() => PrefService.setBool(widget.localKey, val));
     }
     if (widget.onChange != null) widget.onChange(val);
   }

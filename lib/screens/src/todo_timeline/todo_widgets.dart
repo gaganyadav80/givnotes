@@ -11,7 +11,6 @@ import 'package:givnotes/widgets/widgets.dart';
 import 'bloc/todo_bloc.dart';
 import 'bloc/todo_event.dart';
 
-
 class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   const CreateTodoAppBar({
     Key key,
@@ -27,12 +26,11 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   final String id;
 
   @override
-  Size get preferredSize => Size.fromHeight(56.0);
+  Size get preferredSize => const Size.fromHeight(56.0);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      brightness: Brightness.light,
       elevation: 0.0,
       backgroundColor: Colors.white,
       leading: InkWell(
@@ -47,7 +45,7 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
           } else {
             await showDialog(
               context: context,
-              builder: (context) => GivnotesDialog(
+              builder: (context) => const GivnotesDialog(
                 title: "Unsaved Changes",
                 message: "Confirm exit?",
                 mainButtonText: "Exit",
@@ -58,12 +56,12 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
             if (val == true) Navigator.pop(context);
           }
         },
-        child: Icon(CupertinoIcons.arrow_left, color: Colors.black),
+        child: const Icon(CupertinoIcons.arrow_left, color: Colors.black),
       ),
       actions: [
         editTodo
             ? IconButton(
-                icon: Icon(CupertinoIcons.delete),
+                icon: const Icon(CupertinoIcons.delete),
                 color: Colors.black,
                 splashRadius: 25.0,
                 onPressed: () {
@@ -71,14 +69,15 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
                   Navigator.pop(context);
                 },
               )
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
       ],
     );
   }
 }
 
 class SelectCategory extends StatefulWidget {
-  SelectCategory({Key key, this.controller, this.selectCategoryColors}) : super(key: key);
+  const SelectCategory({Key key, this.controller, this.selectCategoryColors})
+      : super(key: key);
 
   final TextEditingController controller;
   final RxInt selectCategoryColors;
@@ -88,7 +87,8 @@ class SelectCategory extends StatefulWidget {
 }
 
 class _SelectCategoryState extends State<SelectCategory> {
-  final CupertinoDynamicColor _kClearButtonColor = CupertinoDynamicColor.withBrightness(
+  final CupertinoDynamicColor _kClearButtonColor =
+      const CupertinoDynamicColor.withBrightness(
     color: Color(0x33000000),
     darkColor: Color(0x33FFFFFF),
   );
@@ -107,20 +107,21 @@ class _SelectCategoryState extends State<SelectCategory> {
     return Material(
       child: WillPopScope(
         onWillPop: () async {
-          if (widget.controller.text.isEmpty)
+          if (widget.controller.text.isEmpty) {
             Navigator.pop<bool>(context, false);
-          else
+          } else {
             Navigator.pop<bool>(context, true);
+          }
 
           return false;
         },
         child: CupertinoPageScaffold(
-          backgroundColor: Color(0xffF7F6F2),
+          backgroundColor: const Color(0xffF7F6F2),
           navigationBar: CupertinoNavigationBar(
             automaticallyImplyLeading: false,
-            middle: Text("Category"),
+            middle: const Text("Category"),
             trailing: TextButton(
-              child: Text(
+              child: const Text(
                 'Done',
                 style: TextStyle(
                   color: Colors.blue,
@@ -128,10 +129,11 @@ class _SelectCategoryState extends State<SelectCategory> {
                 ),
               ),
               onPressed: () {
-                if (widget.controller.text.isEmpty)
+                if (widget.controller.text.isEmpty) {
                   Navigator.pop<bool>(context, false);
-                else
+                } else {
                   Navigator.pop<bool>(context, true);
+                }
               },
             ),
           ),
@@ -152,16 +154,19 @@ class _SelectCategoryState extends State<SelectCategory> {
                         placeholder: "Add category",
                         padding: const EdgeInsets.fromLTRB(15.0, 6.0, 6.0, 6.0),
                         textCapitalization: TextCapitalization.sentences,
-                        decoration: BoxDecoration(border: Border.fromBorderSide(BorderSide.none)),
+                        decoration: const BoxDecoration(
+                            border: Border.fromBorderSide(BorderSide.none)),
                         suffixMode: OverlayVisibilityMode.editing,
                         suffix: GestureDetector(
                           onTap: () => widget.controller.clear(),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 20.0),
                             child: Icon(
                               CupertinoIcons.clear_thick_circled,
                               size: 18.0,
-                              color: CupertinoDynamicColor.resolve(_kClearButtonColor, context),
+                              color: CupertinoDynamicColor.resolve(
+                                  _kClearButtonColor, context),
                             ),
                           ),
                         ),
@@ -172,31 +177,37 @@ class _SelectCategoryState extends State<SelectCategory> {
                   GestureDetector(
                     onTap: () {
                       widget.controller.clear();
-                      widget.selectCategoryColors.value = _colors.materialColorValues[0];
+                      widget.selectCategoryColors.value =
+                          _colors.materialColorValues[0];
                       Navigator.pop(context, false);
                     },
                     child: Container(
-                      padding: EdgeInsets.only(left: 15.0),
+                      padding: const EdgeInsets.only(left: 15.0),
                       height: 45.w,
                       color: Colors.white,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            widget.controller.text.isEmpty ? CupertinoIcons.clear : CupertinoIcons.delete,
+                            widget.controller.text.isEmpty
+                                ? CupertinoIcons.clear
+                                : CupertinoIcons.delete,
                             color: Colors.black,
                             size: 21.0,
                           ),
                           SizedBox(width: 10.w),
-                          "${widget.controller.text.isEmpty ? "Cancel" : "Delete"}".text.size(16.w).make(),
+                          (widget.controller.text.isEmpty ? "Cancel" : "Delete")
+                              .text
+                              .size(16.w)
+                              .make(),
                         ],
                       ),
                     ),
                   ),
-                  SizedBox(height: 30.0),
+                  const SizedBox(height: 30.0),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
+                    child: SizedBox(
                       height: 20.w,
                       child: "COLORS".text.coolGray400.size(10.w).make(),
                     ).pSymmetric(h: 15.0),
@@ -209,14 +220,16 @@ class _SelectCategoryState extends State<SelectCategory> {
                             10,
                             (index) => GestureDetector(
                               onTap: () {
-                                widget.selectCategoryColors.value = _colors.materialColorValues[index];
+                                widget.selectCategoryColors.value =
+                                    _colors.materialColorValues[index];
                               },
                               child: Container(
-                                padding: EdgeInsets.only(left: 15.0),
+                                padding: const EdgeInsets.only(left: 15.0),
                                 height: 45.w,
                                 color: Colors.white,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
@@ -224,18 +237,29 @@ class _SelectCategoryState extends State<SelectCategory> {
                                           height: 25.w,
                                           width: 25.w,
                                           decoration: BoxDecoration(
-                                            color: Color(_colors.materialColorValues[index]).withOpacity(0.2),
-                                            borderRadius: BorderRadius.circular(3.r),
-                                            border:
-                                                Border.all(color: Color(_colors.materialColorValues[index]).withOpacity(0.2)),
+                                            color: Color(_colors
+                                                    .materialColorValues[index])
+                                                .withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(3.r),
+                                            border: Border.all(
+                                                color: Color(_colors
+                                                            .materialColorValues[
+                                                        index])
+                                                    .withOpacity(0.2)),
                                           ),
                                         ),
                                         SizedBox(width: 10.w),
-                                        _colors.materialColorNames[index].text.size(16.w).make(),
+                                        _colors.materialColorNames[index].text
+                                            .size(16.w)
+                                            .make(),
                                       ],
                                     ),
-                                    if (widget.selectCategoryColors.value == _colors.materialColorValues[index])
-                                      Icon(CupertinoIcons.checkmark_alt, color: Colors.black).pOnly(right: 15.w),
+                                    if (widget.selectCategoryColors.value ==
+                                        _colors.materialColorValues[index])
+                                      const Icon(CupertinoIcons.checkmark_alt,
+                                              color: Colors.black)
+                                          .pOnly(right: 15.w),
                                   ],
                                 ),
                               ),

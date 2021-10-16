@@ -35,7 +35,8 @@ class SimpleLockScreen extends StatefulWidget {
   final String simpleTitle;
   final String simpleConfirmTitle;
 
-  SimpleLockScreen({
+  const SimpleLockScreen({
+    Key key,
     this.correctString,
     this.title = 'Enter Passcode',
     this.confirmTitle = 'Enter Confirm Passcode',
@@ -50,26 +51,31 @@ class SimpleLockScreen extends StatefulWidget {
     this.isSuperSimple = true,
     this.simpleTitle,
     this.simpleConfirmTitle,
-  });
+  }) : super(key: key);
 
   @override
   _LockScreenState createState() => _LockScreenState();
 }
 
-class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProviderStateMixin {
-  final StreamController<bool> validateStreamController = StreamController<bool>.broadcast();
-  final StreamController<String> titleStreamController = StreamController<String>.broadcast();
+class _LockScreenState extends State<SimpleLockScreen>
+    with SingleTickerProviderStateMixin {
+  final StreamController<bool> validateStreamController =
+      StreamController<bool>.broadcast();
+  final StreamController<String> titleStreamController =
+      StreamController<String>.broadcast();
 
   final TextEditingController appLockPassController = TextEditingController();
-  final TextEditingController resetLockUserPassController = TextEditingController();
-  final TextEditingController resetLockUserEmailController = TextEditingController();
+  final TextEditingController resetLockUserPassController =
+      TextEditingController();
+  final TextEditingController resetLockUserEmailController =
+      TextEditingController();
   final FocusNode applockFocusNode = FocusNode();
 
   Animation<Offset> _animation;
   AnimationController _animationController;
 
-  RxBool _isConfirmation = false.obs;
-  RxString _verifyConfirmPasscode = ''.obs;
+  final RxBool _isConfirmation = false.obs;
+  final RxString _verifyConfirmPasscode = ''.obs;
 
   @override
   void initState() {
@@ -83,28 +89,32 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
     });
 
     titleStreamController.stream.listen((event) {
-      if (event.isNotBlank && !titleStreamController.isClosed)
-        Future.delayed(Duration(seconds: 3), () {
+      if (event.isNotBlank && !titleStreamController.isClosed) {
+        Future.delayed(const Duration(seconds: 3), () {
           if (!titleStreamController.isClosed) titleStreamController.add('');
         });
+      }
     });
 
-    _animationController =
-        widget.isSuperSimple ? null : AnimationController(vsync: this, duration: Duration(milliseconds: 80));
+    _animationController = widget.isSuperSimple
+        ? null
+        : AnimationController(
+            vsync: this, duration: const Duration(milliseconds: 80));
 
     _animation = widget.isSuperSimple
         ? null
         : (_animationController
             .drive(CurveTween(curve: Curves.elasticIn))
-            .drive(Tween<Offset>(begin: Offset.zero, end: const Offset(0.050, 0)))
-              ..addListener(() {
-                setState(() {});
-              })
-              ..addStatusListener((status) {
-                if (status == AnimationStatus.completed) {
-                  _animationController.reverse();
-                }
-              }));
+            .drive(
+                Tween<Offset>(begin: Offset.zero, end: const Offset(0.050, 0)))
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _animationController.reverse();
+            }
+          }));
   }
 
   void _verifyCorrectString(String enteredValue) {
@@ -137,7 +147,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
     } else {
       // send invalid status to DotSecretUI
       validateStreamController.add(false);
-      titleStreamController.add(_isConfirmation.value ? 'PIN does not match' : 'Wrong PIN');
+      titleStreamController
+          .add(_isConfirmation.value ? 'PIN does not match' : 'Wrong PIN');
     }
     appLockPassController.clear();
     // });
@@ -161,7 +172,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           backgroundColor: Colors.white,
           leading: widget.canCancel
               ? IconButton(
-                  icon: Icon(CupertinoIcons.back),
+                  icon: const Icon(CupertinoIcons.back),
                   color: Colors.black,
                   onPressed: () => Navigator.pop(context, false),
                 )
@@ -169,9 +180,9 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           actions: <Widget>[
             !widget.isAddingLock
                 ? ConstrainedBox(
-                    constraints: BoxConstraints.tightFor(width: 56.0),
+                    constraints: const BoxConstraints.tightFor(width: 56.0),
                     child: IconButton(
-                      icon: Icon(CupertinoIcons.question_circle),
+                      icon: const Icon(CupertinoIcons.question_circle),
                       color: CupertinoColors.systemGrey,
                       tooltip: "Forgot AppLock?",
                       onPressed: () => showCupertinoDialog(
@@ -183,23 +194,31 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                       ),
                     ),
                   )
-                : SizedBox.shrink(),
+                : const SizedBox.shrink(),
           ],
         ),
         body: widget.isSuperSimple
             ? ListView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  Icon(CupertinoIcons.lock, size: 32.w, color: Vx.coolGray800).objectTopLeft(),
+                  Icon(CupertinoIcons.lock, size: 32.w, color: Vx.coolGray800)
+                      .objectTopLeft(),
                   SizedBox(height: 10.w),
-                  Obx(() => (_isConfirmation.value ? widget.simpleConfirmTitle : widget.simpleTitle)
+                  Obx(() => (_isConfirmation.value
+                          ? widget.simpleConfirmTitle
+                          : widget.simpleTitle)
                       .text
                       .xl5
                       .light
                       .coolGray800
                       .make()),
                   SizedBox(height: 80.w),
-                  'Enter your givnotes PIN to continue'.text.light.coolGray800.make().centered(),
+                  'Enter your givnotes PIN to continue'
+                      .text
+                      .light
+                      .coolGray800
+                      .make()
+                      .centered(),
                   _buildSimpleTitle(),
                   _buildSimpleTextField(),
                   SizedBox(height: 20.w),
@@ -207,9 +226,10 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 ],
               ).pSymmetric(h: 20.w)
             : ListView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 children: <Widget>[
-                  Image.asset("assets/img/simple-lockscreen.png", width: 220.w, height: 238.w),
+                  Image.asset("assets/img/simple-lockscreen.png",
+                      width: 220.w, height: 238.w),
                   SizedBox(height: 10.w),
                   _buildTitle(),
                   SizedBox(height: 10.w),
@@ -257,7 +277,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
             applockFocusNode.requestFocus();
           },
           suffix: IconButton(
-            icon: Icon(CupertinoIcons.arrow_turn_down_left),
+            icon: const Icon(CupertinoIcons.arrow_turn_down_left),
             color: Colors.black,
             onPressed: () => appLockPassController.clear(),
           ),
@@ -268,7 +288,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               darkColor: CupertinoColors.black,
             ),
             border: Border.all(
-              color: CupertinoDynamicColor.withBrightness(
+              color: const CupertinoDynamicColor.withBrightness(
                 color: Color(0x33000000),
                 darkColor: Color(0x33FFFFFF),
               ),
@@ -293,13 +313,15 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           cursorColor: Colors.black,
           cursorWidth: 1.5,
           keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
+          inputFormatters: <TextInputFormatter>[
+            FilteringTextInputFormatter.digitsOnly
+          ],
           expands: false,
           maxLines: 1,
           obscureText: true,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 24.w),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             contentPadding: EdgeInsets.fromLTRB(12, 20, 12, 2),
             focusedBorder: UnderlineInputBorder(),
           ),
@@ -313,7 +335,9 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 titleStreamController.add("PIN too short");
               }
             }
-            if (value.isNotEmpty && value.length >= 4) _verifyCorrectString(value);
+            if (value.isNotEmpty && value.length >= 4) {
+              _verifyCorrectString(value);
+            }
 
             applockFocusNode.requestFocus();
           },
@@ -330,7 +354,8 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
           borderRadius: BorderRadius.circular(80.r),
           onTap: () {
             if (widget.biometricAuthenticate == null) {
-              throw Exception('specify biometricFunction or biometricAuthenticate.');
+              throw Exception(
+                  'specify biometricFunction or biometricAuthenticate.');
             } else {
               if (widget.biometricAuthenticate != null) {
                 widget.biometricAuthenticate(context).then((unlocked) {
@@ -350,7 +375,7 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               shape: BoxShape.circle,
               color: CupertinoColors.systemGrey6.withOpacity(0.4),
               border: Border.all(
-                color: CupertinoDynamicColor.withBrightness(
+                color: const CupertinoDynamicColor.withBrightness(
                   color: Color(0x33000000),
                   darkColor: Color(0x33FFFFFF),
                 ),
@@ -358,7 +383,9 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                 width: 1.0,
               ),
             ),
-            child: Image.asset('assets/img/faceid.png', height: 35.w, width: 35.w).centered(),
+            child:
+                Image.asset('assets/img/faceid.png', height: 35.w, width: 35.w)
+                    .centered(),
           ),
         ),
       ),
@@ -377,7 +404,13 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
               if (snapshot.hasData) {
                 return snapshot.data.text.size(22.w).medium.make();
               } else {
-                return (_isConfirmation.value ? widget.confirmTitle : widget.title).text.size(22.w).medium.make();
+                return (_isConfirmation.value
+                        ? widget.confirmTitle
+                        : widget.title)
+                    .text
+                    .size(22.w)
+                    .medium
+                    .make();
               }
             },
           ),
@@ -393,10 +426,11 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
         child: StreamBuilder<String>(
           stream: titleStreamController.stream,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.hasData)
+            if (snapshot.hasData) {
               return snapshot.data.text.light.coolGray800.make();
-            else
+            } else {
               return ''.text.light.coolGray800.make();
+            }
           },
         ),
       ),
@@ -421,33 +455,35 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
       listener: (context, state) {
         if (state is AuthSuccess) {
           if (state.verify) {
-            if (state.verifyFailed)
+            if (state.verifyFailed) {
               Fluttertoast.showToast(msg: "Verification failed");
-            else
+            } else {
               Fluttertoast.showToast(msg: "Will be implemented");
+            }
           }
         } else if (state is AuthNeedsVerification) {
           if (state.verify) {
-            if (state.verifyFailed)
+            if (state.verifyFailed) {
               Fluttertoast.showToast(msg: "Verification failed");
-            else
+            } else {
               Fluttertoast.showToast(msg: "Will be implemented");
+            }
           }
         }
       },
       child: CupertinoAlertDialog(
-        title: Text("Forgot AppLock?"),
+        title: const Text("Forgot AppLock?"),
         content: Column(
           children: <Widget>[
             SizedBox(height: 5.w),
-            Text(
+            const Text(
               "Send applock password on your registered email. Please verify your details for security purpose.",
             ),
             SizedBox(height: 15.w),
             BlocBuilder<AuthenticationBloc, AuthenticationState>(
               builder: (context, state) {
                 if (state is LoginInProgress) {
-                  return Center(
+                  return const Center(
                     child: CircularLoading(),
                   );
                 } else if (state is AuthSuccess) {
@@ -469,15 +505,16 @@ class _LockScreenState extends State<SimpleLockScreen> with SingleTickerProvider
                         color: resetLockUserEmailController.text.isEmpty
                             ? CupertinoColors.white
                             : CupertinoColors.systemGrey4,
-                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(5.0)),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     CupertinoTextField(
                       controller: resetLockUserPassController,
                       obscureText: true,
                       placeholder: 'enter password',
-                      style: TextStyle(color: Colors.black),
+                      style: const TextStyle(color: Colors.black),
                     ),
                   ],
                 );

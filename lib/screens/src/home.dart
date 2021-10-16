@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
               appBar: CustomAppBar(index: state),
               body: IndexedStack(
                 index: state,
-                children: <Widget>[
+                children: const <Widget>[
                   NotesView(),
                   TodoTimelineBloc(),
                   TagsView(),
@@ -44,8 +44,9 @@ class HomePage extends StatelessWidget {
                 unselectedItemColor: Colors.grey,
                 type: BottomNavigationBarType.fixed,
                 currentIndex: state,
-                onTap: (index) => BlocProvider.of<HomeCubit>(context).update(index),
-                items: <BottomNavigationBarItem>[
+                onTap: (index) =>
+                    BlocProvider.of<HomeCubit>(context).update(index),
+                items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(CupertinoIcons.house),
                     activeIcon: Icon(CupertinoIcons.house_fill),

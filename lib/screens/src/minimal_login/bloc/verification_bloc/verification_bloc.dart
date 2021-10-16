@@ -29,7 +29,8 @@ class VerificationBloc extends Bloc<VerificationEvent, VerificationState> {
         } else if (event.isFirstTime) {
           yield (VerificationInitial());
         } else {
-          yield (VerificationFailed(message: "verification: user-not-verified"));
+          yield (const VerificationFailed(
+              message: "verification: user-not-verified"));
         }
       } else if (event is ResendVerificationMail) {
         yield (ResendVerificationInProgress());

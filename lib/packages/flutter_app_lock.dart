@@ -21,7 +21,7 @@ import 'package:flutter/material.dart';
 /// [backgroundLockLatency] determines how much time is allowed to pass when
 /// the app is in the background state before the [lockScreen] widget should be
 /// shown upon returning. It defaults to instantly.
-/// 
+///
 /// Version 1.5.0
 class AppLock extends StatefulWidget {
   final Widget Function(Object) builder;
@@ -59,27 +59,27 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
 
-    this._didUnlockForAppLaunch = !this.widget.enabled;
-    this._isLocked = false;
-    this._enabled = this.widget.enabled;
+    _didUnlockForAppLaunch = !widget.enabled;
+    _isLocked = false;
+    _enabled = widget.enabled;
 
     super.initState();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!this._enabled) {
+    if (!_enabled) {
       return;
     }
 
     if (state == AppLifecycleState.paused &&
-        (!this._isLocked && this._didUnlockForAppLaunch)) {
-      this._backgroundLockLatencyTimer =
-          Timer(this.widget.backgroundLockLatency, () => this.showLockScreen());
+        (!_isLocked && _didUnlockForAppLaunch)) {
+      _backgroundLockLatencyTimer =
+          Timer(widget.backgroundLockLatency, () => showLockScreen());
     }
 
     if (state == AppLifecycleState.resumed) {
-      this._backgroundLockLatencyTimer?.cancel();
+      _backgroundLockLatencyTimer?.cancel();
     }
 
     super.didChangeAppLifecycleState(state);
@@ -89,7 +89,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
 
-    this._backgroundLockLatencyTimer?.cancel();
+    _backgroundLockLatencyTimer?.cancel();
 
     super.dispose();
   }
@@ -98,14 +98,14 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: this.widget.enabled ? this._lockScreen : this.widget.builder(null),
+      home: widget.enabled ? _lockScreen : widget.builder(null),
       navigatorKey: _navigatorKey,
       routes: {
-        '/lock-screen': (context) => this._lockScreen,
+        '/lock-screen': (context) => _lockScreen,
         '/unlocked': (context) =>
-            this.widget.builder(ModalRoute.of(context).settings.arguments)
+            widget.builder(ModalRoute.of(context).settings.arguments)
       },
-      theme: this.widget.theme,
+      theme: widget.theme,
     );
   }
 
@@ -114,7 +114,7 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
     //   child: this.widget.lockScreen,
     //   onWillPop: () => Future.value(false),
     // );
-    return this.widget.lockScreen;
+    return widget.lockScreen;
   }
 
   /// Causes `AppLock` to either pop the [lockScreen] if the app is already running
@@ -126,10 +126,10 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   /// [lockScreen] in to the rest of your app so you can better guarantee that some
   /// objects, services or databases are already instantiated before using them.
   void didUnlock([Object args]) {
-    if (this._didUnlockForAppLaunch) {
-      this._didUnlockOnAppPaused();
+    if (_didUnlockForAppLaunch) {
+      _didUnlockOnAppPaused();
     } else {
-      this._didUnlockOnAppLaunch(args);
+      _didUnlockOnAppLaunch(args);
     }
   }
 
@@ -141,40 +141,40 @@ class _AppLockState extends State<AppLock> with WidgetsBindingObserver {
   /// on [enabled].
   void setEnabled(bool enabled) {
     if (enabled) {
-      this.enable();
+      enable();
     } else {
-      this.disable();
+      disable();
     }
   }
 
   /// Makes sure that [AppLock] shows the [lockScreen] on subsequent app pauses.
   void enable() {
     setState(() {
-      this._enabled = true;
+      _enabled = true;
     });
   }
 
   /// Makes sure that [AppLock] doesn't show the [lockScreen] on subsequent app pauses.
   void disable() {
     setState(() {
-      this._enabled = false;
+      _enabled = false;
     });
   }
 
   /// Manually show the [lockScreen].
   Future<void> showLockScreen() {
-    this._isLocked = true;
+    _isLocked = true;
     return _navigatorKey.currentState.pushNamed('/lock-screen');
   }
 
   void _didUnlockOnAppLaunch(Object args) {
-    this._didUnlockForAppLaunch = true;
+    _didUnlockForAppLaunch = true;
     _navigatorKey.currentState
         .pushReplacementNamed('/unlocked', arguments: args);
   }
 
   void _didUnlockOnAppPaused() {
-    this._isLocked = false;
+    _isLocked = false;
     _navigatorKey.currentState.pop();
   }
 }

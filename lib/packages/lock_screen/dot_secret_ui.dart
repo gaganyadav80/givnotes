@@ -24,17 +24,19 @@ class DotSecretUI extends StatefulWidget {
   final int dots;
 
   const DotSecretUI({
+    Key key,
     @required this.enteredLengthStream,
     @required this.dots,
     @required this.validateStream,
     this.config = const DotSecretConfig(),
-  });
+  }) : super(key: key);
 
   @override
   _DotSecretUIState createState() => _DotSecretUIState();
 }
 
-class _DotSecretUIState extends State<DotSecretUI> with SingleTickerProviderStateMixin {
+class _DotSecretUIState extends State<DotSecretUI>
+    with SingleTickerProviderStateMixin {
   Animation<Offset> _animation;
   AnimationController _animationController;
 
@@ -50,19 +52,20 @@ class _DotSecretUIState extends State<DotSecretUI> with SingleTickerProviderStat
       }
     });
 
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 80));
+    _animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 80));
 
     _animation = _animationController
         .drive(CurveTween(curve: Curves.elasticIn))
         .drive(Tween<Offset>(begin: Offset.zero, end: const Offset(0.025, 0)))
-          ..addListener(() {
-            setState(() {});
-          })
-          ..addStatusListener((status) {
-            if (status == AnimationStatus.completed) {
-              _animationController.reverse();
-            }
-          });
+      ..addListener(() {
+        setState(() {});
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _animationController.reverse();
+        }
+      });
   }
 
   @override
@@ -105,7 +108,8 @@ class _DotSecretUIState extends State<DotSecretUI> with SingleTickerProviderStat
       height: widget.config.dotSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: enabled ? widget.config.enabledColor : widget.config.disabledColor,
+        color:
+            enabled ? widget.config.enabledColor : widget.config.disabledColor,
         border: Border.all(width: 1.2, color: widget.config.dotBorderColor),
       ),
     );

@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 // import 'package:givnotes/database/HiveDB.dart';
 // import 'package:hive/hive.dart';
 

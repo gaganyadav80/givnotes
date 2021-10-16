@@ -20,7 +20,8 @@ import 'authentication_repository.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     @required AuthenticationRepository authenticationRepository,
   })  : assert(authenticationRepository != null),
@@ -44,7 +45,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
     try {
       if (event is LoginButtonPressed) {
         yield (LoginInProgress());
-        await _authRepo.logInWithEmailAndPassword(email: event.email, password: event.password);
+        await _authRepo.logInWithEmailAndPassword(
+            email: event.email, password: event.password);
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
         await pluginInitializer(_currentUser.uid, userKey: event.password);
@@ -56,7 +58,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         }
       } else if (event is RegisterButtonClicked) {
         yield (RegisterInProgress());
-        await _authRepo.signUp(email: event.email, password: event.password, name: event.name);
+        await _authRepo.signUp(
+            email: event.email, password: event.password, name: event.name);
         final User _currentUser = FirebaseAuth.instance.currentUser;
 
         await pluginInitializer(_currentUser.uid, userKey: event.password);
@@ -70,7 +73,9 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         //   'ads-paid': false,
         // });
 
-        final DocumentReference db = FirebaseFirestore.instance.collection("users").doc("${_currentUser?.uid}");
+        final DocumentReference db = FirebaseFirestore.instance
+            .collection("users")
+            .doc(_currentUser?.uid);
         db.set({
           'name': event.name,
           'email': event.email,
@@ -102,7 +107,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         yield (LoginObscureState(obscure: event.obscureLogin));
         //
       } else if (event is RegisterObscureEvent) {
-        yield (RegisterObscureState(obscure: event.obscure, obscureConfirm: event.obscureConfirm));
+        yield (RegisterObscureState(
+            obscure: event.obscure, obscureConfirm: event.obscureConfirm));
         //
       } else if (event is LogOutUser) {
         yield (LogoutInProgress());
@@ -119,9 +125,11 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
           final User _currentUser = FirebaseAuth.instance.currentUser;
 
           if (_currentUser.emailVerified) {
-            yield (AuthSuccess(user: _user, verify: event.verify, verifyFailed: true));
+            yield (AuthSuccess(
+                user: _user, verify: event.verify, verifyFailed: true));
           } else {
-            yield AuthNeedsVerification(user: _user, verify: event.verify, verifyFailed: true);
+            yield AuthNeedsVerification(
+                user: _user, verify: event.verify, verifyFailed: true);
           }
         } else {
           print("AUTH ERROR: ${e.message}");

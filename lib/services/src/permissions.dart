@@ -24,14 +24,14 @@ abstract class HandlePermission {
       builder: (BuildContext context) {
         return AlertDialog(
           // title: Text('Open Settings?'),
-          content: Text('Go to settings to enable storage permission.'),
+          content: const Text('Go to settings to enable storage permission.'),
           actions: [
             TextButton(
-              child: Text("Later"),
+              child: const Text("Later"),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text("Sure"),
+              child: const Text("Sure"),
               onPressed: () {
                 Navigator.pop(context);
 

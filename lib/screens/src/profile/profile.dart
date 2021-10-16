@@ -12,7 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
-import 'package:givnotes/widgets/blueButton.dart';
+import 'package:givnotes/widgets/blue_button.dart';
 import 'package:givnotes/widgets/circular_animation.dart';
 import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
@@ -24,6 +24,8 @@ class MyProfile extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  MyProfile({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,21 +33,21 @@ class MyProfile extends StatelessWidget {
         leading: IconButton(
           splashRadius: 25.0,
           onPressed: () => Navigator.pop(context),
-          icon: Icon(CupertinoIcons.back, color: Colors.black),
+          icon: const Icon(CupertinoIcons.back, color: Colors.black),
         ),
         centerTitle: true,
         title: 'Account'.text.black.make(),
         elevation: 0.0,
         backgroundColor: Colors.white,
       ),
-      backgroundColor: Color(0xfffafafa),
+      backgroundColor: const Color(0xfffafafa),
       body: StreamBuilder<User>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
           User user;
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
+            return const Center(
               child: CircularLoading(color: Colors.black, size: 50.0),
             ).pOnly(bottom: 120.h);
           } else if (snapshot.hasError) {
@@ -53,10 +55,16 @@ class MyProfile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Image.asset('assets/giv_img/logged_out_light.png'),
-                "Oh O! \nSomething went wrong.".text.center.size(18.w).make().pOnly(bottom: 20.w),
+                "Oh O! \nSomething went wrong."
+                    .text
+                    .center
+                    .size(18.w)
+                    .make()
+                    .pOnly(bottom: 20.w),
                 BlueButton(
                   title: 'Try Again',
-                  onPressed: () => Fluttertoast.showToast(msg: "Will be added soon"),
+                  onPressed: () =>
+                      Fluttertoast.showToast(msg: "Will be added soon"),
                 ).w(150.w).h(60.w),
               ],
             ).pOnly(top: 140.h);
@@ -77,29 +85,40 @@ class MyProfile extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       child: user.photoURL != null
                           ? Image.network(user.photoURL)
-                          : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
+                          : SvgPicture.asset(
+                              'assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                     ),
                   ),
                 ),
                 CupertinoButton(
                   padding: EdgeInsets.zero,
                   child: <Widget>[
-                    Icon(CupertinoIcons.camera_fill, size: 18.w, color: CupertinoColors.systemBlue).pOnly(right: 5.w),
-                    'Edit'.text.medium.xl.color(CupertinoColors.systemBlue).make().centered(),
+                    Icon(CupertinoIcons.camera_fill,
+                            size: 18.w, color: CupertinoColors.systemBlue)
+                        .pOnly(right: 5.w),
+                    'Edit'
+                        .text
+                        .medium
+                        .xl
+                        .color(CupertinoColors.systemBlue)
+                        .make()
+                        .centered(),
                   ].hStack(),
                   onPressed: () => Fluttertoast.showToast(msg: 'Will be added'),
                 ).pOnly(bottom: 20.w),
-                TilesDivider(),
+                const TilesDivider(),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   color: Colors.white,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      _buildDetailTextField(title: 'Name', controller: _nameController),
-                      TilesDivider(),
-                      _buildDetailTextField(title: 'Email', controller: _emailController),
-                      TilesDivider(),
+                      _buildDetailTextField(
+                          title: 'Name', controller: _nameController),
+                      const TilesDivider(),
+                      _buildDetailTextField(
+                          title: 'Email', controller: _emailController),
+                      const TilesDivider(),
                       _buildDetailTextField(
                         context: context,
                         title: 'Password',
@@ -109,11 +128,11 @@ class MyProfile extends StatelessWidget {
                     ],
                   ),
                 ),
-                TilesDivider(),
+                const TilesDivider(),
                 SizedBox(height: 40.w),
                 signInButton(context, true).pSymmetric(h: 20.w),
                 SizedBox(height: 20.w),
-                TilesDivider(),
+                const TilesDivider(),
                 Container(
                   height: 50.w,
                   color: Colors.white,
@@ -129,10 +148,10 @@ class MyProfile extends StatelessWidget {
                   () => showCupertinoDialog(
                     context: context,
                     useRootNavigator: false,
-                    builder: (context) => BuildDeleteAccountDialog(),
+                    builder: (context) => const BuildDeleteAccountDialog(),
                   ),
                 ),
-                TilesDivider(),
+                const TilesDivider(),
               ],
             ).centered();
           } else {
@@ -141,16 +160,28 @@ class MyProfile extends StatelessWidget {
               children: <Widget>[
                 Align(
                   alignment: Alignment.topRight,
-                  child: Lottie.asset('assets/animations/people-portrait.json', height: 180.h, width: 195.w),
+                  child: Lottie.asset('assets/animations/people-portrait.json',
+                      height: 180.h, width: 195.w),
                 ),
                 SizedBox(height: 40.h),
                 'Oops!'.text.teal600.size(32.w).medium.make(),
                 SizedBox(height: 5.h),
-                'Looks like you are not logged in.'.text.gray400.light.size(20.w).make(),
+                'Looks like you are not logged in.'
+                    .text
+                    .gray400
+                    .light
+                    .size(20.w)
+                    .make(),
                 SizedBox(height: 40.h),
                 signInButton(context, false),
                 SizedBox(height: 40.h),
-                'Not much here, yet. Maybe I\'ll add later.'.text.light.gray400.italic.size(14.h).make(),
+                'Not much here, yet. Maybe I\'ll add later.'
+                    .text
+                    .light
+                    .gray400
+                    .italic
+                    .size(14.h)
+                    .make(),
               ],
             ).pSymmetric(h: 20.w);
           }
@@ -160,7 +191,10 @@ class MyProfile extends StatelessWidget {
   }
 
   Padding _buildDetailTextField(
-      {BuildContext context, String title, TextEditingController controller, isPassword = false}) {
+      {BuildContext context,
+      String title,
+      TextEditingController controller,
+      isPassword = false}) {
     return Row(
       children: [
         Expanded(child: title.text.gray400.make()),
@@ -170,15 +204,20 @@ class MyProfile extends StatelessWidget {
             controller: controller,
             readOnly: isPassword,
             obscureText: isPassword,
-            style: isPassword ? TextStyle(color: CupertinoColors.systemGrey2) : null,
+            style: isPassword
+                ? const TextStyle(color: CupertinoColors.systemGrey2)
+                : null,
             obscuringCharacter: '✱',
-            suffix: isPassword ? Icon(CupertinoIcons.forward, color: CupertinoColors.systemGrey) : null,
+            suffix: isPassword
+                ? const Icon(CupertinoIcons.forward,
+                    color: CupertinoColors.systemGrey)
+                : null,
             onTap: isPassword
                 ? () => showCupertinoModalBottomSheet(
                       expand: true,
                       context: context,
                       backgroundColor: Colors.transparent,
-                      builder: (context) => ChangePasswordModalSheet(),
+                      builder: (context) => const ChangePasswordModalSheet(),
                     )
                 : null,
           ),
@@ -208,11 +247,14 @@ class MyProfile extends StatelessWidget {
                       showCancel: true,
                       onTap: () {
                         Navigator.pop(ctx, true); // close the dialog
-                        BlocProvider.of<AuthenticationBloc>(rootContext).add(LogOutUser(rootContext));
+                        BlocProvider.of<AuthenticationBloc>(rootContext)
+                            .add(LogOutUser(rootContext));
                       },
                     ),
                   ).then((value) {
-                    if (value ?? false) Navigator.pop(rootContext); // pop profile page if logout is clicked
+                    if (value ?? false) {
+                      Navigator.pop(rootContext);
+                    } // pop profile page if logout is clicked
                   });
                 },
         );

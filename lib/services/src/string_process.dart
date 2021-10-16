@@ -3,9 +3,9 @@
 
 import 'dart:math';
 
-const UNIX_NEWLINE = '\n';
-const WINDOWS_NEWLINE = '\r\n';
-const CARRIAGE_RETURN = '\r';
+const unixNewLine = '\n';
+const windowsnewLine = '\r\n';
+const carriageReturn = '\r';
 
 ///String Processor - that's the theory.
 class StringProcessor {
@@ -22,7 +22,7 @@ class StringProcessor {
     for (int i = 0; i < segments.length; i++) {
       out += segments[i].trim();
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
     return out;
@@ -32,20 +32,20 @@ class StringProcessor {
   int getWordCount(String text) {
     var workingText = text;
     workingText = workingText
-      ..replaceAll(UNIX_NEWLINE, ' ')
+      ..replaceAll(unixNewLine, ' ')
       ..replaceAll('.', ' ')
       ..replaceAll(',', ' ')
       ..replaceAll(':', ' ')
       ..replaceAll(';', ' ')
       ..replaceAll('?', ' ');
     var words = workingText.split(' ');
-    words.removeWhere((word) => word.length == 0 || word == " ");
+    words.removeWhere((word) => word.isEmpty || word == " ");
     return min(words.length, text.length);
   }
 
   ///Count the number of lines in the [String] text.
   int getLineCount(String text) {
-    return UNIX_NEWLINE.allMatches(text).length;
+    return unixNewLine.allMatches(text).length;
   }
 
   ///Count the number of sentences in the [String] text.
@@ -66,7 +66,7 @@ class StringProcessor {
     count ??= 1;
 
     return newLine
-        ? (textToRepeat + UNIX_NEWLINE) * count.toInt()
+        ? (textToRepeat + unixNewLine) * count.toInt()
         : textToRepeat * count.toInt();
   }
 
@@ -81,8 +81,8 @@ class StringProcessor {
   ///If single line then split is by space character.
   String sort(String text) {
     var delimiter = ' ';
-    if (text.contains(UNIX_NEWLINE)) {
-      delimiter = UNIX_NEWLINE;
+    if (text.contains(unixNewLine)) {
+      delimiter = unixNewLine;
     }
 
     return sortDelimiter(text, delimiter);
@@ -100,7 +100,7 @@ class StringProcessor {
 
   ///Returns a [String] of the reverse of the supplied string.
   String reverse(String text) {
-    var delimiter = text.contains(UNIX_NEWLINE) ? UNIX_NEWLINE : ' ';
+    var delimiter = text.contains(unixNewLine) ? unixNewLine : ' ';
     return reverseDelimiter(text, delimiter);
   }
 
@@ -109,7 +109,9 @@ class StringProcessor {
     var segments = text.split(delimiter);
     var out = '';
 
-    segments.reversed.forEach((line) => out += line + delimiter);
+    for (var line in segments.reversed) {
+      out += line + delimiter;
+    }
     return trimText(out);
   }
 
@@ -120,7 +122,7 @@ class StringProcessor {
     for (int i = 0; i < segments.length; i++) {
       out += prefix + segments[i];
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
     return out;
@@ -134,7 +136,7 @@ class StringProcessor {
     for (int i = 0; i < segments.length; i++) {
       out += segments[i] + postfix;
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
     return out;
@@ -148,7 +150,7 @@ class StringProcessor {
     for (int i = 0; i < segments.length; i++) {
       out += segments[i] * 2;
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
     return out;
@@ -162,7 +164,7 @@ class StringProcessor {
 
   ///Returns a [String] with all content on a single line.
   String makeOneLine(String text) {
-    return text.replaceAll(WINDOWS_NEWLINE, '').replaceAll(UNIX_NEWLINE, '');
+    return text.replaceAll(windowsnewLine, '').replaceAll(unixNewLine, '');
   }
 
   ///Returns a [String] with blank lines removed.
@@ -171,10 +173,10 @@ class StringProcessor {
     var out = '';
 
     for (int i = 0; i < segments.length; i++) {
-      if (segments[i].length > 0) {
+      if (segments[i].isNotEmpty) {
         out += segments[i];
-        if (i < (segments.length - 1) && text.indexOf(UNIX_NEWLINE) > -1) {
-          out += UNIX_NEWLINE;
+        if (i < (segments.length - 1) && text.contains(unixNewLine)) {
+          out += unixNewLine;
         }
       }
     }
@@ -184,7 +186,7 @@ class StringProcessor {
 
   ///Returns a [String] with double blank lines reduced to single blank lines.
   String removeExtraBlankLines(String text) {
-    while (text.indexOf('\n\n\n') > -1) {
+    while (text.contains('\n\n\n')) {
       text = text.replaceAll('\n\n\n', '\n\n');
     }
 
@@ -193,7 +195,7 @@ class StringProcessor {
 
   ///Returns a [String] with lines double spaced.
   String doubleSpaceLines(String text) {
-    return text.replaceAll(UNIX_NEWLINE, '\n\n');
+    return text.replaceAll(unixNewLine, '\n\n');
   }
 
   ///Returns a [String] with lines in a random order.
@@ -203,9 +205,9 @@ class StringProcessor {
     var out = '';
 
     for (int i = 0; i < segments.length; i++) {
-      if (segments[i].length > 0) out += segments[i];
+      if (segments[i].isNotEmpty) out += segments[i];
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
     return out;
@@ -217,7 +219,7 @@ class StringProcessor {
     var out = '';
     var current = startIndex;
     for (int i = 0; i < repeatCount; i++) {
-      out += current.round().toString() + UNIX_NEWLINE;
+      out += current.round().toString() + unixNewLine;
       current += increment;
     }
     return out;
@@ -229,15 +231,15 @@ class StringProcessor {
     var out = '';
 
     for (int i = 0; i < segments.length; i++) {
-      if (segments[i].length != 0 &&
-          segments[i] != CARRIAGE_RETURN &&
-          segments[i].indexOf(target) == -1) {
+      if (segments[i].isNotEmpty &&
+          segments[i] != carriageReturn &&
+          !segments[i].contains(target)) {
         out += segments[i];
-        if (i < (segments.length - 1) && text.indexOf(UNIX_NEWLINE) > -1) {
-          out += UNIX_NEWLINE;
+        if (i < (segments.length - 1) && text.contains(unixNewLine)) {
+          out += unixNewLine;
         }
-      } else if (segments[i].length == 0 || segments[i] != CARRIAGE_RETURN) {
-        out += WINDOWS_NEWLINE;
+      } else if (segments[i].isEmpty || segments[i] != carriageReturn) {
+        out += windowsnewLine;
       }
     }
 
@@ -258,11 +260,11 @@ class StringProcessor {
   ///delimiter on new line).
   String split(String text, String delimiter) {
     var out = '';
-    if (text.indexOf(delimiter) == -1) return text;
+    if (!text.contains(delimiter)) return text;
 
     text
         .split(delimiter)
-        .forEach((String item) => out += "$item$WINDOWS_NEWLINE");
+        .forEach((String item) => out += "$item$windowsnewLine");
 
     return out;
   }
@@ -283,15 +285,15 @@ class StringProcessor {
     var out = '';
 
     for (int i = 0; i < segments.length; i++) {
-      if (segments[i].length != 0 &&
-          segments[i] != CARRIAGE_RETURN &&
-          segments[i].indexOf(target) > -1) {
+      if (segments[i].isNotEmpty &&
+          segments[i] != carriageReturn &&
+          segments[i].contains(target)) {
         out += segments[i];
-        if (i < (segments.length - 1) && text.indexOf(UNIX_NEWLINE) > -1) {
-          out += UNIX_NEWLINE;
+        if (i < (segments.length - 1) && text.contains(unixNewLine)) {
+          out += unixNewLine;
         }
-      } else if (segments[i].length == 0 || segments[i] != "\r") {
-        out += WINDOWS_NEWLINE;
+      } else if (segments[i].isEmpty || segments[i] != "\r") {
+        out += windowsnewLine;
       }
     }
 
@@ -300,18 +302,18 @@ class StringProcessor {
 
   ///Returns a [String] with the input lines with content numbered.
   String addNumbering(String text) {
-    if (text.length == 0) {
+    if (text.isEmpty) {
       return '';
     }
     var segments = getSegments(text);
     var out = '';
     var numberingIndex = 1;
     for (var i = 0; i < segments.length; i++) {
-      if (segments[i].length > 0) {
-        out += '$numberingIndex. ' + segments[i] + UNIX_NEWLINE;
+      if (segments[i].isNotEmpty) {
+        out += '$numberingIndex. ' + segments[i] + unixNewLine;
         numberingIndex++;
       } else if (i + 1 != segments.length) {
-        out += segments[i] + UNIX_NEWLINE;
+        out += segments[i] + unixNewLine;
       }
     }
 
@@ -320,7 +322,7 @@ class StringProcessor {
 
   ///Break [String] into segements by line separator.
   List<String> getSegments(String text) {
-    return text.split(UNIX_NEWLINE);
+    return text.split(unixNewLine);
   }
 
   ///Returns a [String] with [leftTrim] characters removed for the left
@@ -333,17 +335,18 @@ class StringProcessor {
       var line = segments[i];
       var currentLength = line.length;
       if (currentLength <= leftTrim || (line.length - rightTrim) < 1) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       } else if (rightTrim > 0) {
-        if ((line.length - rightTrim) >= leftTrim)
+        if ((line.length - rightTrim) >= leftTrim) {
           out += line.substring(leftTrim, line.length - rightTrim);
-        else
-          out += UNIX_NEWLINE;
+        } else {
+          out += unixNewLine;
+        }
       } else {
         out += line.substring(leftTrim);
       }
-      if (text.indexOf(UNIX_NEWLINE) > -1) {
-        out += UNIX_NEWLINE;
+      if (text.contains(unixNewLine)) {
+        out += unixNewLine;
       }
     }
     return out;
@@ -358,14 +361,14 @@ class StringProcessor {
       var line = '';
       var innerSegments = segments[i].split(' ');
       for (int j = 0; j < innerSegments.length; j++) {
-        if (innerSegments[j].trim().length > 0) {
+        if (innerSegments[j].trim().isNotEmpty) {
           line += innerSegments[j].trim() + ' ';
         }
       }
       out += line.trim();
 
       if (i < (segments.length - 1)) {
-        out += UNIX_NEWLINE;
+        out += unixNewLine;
       }
     }
 
@@ -378,14 +381,16 @@ class StringProcessor {
     var segments = getSegments(text);
     segments.sort((a, b) => a.length.compareTo(b.length));
     for (var i = 0; i < segments.length; i++) {
-      out += segments[i] + UNIX_NEWLINE;
+      out += segments[i] + unixNewLine;
     }
     return out;
   }
 
   ///Returns a [String] with input having 0123456789 removed.
   String denumber(String text) {
-    for (var i = 0; i < 10; i++) text = text.replaceAll('$i', '');
+    for (var i = 0; i < 10; i++) {
+      text = text.replaceAll('$i', '');
+    }
     return text;
   }
 
@@ -395,23 +400,23 @@ class StringProcessor {
     if (position >= text.length) {
       position = text.length - 1;
     }
-    if (text.lastIndexOf(UNIX_NEWLINE) == -1 ||
-        text[text.length - 1] != UNIX_NEWLINE) {
-      text = text + UNIX_NEWLINE;
+    if (text.lastIndexOf(unixNewLine) == -1 ||
+        text[text.length - 1] != unixNewLine) {
+      text = text + unixNewLine;
     }
-    var start = max(text.lastIndexOf(UNIX_NEWLINE, position), 0);
-    var end = text.indexOf(UNIX_NEWLINE, position);
+    var start = max(text.lastIndexOf(unixNewLine, position), 0);
+    var end = text.indexOf(unixNewLine, position);
 
     if (start == end && position > 0) {
-      start = max(text.lastIndexOf(UNIX_NEWLINE, position - 1), 0);
+      start = max(text.lastIndexOf(unixNewLine, position - 1), 0);
     }
 
     if (start + 1 < end) {
       var dupe = text.substring(start == 0 ? 0 : start + 1, end);
       text = text.substring(0, start) +
-          (start == 0 ? '' : UNIX_NEWLINE) +
+          (start == 0 ? '' : unixNewLine) +
           dupe +
-          UNIX_NEWLINE +
+          unixNewLine +
           dupe +
           text.substring(end);
     }

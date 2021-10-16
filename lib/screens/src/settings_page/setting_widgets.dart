@@ -19,24 +19,28 @@ class SortNotesFloatModalSheet extends StatelessWidget {
   final TextStyle _kListItemStyle = TextStyle(
     fontWeight: FontWeight.w400,
     fontFamily: 'Poppins',
-    color: Color(0xFF222222),
+    color: const Color(0xFF222222),
     fontSize: 15.w,
   );
 
   final double _kIconSize = 24.w;
 
+  SortNotesFloatModalSheet({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit _prefsCubit = BlocProvider.of<HydratedPrefsCubit>(context);
+    final HydratedPrefsCubit _prefsCubit =
+        BlocProvider.of<HydratedPrefsCubit>(context);
 
     var def = _prefsCubit.state.sortby.obs;
 
     return PreferenceText(
       "Sort Notes",
-      style: TextStyle(fontWeight: FontWeight.w500),
+      style: const TextStyle(fontWeight: FontWeight.w500),
       titleGap: 0.0,
-      leading: Icon(CupertinoIcons.text_alignright, size: _kIconSize, color: Color(0xff606060)),
-      trailing: Container(
+      leading: Icon(CupertinoIcons.text_alignright,
+          size: _kIconSize, color: const Color(0xff606060)),
+      trailing: SizedBox(
         width: 200.w,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -47,11 +51,15 @@ class SortNotesFloatModalSheet extends StatelessWidget {
               child: Obx(
                 () => Text(
                   VariableService().sortbyNames[def.value],
-                  style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 15.w, fontWeight: FontWeight.w300),
+                  style: TextStyle(
+                      color: CupertinoColors.systemGrey,
+                      fontSize: 15.w,
+                      fontWeight: FontWeight.w300),
                 ),
               ),
             ),
-            Icon(CupertinoIcons.forward, size: 21.w, color: Color(0xFF0A0A0A)),
+            Icon(CupertinoIcons.forward,
+                size: 21.w, color: const Color(0xFF0A0A0A)),
           ],
         ),
       ),
@@ -70,10 +78,14 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                   backgroundColor: Colors.white,
                   middle: Text(
                     "SORT NOTES",
-                    style: TextStyle(fontWeight: FontWeight.w500, color: Color(0xFF222222), fontSize: 18.w),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xFF222222),
+                        fontSize: 18.w),
                   ),
                   trailing: IconButton(
-                    icon: Icon(CupertinoIcons.clear, color: Color(0xFFA0A0A0)),
+                    icon: const Icon(CupertinoIcons.clear,
+                        color: Color(0xFFA0A0A0)),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -89,37 +101,52 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                           def.value = 0;
                           _prefsCubit.updateSortBy(0);
                         },
-                        trailing: def.value == 0 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                        trailing: def.value == 0
+                            ? const Icon(CupertinoIcons.checkmark,
+                                color: Color(0xFFDD4C4F))
+                            : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title: Text('Modification Date', style: _kListItemStyle),
+                        title:
+                            Text('Modification Date', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () {
                           _prefsCubit.updateSortBy(1);
                           def.value = 1;
                         },
-                        trailing: def.value == 1 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                        trailing: def.value == 1
+                            ? const Icon(CupertinoIcons.checkmark,
+                                color: Color(0xFFDD4C4F))
+                            : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title: Text('Alphabetical (A-Z)', style: _kListItemStyle),
+                        title:
+                            Text('Alphabetical (A-Z)', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () {
                           _prefsCubit.updateSortBy(2);
                           def.value = 2;
                         },
-                        trailing: def.value == 2 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                        trailing: def.value == 2
+                            ? const Icon(CupertinoIcons.checkmark,
+                                color: Color(0xFFDD4C4F))
+                            : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title: Text('Alphabetical (Z-A)', style: _kListItemStyle),
+                        title:
+                            Text('Alphabetical (Z-A)', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () {
                           _prefsCubit.updateSortBy(3);
                           def.value = 3;
                         },
-                        trailing: def.value == 3 ? Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F)) : null,
+                        trailing: def.value == 3
+                            ? const Icon(CupertinoIcons.checkmark,
+                                color: Color(0xFFDD4C4F))
+                            : null,
                       ),
                       tilesDivider(),
                     ],
@@ -143,6 +170,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
 }
 
 class ProfileTileSettings extends StatelessWidget {
+  const ProfileTileSettings({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     // final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
@@ -177,15 +206,26 @@ class ProfileTileSettings extends StatelessWidget {
                         backgroundColor: Colors.transparent,
                         child: photo != null
                             ? NetworkImage(photo)
-                            : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
+                            : SvgPicture.asset(
+                                'assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                       ).pOnly(bottom: 5.w),
                     ),
-                    Text(user.name).text.medium.color(Color(0xff32343d)).size(22.w).make(),
+                    Text(user.name)
+                        .text
+                        .medium
+                        .color(const Color(0xff32343d))
+                        .size(22.w)
+                        .make(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(" ${user.email}").text.size(14.w).light.gray400.make(),
+                        Text(" ${user.email}")
+                            .text
+                            .size(14.w)
+                            .light
+                            .gray400
+                            .make(),
                         SizedBox(width: 5.w),
                         !user.verified
                             ? Icon(
@@ -193,13 +233,18 @@ class ProfileTileSettings extends StatelessWidget {
                                 color: Colors.red,
                                 size: 16.w,
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        "Edit Profile".text.white.size(16.w).make().pSymmetric(h: 5.w),
+                        "Edit Profile"
+                            .text
+                            .white
+                            .size(16.w)
+                            .make()
+                            .pSymmetric(h: 5.w),
                         Icon(
                           CupertinoIcons.forward,
                           color: Colors.white,
@@ -207,9 +252,13 @@ class ProfileTileSettings extends StatelessWidget {
                         ),
                       ],
                     )
-                        .capsule(backgroundColor: Color(0xff006aff), width: 150.w, height: 45.w)
+                        .capsule(
+                            backgroundColor: const Color(0xff006aff),
+                            width: 150.w,
+                            height: 45.w)
                         .py12()
-                        .onTap(() => Navigator.pushNamed(context, RouterName.profileRoute)),
+                        .onTap(() => Navigator.pushNamed(
+                            context, RouterName.profileRoute)),
                   ],
                 )
               : Row(
@@ -222,7 +271,8 @@ class ProfileTileSettings extends StatelessWidget {
                           backgroundColor: Colors.white,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 10.w),
-                            child: Lottie.asset('assets/animations/people-portrait.json'),
+                            child: Lottie.asset(
+                                'assets/animations/people-portrait.json'),
                           ),
                         ),
                         // SizedBox(width: 10.0),
@@ -232,7 +282,8 @@ class ProfileTileSettings extends StatelessWidget {
                             Text(
                               "You are not logged in!",
                               style: TextStyle(
-                                color: const Color(0xff32343D).withOpacity(0.85),
+                                color:
+                                    const Color(0xff32343D).withOpacity(0.85),
                                 fontSize: 18.w,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -249,9 +300,11 @@ class ProfileTileSettings extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Icon(CupertinoIcons.forward, color: Color(0xFF0A0A0A)),
+                    const Icon(CupertinoIcons.forward,
+                        color: Color(0xFF0A0A0A)),
                   ],
-                ).onTap(() => Navigator.pushNamed(context, RouterName.profileRoute)),
+                ).onTap(
+                  () => Navigator.pushNamed(context, RouterName.profileRoute)),
         );
       },
     );

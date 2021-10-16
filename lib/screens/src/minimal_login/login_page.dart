@@ -8,7 +8,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/blueButton.dart';
+import 'package:givnotes/widgets/blue_button.dart';
 
 import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
@@ -31,11 +31,11 @@ class LoginPage extends StatelessWidget {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
         leading: ModalRoute.of(context).canPop
             ? InkWell(
                 onTap: () => Navigator.pop(context),
-                child: Icon(Icons.close, color: Colors.black),
+                child: const Icon(Icons.close, color: Colors.black),
               )
             : null,
       ),
@@ -49,7 +49,8 @@ class LoginPage extends StatelessWidget {
             Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
           }
           if (state is AuthNeedsVerification) {
-            Navigator.of(context).pushReplacementNamed(RouterName.verificationRoute);
+            Navigator.of(context)
+                .pushReplacementNamed(RouterName.verificationRoute);
           }
           if (state is ForgetPasswordSuccess) {}
         },
@@ -65,9 +66,14 @@ class LoginPage extends StatelessWidget {
                 children: [
                   'Welcome'.text.headline1(context).size(38.w).light.make(),
                   SizedBox(height: 33.w),
-                  LoginForm(),
+                  const LoginForm(),
                   SizedBox(height: 20.w),
-                  'or connect with'.text.headline4(context).size(13.w).make().centered(),
+                  'or connect with'
+                      .text
+                      .headline4(context)
+                      .size(13.w)
+                      .make()
+                      .centered(),
                   SizedBox(height: 10.w),
                   Hero(
                     tag: 'google-button',
@@ -79,7 +85,12 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 100.w),
                   TextButton(
                     onPressed: _onSignUpPressed,
-                    child: 'Create a new account.'.text.caption(context).size(14.w).semiBold.make(),
+                    child: 'Create a new account.'
+                        .text
+                        .caption(context)
+                        .size(14.w)
+                        .semiBold
+                        .make(),
                   ).centered(),
                   // SizedBox(height: screenHeight * 0.045), //30
                 ],
@@ -93,6 +104,8 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
+  const LoginForm({Key key}) : super(key: key);
+
   @override
   _LoginFormState createState() => _LoginFormState();
 }
@@ -137,7 +150,8 @@ class _LoginFormState extends State<LoginForm> {
 
   void _onObscurePressed() {
     _isObscure = !_isObscure;
-    BlocProvider.of<AuthenticationBloc>(context).add(LoginObscureEvent(obscureLogin: _isObscure));
+    BlocProvider.of<AuthenticationBloc>(context)
+        .add(LoginObscureEvent(obscureLogin: _isObscure));
   }
 
   @override
@@ -163,7 +177,7 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
-            prefixIcon: Icon(Icons.email_outlined),
+            prefixIcon: const Icon(Icons.email_outlined),
           ),
           SizedBox(height: 22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
@@ -179,13 +193,17 @@ class _LoginFormState extends State<LoginForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: Icon(Icons.lock_outline),
+                prefixIcon: const Icon(Icons.lock_outline),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure
-                    ? GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_off_outlined))
-                    : GestureDetector(onTap: _onObscurePressed, child: Icon(Icons.visibility_outlined)),
+                    ? GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: const Icon(Icons.visibility_off_outlined))
+                    : GestureDetector(
+                        onTap: _onObscurePressed,
+                        child: const Icon(Icons.visibility_outlined)),
               );
             },
           ),
@@ -214,7 +232,8 @@ class _LoginFormState extends State<LoginForm> {
                       onPressed: () {},
                       isLoading: true,
                     )
-                  : BlueButton(title: "Sign In", onPressed: _onLoginButtonPressed);
+                  : BlueButton(
+                      title: "Sign In", onPressed: _onLoginButtonPressed);
             },
           )
         ],

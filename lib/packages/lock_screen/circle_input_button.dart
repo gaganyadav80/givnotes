@@ -22,11 +22,12 @@ class CircleInputButton extends StatelessWidget {
   final String text;
   final Sink<String> enteredSink;
 
-  CircleInputButton({
+  const CircleInputButton({
+    Key key,
     @required this.text,
     @required this.enteredSink,
     this.config = const CircleInputButtonConfig(),
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +57,8 @@ class CircleInputButton extends StatelessWidget {
             ),
         // primary: config.backgroundColor.withOpacity(config.backgroundOpacity),
         primary: Colors.transparent,
-        shadowColor: config.backgroundColor.withOpacity(config.backgroundOpacity),
+        shadowColor:
+            config.backgroundColor.withOpacity(config.backgroundOpacity),
         elevation: 0,
       ),
     );

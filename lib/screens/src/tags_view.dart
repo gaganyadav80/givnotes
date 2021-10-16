@@ -19,34 +19,36 @@ class TagSearchController extends GetxController {
   List<String> selectedTagList = <String>[];
 
   void resetSearchList() {
-    this.tagSearchList
+    tagSearchList
       ..clear()
       ..addAll(VariableService().prefsBox.allTagsMap.keys.toList());
 
     update(['tagSearchList']);
   }
 
-  void clearSearchListNOUP() => this.tagSearchList.clear();
+  void clearSearchListNOUP() => tagSearchList.clear();
 
   void addAllSearchList(List<String> value) {
-    this.tagSearchList
+    tagSearchList
       ..clear()
       ..addAll(value);
     update(['tagSearchList']);
   }
 
   void addSelectedList(String value) {
-    this.selectedTagList.add(value);
+    selectedTagList.add(value);
     update(['selectedTagList']);
   }
 
   void removeSelectedList(String value) {
-    this.selectedTagList.remove(value);
+    selectedTagList.remove(value);
     update(['selectedTagList']);
   }
 }
 
 class TagsView extends StatefulWidget {
+  const TagsView({Key key}) : super(key: key);
+
   @override
   _TagsViewState createState() => _TagsViewState();
 }
@@ -88,15 +90,19 @@ class _TagsViewState extends State<TagsView> {
                       });
                 }).toList();
 
-                if (controller.selectedTagList.length == 0) {
+                if (controller.selectedTagList.isEmpty) {
                   return SingleChildScrollView(
                     child: Padding(
                       padding: EdgeInsets.all(20.0.w),
                       child: Column(
                         children: [
                           SizedBox(height: 50.h),
-                          Image.asset('assets/giv_img/search_light.png', height: 180.h),
-                          'Search according the tags here'.text.size(12.w).make(),
+                          Image.asset('assets/giv_img/search_light.png',
+                              height: 180.h),
+                          'Search according the tags here'
+                              .text
+                              .size(12.w)
+                              .make(),
                         ],
                       ),
                     ),
@@ -125,7 +131,7 @@ class _TagsViewState extends State<TagsView> {
 }
 
 class SearchTagsTextField extends StatefulWidget {
-  SearchTagsTextField({Key key, this.tagStateKey}) : super(key: key);
+  const SearchTagsTextField({Key key, this.tagStateKey}) : super(key: key);
 
   final GlobalKey<TagsState> tagStateKey;
 
@@ -139,7 +145,8 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();
 
-  final TagSearchController _tagSearchController = Get.find<TagSearchController>();
+  final TagSearchController _tagSearchController =
+      Get.find<TagSearchController>();
 
   @override
   void initState() {
@@ -209,7 +216,8 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   letterSpacing: 0.5,
                   color: Colors.white,
                 ),
-                border: Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
+                border:
+                    Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
                 textActiveColor: Colors.white,
                 textColor: Color(_allTagsMap[noteTag]),
                 combine: ItemTagsCombine.withTextBefore,

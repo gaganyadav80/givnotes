@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'constants.dart';
 
 class CustomTextFormField extends StatelessWidget {
-  CustomTextFormField({
+  const CustomTextFormField({
+    Key key,
     @required TextEditingController fieldController,
     @required String hintText,
     @required TextInputType keyboardType,
@@ -35,7 +36,8 @@ class CustomTextFormField extends StatelessWidget {
         _inputFormatters = inputFormatters,
         _enabled = enabled,
         _prefixIcon = prefixIcon,
-        _maxLength = maxLength;
+        _maxLength = maxLength,
+        super(key: key);
 
   final TextEditingController _fieldController;
   final String _hintText;
@@ -67,7 +69,8 @@ class CustomTextFormField extends StatelessWidget {
       enabled: _enabled ?? true,
       maxLines: _maxLines,
       maxLength: _maxLength,
-      maxLengthEnforcement: _maxLength != null ? MaxLengthEnforcement.enforced : null,
+      maxLengthEnforcement:
+          _maxLength != null ? MaxLengthEnforcement.enforced : null,
       controller: _fieldController,
       cursorColor: Theme.of(context).primaryColor,
       keyboardType: _keyboardType,
