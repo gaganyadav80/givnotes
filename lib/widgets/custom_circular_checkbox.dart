@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class CustomCheckbox extends StatefulWidget {
   /// Creates a material design checkbox.

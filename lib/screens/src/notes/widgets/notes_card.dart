@@ -13,7 +13,6 @@ import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/services/services.dart';
 // For localizations use [timeago] package
 import 'package:givnotes/packages/timeago-3.1.0/timeago.dart' as timeago;
-import 'package:givnotes/services/src/multi_select_notes.dart';
 
 class NotesCard extends StatefulWidget {
   const NotesCard({

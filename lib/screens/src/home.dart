@@ -6,10 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/src/todo_timeline/todo_timeline.dart';
 import 'package:givnotes/widgets/widgets.dart';
-
-import 'todo_timeline/todo_home.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);

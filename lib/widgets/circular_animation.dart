@@ -3,7 +3,6 @@ library widget_circular_animator;
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:meta/meta.dart';
 
 class WidgetCircularAnimator extends StatefulWidget {
   const WidgetCircularAnimator({
