@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'preference_service.dart';
@@ -46,7 +48,7 @@ class _RadioPreferenceState<T> extends State<RadioPreference<T>> {
       try {
         setState(() {});
       } catch (e) {
-        print(e);
+        log(e.toString());
       }
     });
   }
@@ -71,7 +73,8 @@ class _RadioPreferenceState<T> extends State<RadioPreference<T>> {
       trailing: Radio(
         value: widget.val,
         groupValue: PrefService.get(widget.localGroupKey),
-        onChanged: widget.disabled ? null : (dynamic val) => onChange(widget.val),
+        onChanged:
+            widget.disabled ? null : (dynamic val) => onChange(widget.val),
       ),
       onTap: (widget.ignoreTileTap || widget.disabled)
           ? null

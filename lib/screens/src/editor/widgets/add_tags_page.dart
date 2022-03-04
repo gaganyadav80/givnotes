@@ -1,9 +1,9 @@
-import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/screens/src/tags_view.dart';
@@ -36,14 +36,17 @@ class _AddTagScreenState extends State<AddTagScreen> {
 
   final FocusNode _focusNode = FocusNode();
   final RxInt tagColor = 0.obs;
-  final VariableService _global = VariableService();
+  // final VariableService _global = VariableService();
   final MaterialColors _colors = MaterialColors();
+  Map<String, int> allTagsMap = <String, int>{};
 
   @override
   void initState() {
     super.initState();
+    allTagsMap = Database.tags;
+
     if (widget.editTagTitle!.isNotEmpty && widget.isEditing!) {
-      tagColor.value = _global.prefsBox.allTagsMap![widget.editTagTitle!]!;
+      tagColor.value = allTagsMap[widget.editTagTitle!]!;
       widget.controller!.text = widget.editTagTitle!;
     } else {
       tagColor.value = _colors.materialColorValues[0];
@@ -53,13 +56,12 @@ class _AddTagScreenState extends State<AddTagScreen> {
       final text = widget.controller!.text.trim();
 
       if (text.isNotEmpty) {
-        final String? filterTagName =
-            _global.prefsBox.allTagsMap!.keys.firstWhereOrNull(
+        final String? filterTagName = allTagsMap.keys.firstWhere(
           (element) => element == text,
         );
 
         if (filterTagName != null) {
-          tagColor.value = _global.prefsBox.allTagsMap![filterTagName]!;
+          tagColor.value = allTagsMap[filterTagName]!;
         }
       }
     });
@@ -67,7 +69,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
 
   @override
   void dispose() {
-    _global.prefsBox.save();
+    // _global.prefsBox.save();
+    Database.updateTags(allTagsMap);
     _focusNode.dispose();
     super.dispose();
   }
@@ -199,11 +202,10 @@ class _AddTagScreenState extends State<AddTagScreen> {
                               onTap: () {
                                 tagColor.value =
                                     _colors.materialColorValues[index];
-                                if (_global.prefsBox.allTagsMap!
+                                if (allTagsMap
                                         .containsKey(widget.controller!.text) &&
                                     tagColor.value !=
-                                        _global.prefsBox.allTagsMap![
-                                            widget.controller!.text] &&
+                                        allTagsMap[widget.controller!.text] &&
                                     !widget.isEditing!) {
                                   Fluttertoast.showToast(
                                       msg:
@@ -247,12 +249,10 @@ class _AddTagScreenState extends State<AddTagScreen> {
                                       const Icon(CupertinoIcons.checkmark_alt,
                                               color: Colors.black)
                                           .pOnly(right: 15.w)
-                                    else if (_global.prefsBox.allTagsMap!
-                                            .containsKey(
-                                                widget.controller!.text) &&
+                                    else if (allTagsMap.containsKey(
+                                            widget.controller!.text) &&
                                         _colors.materialColorValues[index] ==
-                                            _global.prefsBox.allTagsMap![
-                                                widget.controller!.text])
+                                            allTagsMap[widget.controller!.text])
                                       'Current'
                                           .text
                                           .xs
@@ -284,26 +284,26 @@ class _AddTagScreenState extends State<AddTagScreen> {
       if (widget.isEditing!) {
         if (tagName != widget.editTagTitle) {
           widget.noteTagsList.remove(widget.editTagTitle);
-          _global.prefsBox.allTagsMap!.remove(widget.editTagTitle);
+          allTagsMap.remove(widget.editTagTitle);
         }
         // noteTagsMap[tagName] = tagColor.value;
         if (!widget.noteTagsList.contains(tagName)) {
           widget.noteTagsList.add(tagName);
         }
-        _global.prefsBox.allTagsMap![tagName] = tagColor.value;
+        allTagsMap[tagName] = tagColor.value;
 
         Get.find<TagSearchController>().tagSearchList
           ..clear()
-          ..addAll(_global.prefsBox.allTagsMap!.keys.toList());
+          ..addAll(allTagsMap.keys.toList());
       } else {
-        if (!_global.prefsBox.allTagsMap!.containsKey(tagName)) {
-          _global.prefsBox.allTagsMap![tagName] = tagColor.value;
+        if (!allTagsMap.containsKey(tagName)) {
+          allTagsMap[tagName] = tagColor.value;
 
           Get.find<TagSearchController>().tagSearchList
             ..clear()
-            ..addAll(_global.prefsBox.allTagsMap!.keys.toList());
+            ..addAll(allTagsMap.keys.toList());
         }
-        _global.prefsBox.allTagsMap![tagName] = tagColor.value;
+        allTagsMap[tagName] = tagColor.value;
 
         if (!widget.noteTagsList.contains(tagName)) {
           widget.noteTagsList.add(tagName);

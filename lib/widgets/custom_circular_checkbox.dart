@@ -28,9 +28,7 @@ class CustomCheckbox extends StatefulWidget {
     this.side,
     this.width = 18.0,
     this.strokeWidth = 2.0,
-  })  : assert(tristate != null),
-        assert(tristate || value != null),
-        assert(autofocus != null),
+  })  : assert(tristate || value != null),
         super(key: key);
 
   /// Whether this checkbox is checked.
@@ -538,8 +536,8 @@ class _CheckboxPainter extends ToggleablePainter {
     assert(t >= 0.0 && t <= 0.5);
     OutlinedBorder? resolvedShape = shape;
     if (side == null) {
-      resolvedShape = resolvedShape!.copyWith(
-          side: BorderSide(width: 2, color: paint.color));
+      resolvedShape = resolvedShape!
+          .copyWith(side: BorderSide(width: 2, color: paint.color));
     }
     resolvedShape!.copyWith(side: side).paint(canvas, outer);
   }

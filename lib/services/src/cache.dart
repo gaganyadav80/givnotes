@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 /// {@template cache_client}
 /// An in-memory cache client.
 /// {@endtemplate}

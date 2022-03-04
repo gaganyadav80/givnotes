@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 
@@ -34,7 +35,7 @@ class NotesCard extends StatefulWidget {
 }
 
 class _NotesCardState extends State<NotesCard> {
-  final Map<String, int>? _allTagsMap = VariableService().prefsBox.allTagsMap;
+  final Map<String, int>? _allTagsMap = Database.tags;
   final RxString createdAgo = ''.obs;
 
   Timer? timer;
@@ -119,7 +120,8 @@ class _NotesCardState extends State<NotesCard> {
                                   itemCount: widget.note.tags.length,
                                   itemBuilder: (context, index) {
                                     String tagsTitle = widget.note.tags[index];
-                                    Color color = Color(_allTagsMap![tagsTitle]!);
+                                    Color color =
+                                        Color(_allTagsMap![tagsTitle]!);
 
                                     return prefsCubit.state.compactTags!
                                         ? Container(

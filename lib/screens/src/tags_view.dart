@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
-import 'package:givnotes/services/services.dart';
 
 import 'notes/src/notes_model.dart';
 import 'notes/widgets/notes_card.dart';
@@ -20,7 +20,7 @@ class TagSearchController extends GetxController {
   void resetSearchList() {
     tagSearchList
       ..clear()
-      ..addAll(VariableService().prefsBox.allTagsMap!.keys.toList());
+      ..addAll(Database.tags.keys.toList());
 
     update(['tagSearchList']);
   }
@@ -61,7 +61,7 @@ class _TagsViewState extends State<TagsView> {
     super.initState();
     Get.find<TagSearchController>().tagSearchList
       ..clear()
-      ..addAll(VariableService().prefsBox.allTagsMap!.keys.toList());
+      ..addAll(Database.tags.keys.toList());
   }
 
   @override
@@ -139,7 +139,7 @@ class SearchTagsTextField extends StatefulWidget {
 }
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
-  final Map<String, int>? _allTagsMap = VariableService().prefsBox.allTagsMap;
+  final Map<String, int>? _allTagsMap = Database.tags;
 
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();
@@ -155,13 +155,10 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
       final text = _searchTagController.text;
 
       if (text.isNotEmpty) {
-        final _filterList = _allTagsMap!.keys.toList().where((element) {
+        final List<String> _filterList =
+            _allTagsMap!.keys.toList().where((element) {
           return element.toLowerCase().contains(text.toLowerCase());
         }).toList();
-
-        if (_filterList == null) {
-          throw Exception('List cannot be null');
-        }
 
         _tagSearchController.addAllSearchList(_filterList);
       } else if (text.isEmpty) {

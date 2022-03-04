@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -127,11 +129,11 @@ class _RegisterFormState extends State<RegisterForm> {
     );
 
     if (!_formKey.currentState!.validate()) {
-      print('not validated');
+      log('not validated');
       return;
     }
     if (_passwordMatch.value != null) {
-      print('password do not match');
+      log('password do not match');
       return;
     }
 
@@ -253,9 +255,7 @@ class _RegisterFormState extends State<RegisterForm> {
                         );
                       }
 
-                      if (_confirmPassNode != null) {
-                        _confirmPassNode.unfocus();
-                      }
+                      _confirmPassNode.unfocus();
                     },
                     onChanged: (value) {
                       if (_passtextController.text.isNotEmpty) {

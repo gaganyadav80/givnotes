@@ -27,7 +27,7 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
-  final Rx<quill.QuillController> _quillController =
+  final Rx<quill.QuillController?> _quillController =
       quill.QuillController.basic().obs;
 
   // final HiveDBServices _dbServices = HiveDBServices();
@@ -149,7 +149,7 @@ class _EditorScreenState extends State<EditorScreen> {
                     width: double.infinity,
                     child: state.isEditing
                         ? quill.QuillToolbar.basic(
-                            controller: _quillController.value,
+                            controller: _quillController.value!,
                             showBackgroundColorButton: false,
                             showClearFormat: false,
                             // showHorizontalRule: false,
@@ -197,7 +197,7 @@ class _EditorScreenState extends State<EditorScreen> {
         return (_quillController.value == null)
             ? const Center(child: CupertinoActivityIndicator())
             : Obx(() => quill.QuillEditor(
-                  controller: _quillController.value,
+                  controller: _quillController.value!,
                   focusNode: _editorfocusNode,
                   scrollController: ScrollController(),
                   scrollable: true,
@@ -253,7 +253,7 @@ class _EditorScreenState extends State<EditorScreen> {
     FocusScope.of(context).unfocus();
 
     String title = _titleController.text;
-    String note = _quillController.value.document.toPlainText().trim();
+    String note = _quillController.value!.document.toPlainText().trim();
 
     if (title.isEmpty && note.isEmpty) {
       showToast("Can't create empty note");
@@ -277,7 +277,7 @@ class _EditorScreenState extends State<EditorScreen> {
       //
     } else if (_noteEditStore!.state.isEditing) {
       String _title = _titleController.text;
-      String _note = _quillController.value.document.toPlainText().trim();
+      String _note = _quillController.value!.document.toPlainText().trim();
 
       if (_title.isEmpty && _note.isEmpty) {
         FocusScope.of(context).unfocus();
@@ -294,7 +294,7 @@ class _EditorScreenState extends State<EditorScreen> {
             title: _title.isNotEmpty ? _title : 'Untitled',
             text: _note,
             znote:
-                jsonEncode(_quillController.value.document.toDelta().toJson()),
+                jsonEncode(_quillController.value!.document.toDelta().toJson()),
             created: DateTime.now().toString(),
             modified: DateTime.now().toString(),
             tags: noteTagsList.toList(),
@@ -308,7 +308,7 @@ class _EditorScreenState extends State<EditorScreen> {
             title: _title.isNotEmpty ? _title : 'Untitled',
             text: _note,
             znote:
-                jsonEncode(_quillController.value.document.toDelta().toJson()),
+                jsonEncode(_quillController.value!.document.toDelta().toJson()),
             trash: _notesModel.value!.trash,
             created: _notesModel.value!.created,
             modified: DateTime.now().toString(),

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -186,10 +187,7 @@ class _SearchPageState extends State<SearchPage> {
                                                     String title =
                                                         item.tags[index];
                                                     Color color = Color(
-                                                        VariableService()
-                                                                .prefsBox
-                                                                .allTagsMap![
-                                                            title]!);
+                                                        Database.tags[title]!);
 
                                                     return _prefsCubit
                                                             .compactTags!

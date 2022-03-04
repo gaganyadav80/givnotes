@@ -12,9 +12,7 @@ class LoginButtonPressed extends AuthenticationEvent {
   final String password;
   final bool verify;
   const LoginButtonPressed(
-      {required this.email, required this.password, this.verify = false})
-      : assert(email != null),
-        assert(password != null);
+      {required this.email, required this.password, this.verify = false});
 
   @override
   List<Object> get props => [email, password, verify];
@@ -25,9 +23,7 @@ class RegisterButtonClicked extends AuthenticationEvent {
   final String email;
   final String password;
   const RegisterButtonClicked(
-      {required this.name, required this.email, required this.password})
-      : assert(email != null),
-        assert(password != null);
+      {required this.name, required this.email, required this.password});
 
   @override
   List<Object> get props => [email, password];

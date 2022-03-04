@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:givnotes/screens/src/todo_timeline/src/todo_repository.dart';
-import 'package:meta/meta.dart';
 
 import 'todo_event.dart';
 import 'todo_state.dart';
@@ -12,8 +11,7 @@ class TodosBloc extends Bloc<TodosEvent, TodosState> {
   StreamSubscription? _todosSubscription;
 
   TodosBloc({required TodosRepository todosRepository})
-      : assert(todosRepository != null),
-        _todosRepository = todosRepository,
+      : _todosRepository = todosRepository,
         super(TodosLoading());
 
   @override

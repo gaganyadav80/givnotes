@@ -18,8 +18,7 @@ class WidgetCircularAnimator extends StatefulWidget {
     this.innerAnimationSeconds = 30,
     this.outerAnimationSeconds = 30,
     this.reverse = true,
-  })  : assert(child != null),
-        super(key: key);
+  }) : super(key: key);
 
   final Color innerColor;
   final Color outerColor;

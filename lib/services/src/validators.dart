@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Validator {
   static final Validator _singleton = Validator._internal();
   factory Validator() => _singleton;

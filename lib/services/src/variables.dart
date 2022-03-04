@@ -1,4 +1,3 @@
-import 'package:givnotes/database/HiveDB.dart';
 import 'package:package_info/package_info.dart';
 import 'package:encrypt/encrypt.dart' as aes;
 
@@ -12,10 +11,6 @@ class VariableService {
     isPermanentDisabled = false;
     PackageInfo.fromPlatform().then((value) => packageInfo = value);
   }
-
-  late PrefsModel prefsBox;
-  // PrefsModel get prefsBox => _prefsBox;
-  // set prefsBox(PrefsModel value) => _prefsBox = value;
 
   late PackageInfo packageInfo;
   // PackageInfo get packageInfo => _packageInfo;

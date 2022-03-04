@@ -8,9 +8,7 @@ class GoogleButton extends StatelessWidget {
   final Function onPressed;
   final String title;
   const GoogleButton({Key? key, required this.title, required this.onPressed})
-      : assert(onPressed != null),
-        assert(title != null),
-        super(key: key);
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Material(

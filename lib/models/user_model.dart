@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 
 /// {@template user}
 /// User model
@@ -14,8 +13,7 @@ class UserModel extends Equatable {
     required this.name,
     required this.photo,
     required this.verified,
-  })  : assert(email != null),
-        assert(id != null);
+  });
 
   /// The current user's email address.
   final String email;
@@ -32,7 +30,8 @@ class UserModel extends Equatable {
   final bool verified;
 
   /// Empty user which represents an unauthenticated user.
-  static const empty = UserModel(email: '', id: '', name: null, photo: null, verified: false);
+  static const empty =
+      UserModel(email: '', id: '', name: null, photo: null, verified: false);
 
   @override
   List<Object?> get props => [email, id, name, photo, verified];

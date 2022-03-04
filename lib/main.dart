@@ -7,6 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,6 +24,7 @@ import 'services/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await GetStorage.init();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -35,7 +38,6 @@ void main() async {
       storageDirectory: await getApplicationDocumentsDirectory());
 
   initGetXControllers();
-  await initHiveDb();
 
   final AuthenticationRepository authenticationRepository =
       AuthenticationRepository();
@@ -46,8 +48,7 @@ void main() async {
 
 class App extends StatelessWidget {
   const App({Key? key, required this.authenticationRepository})
-      : assert(authenticationRepository != null),
-        super(key: key);
+      : super(key: key);
   final AuthenticationRepository authenticationRepository;
 
   @override
@@ -73,8 +74,8 @@ class App extends StatelessWidget {
           designSize: const Size(414, 896),
           builder: () => AppLock(
             builder: (_) => const GivnotesApp(),
-            lockScreen: ShowLockscreen(changePassAuth: null),
-            enabled: VariableService().prefsBox.passcode!.isNotEmpty,
+            lockScreen: const ShowLockscreen(changePassAuth: null),
+            enabled: Database.passcodeEnabled,
             // backgroundLockLatency: Duration(),
           ),
         ),
@@ -133,25 +134,5 @@ class CheckLogin extends StatelessWidget {
 
       return const HomePage();
     }
-
-    // return StreamBuilder<User>(
-    //   stream: FirebaseAuth.instance.authStateChanges(),
-    //   builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-    //     if (snapshot.connectionState == ConnectionState.waiting)
-    //       return Scaffold(
-    //         backgroundColor: Colors.white,
-    //         body: Center(
-    //           child: CircularLoading(size: 50.0),
-    //         ),
-    //       );
-
-    //     if (!snapshot.hasData || snapshot.data == null) return LoginPage();
-
-    //     pluginInitializer(snapshot.data.uid);
-    //     initHiveDb();
-
-    //     return HomePage();
-    //   },
-    // );
   }
 }

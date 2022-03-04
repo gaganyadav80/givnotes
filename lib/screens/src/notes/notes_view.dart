@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -158,7 +160,7 @@ class _NotesViewState extends State<NotesView> {
               _searchList.value = controller.notes
                   .where((element) => element.trash == false)
                   .toList();
-              print(controller.directory);
+              log(controller.directory.toString());
 
               if ((controller.notes.isEmpty)) {
                 return const NotesEmptyView(isTrash: false);

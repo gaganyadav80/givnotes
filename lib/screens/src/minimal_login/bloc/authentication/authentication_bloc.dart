@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
@@ -21,8 +22,7 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,
-  })  : assert(authenticationRepository != null),
-        _authRepo = authenticationRepository,
+  })  : _authRepo = authenticationRepository,
         super(
           authenticationRepository.currentUser.id == ''
               ? AuthInitial()
@@ -129,7 +129,7 @@ class AuthenticationBloc
                 user: _user, verify: event.verify, verifyFailed: true);
           }
         } else {
-          print("AUTH ERROR: ${e.message}");
+          log("AUTH ERROR: ${e.message}");
           yield (AuthFailure(message: "Auth Error: ${e.code.toUpperCase()}"));
         }
       }

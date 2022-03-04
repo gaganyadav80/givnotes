@@ -50,16 +50,16 @@ class AuthenticationRepository {
     required String password,
     required String name,
   }) async {
-    assert(email != null && password != null && name != null);
     // try {
-      final firebase_auth.UserCredential _authResult = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+    final firebase_auth.UserCredential _authResult =
+        await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
 
-      await _authResult.user!.updateProfile(displayName: name);
-      // await _authResult.user.reload();
-      await _authResult.user!.sendEmailVerification();
+    await _authResult.user!.updateProfile(displayName: name);
+    // await _authResult.user.reload();
+    await _authResult.user!.sendEmailVerification();
     // } on Exception {
     //   throw SignUpFailure();
     // }
@@ -67,13 +67,16 @@ class AuthenticationRepository {
 
   Future<void> logInWithGoogle() async {
     // try {
-      final GoogleSignInAccount _googleUser = await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
-      final GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
-      final firebase_auth.OAuthCredential _authCredential = firebase_auth.GoogleAuthProvider.credential(
-        accessToken: _googleAuth.accessToken,
-        idToken: _googleAuth.idToken,
-      );
-      await _firebaseAuth.signInWithCredential(_authCredential);
+    final GoogleSignInAccount _googleUser =
+        await (_googleSignIn.signIn() as FutureOr<GoogleSignInAccount>);
+    final GoogleSignInAuthentication _googleAuth =
+        await _googleUser.authentication;
+    final firebase_auth.OAuthCredential _authCredential =
+        firebase_auth.GoogleAuthProvider.credential(
+      accessToken: _googleAuth.accessToken,
+      idToken: _googleAuth.idToken,
+    );
+    await _firebaseAuth.signInWithCredential(_authCredential);
     // } on Exception {
     //   throw LogInWithGoogleFailure();
     // }
@@ -83,7 +86,6 @@ class AuthenticationRepository {
     required String email,
     required String password,
   }) async {
-    assert(email != null && password != null);
     // try {
     await _firebaseAuth.signInWithEmailAndPassword(
       email: email,
@@ -95,15 +97,16 @@ class AuthenticationRepository {
   }
 
   Future<void> resetPassword(String email) async {
-    await firebase_auth.FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    await firebase_auth.FirebaseAuth.instance
+        .sendPasswordResetEmail(email: email);
   }
 
   Future<void> logOut() async {
     // try {
-      await Future.wait([
-        _firebaseAuth.signOut(),
-        _googleSignIn.signOut(),
-      ]);
+    await Future.wait([
+      _firebaseAuth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
     // } on Exception {
     //   throw LogOutFailure();
     // }
@@ -112,6 +115,11 @@ class AuthenticationRepository {
 
 extension on firebase_auth.User {
   UserModel get toUser {
-    return UserModel(id: uid, email: email!, name: displayName, photo: photoURL, verified: emailVerified);
+    return UserModel(
+        id: uid,
+        email: email!,
+        name: displayName,
+        photo: photoURL,
+        verified: emailVerified);
   }
 }

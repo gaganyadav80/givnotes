@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -55,7 +58,7 @@ class SettingsPage extends StatelessWidget {
           // leadingColor: Colors.purple,
           titleGap: 0.0,
           onChange: ((value) {
-            print(value);
+            log(value);
           }),
         ),
         DropdownPreference(
@@ -71,7 +74,7 @@ class SettingsPage extends StatelessWidget {
           // leadingColor: Colors.pink,
           titleGap: 0.0,
           onChange: ((value) {
-            print(value);
+            log(value);
           }),
         ),
         PreferencePageLink(
@@ -99,7 +102,7 @@ class SettingsPage extends StatelessWidget {
           // leadingColor: Colors.lightGreen,
           titleGap: 0.0,
           onTap: () {
-            if (VariableService().prefsBox.passcode != '') {
+            if (Database.passcode != '') {
               Navigator.pushNamed(
                 context,
                 RouterName.lockscreenRoute,
@@ -182,7 +185,8 @@ class AppDetailSection extends StatelessWidget {
                     1: Text("Logs"),
                   },
                   groupValue: selectedIndex.value,
-                  onValueChanged: (dynamic value) => selectedIndex.value = value,
+                  onValueChanged: (dynamic value) =>
+                      selectedIndex.value = value,
                 )),
           ),
         ),
@@ -257,7 +261,6 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
   }
 
   final double _kIconSize = 26.w;
-  final VariableService _variableService = VariableService();
 
   @override
   Widget build(BuildContext context) {
@@ -276,7 +279,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
           titleGap: 0.0,
           isWaitSwitch: true,
           onEnable: () {
-            if (_variableService.prefsBox.passcode == '') {
+            if (Database.passcode == '') {
               Navigator.pushNamed(context, RouterName.addlockRoute)
                   .then((value) {
                 if (value as bool) {
@@ -288,14 +291,13 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             }
           },
           onDisable: () {
-            if (_variableService.prefsBox.passcode != '') {
+            if (Database.passcode != '') {
               Navigator.pushNamed(
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
                   AppLock.of(context)!.disable();
-                  _variableService.prefsBox.passcode = '';
-                  _variableService.prefsBox.save();
+                  Database.updatePasscode('');
                   Navigator.pop(context, true);
                 },
               ).then((value) {
@@ -312,9 +314,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
               'Biometric authentication',
               'biometric',
               defaultVal: false,
-              disabled: canUseBiometric.value
-                  ? _variableService.prefsBox.passcode!.isEmpty
-                  : true,
+              disabled:
+                  canUseBiometric.value ? Database.passcode.isEmpty : true,
               leading: Icon(Icons.fingerprint_outlined,
                   color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.teal,
@@ -323,12 +324,10 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
                 if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
               },
               onEnable: () {
-                _variableService.prefsBox.biometric = true;
-                _variableService.prefsBox.save();
+                Database.updateBiometric(true);
               },
               onDisable: () {
-                _variableService.prefsBox.biometric = false;
-                _variableService.prefsBox.save();
+                Database.updateBiometric(true);
               },
             )),
       ],

@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/cubit/cubits.dart';
-import 'package:givnotes/services/services.dart';
+import 'package:givnotes/database/database.dart';
 
 import 'add_tags_page.dart';
 
@@ -109,8 +109,7 @@ class _EditorTagsState extends State<EditorTags> {
       key: _tagStateKey,
       itemCount: widget.noteTagsList.length,
       itemBuilder: (int index) {
-        int borderColor =
-            VariableService().prefsBox.allTagsMap![widget.noteTagsList[index]]!;
+        int borderColor = Database.tags[widget.noteTagsList[index]]!;
 
         return ItemTags(
           key: Key(index.toString()),

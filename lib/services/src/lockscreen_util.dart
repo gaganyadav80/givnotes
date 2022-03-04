@@ -1,13 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/simple_lockscreen.dart';
 
 class ShowLockscreen extends StatelessWidget {
-  ShowLockscreen({
+  const ShowLockscreen({
     Key? key,
     required this.changePassAuth,
   }) : super(key: key);
@@ -26,7 +28,7 @@ class ShowLockscreen extends StatelessWidget {
         stickyAuth: false,
       );
     } on PlatformException catch (e) {
-      print("Error: $e");
+      log("Error: $e");
     }
     // if (!mounted) return false;
     if (authenticated) {
@@ -35,19 +37,16 @@ class ShowLockscreen extends StatelessWidget {
     return false;
   }
 
-  final VariableService _variableService = VariableService();
-
   @override
   Widget build(BuildContext context) {
     return SimpleLockScreen(
       title: 'Unlock givnotes',
       simpleTitle: 'Re-enter your \nPIN',
-      correctString: _variableService.prefsBox.passcode,
+      correctString: Database.passcode,
       confirmMode: false,
       canCancel: changePassAuth != null ? true : false,
-      canBiometric:
-          changePassAuth != null ? true : _variableService.prefsBox.biometric,
-      showBiometricFirst: _variableService.prefsBox.biometric,
+      canBiometric: changePassAuth != null ? true : Database.biometric,
+      showBiometricFirst: Database.biometric,
       biometricAuthenticate: biometrics,
       onUnlocked: changePassAuth ??
           () {
@@ -79,9 +78,8 @@ class AddLockscreen extends StatelessWidget {
       canBiometric: false,
       isAddingLock: true,
       onCompleted: (ctx, passcode) {
-        VariableService().prefsBox.passcode = passcode;
+        Database.updatePasscode(passcode);
         AppLock.of(context)!.enable();
-        VariableService().prefsBox.save();
         Navigator.pop(context, true);
       },
       // dotSecretConfig: DotSecretConfig(
