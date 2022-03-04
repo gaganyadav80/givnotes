@@ -111,6 +111,3 @@ flutter:
           weight: 600
         - asset: assets/fonts/ZillaSlab/ZillaSlab-Regular.ttf
           weight: 400
-
-## For other languages [localization]
-# timeago: ^3.1.0

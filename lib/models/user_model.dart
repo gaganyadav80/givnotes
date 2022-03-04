@@ -33,6 +33,12 @@ class UserModel extends Equatable {
   static const empty =
       UserModel(email: '', id: '', name: null, photo: null, verified: false);
 
+  /// Convenience getter to determine whether the current user is empty.
+  bool get isEmpty => this == UserModel.empty;
+
+  /// Convenience getter to determine whether the current user is not empty.
+  bool get isNotEmpty => this != UserModel.empty;
+
   @override
   List<Object?> get props => [email, id, name, photo, verified];
 }
