@@ -57,7 +57,7 @@ class AuthenticationRepository {
       password: password,
     );
 
-    await _authResult.user!.updateProfile(displayName: name);
+    await _authResult.user!.updateDisplayName(name);
     // await _authResult.user.reload();
     await _authResult.user!.sendEmailVerification();
     // } on Exception {
