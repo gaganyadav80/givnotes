@@ -4,7 +4,7 @@ abstract class VerificationState extends Equatable {
   const VerificationState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class VerificationInitial extends VerificationState {}
@@ -18,9 +18,9 @@ class ResendVerification extends VerificationState {}
 class ResendVerificationInProgress extends VerificationState {}
 
 class VerificationFailed extends VerificationState {
-  final String message;
+  final String? message;
   const VerificationFailed({this.message});
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

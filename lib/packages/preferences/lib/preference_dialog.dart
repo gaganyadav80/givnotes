@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'preference_service.dart';
 
 class PreferenceDialog extends StatefulWidget {
-  final String title;
+  final String? title;
   final List<Widget> preferences;
-  final String submitText;
-  final String cancelText;
+  final String? submitText;
+  final String? cancelText;
 
   final bool onlySaveOnSubmit;
 
   const PreferenceDialog(this.preferences,
-      {Key key,
+      {Key? key,
       this.title,
       this.submitText,
       this.onlySaveOnSubmit = false,
@@ -43,7 +43,7 @@ class PreferenceDialogState extends State<PreferenceDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: widget.title == null ? null : Text(widget.title),
+      title: widget.title == null ? null : Text(widget.title!),
       content: FutureBuilder(
         future: PrefService.init(),
         builder: (context, snapshot) {
@@ -61,7 +61,7 @@ class PreferenceDialogState extends State<PreferenceDialog> {
             ? []
             : [
                 TextButton(
-                  child: Text(widget.cancelText),
+                  child: Text(widget.cancelText!),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -71,7 +71,7 @@ class PreferenceDialogState extends State<PreferenceDialog> {
             ? []
             : [
                 TextButton(
-                  child: Text(widget.submitText),
+                  child: Text(widget.submitText!),
                   onPressed: () {
                     if (widget.onlySaveOnSubmit) {
                       PrefService.applyCache();

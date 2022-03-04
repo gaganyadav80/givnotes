@@ -8,7 +8,7 @@ import 'todo_model.dart';
 abstract class TodosRepository {
   Future<void> addNewTodo(TodoModel todo);
 
-  Future<void> deleteTodo(String todo);
+  Future<void> deleteTodo(String? todo);
 
   Stream<List<TodoModel>> todos();
 
@@ -27,7 +27,7 @@ class FirebaseTodosRepository implements TodosRepository {
   }
 
   @override
-  Future<void> deleteTodo(String id) async {
+  Future<void> deleteTodo(String? id) async {
     return todoCollection.doc(id).delete();
   }
 
@@ -35,7 +35,7 @@ class FirebaseTodosRepository implements TodosRepository {
   Stream<List<TodoModel>> todos() {
     return todoCollection.snapshots().map((snapshot) {
       return snapshot.docs
-          .map((DocumentSnapshot doc) => TodoModel.fromSnapshot(doc))
+          .map((DocumentSnapshot doc) => TodoModel.fromSnapshot(doc as DocumentSnapshot<Map<String, dynamic>>))
           .toList();
     });
   }

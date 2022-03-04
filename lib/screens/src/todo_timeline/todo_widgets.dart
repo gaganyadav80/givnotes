@@ -13,17 +13,17 @@ import 'bloc/todo_event.dart';
 
 class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
   const CreateTodoAppBar({
-    Key key,
+    Key? key,
     this.controller,
     this.prevTitle,
     this.editTodo,
     this.id,
   }) : super(key: key);
 
-  final TextEditingController controller;
-  final String prevTitle;
-  final bool editTodo;
-  final String id;
+  final TextEditingController? controller;
+  final String? prevTitle;
+  final bool? editTodo;
+  final String? id;
 
   @override
   Size get preferredSize => const Size.fromHeight(56.0);
@@ -35,12 +35,12 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
       backgroundColor: Colors.white,
       leading: InkWell(
         onTap: () async {
-          bool val;
+          bool? val;
           FocusScope.of(context).unfocus();
 
-          if (editTodo && controller.text == prevTitle) {
+          if (editTodo! && controller!.text == prevTitle) {
             Navigator.pop(context);
-          } else if (controller.text.isEmpty && !editTodo) {
+          } else if (controller!.text.isEmpty && !editTodo!) {
             Navigator.pop(context);
           } else {
             await showDialog(
@@ -59,7 +59,7 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
         child: const Icon(CupertinoIcons.arrow_left, color: Colors.black),
       ),
       actions: [
-        editTodo
+        editTodo!
             ? IconButton(
                 icon: const Icon(CupertinoIcons.delete),
                 color: Colors.black,
@@ -76,11 +76,11 @@ class CreateTodoAppBar extends StatelessWidget with PreferredSizeWidget {
 }
 
 class SelectCategory extends StatefulWidget {
-  const SelectCategory({Key key, this.controller, this.selectCategoryColors})
+  const SelectCategory({Key? key, this.controller, this.selectCategoryColors})
       : super(key: key);
 
-  final TextEditingController controller;
-  final RxInt selectCategoryColors;
+  final TextEditingController? controller;
+  final RxInt? selectCategoryColors;
 
   @override
   _SelectCategoryState createState() => _SelectCategoryState();
@@ -107,7 +107,7 @@ class _SelectCategoryState extends State<SelectCategory> {
     return Material(
       child: WillPopScope(
         onWillPop: () async {
-          if (widget.controller.text.isEmpty) {
+          if (widget.controller!.text.isEmpty) {
             Navigator.pop<bool>(context, false);
           } else {
             Navigator.pop<bool>(context, true);
@@ -129,7 +129,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                 ),
               ),
               onPressed: () {
-                if (widget.controller.text.isEmpty) {
+                if (widget.controller!.text.isEmpty) {
                   Navigator.pop<bool>(context, false);
                 } else {
                   Navigator.pop<bool>(context, true);
@@ -158,7 +158,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                             border: Border.fromBorderSide(BorderSide.none)),
                         suffixMode: OverlayVisibilityMode.editing,
                         suffix: GestureDetector(
-                          onTap: () => widget.controller.clear(),
+                          onTap: () => widget.controller!.clear(),
                           child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
@@ -176,8 +176,8 @@ class _SelectCategoryState extends State<SelectCategory> {
                   SizedBox(height: 30.w),
                   GestureDetector(
                     onTap: () {
-                      widget.controller.clear();
-                      widget.selectCategoryColors.value =
+                      widget.controller!.clear();
+                      widget.selectCategoryColors!.value =
                           _colors.materialColorValues[0];
                       Navigator.pop(context, false);
                     },
@@ -189,14 +189,14 @@ class _SelectCategoryState extends State<SelectCategory> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            widget.controller.text.isEmpty
+                            widget.controller!.text.isEmpty
                                 ? CupertinoIcons.clear
                                 : CupertinoIcons.delete,
                             color: Colors.black,
                             size: 21.0,
                           ),
                           SizedBox(width: 10.w),
-                          (widget.controller.text.isEmpty ? "Cancel" : "Delete")
+                          (widget.controller!.text.isEmpty ? "Cancel" : "Delete")
                               .text
                               .size(16.w)
                               .make(),
@@ -220,7 +220,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                             10,
                             (index) => GestureDetector(
                               onTap: () {
-                                widget.selectCategoryColors.value =
+                                widget.selectCategoryColors!.value =
                                     _colors.materialColorValues[index];
                               },
                               child: Container(
@@ -255,7 +255,7 @@ class _SelectCategoryState extends State<SelectCategory> {
                                             .make(),
                                       ],
                                     ),
-                                    if (widget.selectCategoryColors.value ==
+                                    if (widget.selectCategoryColors!.value ==
                                         _colors.materialColorValues[index])
                                       const Icon(CupertinoIcons.checkmark_alt,
                                               color: Colors.black)

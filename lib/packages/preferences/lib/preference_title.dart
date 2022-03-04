@@ -4,9 +4,9 @@ import 'package:velocity_x/velocity_x.dart';
 
 class PreferenceTitle extends StatelessWidget {
   final String title;
-  final TextStyle style;
+  final TextStyle? style;
 
-  const PreferenceTitle(this.title, {Key key, this.style}) : super(key: key);
+  const PreferenceTitle(this.title, {Key? key, this.style}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(

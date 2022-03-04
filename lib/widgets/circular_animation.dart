@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class WidgetCircularAnimator extends StatefulWidget {
   const WidgetCircularAnimator({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.innerColor = Colors.deepOrange,
     this.outerColor = Colors.deepOrange,
     this.innerAnimation = Curves.linear,
@@ -39,10 +39,10 @@ class WidgetCircularAnimator extends StatefulWidget {
 
 class _WidgetAnimatorState extends State<WidgetCircularAnimator>
     with TickerProviderStateMixin {
-  Animation<double> animation1;
-  Animation<double> animation2;
-  AnimationController controller2;
-  AnimationController controller1;
+  late Animation<double> animation1;
+  late Animation<double> animation2;
+  late AnimationController controller2;
+  late AnimationController controller1;
 
   @override
   void initState() {
@@ -140,13 +140,13 @@ class _WidgetAnimatorState extends State<WidgetCircularAnimator>
 class Arc2Painter extends CustomPainter {
   Arc2Painter({this.color, this.iconsSize = 3});
 
-  final Color color;
+  final Color? color;
   final double iconsSize;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint p = Paint()
-      ..color = color
+      ..color = color!
       ..strokeWidth = 1.0
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;
@@ -192,13 +192,13 @@ class Arc2Painter extends CustomPainter {
 class Arc1Painter extends CustomPainter {
   Arc1Painter({this.color, this.iconsSize = 3});
 
-  final Color color;
+  final Color? color;
   final double iconsSize;
 
   @override
   void paint(Canvas canvas, Size size) {
     final Paint p = Paint()
-      ..color = color
+      ..color = color!
       ..strokeWidth = 1
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.stroke;

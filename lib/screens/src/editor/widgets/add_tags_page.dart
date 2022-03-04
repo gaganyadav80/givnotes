@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,16 +11,16 @@ import 'package:givnotes/services/services.dart';
 
 class AddTagScreen extends StatefulWidget {
   const AddTagScreen({
-    Key key,
+    Key? key,
     this.controller,
     this.isEditing,
     this.editTagTitle,
-    @required this.noteTagsList,
+    required this.noteTagsList,
   }) : super(key: key);
 
-  final TextEditingController controller;
-  final bool isEditing;
-  final String editTagTitle;
+  final TextEditingController? controller;
+  final bool? isEditing;
+  final String? editTagTitle;
   final RxList<String> noteTagsList;
 
   @override
@@ -41,25 +42,24 @@ class _AddTagScreenState extends State<AddTagScreen> {
   @override
   void initState() {
     super.initState();
-    if (widget.editTagTitle.isNotEmpty && widget.isEditing) {
-      tagColor.value = _global.prefsBox.allTagsMap[widget.editTagTitle];
-      widget.controller.text = widget.editTagTitle;
+    if (widget.editTagTitle!.isNotEmpty && widget.isEditing!) {
+      tagColor.value = _global.prefsBox.allTagsMap![widget.editTagTitle!]!;
+      widget.controller!.text = widget.editTagTitle!;
     } else {
       tagColor.value = _colors.materialColorValues[0];
     }
 
-    widget.controller.addListener(() {
-      final text = widget.controller.text.trim();
+    widget.controller!.addListener(() {
+      final text = widget.controller!.text.trim();
 
       if (text.isNotEmpty) {
-        final String filterTagName =
-            _global.prefsBox.allTagsMap.keys.firstWhere(
+        final String? filterTagName =
+            _global.prefsBox.allTagsMap!.keys.firstWhereOrNull(
           (element) => element == text,
-          orElse: () => null,
         );
 
         if (filterTagName != null) {
-          tagColor.value = _global.prefsBox.allTagsMap[filterTagName];
+          tagColor.value = _global.prefsBox.allTagsMap![filterTagName]!;
         }
       }
     });
@@ -82,12 +82,12 @@ class _AddTagScreenState extends State<AddTagScreen> {
           navigationBar: CupertinoNavigationBar(
             automaticallyImplyLeading: false,
             middle: const Text("Add Tag"),
-            leading: widget.isEditing
+            leading: widget.isEditing!
                 ? IconButton(
                     icon: const Icon(CupertinoIcons.xmark_circle_fill),
                     color: CupertinoColors.systemGrey3,
                     onPressed: () {
-                      widget.controller.clear();
+                      widget.controller!.clear();
                       Navigator.pop(context, false);
                     },
                   )
@@ -124,7 +124,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
                             border: Border.fromBorderSide(BorderSide.none)),
                         suffixMode: OverlayVisibilityMode.editing,
                         suffix: GestureDetector(
-                          onTap: () => widget.controller.clear(),
+                          onTap: () => widget.controller!.clear(),
                           child: Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 20.0),
@@ -142,10 +142,10 @@ class _AddTagScreenState extends State<AddTagScreen> {
                   SizedBox(height: 30.w),
                   GestureDetector(
                     onTap: () {
-                      if (widget.isEditing) {
+                      if (widget.isEditing!) {
                         if (widget.noteTagsList
-                            .contains(widget.controller.text)) {
-                          widget.noteTagsList.remove(widget.controller.text);
+                            .contains(widget.controller!.text)) {
+                          widget.noteTagsList.remove(widget.controller!.text);
                         }
                         // if (Get.find<TagSearchController>().tagSearchList.contains(widget.controller.text)) {
                         //   Get.find<TagSearchController>().tagSearchList.remove(widget.controller.text);
@@ -154,7 +154,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         //   _global.prefsBox.allTagsMap.remove(widget.controller.text);
                         // }
                       }
-                      widget.controller.clear();
+                      widget.controller!.clear();
                       tagColor.value = _colors.materialColorValues[0];
                       Navigator.pop(context, false);
                     },
@@ -166,14 +166,14 @@ class _AddTagScreenState extends State<AddTagScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Icon(
-                            !widget.isEditing
+                            !widget.isEditing!
                                 ? CupertinoIcons.clear
                                 : CupertinoIcons.delete,
                             color: Colors.black,
                             size: 21.0,
                           ),
                           SizedBox(width: 10.w),
-                          (!widget.isEditing ? "Cancel" : "Delete")
+                          (!widget.isEditing! ? "Cancel" : "Delete")
                               .text
                               .size(16.w)
                               .make(),
@@ -199,12 +199,12 @@ class _AddTagScreenState extends State<AddTagScreen> {
                               onTap: () {
                                 tagColor.value =
                                     _colors.materialColorValues[index];
-                                if (_global.prefsBox.allTagsMap
-                                        .containsKey(widget.controller.text) &&
+                                if (_global.prefsBox.allTagsMap!
+                                        .containsKey(widget.controller!.text) &&
                                     tagColor.value !=
-                                        _global.prefsBox.allTagsMap[
-                                            widget.controller.text] &&
-                                    !widget.isEditing) {
+                                        _global.prefsBox.allTagsMap![
+                                            widget.controller!.text] &&
+                                    !widget.isEditing!) {
                                   Fluttertoast.showToast(
                                       msg:
                                           'Tag already exists. This will change the color of the existing tag');
@@ -247,12 +247,12 @@ class _AddTagScreenState extends State<AddTagScreen> {
                                       const Icon(CupertinoIcons.checkmark_alt,
                                               color: Colors.black)
                                           .pOnly(right: 15.w)
-                                    else if (_global.prefsBox.allTagsMap
+                                    else if (_global.prefsBox.allTagsMap!
                                             .containsKey(
-                                                widget.controller.text) &&
+                                                widget.controller!.text) &&
                                         _colors.materialColorValues[index] ==
-                                            _global.prefsBox.allTagsMap[
-                                                widget.controller.text])
+                                            _global.prefsBox.allTagsMap![
+                                                widget.controller!.text])
                                       'Current'
                                           .text
                                           .xs
@@ -276,34 +276,34 @@ class _AddTagScreenState extends State<AddTagScreen> {
   }
 
   Future<bool> onDone() async {
-    String tagName = widget.controller.text.trim();
+    String tagName = widget.controller!.text.trim();
 
     if (tagName.isEmpty) {
       Fluttertoast.showToast(msg: "Tag name is required");
     } else {
-      if (widget.isEditing) {
+      if (widget.isEditing!) {
         if (tagName != widget.editTagTitle) {
           widget.noteTagsList.remove(widget.editTagTitle);
-          _global.prefsBox.allTagsMap.remove(widget.editTagTitle);
+          _global.prefsBox.allTagsMap!.remove(widget.editTagTitle);
         }
         // noteTagsMap[tagName] = tagColor.value;
         if (!widget.noteTagsList.contains(tagName)) {
           widget.noteTagsList.add(tagName);
         }
-        _global.prefsBox.allTagsMap[tagName] = tagColor.value;
+        _global.prefsBox.allTagsMap![tagName] = tagColor.value;
 
         Get.find<TagSearchController>().tagSearchList
           ..clear()
-          ..addAll(_global.prefsBox.allTagsMap.keys.toList());
+          ..addAll(_global.prefsBox.allTagsMap!.keys.toList());
       } else {
-        if (!_global.prefsBox.allTagsMap.containsKey(tagName)) {
-          _global.prefsBox.allTagsMap[tagName] = tagColor.value;
+        if (!_global.prefsBox.allTagsMap!.containsKey(tagName)) {
+          _global.prefsBox.allTagsMap![tagName] = tagColor.value;
 
           Get.find<TagSearchController>().tagSearchList
             ..clear()
-            ..addAll(_global.prefsBox.allTagsMap.keys.toList());
+            ..addAll(_global.prefsBox.allTagsMap!.keys.toList());
         }
-        _global.prefsBox.allTagsMap[tagName] = tagColor.value;
+        _global.prefsBox.allTagsMap![tagName] = tagColor.value;
 
         if (!widget.noteTagsList.contains(tagName)) {
           widget.noteTagsList.add(tagName);
@@ -312,7 +312,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
           Fluttertoast.showToast(msg: "Tag already added");
         }
       }
-      widget.controller.clear();
+      widget.controller!.clear();
     }
     Navigator.pop(context);
 

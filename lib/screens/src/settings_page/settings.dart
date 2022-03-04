@@ -15,7 +15,7 @@ import 'package:givnotes/services/services.dart';
 import 'setting_widgets.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key key}) : super(key: key);
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +158,7 @@ class SettingsPage extends StatelessWidget {
 class AppDetailSection extends StatelessWidget {
   final RxInt selectedIndex = 0.obs;
 
-  AppDetailSection({Key key}) : super(key: key);
+  AppDetailSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,7 @@ class AppDetailSection extends StatelessWidget {
                     1: Text("Logs"),
                   },
                   groupValue: selectedIndex.value,
-                  onValueChanged: (value) => selectedIndex.value = value,
+                  onValueChanged: (dynamic value) => selectedIndex.value = value,
                 )),
           ),
         ),
@@ -226,7 +226,7 @@ class AppDetailSection extends StatelessWidget {
 }
 
 class AppLockSwitchPrefs extends StatefulWidget {
-  const AppLockSwitchPrefs({Key key}) : super(key: key);
+  const AppLockSwitchPrefs({Key? key}) : super(key: key);
 
   @override
   _AppLockSwitchPrefsState createState() => _AppLockSwitchPrefsState();
@@ -279,7 +279,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             if (_variableService.prefsBox.passcode == '') {
               Navigator.pushNamed(context, RouterName.addlockRoute)
                   .then((value) {
-                if (value) {
+                if (value as bool) {
                   setState(() {
                     PrefService.setBool('app_lock', true);
                   });
@@ -293,13 +293,13 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
-                  AppLock.of(context).disable();
+                  AppLock.of(context)!.disable();
                   _variableService.prefsBox.passcode = '';
                   _variableService.prefsBox.save();
                   Navigator.pop(context, true);
                 },
               ).then((value) {
-                if (value) {
+                if (value as bool) {
                   setState(() {
                     PrefService.setBool('app_lock', false);
                   });
@@ -313,7 +313,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
               'biometric',
               defaultVal: false,
               disabled: canUseBiometric.value
-                  ? _variableService.prefsBox.passcode.isEmpty
+                  ? _variableService.prefsBox.passcode!.isEmpty
                   : true,
               leading: Icon(Icons.fingerprint_outlined,
                   color: Colors.black, size: _kIconSize),

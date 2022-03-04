@@ -30,7 +30,7 @@ class TodoDateController extends GetxController {
 }
 
 class TodoTimelineBloc extends StatefulWidget {
-  const TodoTimelineBloc({Key key}) : super(key: key);
+  const TodoTimelineBloc({Key? key}) : super(key: key);
 
   @override
   _TodoTimelineBlocState createState() => _TodoTimelineBlocState();
@@ -94,9 +94,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
               return Obx(
                 () {
                   for (var element in state.todos) {
-                    if (element.dueDate.toDate().difference(DateTime.now()) >
+                    if (element.dueDate!.toDate().difference(DateTime.now()) >
                         const Duration(days: 5)) {
-                      if (element.completed) {
+                      if (element.completed!) {
                         BlocProvider.of<TodosBloc>(context)
                             .add(DeleteTodo(element.id));
                       }
@@ -105,19 +105,19 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
 
                   final List<TodoModel> _todosBox = state.todos
                       .where((element) =>
-                          element.dueDate.toDate().day ==
+                          element.dueDate!.toDate().day ==
                           _dateController.date.day)
                       .toList();
                   final int pending = state.todos
                       .where((element) =>
-                          element.dueDate.toDate().day < DateTime.now().day)
+                          element.dueDate!.toDate().day < DateTime.now().day)
                       .length;
                   final int upcoming = state.todos
                       .where((element) =>
-                          element.dueDate.toDate().day > DateTime.now().day)
+                          element.dueDate!.toDate().day > DateTime.now().day)
                       .length;
 
-                  _todosBox.sort((a, b) => b.dueDate.compareTo(a.dueDate));
+                  _todosBox.sort((a, b) => b.dueDate!.compareTo(a.dueDate!));
 
                   return Column(
                     children: [
@@ -166,7 +166,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                     final TodoModel todo = _todosBox[index];
 
                                     int taskCompleted = 0;
-                                    for (var element in todo.subTask) {
+                                    for (var element in todo.subTask!) {
                                       if (element.containsValue(true)) {
                                         taskCompleted++;
                                       }
@@ -178,7 +178,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                       decoration: BoxDecoration(
                                         borderRadius:
                                             BorderRadius.circular(15.0.r),
-                                        color: todo.completed
+                                        color: todo.completed!
                                             ? Colors.grey[300]
                                             : Colors.transparent,
                                       ),
@@ -218,7 +218,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontFamily: "Roboto",
-                                                      decoration: todo.completed
+                                                      decoration: todo.completed!
                                                           ? TextDecoration
                                                               .lineThrough
                                                           : TextDecoration.none,
@@ -227,9 +227,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        todo.priority.decrypt
+                                                        todo.priority!.decrypt
                                                                 .isNotEmpty
-                                                            ? "\u{1F525} ${todo.priority.decrypt}"
+                                                            ? "\u{1F525} ${todo.priority!.decrypt}"
                                                             : "\u{1F525} None",
                                                       ),
                                                       SizedBox(width: 10.0.w),
@@ -239,7 +239,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                           size: 16.0.w),
                                                       SizedBox(width: 5.0.w),
                                                       Text(
-                                                          "$taskCompleted/${todo.subTask.length}"),
+                                                          "$taskCompleted/${todo.subTask!.length}"),
                                                       SizedBox(width: 10.0.w),
                                                       Icon(
                                                           Icons
@@ -247,11 +247,11 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                           size: 16.0.w),
                                                       SizedBox(width: 5.0.w),
                                                       Text(DateFormat("HH:mm")
-                                                          .format(todo.dueDate
+                                                          .format(todo.dueDate!
                                                               .toDate())),
                                                     ],
                                                   ),
-                                                  todo.category.isNotEmpty
+                                                  todo.category!.isNotEmpty
                                                       ? Container(
                                                           margin: EdgeInsets
                                                               .fromLTRB(0, 8.w,
@@ -265,13 +265,13 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                           decoration:
                                                               BoxDecoration(
                                                             color: todo
-                                                                    .completed
+                                                                    .completed!
                                                                 ? Color(todo
-                                                                        .categoryColor)
+                                                                        .categoryColor!)
                                                                     .withOpacity(
                                                                         0.4)
                                                                 : Color(todo
-                                                                        .categoryColor)
+                                                                        .categoryColor!)
                                                                     .withOpacity(
                                                                         0.6),
                                                             borderRadius:
@@ -281,11 +281,11 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                           ),
                                                           child: Center(
                                                             child: Text(
-                                                              todo.category
+                                                              todo.category!
                                                                   .decrypt,
                                                               style: TextStyle(
                                                                 color: todo
-                                                                        .completed
+                                                                        .completed!
                                                                     ? Colors
                                                                         .black87
                                                                     : Colors
@@ -300,10 +300,10 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                         )
                                                       : const SizedBox.shrink(),
                                                   SizedBox(height: 10.0.w),
-                                                  if (todo.description.decrypt
+                                                  if (todo.description!.decrypt
                                                       .isNotBlank)
                                                     Text(
-                                                      todo.description.decrypt,
+                                                      todo.description!.decrypt,
                                                       maxLines: 3,
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -315,7 +315,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                               ),
                                             ),
                                           ),
-                                          if (todo.subTask.isNotEmpty)
+                                          if (todo.subTask!.isNotEmpty)
                                             SizedBox(height: 5.0.w),
                                           Padding(
                                             padding: EdgeInsets.only(
@@ -341,7 +341,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                               .add(
                                             UpdateTodo(checkTodo.copyWith(
                                                 completed:
-                                                    !(checkTodo.completed))),
+                                                    !checkTodo.completed!)),
                                           );
                                         },
                                         activeColor: Colors.blue,
@@ -402,9 +402,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
     return FixedTimeline.tileBuilder(
       theme: TimelineThemeData(nodePosition: 0),
       builder: TimelineTileBuilder.connected(
-        itemCount: _todo.subTask.length,
+        itemCount: _todo.subTask!.length,
         contentsBuilder: (_, int subtaskIndex) {
-          String subTitle = _todo.subTask[subtaskIndex].keys.first;
+          String subTitle = _todo.subTask![subtaskIndex].keys.first;
 
           return Padding(
             padding: EdgeInsets.only(left: 10.0.w),
@@ -418,7 +418,7 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                     fontSize: 20.0.w,
                     fontWeight: FontWeight.w600,
                     fontFamily: 'Roboto',
-                    decoration: _todo.subTask[subtaskIndex].values.first
+                    decoration: _todo.subTask![subtaskIndex].values.first
                         ? TextDecoration.lineThrough
                         : TextDecoration.none,
                   ),
@@ -431,9 +431,9 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
           size: 20.0.w,
           color: Colors.transparent,
           child: CustomCheckbox(
-            value: _todo.subTask[subCheckIndex].values.first,
+            value: _todo.subTask![subCheckIndex].values.first,
             onChanged: (_) async {
-              var subTask = _todo.subTask;
+              var subTask = _todo.subTask!;
               subTask[subCheckIndex][subTask[subCheckIndex].keys.first] =
                   !subTask[subCheckIndex].values.first;
 

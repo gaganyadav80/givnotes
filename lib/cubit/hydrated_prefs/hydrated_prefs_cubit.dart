@@ -17,11 +17,11 @@ class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
       emit(state.copyWith(compactTags: value));
 
   @override
-  HydratedPrefsState fromJson(Map<String, dynamic> json) {
+  HydratedPrefsState? fromJson(Map<String, dynamic> json) {
     try {
       return HydratedPrefsState(
-        compactTags: json['compact'] as bool,
-        sortby: json['sortby'] as int,
+        compactTags: json['compact'] as bool?,
+        sortby: json['sortby'] as int?,
       );
     } catch (_) {
       return null;

@@ -5,7 +5,7 @@ abstract class TodosState extends Equatable {
   const TodosState();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TodosLoading extends TodosState {}
@@ -23,10 +23,10 @@ class TodosLoaded extends TodosState {
 }
 
 class TodosNotLoaded extends TodosState {
-  final String message;
+  final String? message;
 
   const TodosNotLoaded([this.message]);
 
   @override
-  List<Object> get props => [message];
+  List<Object?> get props => [message];
 }

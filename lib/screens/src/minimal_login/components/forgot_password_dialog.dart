@@ -13,10 +13,10 @@ class PassResetMailDialog extends StatelessWidget {
   final GlobalKey<FormState> formKey;
 
   const PassResetMailDialog({
-    Key key,
-    @required this.onPressed,
-    @required this.formKey,
-    @required this.emailController,
+    Key? key,
+    required this.onPressed,
+    required this.formKey,
+    required this.emailController,
   }) : super(key: key);
 
   @override
@@ -25,7 +25,7 @@ class PassResetMailDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: kBorderRadius),
       title: Text(
         "Forgot Password",
-        style: Theme.of(context).textTheme.headline1.copyWith(
+        style: Theme.of(context).textTheme.headline1!.copyWith(
               fontSize: 22.w,
               fontWeight: FontWeight.w300,
             ),
@@ -67,7 +67,7 @@ class PassResetMailDialog extends StatelessWidget {
           child: const Text("CANCEL"),
         ),
         TextButton(
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
           child: const Text("CONFIRM"),
         ),
       ],

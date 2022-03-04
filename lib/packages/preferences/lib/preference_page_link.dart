@@ -3,20 +3,20 @@ import 'preference_page.dart';
 
 class PreferencePageLink extends StatelessWidget {
   final String title;
-  final String pageTitle;
-  final String desc;
-  final PreferencePage page;
-  final Widget widgetScaffold;
-  final Widget leading;
-  final Widget trailing;
-  final double titleGap;
-  final TextStyle style;
-  final Color leadingColor;
+  final String? pageTitle;
+  final String? desc;
+  final PreferencePage? page;
+  final Widget? widgetScaffold;
+  final Widget? leading;
+  final Widget? trailing;
+  final double? titleGap;
+  final TextStyle? style;
+  final Color? leadingColor;
   final bool disabled;
   final Color titleColor;
   const PreferencePageLink(
     this.title, {
-    Key key,
+    Key? key,
     this.page,
     this.desc,
     this.pageTitle,
@@ -57,9 +57,9 @@ class PreferencePageLink extends StatelessWidget {
         subtitle: desc == null
             ? null
             : Text(
-                desc,
+                desc!,
                 style: TextStyle(
-                    color: titleColor?.withOpacity(0.6),
+                    color: titleColor.withOpacity(0.6),
                     fontWeight: FontWeight.w300,
                     fontSize: 12.0),
               ),

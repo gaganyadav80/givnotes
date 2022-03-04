@@ -14,16 +14,16 @@ import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 class EditorEndDrawer extends StatelessWidget {
-  final Function saveNote;
-  final NotesModel note;
+  final Function? saveNote;
+  final NotesModel? note;
   final BuildContext rootCtx;
   final bool isTrash;
 
   EditorEndDrawer({
-    Key key,
+    Key? key,
     this.note,
     this.saveNote,
-    @required this.rootCtx,
+    required this.rootCtx,
     this.isTrash = false,
   }) : super(key: key);
 
@@ -47,7 +47,7 @@ class EditorEndDrawer extends StatelessWidget {
                     () async {
                       Navigator.pop(context);
 
-                      saveNote(isDrawerSave: true);
+                      saveNote!(isDrawerSave: true);
                     },
                     context,
                   )
@@ -57,7 +57,7 @@ class EditorEndDrawer extends StatelessWidget {
                     () async {
                       // note.trash = !note.trash;
                       Get.find<NotesController>()
-                          .updateNote(note.copyWith(trash: false));
+                          .updateNote(note!.copyWith(trash: false));
 
                       _noteEditStore.updateNoteMode(NoteMode.adding);
 
@@ -96,7 +96,7 @@ class EditorEndDrawer extends StatelessWidget {
                                   'Words: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("${_sp.getWordCount(note.text)}"),
+                                Text("${_sp.getWordCount(note!.text!)}"),
                               ],
                             ),
                             Row(
@@ -105,7 +105,7 @@ class EditorEndDrawer extends StatelessWidget {
                                   'Characters (With Spaces): ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("${note.text.length}"),
+                                Text("${note!.text!.length}"),
                               ],
                             ),
                             Row(
@@ -114,7 +114,7 @@ class EditorEndDrawer extends StatelessWidget {
                                   'Lines: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("${_sp.getLineCount(note.text)}"),
+                                Text("${_sp.getLineCount(note!.text!)}"),
                               ],
                             ),
                             Row(
@@ -123,7 +123,7 @@ class EditorEndDrawer extends StatelessWidget {
                                   'Paragraphs: ',
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                Text("${note.text.split(".\n\n").length}"),
+                                Text("${note!.text!.split(".\n\n").length}"),
                               ],
                             ),
                             SizedBox(height: 10.0.h),
@@ -192,7 +192,7 @@ class EditorEndDrawer extends StatelessWidget {
 
                                   // _dbServices.deleteNote(note.key);
                                   Get.find<NotesController>()
-                                      .deleteNote(note.id);
+                                      .deleteNote(note!.id);
                                   _noteEditStore
                                       .updateNoteMode(NoteMode.adding);
 
@@ -205,7 +205,7 @@ class EditorEndDrawer extends StatelessWidget {
                           }
                         : () async {
                             Get.find<NotesController>()
-                                .updateNote(note.copyWith(trash: true));
+                                .updateNote(note!.copyWith(trash: true));
 
                             _noteEditStore.updateNoteMode(NoteMode.adding);
 
@@ -230,7 +230,7 @@ class EditorEndDrawer extends StatelessWidget {
     BuildContext context,
   ) {
     return InkWell(
-      onTap: onPressed,
+      onTap: onPressed as void Function()?,
       child: Column(
         children: [
           GFListTile(

@@ -25,14 +25,14 @@ class SortNotesFloatModalSheet extends StatelessWidget {
 
   final double _kIconSize = 24.w;
 
-  SortNotesFloatModalSheet({Key key}) : super(key: key);
+  SortNotesFloatModalSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final HydratedPrefsCubit _prefsCubit =
         BlocProvider.of<HydratedPrefsCubit>(context);
 
-    var def = _prefsCubit.state.sortby.obs;
+    var def = _prefsCubit.state.sortby!.obs;
 
     return PreferenceText(
       "Sort Notes",
@@ -170,13 +170,13 @@ class SortNotesFloatModalSheet extends StatelessWidget {
 }
 
 class ProfileTileSettings extends StatelessWidget {
-  const ProfileTileSettings({Key key}) : super(key: key);
+  const ProfileTileSettings({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
-    UserModel user = UserModel.empty;
-    String photo;
+    UserModel? user = UserModel.empty;
+    String? photo;
 
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
       buildWhen: (previous, current) => previous != current,
@@ -189,12 +189,12 @@ class ProfileTileSettings extends StatelessWidget {
           user = state.user;
         }
 
-        if (user.email.isNotEmpty) photo = user.photo;
+        if (user!.email.isNotEmpty) photo = user!.photo;
 
         return Container(
           padding: EdgeInsets.symmetric(vertical: 10.w),
           margin: EdgeInsets.symmetric(horizontal: 20.w),
-          child: user.email.isNotEmpty
+          child: user!.email.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -205,12 +205,12 @@ class ProfileTileSettings extends StatelessWidget {
                         radius: 55.w,
                         backgroundColor: Colors.transparent,
                         child: photo != null
-                            ? NetworkImage(photo)
+                            ? NetworkImage(photo!) as Widget?
                             : SvgPicture.asset(
                                 'assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                       ).pOnly(bottom: 5.w),
                     ),
-                    Text(user.name)
+                    Text(user!.name!)
                         .text
                         .medium
                         .color(const Color(0xff32343d))
@@ -220,14 +220,14 @@ class ProfileTileSettings extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(" ${user.email}")
+                        Text(" ${user!.email}")
                             .text
                             .size(14.w)
                             .light
                             .gray400
                             .make(),
                         SizedBox(width: 5.w),
-                        !user.verified
+                        !user!.verified
                             ? Icon(
                                 CupertinoIcons.exclamationmark_circle,
                                 color: Colors.red,

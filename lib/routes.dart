@@ -46,10 +46,10 @@ abstract class Router {
         return MaterialWithModalsPageRoute(
             settings: settings, builder: (_) => const SearchPage());
       case RouterName.editorRoute:
-        List<dynamic> data = settings.arguments;
+        List<dynamic>? data = settings.arguments as List<dynamic>?;
         return MaterialWithModalsPageRoute(
             settings: settings,
-            builder: (_) => EditorScreen(noteMode: data[0], note: data[1]));
+            builder: (_) => EditorScreen(noteMode: data![0], note: data[1]));
       case RouterName.aboutRoute:
         return MaterialWithModalsPageRoute(
             settings: settings, builder: (_) => const AboutUsPage());
@@ -60,7 +60,7 @@ abstract class Router {
         return MaterialWithModalsPageRoute(
             settings: settings, builder: (_) => MyProfile());
       case RouterName.lockscreenRoute:
-        VoidCallback data = settings.arguments as VoidCallback;
+        VoidCallback? data = settings.arguments as VoidCallback?;
         return MaterialWithModalsPageRoute(
             settings: settings,
             builder: (_) => ShowLockscreen(changePassAuth: data));
@@ -71,11 +71,11 @@ abstract class Router {
         return MaterialWithModalsPageRoute(
             settings: settings, builder: (_) => const NotesView());
       case RouterName.createTodoRoute:
-        List<dynamic> data = settings.arguments;
+        List<dynamic>? data = settings.arguments as List<dynamic>?;
         return MaterialWithModalsPageRoute(
             settings: settings,
             builder: (_) => CreateTodoBloc(
-                  isEditing: data[0],
+                  isEditing: data![0],
                   id: data[1],
                   todo: data[2],
                 ));

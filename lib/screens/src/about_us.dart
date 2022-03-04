@@ -18,7 +18,7 @@ class AboutUsPage extends StatelessWidget {
       "And at this point, we almost gave up which eventually motivated us to build something "
       "on our own, which lead to the origin of givnotes.";
 
-  const AboutUsPage({Key key}) : super(key: key);
+  const AboutUsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

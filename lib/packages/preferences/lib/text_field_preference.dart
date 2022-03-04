@@ -5,26 +5,26 @@ import 'preference_service.dart';
 class TextFieldPreference extends StatefulWidget {
   final String label;
   final String localKey;
-  final String defaultVal;
-  final EdgeInsets padding;
+  final String? defaultVal;
+  final EdgeInsets? padding;
   final bool autofocus;
   final int maxLines;
   final bool obscureText;
   final String hintText;
-  final TextStyle style;
-  final TextInputType keyboardType;
-  final TextStyle labelStyle;
-  final InputDecoration decoration;
+  final TextStyle? style;
+  final TextInputType? keyboardType;
+  final TextStyle? labelStyle;
+  final InputDecoration? decoration;
 
-  final Function onChange;
-  final Function validator;
+  final Function? onChange;
+  final Function? validator;
 
   final bool disabled;
 
   const TextFieldPreference(
     this.label,
     this.localKey, {
-    Key key,
+    Key? key,
     this.defaultVal,
     this.onChange,
     this.validator,
@@ -76,8 +76,8 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
               ),
           controller: controller,
           onChanged: (val) {
-            if (_formKey.currentState.validate()) {
-              if (widget.onChange != null) val = widget.onChange(val) ?? val;
+            if (_formKey.currentState!.validate()) {
+              if (widget.onChange != null) val = widget.onChange!(val) ?? val;
               PrefService.setString(widget.localKey, val);
             }
           },
@@ -86,7 +86,7 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
           style: widget.style,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
-          validator: widget.validator,
+          validator: widget.validator as String? Function(String?)?,
           enabled: !widget.disabled,
         ),
       ),

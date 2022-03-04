@@ -9,11 +9,11 @@ import 'circle_input_button.dart';
 /// to make it work with AppLock package
 
 class LockScreen extends StatefulWidget {
-  final String correctString;
+  final String? correctString;
   final String title;
   final String confirmTitle;
   final bool confirmMode;
-  final Widget rightSideButton;
+  final Widget? rightSideButton;
   final int digits;
   final DotSecretConfig dotSecretConfig;
   final CircleInputButtonConfig circleInputButtonConfig;
@@ -21,19 +21,19 @@ class LockScreen extends StatefulWidget {
   final String cancelText;
   final String deleteText;
   final Widget biometricButton;
-  final void Function(BuildContext, String) onCompleted;
+  final void Function(BuildContext, String)? onCompleted;
   final bool canBiometric;
   final bool showBiometricFirst;
   // @Deprecated('use biometricAuthenticate.')
   // final void Function(BuildContext) biometricFunction;
-  final Future<bool> Function(BuildContext) biometricAuthenticate;
-  final StreamController<void> showBiometricFirstController;
+  final Future<bool> Function(BuildContext)? biometricAuthenticate;
+  final StreamController<void>? showBiometricFirstController;
   final Color backgroundColor;
   final double backgroundColorOpacity;
-  final void Function() onUnlocked;
+  final void Function()? onUnlocked;
 
   const LockScreen({
-    Key key,
+    Key? key,
     this.correctString,
     this.title = 'Enter Passcode',
     this.confirmTitle = 'Enter Confirm Passcode',
@@ -96,11 +96,11 @@ class _LockScreenState extends State<LockScreen> {
       if (widget.biometricAuthenticate != null) {
         // Set the listener if there is a stream option.
         if (widget.showBiometricFirstController != null) {
-          widget.showBiometricFirstController.stream.listen((_) {
-            widget.biometricAuthenticate(context).then((unlocked) {
+          widget.showBiometricFirstController!.stream.listen((_) {
+            widget.biometricAuthenticate!(context).then((unlocked) {
               if (unlocked) {
                 if (widget.onUnlocked != null) {
-                  widget.onUnlocked();
+                  widget.onUnlocked!();
                 }
 
                 // Navigator.of(context).pop();
@@ -112,10 +112,10 @@ class _LockScreenState extends State<LockScreen> {
           Future.delayed(
             const Duration(milliseconds: 350),
             () {
-              widget.biometricAuthenticate(context).then((unlocked) {
+              widget.biometricAuthenticate!(context).then((unlocked) {
                 if (unlocked) {
                   if (widget.onUnlocked != null) {
-                    widget.onUnlocked();
+                    widget.onUnlocked!();
                   }
                   // Navigator.of(context).pop();
                 }
@@ -186,14 +186,14 @@ class _LockScreenState extends State<LockScreen> {
 
         if (widget.onCompleted != null) {
           // call user function
-          widget.onCompleted(context, enteredValue);
+          widget.onCompleted!(context, enteredValue);
         } else {
           // _needClose = true;
           // Navigator.of(context).pop();
         }
 
         if (widget.onUnlocked != null) {
-          widget.onUnlocked();
+          widget.onUnlocked!();
         }
       } else {
         // send invalid status to DotSecretUI
@@ -361,7 +361,7 @@ class _LockScreenState extends State<LockScreen> {
     );
   }
 
-  Widget _buildBothSidesButton(BuildContext context, Widget button) {
+  Widget _buildBothSidesButton(BuildContext context, Widget? button) {
     final buttonSize = MediaQuery.of(context).size.width * 0.215;
     return SizedBox(
       width: buttonSize,
@@ -429,10 +429,10 @@ class _LockScreenState extends State<LockScreen> {
           // }
 
           if (widget.biometricAuthenticate != null) {
-            widget.biometricAuthenticate(context).then((unlocked) {
+            widget.biometricAuthenticate!(context).then((unlocked) {
               if (unlocked) {
                 if (widget.onUnlocked != null) {
-                  widget.onUnlocked();
+                  widget.onUnlocked!();
                 }
 
                 // Navigator.of(context).pop();
@@ -472,7 +472,7 @@ class _LockScreenState extends State<LockScreen> {
     );
   }
 
-  Widget _deleteSideButton() {
+  Widget? _deleteSideButton() {
     if (widget.rightSideButton != null) return widget.rightSideButton;
 
     return StreamBuilder<int>(
@@ -500,7 +500,7 @@ class _LockScreenState extends State<LockScreen> {
               textAlign: TextAlign.center,
             ),
             onPressed: () {
-              if (snapshot.hasData && snapshot.data > 0) {
+              if (snapshot.hasData && snapshot.data! > 0) {
                 removedStreamController.sink.add(null);
               } else {
                 // if (widget.canCancel) {
@@ -520,7 +520,7 @@ class _LockScreenState extends State<LockScreen> {
     validateStreamController.close();
     removedStreamController.close();
     if (widget.showBiometricFirstController != null) {
-      widget.showBiometricFirstController.close();
+      widget.showBiometricFirstController!.close();
     }
 
     // restore orientation.

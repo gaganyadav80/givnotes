@@ -8,7 +8,7 @@ import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const CustomAppBar({Key key, @required this.index}) : super(key: key);
+  const CustomAppBar({Key? key, required this.index}) : super(key: key);
 
   final int index;
 
@@ -67,7 +67,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             builder: (context, child) {
                               return Theme(
                                 data: ThemeData.dark(),
-                                child: child,
+                                child: child!,
                               );
                             },
                           ).then((value) {

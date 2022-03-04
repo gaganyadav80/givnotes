@@ -45,7 +45,7 @@ void main() async {
 }
 
 class App extends StatelessWidget {
-  const App({Key key, @required this.authenticationRepository})
+  const App({Key? key, required this.authenticationRepository})
       : assert(authenticationRepository != null),
         super(key: key);
   final AuthenticationRepository authenticationRepository;
@@ -74,7 +74,7 @@ class App extends StatelessWidget {
           builder: () => AppLock(
             builder: (_) => const GivnotesApp(),
             lockScreen: ShowLockscreen(changePassAuth: null),
-            enabled: VariableService().prefsBox.passcode.isNotEmpty,
+            enabled: VariableService().prefsBox.passcode!.isNotEmpty,
             // backgroundLockLatency: Duration(),
           ),
         ),
@@ -84,7 +84,7 @@ class App extends StatelessWidget {
 }
 
 class GivnotesApp extends StatefulWidget {
-  const GivnotesApp({Key key}) : super(key: key);
+  const GivnotesApp({Key? key}) : super(key: key);
 
   @override
   _GivnotesAppState createState() => _GivnotesAppState();
@@ -107,7 +107,7 @@ class _GivnotesAppState extends State<GivnotesApp> {
       builder: (context, child) {
         return ScrollConfiguration(
           behavior: RemoveScrollGlow(),
-          child: child,
+          child: child!,
         );
       },
       onGenerateRoute: rt.Router.generateRoute,
@@ -117,9 +117,9 @@ class _GivnotesAppState extends State<GivnotesApp> {
 }
 
 class CheckLogin extends StatelessWidget {
-  final User _currentUser = FirebaseAuth.instance.currentUser;
+  final User? _currentUser = FirebaseAuth.instance.currentUser;
 
-  CheckLogin({Key key}) : super(key: key);
+  CheckLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +129,7 @@ class CheckLogin extends StatelessWidget {
     if (_currentUser == null) {
       return const LoginPage();
     } else {
-      pluginInitializer(_currentUser.uid);
+      pluginInitializer(_currentUser!.uid);
 
       return const HomePage();
     }

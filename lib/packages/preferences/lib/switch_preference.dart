@@ -5,30 +5,30 @@ import 'preference_service.dart';
 
 class SwitchPreference extends StatefulWidget {
   final String title;
-  final String desc;
+  final String? desc;
   final String localKey;
-  final bool defaultVal;
+  final bool? defaultVal;
   final bool ignoreTileTap;
   final bool resetOnException;
-  final Function onEnable;
-  final Function onDisable;
-  final Function onChange;
+  final Function? onEnable;
+  final Function? onDisable;
+  final Function? onChange;
   final bool disabled;
-  final Color switchActiveColor;
+  final Color? switchActiveColor;
 
   final Color titleColor;
-  final Widget leading;
-  final double titleGap;
-  final Color leadingColor;
+  final Widget? leading;
+  final double? titleGap;
+  final Color? leadingColor;
   final Color backgroundColor;
 
-  final VoidCallback ondisableTap;
+  final VoidCallback? ondisableTap;
   final bool isWaitSwitch;
 
   const SwitchPreference(
     this.title,
     this.localKey, {
-    Key key,
+    Key? key,
     this.desc,
     this.defaultVal = false,
     this.ignoreTileTap = false,
@@ -85,14 +85,14 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
         subtitle: widget.desc == null
             ? null
             : Text(
-                widget.desc,
+                widget.desc!,
                 style: TextStyle(
-                    color: widget.titleColor?.withOpacity(0.6),
+                    color: widget.titleColor.withOpacity(0.6),
                     fontWeight: FontWeight.w300,
                     fontSize: 12.0),
               ),
         trailing: CupertinoSwitch(
-          value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
+          value: PrefService.getBool(widget.localKey) ?? widget.defaultVal!,
           activeColor: widget.switchActiveColor ?? const Color(0xFFDD4C4F),
           onChanged: widget.disabled
               ? (_) => widget.ondisableTap
@@ -100,7 +100,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
         ),
         onTap: (widget.disabled || widget.ignoreTileTap)
             ? widget.ondisableTap
-            : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal)
+            : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal)!
                 ? onDisable()
                 : onEnable(),
       ),
@@ -111,16 +111,16 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
     if (!widget.isWaitSwitch) {
       setState(() => PrefService.setBool(widget.localKey, true));
     }
-    if (widget.onChange != null) widget.onChange();
+    if (widget.onChange != null) widget.onChange!();
     if (widget.onEnable != null) {
       try {
-        await widget.onEnable();
+        await widget.onEnable!();
       } catch (e) {
         if (widget.resetOnException) {
           PrefService.setBool(widget.localKey, false);
           if (mounted) setState(() {});
         }
-        if (mounted) PrefService.showError(context, e.message);
+        if (mounted) PrefService.showError(context, e.toString());
       }
     }
   }
@@ -129,16 +129,16 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
     if (!widget.isWaitSwitch) {
       setState(() => PrefService.setBool(widget.localKey, false));
     }
-    if (widget.onChange != null) widget.onChange();
+    if (widget.onChange != null) widget.onChange!();
     if (widget.onDisable != null) {
       try {
-        await widget.onDisable();
+        await widget.onDisable!();
       } catch (e) {
         if (widget.resetOnException) {
           PrefService.setBool(widget.localKey, true);
           if (mounted) setState(() {});
         }
-        if (mounted) PrefService.showError(context, e.message);
+        if (mounted) PrefService.showError(context, e.toString());
       }
     }
   }

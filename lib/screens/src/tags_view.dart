@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -14,13 +14,13 @@ import 'notes/src/notes_model.dart';
 import 'notes/widgets/notes_card.dart';
 
 class TagSearchController extends GetxController {
-  List<String> tagSearchList = <String>[];
-  List<String> selectedTagList = <String>[];
+  List<String?> tagSearchList = <String?>[];
+  List<String?> selectedTagList = <String?>[];
 
   void resetSearchList() {
     tagSearchList
       ..clear()
-      ..addAll(VariableService().prefsBox.allTagsMap.keys.toList());
+      ..addAll(VariableService().prefsBox.allTagsMap!.keys.toList());
 
     update(['tagSearchList']);
   }
@@ -34,19 +34,19 @@ class TagSearchController extends GetxController {
     update(['tagSearchList']);
   }
 
-  void addSelectedList(String value) {
+  void addSelectedList(String? value) {
     selectedTagList.add(value);
     update(['selectedTagList']);
   }
 
-  void removeSelectedList(String value) {
+  void removeSelectedList(String? value) {
     selectedTagList.remove(value);
     update(['selectedTagList']);
   }
 }
 
 class TagsView extends StatefulWidget {
-  const TagsView({Key key}) : super(key: key);
+  const TagsView({Key? key}) : super(key: key);
 
   @override
   _TagsViewState createState() => _TagsViewState();
@@ -61,7 +61,7 @@ class _TagsViewState extends State<TagsView> {
     super.initState();
     Get.find<TagSearchController>().tagSearchList
       ..clear()
-      ..addAll(VariableService().prefsBox.allTagsMap.keys.toList());
+      ..addAll(VariableService().prefsBox.allTagsMap!.keys.toList());
   }
 
   @override
@@ -130,16 +130,16 @@ class _TagsViewState extends State<TagsView> {
 }
 
 class SearchTagsTextField extends StatefulWidget {
-  const SearchTagsTextField({Key key, this.tagStateKey}) : super(key: key);
+  const SearchTagsTextField({Key? key, this.tagStateKey}) : super(key: key);
 
-  final GlobalKey<TagsState> tagStateKey;
+  final GlobalKey<TagsState>? tagStateKey;
 
   @override
   _SearchTagsTextFieldState createState() => _SearchTagsTextFieldState();
 }
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
-  final Map<String, int> _allTagsMap = VariableService().prefsBox.allTagsMap;
+  final Map<String, int>? _allTagsMap = VariableService().prefsBox.allTagsMap;
 
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();
@@ -155,7 +155,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
       final text = _searchTagController.text;
 
       if (text.isNotEmpty) {
-        final _filterList = _allTagsMap.keys.toList().where((element) {
+        final _filterList = _allTagsMap!.keys.toList().where((element) {
           return element.toLowerCase().contains(text.toLowerCase());
         }).toList();
 
@@ -200,13 +200,13 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
             itemCount: controller.tagSearchList.length,
             horizontalScroll: true,
             itemBuilder: (int index) {
-              final noteTag = controller.tagSearchList[index];
+              final String? noteTag = controller.tagSearchList[index];
 
               return ItemTags(
                 key: Key(index.toString()),
                 elevation: 2,
                 index: index,
-                title: noteTag,
+                title: noteTag!,
                 active: controller.selectedTagList.contains(noteTag),
                 padding: EdgeInsets.fromLTRB(10.w, 5.h, 10.w, 5.h),
                 textStyle: TextStyle(
@@ -216,13 +216,13 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   color: Colors.white,
                 ),
                 border:
-                    Border.all(color: Color(_allTagsMap[noteTag]), width: 2),
+                    Border.all(color: Color(_allTagsMap![noteTag]!), width: 2),
                 textActiveColor: Colors.white,
-                textColor: Color(_allTagsMap[noteTag]),
+                textColor: Color(_allTagsMap![noteTag]!),
                 combine: ItemTagsCombine.withTextBefore,
-                activeColor: Color(_allTagsMap[noteTag]),
+                activeColor: Color(_allTagsMap![noteTag]!),
                 onPressed: (item) {
-                  if (item.active) {
+                  if (item.active!) {
                     controller.addSelectedList(item.title);
                   } else {
                     controller.removeSelectedList(item.title);

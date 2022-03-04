@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tags/flutter_tags.dart';
+import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/services/services.dart';
@@ -10,7 +10,7 @@ import 'package:givnotes/services/services.dart';
 import 'add_tags_page.dart';
 
 class EditorTags extends StatefulWidget {
-  const EditorTags({Key key, @required this.noteTagsList}) : super(key: key);
+  const EditorTags({Key? key, required this.noteTagsList}) : super(key: key);
 
   final RxList<String> noteTagsList;
 
@@ -110,7 +110,7 @@ class _EditorTagsState extends State<EditorTags> {
       itemCount: widget.noteTagsList.length,
       itemBuilder: (int index) {
         int borderColor =
-            VariableService().prefsBox.allTagsMap[widget.noteTagsList[index]];
+            VariableService().prefsBox.allTagsMap![widget.noteTagsList[index]]!;
 
         return ItemTags(
           key: Key(index.toString()),

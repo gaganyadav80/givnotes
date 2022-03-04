@@ -45,7 +45,7 @@ void setLocaleMessages(String locale, LookupMessages lookupMessages) {
 /// - If [allowFromNow] is passed, format will use the From prefix, ie. a date
 ///   5 minutes from now in 'en' locale will display as "5 minutes from now"
 String format(DateTime date,
-    {String locale, DateTime clock, bool allowFromNow = false}) {
+    {String? locale, DateTime? clock, bool allowFromNow = false}) {
   final _locale = locale ?? _default;
   if (_lookupMessagesMap[_locale] == null) {
     print(

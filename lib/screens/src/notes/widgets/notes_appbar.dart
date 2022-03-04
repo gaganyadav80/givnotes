@@ -16,13 +16,13 @@ import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 class NotesOptionModalSheet extends StatelessWidget {
-  const NotesOptionModalSheet({Key key}) : super(key: key);
+  const NotesOptionModalSheet({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext rootContext) {
     final HydratedPrefsCubit prefsCubit =
         BlocProvider.of<HydratedPrefsCubit>(rootContext);
-    final RxInt sortby = prefsCubit.state.sortby.obs;
+    final RxInt sortby = prefsCubit.state.sortby!.obs;
 
     return Material(
       child: Navigator(
@@ -147,7 +147,7 @@ class NotesOptionModalSheet extends StatelessWidget {
 
 class SortByModalPage extends StatelessWidget {
   const SortByModalPage(
-      {Key key, @required this.rootContext, @required this.sortby})
+      {Key? key, required this.rootContext, required this.sortby})
       : super(key: key);
 
   final BuildContext rootContext;

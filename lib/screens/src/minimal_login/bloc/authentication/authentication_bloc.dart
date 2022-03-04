@@ -20,7 +20,7 @@ part 'authentication_state.dart';
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
-    @required AuthenticationRepository authenticationRepository,
+    required AuthenticationRepository authenticationRepository,
   })  : assert(authenticationRepository != null),
         _authRepo = authenticationRepository,
         super(
@@ -32,8 +32,8 @@ class AuthenticationBloc
   }
 
   final AuthenticationRepository _authRepo;
-  StreamSubscription<UserModel> _userSubscription;
-  UserModel _user;
+  StreamSubscription<UserModel>? _userSubscription;
+  UserModel? _user;
 
   @override
   Stream<AuthenticationState> mapEventToState(
@@ -44,7 +44,7 @@ class AuthenticationBloc
         yield (LoginInProgress());
         await _authRepo.logInWithEmailAndPassword(
             email: event.email, password: event.password);
-        final User _currentUser = FirebaseAuth.instance.currentUser;
+        final User _currentUser = FirebaseAuth.instance.currentUser!;
 
         await pluginInitializer(_currentUser.uid, userKey: event.password);
 
@@ -57,7 +57,7 @@ class AuthenticationBloc
         yield (RegisterInProgress());
         await _authRepo.signUp(
             email: event.email, password: event.password, name: event.name);
-        final User _currentUser = FirebaseAuth.instance.currentUser;
+        final User _currentUser = FirebaseAuth.instance.currentUser!;
 
         await pluginInitializer(_currentUser.uid, userKey: event.password);
 
@@ -72,7 +72,7 @@ class AuthenticationBloc
 
         final DocumentReference db = FirebaseFirestore.instance
             .collection("users")
-            .doc(_currentUser?.uid);
+            .doc(_currentUser.uid);
         db.set({
           'name': event.name,
           'email': event.email,
@@ -97,7 +97,7 @@ class AuthenticationBloc
         //
       } else if (event is ForgetPassword) {
         yield (LoginInProgress());
-        await _authRepo.resetPassword(event.email);
+        await _authRepo.resetPassword(event.email!);
         yield (ForgetPasswordSuccess());
         //
       } else if (event is LoginObscureEvent) {
@@ -110,7 +110,7 @@ class AuthenticationBloc
       } else if (event is LogOutUser) {
         yield (LogoutInProgress());
         await _authRepo.logOut();
-        BlocProvider.of<TodosBloc>(event.ctx).add(LoadTodos());
+        BlocProvider.of<TodosBloc>(event.ctx!).add(LoadTodos());
         yield (LogoutSuccess(user: _user));
         //
       }
@@ -119,7 +119,7 @@ class AuthenticationBloc
     } on FirebaseAuthException catch (e) {
       if (event is LoginButtonPressed) {
         if (event.verify) {
-          final User _currentUser = FirebaseAuth.instance.currentUser;
+          final User _currentUser = FirebaseAuth.instance.currentUser!;
 
           if (_currentUser.emailVerified) {
             yield (AuthSuccess(

@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:dynamic_text_highlighting/dynamic_text_highlighting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 
 import 'package:givnotes/cubit/cubits.dart';
@@ -16,9 +16,9 @@ import 'package:givnotes/packages/timeago-3.1.0/timeago.dart' as timeago;
 
 class NotesCard extends StatefulWidget {
   const NotesCard({
-    Key key,
-    @required this.note,
-    @required this.showTags,
+    Key? key,
+    required this.note,
+    required this.showTags,
     this.canMultiSelect = true,
     //TODO improve search text functionality
     this.searchText = '',
@@ -34,17 +34,17 @@ class NotesCard extends StatefulWidget {
 }
 
 class _NotesCardState extends State<NotesCard> {
-  final Map<String, int> _allTagsMap = VariableService().prefsBox.allTagsMap;
+  final Map<String, int>? _allTagsMap = VariableService().prefsBox.allTagsMap;
   final RxString createdAgo = ''.obs;
 
-  Timer timer;
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
-    timeago.format(DateTime.parse(widget.note.created), locale: 'en_short');
+    timeago.format(DateTime.parse(widget.note.created!), locale: 'en_short');
     timer = Timer.periodic(const Duration(minutes: 1), (Timer t) {
-      createdAgo.value = timeago.format(DateTime.parse(widget.note.created),
+      createdAgo.value = timeago.format(DateTime.parse(widget.note.created!),
           locale: 'en_short');
     });
   }
@@ -112,16 +112,16 @@ class _NotesCardState extends State<NotesCard> {
                             ? SizedBox(height: 5.w)
                             : Container(
                                 height:
-                                    prefsCubit.state.compactTags ? 8.h : 18.h,
+                                    prefsCubit.state.compactTags! ? 8.h : 18.h,
                                 color: Colors.transparent,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.note.tags.length,
                                   itemBuilder: (context, index) {
                                     String tagsTitle = widget.note.tags[index];
-                                    Color color = Color(_allTagsMap[tagsTitle]);
+                                    Color color = Color(_allTagsMap![tagsTitle]!);
 
-                                    return prefsCubit.state.compactTags
+                                    return prefsCubit.state.compactTags!
                                         ? Container(
                                             width: 30.w,
                                             margin: EdgeInsets.only(right: 5.w),
@@ -164,7 +164,7 @@ class _NotesCardState extends State<NotesCard> {
                                 ? 'null'
                                 : widget.searchText
                           ],
-                          text: widget.note.title,
+                          text: widget.note.title!,
                           style: TextStyle(
                             fontSize: 18.w,
                             fontFamily: 'Poppins',
@@ -179,7 +179,7 @@ class _NotesCardState extends State<NotesCard> {
                                 ? 'null'
                                 : widget.searchText
                           ],
-                          text: widget.note.text,
+                          text: widget.note.text!,
                           maxLines: 5,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -189,10 +189,10 @@ class _NotesCardState extends State<NotesCard> {
                           ),
                         ),
                         SizedBox(height: 5.0.w),
-                        prefsCubit.state.compactTags
+                        prefsCubit.state.compactTags!
                             ? const SizedBox.shrink()
                             : Text(
-                                "created  ${DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created))}",
+                                "created  ${DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created!))}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.w300,
                                   fontSize: 12.w,

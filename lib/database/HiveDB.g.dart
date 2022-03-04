@@ -17,9 +17,9 @@ class PrefsModelAdapter extends TypeAdapter<PrefsModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return PrefsModel()
-      ..biometric = fields[0] as bool
-      ..passcode = fields[1] as String
-      ..allTagsMap = (fields[2] as Map)?.cast<String, int>();
+      ..biometric = fields[0] as bool?
+      ..passcode = fields[1] as String?
+      ..allTagsMap = (fields[2] as Map?)?.cast<String, int>();
   }
 
   @override

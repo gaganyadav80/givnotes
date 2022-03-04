@@ -34,11 +34,11 @@ part 'HiveDB.g.dart';
 @HiveType(typeId: 0)
 class PrefsModel extends HiveObject {
   @HiveField(0)
-  bool biometric = false;
+  bool? biometric = false;
 
   @HiveField(1)
-  String passcode = '';
+  String? passcode = '';
 
   @HiveField(2)
-  Map<String, int> allTagsMap = {};
+  Map<String, int>? allTagsMap = {};
 }

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 class CircleInputButtonConfig {
   // final double fontSize;
   /// default `MediaQuery.of(context).size.width * 0.095`
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
   final Color backgroundColor;
   final double backgroundOpacity;
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
 
   const CircleInputButtonConfig({
     this.textStyle,
@@ -23,9 +23,9 @@ class CircleInputButton extends StatelessWidget {
   final Sink<String> enteredSink;
 
   const CircleInputButton({
-    Key key,
-    @required this.text,
-    @required this.enteredSink,
+    Key? key,
+    required this.text,
+    required this.enteredSink,
     this.config = const CircleInputButtonConfig(),
   }) : super(key: key);
 
@@ -47,7 +47,7 @@ class CircleInputButton extends StatelessWidget {
         enteredSink.add(text);
       },
       style: ElevatedButton.styleFrom(
-        shape: config.shape ??
+        shape: config.shape as OutlinedBorder? ??
             CircleBorder(
               side: BorderSide(
                 color: config.backgroundColor,

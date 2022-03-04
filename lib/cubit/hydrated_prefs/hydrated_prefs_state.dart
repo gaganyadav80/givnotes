@@ -7,15 +7,15 @@ class HydratedPrefsState extends Equatable {
   });
 
   // 0: created, 1: modified, 2: a-z, 3: z-a
-  final int sortby;
-  final bool compactTags;
+  final int? sortby;
+  final bool? compactTags;
 
   @override
-  List<Object> get props => [sortby, compactTags];
+  List<Object?> get props => [sortby, compactTags];
 
   HydratedPrefsState copyWith({
-    int sortby,
-    bool compactTags,
+    int? sortby,
+    bool? compactTags,
   }) {
     return HydratedPrefsState(
       sortby: sortby ?? this.sortby,

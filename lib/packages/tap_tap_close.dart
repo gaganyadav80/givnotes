@@ -9,8 +9,8 @@ class TapTapClose extends StatefulWidget {
   final int durationSeconds;
 
   const TapTapClose({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.message = "Press BACK again",
     this.durationSeconds = 2,
   }) : super(key: key);
@@ -20,7 +20,7 @@ class TapTapClose extends StatefulWidget {
 }
 
 class _TapTapCloseState extends State<TapTapClose> {
-  DateTime currentBackPressTime;
+  DateTime? currentBackPressTime;
 
   bool get _isAndroid => Theme.of(context).platform == TargetPlatform.android;
 
@@ -31,7 +31,7 @@ class _TapTapCloseState extends State<TapTapClose> {
         onWillPop: () async {
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime) >
+              now.difference(currentBackPressTime!) >
                   const Duration(seconds: 2)) {
             currentBackPressTime = now;
 

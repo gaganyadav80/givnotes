@@ -19,7 +19,7 @@ class NoteStatusState extends Equatable {
   @override
   List<Object> get props => [noteMode, isEditing];
 
-  NoteStatusState copyWith({NoteMode noteMode, bool isEditing}) {
+  NoteStatusState copyWith({NoteMode? noteMode, bool? isEditing}) {
     return NoteStatusState(
       noteMode: noteMode ?? this.noteMode,
       isEditing: isEditing ?? this.isEditing,

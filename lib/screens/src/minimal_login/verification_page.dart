@@ -10,7 +10,7 @@ import 'package:givnotes/widgets/blue_button.dart';
 import 'bloc/verification_bloc/verification_bloc.dart';
 
 class VerificationPage extends StatelessWidget {
-  const VerificationPage({Key key}) : super(key: key);
+  const VerificationPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class VerificationPage extends StatelessWidget {
               icon: Text(
                 "Skip",
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Theme.of(context).textTheme.bodyText1!.color,
                   fontSize: 16.w,
                 ),
               ),
@@ -50,7 +50,7 @@ class VerificationPage extends StatelessWidget {
 }
 
 class VerificationMainBody extends StatelessWidget {
-  const VerificationMainBody({Key key}) : super(key: key);
+  const VerificationMainBody({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +66,7 @@ class VerificationMainBody extends StatelessWidget {
     return BlocListener<VerificationBloc, VerificationState>(
       listener: (context, state) {
         if (state is VerificationFailed) {
-          Fluttertoast.showToast(msg: state.message);
+          Fluttertoast.showToast(msg: state.message!);
         } else if (state is VerificationSuccess) {
           Fluttertoast.showToast(msg: 'verification successful');
           Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
@@ -102,14 +102,14 @@ class VerificationMainBody extends StatelessWidget {
                   "A verification email has been sent to your email",
                   style: Theme.of(context)
                       .textTheme
-                      .caption
+                      .caption!
                       .copyWith(fontSize: 14.w),
                 ),
                 Text(
                   "Verify by clicking on the link provided",
                   style: Theme.of(context)
                       .textTheme
-                      .caption
+                      .caption!
                       .copyWith(fontSize: 14.w),
                 ),
                 SizedBox(height: 45.w),

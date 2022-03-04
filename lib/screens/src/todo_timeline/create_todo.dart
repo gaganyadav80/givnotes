@@ -20,7 +20,7 @@ import 'todo_widgets.dart';
 
 class CreateTodoBloc extends StatefulWidget {
   const CreateTodoBloc({
-    Key key,
+    Key? key,
     this.isEditing = false,
     this.id,
     this.todo,
@@ -29,8 +29,8 @@ class CreateTodoBloc extends StatefulWidget {
         super(key: key);
 
   final bool isEditing;
-  final String id;
-  final TodoModel todo;
+  final String? id;
+  final TodoModel? todo;
 
   @override
   _CreateTodoState createState() => _CreateTodoState();
@@ -56,33 +56,33 @@ class _CreateTodoState extends State<CreateTodoBloc> {
     _selectCategoryColors.value = MaterialColors().materialColorValues[0];
 
     if (widget.isEditing) {
-      _categoryAdded.value = widget.todo.category.isNotEmpty;
+      _categoryAdded.value = widget.todo!.category!.isNotEmpty;
 
-      _titleController.text = widget.todo.title.decrypt;
-      _detailsController.text = widget.todo.description.decrypt;
+      _titleController.text = widget.todo!.title.decrypt;
+      _detailsController.text = widget.todo!.description!.decrypt;
 
       if (_categoryAdded.value) {
-        _categoryController.text = widget.todo.category.decrypt;
+        _categoryController.text = widget.todo!.category!.decrypt;
       }
       if (_categoryAdded.value) {
-        _selectCategoryColors.value = widget.todo.categoryColor;
+        _selectCategoryColors.value = widget.todo!.categoryColor!;
       }
 
-      _priority.value = widget.todo.priority.decrypt;
+      _priority.value = widget.todo!.priority!.decrypt;
       _subTasks
         ..clear()
-        ..addAll(widget.todo.subTask);
+        ..addAll(widget.todo!.subTask!);
 
-      _dueDate.value = widget.todo.dueDate.toDate();
+      _dueDate.value = widget.todo!.dueDate!.toDate();
     }
   }
 
   @override
   void dispose() {
-    _titleController?.dispose();
-    _detailsController?.dispose();
-    _subtaskController?.dispose();
-    _categoryController?.dispose();
+    _titleController.dispose();
+    _detailsController.dispose();
+    _subtaskController.dispose();
+    _categoryController.dispose();
     super.dispose();
   }
 
@@ -90,11 +90,11 @@ class _CreateTodoState extends State<CreateTodoBloc> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        bool val = true;
+        bool? val = true;
         FocusScope.of(context).unfocus();
 
         if (widget.isEditing &&
-            _titleController.text != widget.todo.title.decrypt) {
+            _titleController.text != widget.todo!.title.decrypt) {
           await showDialog(
             context: context,
             builder: (context) => const GivnotesDialog(
@@ -118,14 +118,14 @@ class _CreateTodoState extends State<CreateTodoBloc> {
           Fluttertoast.showToast(msg: "Please add a title");
         }
 
-        return val;
+        return val!;
       },
       child: Scaffold(
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: CreateTodoAppBar(
           controller: _titleController,
-          prevTitle: widget.isEditing ? widget.todo.title.decrypt : "",
+          prevTitle: widget.isEditing ? widget.todo!.title.decrypt : "",
           editTodo: widget.isEditing,
           id: widget.todo?.id,
         ),
@@ -252,11 +252,11 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                         await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
-                          builder: (BuildContext context, Widget child) {
+                          builder: (BuildContext context, Widget? child) {
                             return MediaQuery(
                               data: MediaQuery.of(context)
                                   .copyWith(alwaysUse24HourFormat: true),
-                              child: child,
+                              child: child!,
                             );
                           },
                         ).then((value) {
@@ -363,13 +363,13 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                             builder: (context, state) {
                               return CustomCheckbox(
                                 onChanged: (_) async {
-                                  var subTask = widget.todo.subTask;
+                                  var subTask = widget.todo!.subTask!;
                                   subTask[index][subTask[index].keys.first] =
                                       !subTask[index].values.first;
 
                                   BlocProvider.of<TodosBloc>(context).add(
-                                    UpdateTodo(
-                                        widget.todo.copyWith(subTask: subTask)),
+                                    UpdateTodo(widget.todo!
+                                        .copyWith(subTask: subTask)),
                                   );
                                 },
                                 value: _subTasks[index].values.first,
@@ -534,7 +534,7 @@ class _CreateTodoState extends State<CreateTodoBloc> {
                 Navigator.pop(context);
               } else if (widget.isEditing) {
                 BlocProvider.of<TodosBloc>(context).add(
-                  UpdateTodo(widget.todo.copyWith(
+                  UpdateTodo(widget.todo!.copyWith(
                     title: _titleController.text.encrypt,
                     description: _detailsController.text.encrypt,
                     priority: _priority.value.encrypt,

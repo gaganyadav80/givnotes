@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CircularLoading extends StatelessWidget {
-  const CircularLoading({Key key, this.color = Colors.black, this.size = 30.0})
+  const CircularLoading({Key? key, this.color = Colors.black, this.size = 30.0})
       : super(key: key);
 
   final Color color;

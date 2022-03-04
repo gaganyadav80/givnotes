@@ -7,8 +7,8 @@ import 'package:givnotes/cubit/cubits.dart';
 class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
   final Function saveNote;
   const NoteEditorAppBar({
-    @required this.saveNote,
-    Key key,
+    required this.saveNote,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -27,7 +27,7 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
                 : CupertinoIcons.back),
             color: Colors.black,
             iconSize: 28.0,
-            onPressed: saveNote,
+            onPressed: saveNote as void Function()?,
           );
         },
       ),

@@ -6,22 +6,22 @@ import 'package:uuid/uuid.dart';
 class TodoModel extends Equatable {
   final String id;
   final String title;
-  final bool completed;
-  final String description;
-  final Timestamp dueDate;
-  final String priority;
+  final bool? completed;
+  final String? description;
+  final Timestamp? dueDate;
+  final String? priority;
 
   // final Map<String, dynamic> category;
-  final List<dynamic> subTask;
-  final String category;
-  final int categoryColor;
+  final List<dynamic>? subTask;
+  final String? category;
+  final int? categoryColor;
 
   TodoModel({
-    String id,
-    @required String title,
+    String? id,
+    required String? title,
     this.completed,
     this.description = '',
-    @required this.dueDate,
+    required this.dueDate,
     this.priority,
     this.subTask,
     this.category = '',
@@ -30,15 +30,15 @@ class TodoModel extends Equatable {
         id = id ?? const Uuid().v1();
 
   TodoModel copyWith({
-    String id,
-    String title,
-    bool completed,
-    String description,
-    Timestamp dueDate,
-    String priority,
-    List<dynamic> subTask,
-    String category,
-    int categoryColor,
+    String? id,
+    String? title,
+    bool? completed,
+    String? description,
+    Timestamp? dueDate,
+    String? priority,
+    List<dynamic>? subTask,
+    String? category,
+    int? categoryColor,
   }) {
     return TodoModel(
       id: id ?? this.id,
@@ -54,7 +54,7 @@ class TodoModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         id,
         title,
         completed,
@@ -100,19 +100,19 @@ class TodoModel extends Equatable {
 
   static TodoModel fromSnapshot(DocumentSnapshot<Map<String, dynamic>> snap) {
     return TodoModel(
-      id: snap.data()['id'] as String,
-      title: snap.data()['title'] as String,
-      completed: snap.data()['completed'] as bool,
-      description: snap.data()['description'] as String,
-      dueDate: snap.data()['dueDate'] as Timestamp,
-      priority: snap.data()['priority'] as String,
-      subTask: snap.data()['subTask'],
-      category: snap.data()['category'] as String,
-      categoryColor: snap.data()['categoryColor'] as int,
+      id: snap.data()!['id'] as String?,
+      title: snap.data()!['title'] as String?,
+      completed: snap.data()!['completed'] as bool?,
+      description: snap.data()!['description'] as String?,
+      dueDate: snap.data()!['dueDate'] as Timestamp?,
+      priority: snap.data()!['priority'] as String?,
+      subTask: snap.data()!['subTask'],
+      category: snap.data()!['category'] as String?,
+      categoryColor: snap.data()!['categoryColor'] as int?,
     );
   }
 
-  Map<String, Object> toDocument() {
+  Map<String, Object?> toDocument() {
     return {
       "id": id,
       "title": title,

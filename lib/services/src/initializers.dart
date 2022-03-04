@@ -34,7 +34,7 @@ Future<void> initHiveDb() async {
   VariableService().prefsBox = box.values.first;
 }
 
-Future<void> pluginInitializer(String userID, {String userKey}) async {
+Future<void> pluginInitializer(String userID, {String? userKey}) async {
   PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(
@@ -42,11 +42,11 @@ Future<void> pluginInitializer(String userID, {String userKey}) async {
     options: StorageFileInitOptions(authenticationRequired: false),
   );
 
-  String storageContent = await secureStorage.read();
+  String? storageContent = await secureStorage.read();
 
   if (storageContent == null || storageContent.isEmpty || storageContent.split(':')[0] != userID) {
     // Not required to make it 32 byte. Was required for hive db.
-    if (userKey.length < 32) {
+    if (userKey!.length < 32) {
       userKey += 'X#P%5vu!w2zTPm&1#n0%zz^38^'.substring(0, 32 - userKey.length);
     }
 
@@ -56,7 +56,7 @@ Future<void> pluginInitializer(String userID, {String userKey}) async {
     storageContent = await secureStorage.read();
   }
 
-  VariableService().encryptionKey = storageContent.split(':')[1];
+  VariableService().encryptionKey = storageContent!.split(':')[1];
   VariableService().iv = aes.IV.fromBase64(storageContent.split(':')[2]);
 
   aes.Key key = aes.Key.fromBase64(VariableService().encryptionKey);

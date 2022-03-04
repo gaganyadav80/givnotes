@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NotesEmptyView extends StatelessWidget {
-  const NotesEmptyView({Key key, @required this.isTrash}) : super(key: key);
+  const NotesEmptyView({Key? key, required this.isTrash}) : super(key: key);
 
   final bool isTrash;
 

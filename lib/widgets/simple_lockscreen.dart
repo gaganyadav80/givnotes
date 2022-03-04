@@ -17,24 +17,24 @@ import 'circular_loading.dart';
 /// to make it work with AppLock package
 
 class SimpleLockScreen extends StatefulWidget {
-  final String correctString;
+  final String? correctString;
   final String title;
   final String confirmTitle;
   final bool confirmMode;
   final bool canCancel;
-  final void Function(BuildContext, String) onCompleted;
-  final bool canBiometric;
-  final bool showBiometricFirst;
-  final Future<bool> Function(BuildContext) biometricAuthenticate;
-  final void Function() onUnlocked;
+  final void Function(BuildContext, String)? onCompleted;
+  final bool? canBiometric;
+  final bool? showBiometricFirst;
+  final Future<bool> Function(BuildContext)? biometricAuthenticate;
+  final void Function()? onUnlocked;
 
   final bool isAddingLock;
   final bool isSuperSimple;
-  final String simpleTitle;
-  final String simpleConfirmTitle;
+  final String? simpleTitle;
+  final String? simpleConfirmTitle;
 
   const SimpleLockScreen({
-    Key key,
+    Key? key,
     this.correctString,
     this.title = 'Enter Passcode',
     this.confirmTitle = 'Enter Confirm Passcode',
@@ -69,8 +69,8 @@ class _LockScreenState extends State<SimpleLockScreen>
       TextEditingController();
   final FocusNode applockFocusNode = FocusNode();
 
-  Animation<Offset> _animation;
-  AnimationController _animationController;
+  Animation<Offset>? _animation;
+  AnimationController? _animationController;
 
   final RxBool _isConfirmation = false.obs;
   final RxString _verifyConfirmPasscode = ''.obs;
@@ -82,7 +82,7 @@ class _LockScreenState extends State<SimpleLockScreen>
     validateStreamController.stream.listen((valid) {
       if (!valid) {
         // shake animation when invalid
-        _animationController.forward();
+        _animationController!.forward();
       }
     });
 
@@ -101,7 +101,7 @@ class _LockScreenState extends State<SimpleLockScreen>
 
     _animation = widget.isSuperSimple
         ? null
-        : (_animationController
+        : (_animationController!
             .drive(CurveTween(curve: Curves.elasticIn))
             .drive(
                 Tween<Offset>(begin: Offset.zero, end: const Offset(0.050, 0)))
@@ -110,7 +110,7 @@ class _LockScreenState extends State<SimpleLockScreen>
           })
           ..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
-              _animationController.reverse();
+              _animationController!.reverse();
             }
           }));
   }
@@ -136,11 +136,11 @@ class _LockScreenState extends State<SimpleLockScreen>
       // if (!widget.canCancel) titleStreamController.add('Success');
 
       if (widget.onCompleted != null) {
-        widget.onCompleted(context, enteredValue);
+        widget.onCompleted!(context, enteredValue);
       }
 
       if (widget.onUnlocked != null) {
-        widget.onUnlocked();
+        widget.onUnlocked!();
       }
     } else {
       // send invalid status to DotSecretUI
@@ -204,7 +204,7 @@ class _LockScreenState extends State<SimpleLockScreen>
                   SizedBox(height: 10.w),
                   Obx(() => (_isConfirmation.value
                           ? widget.simpleConfirmTitle
-                          : widget.simpleTitle)
+                          : widget.simpleTitle)!
                       .text
                       .xl5
                       .light
@@ -220,7 +220,7 @@ class _LockScreenState extends State<SimpleLockScreen>
                   _buildSimpleTitle(),
                   _buildSimpleTextField(),
                   SizedBox(height: 20.w),
-                  widget.canBiometric ? _buildBiometric() : Container(),
+                  widget.canBiometric! ? _buildBiometric() : Container(),
                 ],
               ).pSymmetric(h: 20.w)
             : ListView(
@@ -233,7 +233,7 @@ class _LockScreenState extends State<SimpleLockScreen>
                   SizedBox(height: 10.w),
                   _buildTextField(),
                   SizedBox(height: 40.w),
-                  widget.canBiometric ? _buildBiometric() : Container(),
+                  widget.canBiometric! ? _buildBiometric() : Container(),
                 ],
               ),
       ),
@@ -356,10 +356,10 @@ class _LockScreenState extends State<SimpleLockScreen>
                   'specify biometricFunction or biometricAuthenticate.');
             } else {
               if (widget.biometricAuthenticate != null) {
-                widget.biometricAuthenticate(context).then((unlocked) {
+                widget.biometricAuthenticate!(context).then((unlocked) {
                   if (unlocked) {
                     if (widget.onUnlocked != null) {
-                      widget.onUnlocked();
+                      widget.onUnlocked!();
                     }
                   }
                 });
@@ -393,14 +393,14 @@ class _LockScreenState extends State<SimpleLockScreen>
   Widget _buildTitle() {
     return Center(
       child: SlideTransition(
-        position: _animation,
+        position: _animation!,
         child: Container(
           margin: EdgeInsets.symmetric(vertical: 15.h),
           child: StreamBuilder<String>(
             stream: titleStreamController.stream,
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
-                return snapshot.data.text.size(22.w).medium.make();
+                return snapshot.data!.text.size(22.w).medium.make();
               } else {
                 return (_isConfirmation.value
                         ? widget.confirmTitle
@@ -425,7 +425,7 @@ class _LockScreenState extends State<SimpleLockScreen>
           stream: titleStreamController.stream,
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.hasData) {
-              return snapshot.data.text.light.coolGray800.make();
+              return snapshot.data!.text.light.coolGray800.make();
             } else {
               return ''.text.light.coolGray800.make();
             }
@@ -485,9 +485,9 @@ class _LockScreenState extends State<SimpleLockScreen>
                     child: CircularLoading(),
                   );
                 } else if (state is AuthSuccess) {
-                  resetLockUserEmailController.text = state.user.email;
+                  resetLockUserEmailController.text = state.user!.email;
                 } else if (state is AuthNeedsVerification) {
-                  resetLockUserEmailController.text = state.user.email;
+                  resetLockUserEmailController.text = state.user!.email;
                 } else {
                   resetLockUserEmailController.clear();
                 }

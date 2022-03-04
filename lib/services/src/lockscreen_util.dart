@@ -8,11 +8,11 @@ import 'package:givnotes/widgets/simple_lockscreen.dart';
 
 class ShowLockscreen extends StatelessWidget {
   ShowLockscreen({
-    Key key,
-    @required this.changePassAuth,
+    Key? key,
+    required this.changePassAuth,
   }) : super(key: key);
 
-  final VoidCallback changePassAuth;
+  final VoidCallback? changePassAuth;
 
   Future<bool> biometrics(BuildContext context) async {
     final LocalAuthentication auth = LocalAuthentication();
@@ -51,7 +51,7 @@ class ShowLockscreen extends StatelessWidget {
       biometricAuthenticate: biometrics,
       onUnlocked: changePassAuth ??
           () {
-            AppLock.of(context).didUnlock();
+            AppLock.of(context)!.didUnlock();
           },
       // dotSecretConfig: DotSecretConfig(
       //   dotSize: 15.w,
@@ -67,7 +67,7 @@ class ShowLockscreen extends StatelessWidget {
 }
 
 class AddLockscreen extends StatelessWidget {
-  const AddLockscreen({Key key}) : super(key: key);
+  const AddLockscreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +80,7 @@ class AddLockscreen extends StatelessWidget {
       isAddingLock: true,
       onCompleted: (ctx, passcode) {
         VariableService().prefsBox.passcode = passcode;
-        AppLock.of(context).enable();
+        AppLock.of(context)!.enable();
         VariableService().prefsBox.save();
         Navigator.pop(context, true);
       },

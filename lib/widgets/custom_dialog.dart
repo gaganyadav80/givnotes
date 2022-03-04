@@ -4,8 +4,8 @@ import 'package:givnotes/widgets/widgets.dart';
 
 class GivnotesDialog extends StatelessWidget {
   const GivnotesDialog({
-    Key key,
-    @required this.title,
+    Key? key,
+    required this.title,
     this.message,
     this.showCancel = false,
     this.mainButtonText = "Okay",
@@ -14,11 +14,11 @@ class GivnotesDialog extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
-  final String message;
+  final String? message;
   final String mainButtonText;
   final bool showCancel;
-  final Function onTap;
-  final Widget content;
+  final Function? onTap;
+  final Widget? content;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +48,11 @@ class GivnotesDialog extends StatelessWidget {
                 ),
               ),
             ),
-            message.isNotEmpty
+            message!.isNotEmpty
                 ? Padding(
                     padding: EdgeInsets.fromLTRB(15.0.w, 8.0.w, 15.0.w, 15.0.w),
                     child: Text(
-                      message,
+                      message!,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.grey,
@@ -67,7 +67,7 @@ class GivnotesDialog extends StatelessWidget {
             Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: onTap ?? () => Navigator.pop(context, true),
+                onTap: onTap as void Function()? ?? () => Navigator.pop(context, true),
                 child: Container(
                   // height: 30.0,
                   padding: EdgeInsets.symmetric(vertical: 18.0.w),

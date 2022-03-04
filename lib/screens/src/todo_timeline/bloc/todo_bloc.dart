@@ -9,9 +9,9 @@ import 'todo_state.dart';
 
 class TodosBloc extends Bloc<TodosEvent, TodosState> {
   final TodosRepository _todosRepository;
-  StreamSubscription _todosSubscription;
+  StreamSubscription? _todosSubscription;
 
-  TodosBloc({@required TodosRepository todosRepository})
+  TodosBloc({required TodosRepository todosRepository})
       : assert(todosRepository != null),
         _todosRepository = todosRepository,
         super(TodosLoading());

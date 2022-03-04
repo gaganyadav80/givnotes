@@ -11,7 +11,7 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChangePasswordModalSheet extends StatefulWidget {
-  const ChangePasswordModalSheet({Key key}) : super(key: key);
+  const ChangePasswordModalSheet({Key? key}) : super(key: key);
 
   @override
   _ChangePasswordModalSheetState createState() =>
@@ -35,7 +35,7 @@ class _ChangePasswordModalSheetState extends State<ChangePasswordModalSheet> {
               if (state.verifyFailed) {
                 Fluttertoast.showToast(msg: "Verification failed");
               } else {
-                FirebaseAuth.instance.currentUser
+                FirebaseAuth.instance.currentUser!
                     .updatePassword(_newpassController.text);
                 Navigator.pop(rootContext);
               }
@@ -45,7 +45,7 @@ class _ChangePasswordModalSheetState extends State<ChangePasswordModalSheet> {
               if (state.verifyFailed) {
                 Fluttertoast.showToast(msg: "Verification failed");
               } else {
-                FirebaseAuth.instance.currentUser
+                FirebaseAuth.instance.currentUser!
                     .updatePassword(_newpassController.text);
                 Navigator.pop(rootContext);
               }
@@ -141,7 +141,7 @@ class _ChangePasswordModalSheetState extends State<ChangePasswordModalSheet> {
     } else {
       BlocProvider.of<AuthenticationBloc>(rtContext).add(
         LoginButtonPressed(
-          email: FirebaseAuth.instance.currentUser.email,
+          email: FirebaseAuth.instance.currentUser!.email!,
           password: _passController.text,
           verify: true,
         ),
@@ -151,7 +151,7 @@ class _ChangePasswordModalSheetState extends State<ChangePasswordModalSheet> {
 }
 
 class BuildDeleteAccountDialog extends StatefulWidget {
-  const BuildDeleteAccountDialog({Key key}) : super(key: key);
+  const BuildDeleteAccountDialog({Key? key}) : super(key: key);
 
   @override
   _BuildDeleteAccountDialogState createState() =>
@@ -173,7 +173,7 @@ class _BuildDeleteAccountDialogState extends State<BuildDeleteAccountDialog> {
             if (state.verifyFailed) {
               Fluttertoast.showToast(msg: "Verification failed");
             } else {
-              FirebaseAuth.instance.currentUser.delete();
+              FirebaseAuth.instance.currentUser!.delete();
               Navigator.pop(context);
             }
           }
@@ -182,7 +182,7 @@ class _BuildDeleteAccountDialogState extends State<BuildDeleteAccountDialog> {
             if (state.verifyFailed) {
               Fluttertoast.showToast(msg: "Verification failed");
             } else {
-              FirebaseAuth.instance.currentUser.delete();
+              FirebaseAuth.instance.currentUser!.delete();
               Navigator.pop(context);
             }
           }
@@ -211,9 +211,9 @@ class _BuildDeleteAccountDialogState extends State<BuildDeleteAccountDialog> {
                   child: CircularLoading(),
                 );
               } else if (state is AuthSuccess) {
-                _deleteAccEmailController.text = state.user.email;
+                _deleteAccEmailController.text = state.user!.email;
               } else if (state is AuthNeedsVerification) {
-                _deleteAccEmailController.text = state.user.email;
+                _deleteAccEmailController.text = state.user!.email;
               } else {
                 _deleteAccEmailController.clear();
               }

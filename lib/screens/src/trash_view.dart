@@ -13,13 +13,13 @@ import 'notes/widgets/notes_empty_view.dart';
 
 class TrashView extends StatelessWidget {
   const TrashView({
-    Key key,
-    @required this.rootContext,
-    @required this.modalController,
+    Key? key,
+    required this.rootContext,
+    required this.modalController,
   }) : super(key: key);
 
   final BuildContext rootContext;
-  final ScrollController modalController;
+  final ScrollController? modalController;
 
   @override
   Widget build(BuildContext context) {

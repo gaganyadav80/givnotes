@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class TilesDivider extends StatelessWidget {
   const TilesDivider({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override

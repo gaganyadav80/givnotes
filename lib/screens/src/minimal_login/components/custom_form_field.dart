@@ -6,22 +6,22 @@ import 'constants.dart';
 
 class CustomTextFormField extends StatelessWidget {
   const CustomTextFormField({
-    Key key,
-    @required TextEditingController fieldController,
-    @required String hintText,
-    @required TextInputType keyboardType,
-    FocusNode currentNode,
-    FocusNode nextNode,
-    @required Icon prefixIcon,
-    bool obscureText,
-    bool enabled,
-    Widget suffix,
-    TextCapitalization textCapitalization,
-    List<TextInputFormatter> inputFormatters,
-    @required TextInputAction textInputAction,
-    @required String Function(String) validator,
-    @required int maxLines,
-    int maxLength,
+    Key? key,
+    required TextEditingController fieldController,
+    required String hintText,
+    required TextInputType keyboardType,
+    FocusNode? currentNode,
+    FocusNode? nextNode,
+    required Icon prefixIcon,
+    bool? obscureText,
+    bool? enabled,
+    Widget? suffix,
+    TextCapitalization? textCapitalization,
+    List<TextInputFormatter>? inputFormatters,
+    required TextInputAction textInputAction,
+    required String? Function(String?) validator,
+    required int maxLines,
+    int? maxLength,
   })  : _fieldController = fieldController,
         _hintText = hintText,
         _currentNode = currentNode,
@@ -42,18 +42,18 @@ class CustomTextFormField extends StatelessWidget {
   final TextEditingController _fieldController;
   final String _hintText;
   final TextInputType _keyboardType;
-  final bool _obscureText;
-  final String Function(String) _validator;
+  final bool? _obscureText;
+  final String? Function(String?) _validator;
   final int _maxLines;
-  final bool _enabled;
-  final Widget _suffix;
+  final bool? _enabled;
+  final Widget? _suffix;
   final TextInputAction _textInputAction;
-  final FocusNode _currentNode;
-  final FocusNode _nextNode;
-  final List<TextInputFormatter> _inputFormatters;
-  final TextCapitalization _textCapitalization;
+  final FocusNode? _currentNode;
+  final FocusNode? _nextNode;
+  final List<TextInputFormatter>? _inputFormatters;
+  final TextCapitalization? _textCapitalization;
   final Icon _prefixIcon;
-  final int _maxLength;
+  final int? _maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class CustomTextFormField extends StatelessWidget {
       focusNode: _currentNode,
       onFieldSubmitted: (value) {
         if (_currentNode != null) {
-          _currentNode.unfocus();
+          _currentNode!.unfocus();
           FocusScope.of(context).requestFocus(_nextNode);
         }
       },
@@ -78,14 +78,14 @@ class CustomTextFormField extends StatelessWidget {
       validator: _validator,
       textCapitalization: _textCapitalization ?? TextCapitalization.none,
       textAlignVertical: TextAlignVertical.center,
-      style: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
       inputFormatters: _inputFormatters,
       decoration: InputDecoration(
         suffixIcon: _suffix,
         border: kInputBorderStyle,
         focusedBorder: kInputBorderStyle,
         enabledBorder: kInputBorderStyle,
-        hintStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 14.w),
+        hintStyle: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
         contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 19.w),
         hintText: _hintText,
         prefixIcon: _prefixIcon,

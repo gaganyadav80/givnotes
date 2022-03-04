@@ -24,7 +24,7 @@ class MyProfile extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  MyProfile({Key key}) : super(key: key);
+  MyProfile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +41,10 @@ class MyProfile extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       backgroundColor: const Color(0xfffafafa),
-      body: StreamBuilder<User>(
+      body: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
-          User user;
+        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          User? user;
 
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -70,8 +70,8 @@ class MyProfile extends StatelessWidget {
             ).pOnly(top: 140.h);
           } else if (snapshot.hasData) {
             user = snapshot.data;
-            _nameController.text = user.displayName;
-            _emailController.text = user.email;
+            _nameController.text = user!.displayName!;
+            _emailController.text = user.email!;
             _passwordController.text = '12345678';
 
             return ListView(
@@ -84,7 +84,7 @@ class MyProfile extends StatelessWidget {
                       // radius: 70.r,
                       backgroundColor: Colors.transparent,
                       child: user.photoURL != null
-                          ? Image.network(user.photoURL)
+                          ? Image.network(user.photoURL!)
                           : SvgPicture.asset(
                               'assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                     ),
@@ -191,9 +191,9 @@ class MyProfile extends StatelessWidget {
   }
 
   Padding _buildDetailTextField(
-      {BuildContext context,
-      String title,
-      TextEditingController controller,
+      {BuildContext? context,
+      required String title,
+      TextEditingController? controller,
       isPassword = false}) {
     return Row(
       children: [
@@ -215,7 +215,7 @@ class MyProfile extends StatelessWidget {
             onTap: isPassword
                 ? () => showCupertinoModalBottomSheet(
                       expand: true,
-                      context: context,
+                      context: context!,
                       backgroundColor: Colors.transparent,
                       builder: (context) => const ChangePasswordModalSheet(),
                     )

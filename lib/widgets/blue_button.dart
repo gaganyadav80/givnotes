@@ -6,8 +6,8 @@ import 'package:velocity_x/velocity_x.dart';
 import '../screens/src/minimal_login/components/constants.dart';
 
 class BlueButton extends StatelessWidget {
-  final Function onPressed;
-  final String title;
+  final Function? onPressed;
+  final String? title;
 
   /// If [isLoading] is [true] then it will override both
   /// [child] and [title].
@@ -15,15 +15,15 @@ class BlueButton extends StatelessWidget {
 
   /// If [child] is null then [title] will be used
   /// Otherwise, [child] will override [title]
-  final Widget child;
+  final Widget? child;
 
   /// Default value is 60.
-  final double height;
+  final double? height;
 
   const BlueButton(
-      {Key key,
+      {Key? key,
       this.title,
-      @required this.onPressed,
+      required this.onPressed,
       this.isLoading = false,
       this.child,
       this.height})
@@ -39,7 +39,7 @@ class BlueButton extends StatelessWidget {
       child: SizedBox(
         height: height ?? 60.w,
         child: TextButton(
-          onPressed: onPressed,
+          onPressed: onPressed as void Function()?,
           style: TextButton.styleFrom(
             elevation: 0.0,
             backgroundColor: Theme.of(context).primaryColor,
@@ -50,7 +50,7 @@ class BlueButton extends StatelessWidget {
           child: Center(
             child: isLoading
                 ? const CircularLoading(color: Colors.white)
-                : child ?? title.text.xl.light.white.make(),
+                : child ?? title!.text.xl.light.white.make(),
           ),
         ),
       ),

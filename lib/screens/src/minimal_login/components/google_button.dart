@@ -7,7 +7,7 @@ import 'constants.dart';
 class GoogleButton extends StatelessWidget {
   final Function onPressed;
   final String title;
-  const GoogleButton({Key key, @required this.title, @required this.onPressed})
+  const GoogleButton({Key? key, required this.title, required this.onPressed})
       : assert(onPressed != null),
         assert(title != null),
         super(key: key);
@@ -17,9 +17,9 @@ class GoogleButton extends StatelessWidget {
       borderRadius: kBorderRadius,
       color: Colors.transparent,
       elevation: 0.0,
-      shadowColor: Colors.grey[400].withOpacity(0.2),
+      shadowColor: Colors.grey[400]!.withOpacity(0.2),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onPressed as void Function()?,
         style: ElevatedButton.styleFrom(
           elevation: 0.0,
           padding: EdgeInsets.symmetric(vertical: 15.w),
@@ -29,7 +29,7 @@ class GoogleButton extends StatelessWidget {
             borderRadius: kBorderRadius,
             side: BorderSide(
               width: 1.0,
-              color: Colors.grey[500].withOpacity(0.5),
+              color: Colors.grey[500]!.withOpacity(0.5),
             ),
           ),
         ),
@@ -47,7 +47,7 @@ class GoogleButton extends StatelessWidget {
             Text(
               title,
               style:
-                  Theme.of(context).textTheme.caption.copyWith(fontSize: 16.w),
+                  Theme.of(context).textTheme.caption!.copyWith(fontSize: 16.w),
             )
           ],
         ),

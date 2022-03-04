@@ -61,7 +61,7 @@ class StringProcessor {
   }
 
   ///Return [String] of supplied text repeated count times.
-  String generateRepeatedString(String textToRepeat, num count,
+  String generateRepeatedString(String textToRepeat, num? count,
       [bool newLine = false]) {
     count ??= 1;
 

@@ -14,7 +14,7 @@ import 'package:givnotes/widgets/blue_button.dart';
 import 'components/components.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key key}) : super(key: key);
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class RegisterPage extends StatelessWidget {
 }
 
 class RegisterForm extends StatefulWidget {
-  const RegisterForm({Key key}) : super(key: key);
+  const RegisterForm({Key? key}) : super(key: key);
 
   @override
   _RegisterFormState createState() => _RegisterFormState();
@@ -106,17 +106,17 @@ class _RegisterFormState extends State<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _validator = Validator();
   // static bool acceptTnC = false;
-  bool _isObscure = true;
-  bool _isConfirmObscure = true;
+  bool? _isObscure = true;
+  bool? _isConfirmObscure = true;
 
-  final ValueNotifier<String> _passwordMatch = ValueNotifier<String>(null);
+  final ValueNotifier<String?> _passwordMatch = ValueNotifier<String?>(null);
 
   @override
   void dispose() {
-    _emailTextController?.dispose();
-    _passtextController?.dispose();
-    _nametextController?.dispose();
-    _confirmPassTextController?.dispose();
+    _emailTextController.dispose();
+    _passtextController.dispose();
+    _nametextController.dispose();
+    _confirmPassTextController.dispose();
     super.dispose();
   }
 
@@ -126,7 +126,7 @@ class _RegisterFormState extends State<RegisterForm> {
       newPassword: _passtextController.text,
     );
 
-    if (!_formKey.currentState.validate()) {
+    if (!_formKey.currentState!.validate()) {
       print('not validated');
       return;
     }
@@ -159,13 +159,13 @@ class _RegisterFormState extends State<RegisterForm> {
   }
 
   void _onObscurePressed() {
-    _isObscure = !_isObscure;
+    _isObscure = !_isObscure!;
     BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(
         obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
 
   void _onConfirmObscurePressed() {
-    _isConfirmObscure = !_isConfirmObscure;
+    _isConfirmObscure = !_isConfirmObscure!;
     BlocProvider.of<AuthenticationBloc>(context).add(RegisterObscureEvent(
         obscure: _isObscure, obscureConfirm: _isConfirmObscure));
   }
@@ -221,7 +221,7 @@ class _RegisterFormState extends State<RegisterForm> {
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
-                suffix: _isObscure
+                suffix: _isObscure!
                     ? GestureDetector(
                         onTap: _onObscurePressed,
                         child: const Icon(Icons.visibility_off_outlined))
@@ -241,12 +241,12 @@ class _RegisterFormState extends State<RegisterForm> {
             builder: (context, state) {
               return ValueListenableBuilder(
                 valueListenable: _passwordMatch,
-                builder: (context, value, child) {
+                builder: (context, dynamic value, child) {
                   return TextFormField(
                     focusNode: _confirmPassNode,
                     onFieldSubmitted: (value) {
                       if (_passtextController.text.isNotEmpty) {
-                        return _passwordMatch.value =
+                        _passwordMatch.value =
                             _validator.validateConfirmPassword(
                           confirmPassword: value,
                           newPassword: _passtextController.text,
@@ -259,7 +259,7 @@ class _RegisterFormState extends State<RegisterForm> {
                     },
                     onChanged: (value) {
                       if (_passtextController.text.isNotEmpty) {
-                        return _passwordMatch.value =
+                        _passwordMatch.value =
                             _validator.validateConfirmPassword(
                           confirmPassword: value,
                           newPassword: _passtextController.text,
@@ -273,15 +273,15 @@ class _RegisterFormState extends State<RegisterForm> {
                     controller: _confirmPassTextController,
                     cursorColor: Theme.of(context).primaryColor,
                     keyboardType: TextInputType.text,
-                    obscureText: _isConfirmObscure,
+                    obscureText: _isConfirmObscure!,
                     textCapitalization: TextCapitalization.none,
                     textAlignVertical: TextAlignVertical.center,
                     style: Theme.of(context)
                         .textTheme
-                        .caption
+                        .caption!
                         .copyWith(fontSize: 14.w),
                     decoration: InputDecoration(
-                      suffixIcon: _isConfirmObscure
+                      suffixIcon: _isConfirmObscure!
                           ? GestureDetector(
                               onTap: _onConfirmObscurePressed,
                               child: const Icon(Icons.visibility_off_outlined))
@@ -293,7 +293,7 @@ class _RegisterFormState extends State<RegisterForm> {
                       enabledBorder: kInputBorderStyle,
                       hintStyle: Theme.of(context)
                           .textTheme
-                          .caption
+                          .caption!
                           .copyWith(fontSize: 14.w),
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 20.w),

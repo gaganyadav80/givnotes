@@ -18,7 +18,7 @@ import 'package:givnotes/services/services.dart';
 import 'widgets/notes_widgets.dart';
 
 class NotesView extends StatefulWidget {
-  const NotesView({Key key}) : super(key: key);
+  const NotesView({Key? key}) : super(key: key);
 
   @override
   _NotesViewState createState() => _NotesViewState();
@@ -38,7 +38,7 @@ class _NotesViewState extends State<NotesView> {
 
       if (text.trim().isNotEmpty) {
         _searchList.value = Get.find<NotesController>().notes.where((element) {
-          return (element.title + ' ' + element.text + element.tags.join(' '))
+          return (element.title! + ' ' + element.text! + element.tags.join(' '))
                   .toLowerCase()
                   .contains(text.toLowerCase()) &&
               element.trash == false;
@@ -63,8 +63,8 @@ class _NotesViewState extends State<NotesView> {
 
   @override
   void dispose() {
-    _textController?.dispose();
-    _focusNode?.dispose();
+    _textController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 

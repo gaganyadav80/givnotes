@@ -12,7 +12,7 @@ import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key key}) : super(key: key);
+  const LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class LoginPage extends StatelessWidget {
         elevation: 0.0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         iconTheme: const IconThemeData(color: Colors.black),
-        leading: ModalRoute.of(context).canPop
+        leading: ModalRoute.of(context)!.canPop
             ? InkWell(
                 onTap: () => Navigator.pop(context),
                 child: const Icon(Icons.close, color: Colors.black),
@@ -40,7 +40,7 @@ class LoginPage extends StatelessWidget {
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) async {
           if (state is AuthFailure) {
-            Fluttertoast.showToast(msg: state.message);
+            Fluttertoast.showToast(msg: state.message!);
           }
           if (state is AuthSuccess) {
             Fluttertoast.showToast(msg: "Authentication successfull");
@@ -102,7 +102,7 @@ class LoginPage extends StatelessWidget {
 }
 
 class LoginForm extends StatefulWidget {
-  const LoginForm({Key key}) : super(key: key);
+  const LoginForm({Key? key}) : super(key: key);
 
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -115,11 +115,11 @@ class _LoginFormState extends State<LoginForm> {
   final _passwordNode = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _validator = Validator();
-  bool _isObscure = true;
+  bool? _isObscure = true;
 
   void _onLoginButtonPressed() {
     FocusScope.of(context).unfocus();
-    if (!_formKey.currentState.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
     BlocProvider.of<AuthenticationBloc>(context).add(
       LoginButtonPressed(
         email: _emailTextController.text,
@@ -147,15 +147,15 @@ class _LoginFormState extends State<LoginForm> {
   }
 
   void _onObscurePressed() {
-    _isObscure = !_isObscure;
+    _isObscure = !_isObscure!;
     BlocProvider.of<AuthenticationBloc>(context)
         .add(LoginObscureEvent(obscureLogin: _isObscure));
   }
 
   @override
   void dispose() {
-    _emailTextController?.dispose();
-    _passtextController?.dispose();
+    _emailTextController.dispose();
+    _passtextController.dispose();
     super.dispose();
   }
 
@@ -195,7 +195,7 @@ class _LoginFormState extends State<LoginForm> {
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
-                suffix: _isObscure
+                suffix: _isObscure!
                     ? GestureDetector(
                         onTap: _onObscurePressed,
                         child: const Icon(Icons.visibility_off_outlined))
@@ -213,7 +213,7 @@ class _LoginFormState extends State<LoginForm> {
                 onTap: _onForgetPasswordPressed,
                 child: Text(
                   "Forgot Password?",
-                  style: Theme.of(context).textTheme.headline6.copyWith(
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
                         fontSize: 10.w,
                         color: Theme.of(context).iconTheme.color,
                       ),

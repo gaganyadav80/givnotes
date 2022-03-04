@@ -5,28 +5,28 @@ import 'preference_service.dart';
 
 class DropdownPreference<T> extends StatefulWidget {
   final String title;
-  final String desc;
+  final String? desc;
   final String localKey;
   final T defaultVal;
   // final String defaultVal;
   final List<T> values;
-  final List<String> displayValues;
-  final Function onChange;
+  final List<String>? displayValues;
+  final Function? onChange;
   final bool disabled;
 
   final Color titleColor;
-  final Widget leading;
-  final double titleGap;
-  final Color leadingColor;
+  final Widget? leading;
+  final double? titleGap;
+  final Color? leadingColor;
   final bool showDesc;
 
   const DropdownPreference(
     this.title,
     this.localKey, {
-    Key key,
+    Key? key,
     this.desc,
-    @required this.defaultVal,
-    @required this.values,
+    required this.defaultVal,
+    required this.values,
     this.displayValues,
     this.onChange,
     this.disabled = false,
@@ -87,7 +87,7 @@ In release mode, the default value ($value) will silently be used.
         subtitle: widget.desc == null || !widget.showDesc
             ? null
             : Text(
-                widget.desc,
+                widget.desc!,
                 style: TextStyle(
                   color: widget.titleColor,
                   fontWeight: FontWeight.w300,
@@ -142,7 +142,7 @@ In release mode, the default value ($value) will silently be used.
                 context: context,
                 builder: (ctx) => CupertinoActionSheet(
                   title: Text(widget.title.toUpperCase()),
-                  message: widget.desc == null ? null : Text(widget.desc),
+                  message: widget.desc == null ? null : Text(widget.desc!),
                   actions: widget.values.map((val) {
                     return CupertinoActionSheetAction(
                       onPressed: () {
@@ -152,7 +152,7 @@ In release mode, the default value ($value) will silently be used.
                       child: Text(
                         widget.displayValues == null
                             ? val.toString()
-                            : widget.displayValues[widget.values.indexOf(val)],
+                            : widget.displayValues![widget.values.indexOf(val)],
                         textAlign: TextAlign.end,
                         style: const TextStyle(color: Colors.black),
                       ),
@@ -180,6 +180,6 @@ In release mode, the default value ($value) will silently be used.
     } else if (val is bool) {
       setState(() => PrefService.setBool(widget.localKey, val));
     }
-    if (widget.onChange != null) widget.onChange(val);
+    if (widget.onChange != null) widget.onChange!(val);
   }
 }

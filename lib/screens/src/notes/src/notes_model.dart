@@ -1,38 +1,37 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
 import 'package:uuid/uuid.dart';
 
 class NotesModel extends Equatable {
   final String id;
-  final String title;
-  final String text;
-  final String znote;
-  final bool trash;
-  final String created;
-  final String modified;
+  final String? title;
+  final String? text;
+  final String? znote;
+  final bool? trash;
+  final String? created;
+  final String? modified;
   final List<String> tags;
 
   NotesModel({
-    String id,
-    @required this.title,
-    @required this.text,
-    @required this.znote,
+    String? id,
+    required this.title,
+    required this.text,
+    required this.znote,
     this.trash = false,
-    @required this.created,
-    @required this.modified,
-    List<String> tags,
+    required this.created,
+    required this.modified,
+    List<String>? tags,
   })  : tags = tags ?? <String>[],
         id = id ?? const Uuid().v1();
 
   NotesModel copyWith({
-    String id,
-    String title,
-    String text,
-    String znote,
-    bool trash,
-    String created,
-    String modified,
-    List<String> tags,
+    String? id,
+    String? title,
+    String? text,
+    String? znote,
+    bool? trash,
+    String? created,
+    String? modified,
+    List<String>? tags,
   }) {
     return NotesModel(
       id: id ?? this.id,
@@ -47,7 +46,7 @@ class NotesModel extends Equatable {
   }
 
   @override
-  List<Object> get props =>
+  List<Object?> get props =>
       [id, title, text, znote, trash, created, modified, tags];
 
   @override
@@ -95,14 +94,14 @@ class NotesModel extends Equatable {
 
   static NotesModel fromJson(Map<String, dynamic> json) {
     return NotesModel(
-      id: json["id"] as String,
-      title: json["title"] as String,
-      text: json["text"] as String,
-      znote: json["znote"] as String,
-      trash: json["trash"] as bool,
-      created: json["created"] as String,
-      modified: json["modified"] as String,
-      tags: (json["tags"] as List)?.map((item) => item as String)?.toList(),
+      id: json["id"] as String?,
+      title: json["title"] as String?,
+      text: json["text"] as String?,
+      znote: json["znote"] as String?,
+      trash: json["trash"] as bool?,
+      created: json["created"] as String?,
+      modified: json["modified"] as String?,
+      tags: (json["tags"] as List?)?.map((item) => item as String).toList(),
     );
   }
 }

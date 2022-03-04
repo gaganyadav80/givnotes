@@ -6,7 +6,7 @@ import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/getwidget.dart';
 
 class ContactUsPage extends StatelessWidget {
-  const ContactUsPage({Key key}) : super(key: key);
+  const ContactUsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,7 @@ class ContactUsPage extends StatelessWidget {
       height: 60.w,
       width: 60.w,
       child: GFIconButton(
-        onPressed: onPressed,
+        onPressed: onPressed as void Function()?,
         color: blueColor,
         icon: Icon(icon),
         iconSize: 26.w,
