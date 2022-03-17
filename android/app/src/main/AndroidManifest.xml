@@ -9,7 +9,7 @@
          <!-- android:fullBackupContent="@xml/my_backup_rules" -->
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:label="givnotes"
         android:icon="@mipmap/ic_launcher">
         <activity
