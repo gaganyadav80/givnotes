@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/blue_button.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 class AboutUsPage extends StatelessWidget {
   static const String aboutGivnotes =

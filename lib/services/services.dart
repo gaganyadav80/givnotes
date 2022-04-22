@@ -11,6 +11,7 @@ export 'src/multi_select_notes.dart';
 export 'src/permissions.dart';
 export 'src/simple_bloc_observer.dart';
 export 'src/string_process.dart';
+export 'src/utils.dart';
 export 'src/validators.dart';
 export 'src/variables.dart';
 

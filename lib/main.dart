@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/database/database.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -99,9 +100,6 @@ class _GivnotesAppState extends State<GivnotesApp> {
       title: 'Givnotes',
       theme: ThemeData(
         fontFamily: 'Poppins',
-        colorScheme: ThemeData().colorScheme.copyWith(
-              secondary: Colors.black, // accent color
-            ),
         pageTransitionsTheme: const PageTransitionsTheme(
             builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
       ),

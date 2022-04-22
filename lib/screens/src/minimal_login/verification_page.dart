@@ -1,11 +1,15 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:givnotes/screens/screens.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/blue_button.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:givnotes/widgets/custom_buttons.dart';
 
 import 'bloc/verification_bloc/verification_bloc.dart';
 
@@ -15,27 +19,26 @@ class VerificationPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         elevation: 0.0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         actions: [
           Padding(
-            padding: EdgeInsets.only(right: 20.0.w),
-            child: TextButton.icon(
+            padding: EdgeInsets.only(right: 20.w),
+            child: TextButton(
               onPressed: () {
                 Navigator.of(context)
                     .pushReplacementNamed(RouterName.homeRoute);
               },
-              icon: Text(
-                "Skip",
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyText1!.color,
-                  fontSize: 16.w,
+              child: <Widget>[
+                Text(
+                  "Skip",
+                  style: TextStyle(color: Colors.black, fontSize: 18.w),
                 ),
-              ),
-              label: const Icon(Icons.fast_forward, color: Colors.black),
+                HSpace(5.w),
+                const Icon(LineIcons.arrowRight, color: Colors.black)
+              ].hStack(),
             ),
           ),
         ],
@@ -66,16 +69,15 @@ class VerificationMainBody extends StatelessWidget {
     return BlocListener<VerificationBloc, VerificationState>(
       listener: (context, state) {
         if (state is VerificationFailed) {
-          Fluttertoast.showToast(msg: state.message!);
+          showToast(msg: state.message!);
         } else if (state is VerificationSuccess) {
-          Fluttertoast.showToast(msg: 'verification successful');
+          showToast(msg: 'verification successful');
           Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
         } else if (state is ResendVerification) {
-          Fluttertoast.showToast(msg: 'verification mail sent');
+          showToast(msg: 'verification mail sent');
         }
       },
       child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 30.w),
           child: SingleChildScrollView(
@@ -83,36 +85,25 @@ class VerificationMainBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 40.w),
+                VSpace(20.w),
                 Center(
                     child: Image.asset(
                   "assets/img/login-verify.png",
-                  height: 180.w,
-                  width: 180.w,
+                  height: 200.w,
+                  width: 200.w,
                 )),
-                SizedBox(height: 40.w),
-                'Waiting for Verification'
-                    .text
-                    .headline1(context)
-                    .xl3
-                    .light
-                    .make(),
-                SizedBox(height: 27.w),
+                VSpace(40.w),
+                'Waiting for Verification'.text.xl3.extraBlack.make(),
+                VSpace(12.w),
                 Text(
-                  "A verification email has been sent to your email",
+                  "A verification link has been sent to your email address. Please confirm your signup.",
+                  textAlign: TextAlign.center,
                   style: Theme.of(context)
                       .textTheme
                       .caption!
                       .copyWith(fontSize: 14.w),
-                ),
-                Text(
-                  "Verify by clicking on the link provided",
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption!
-                      .copyWith(fontSize: 14.w),
-                ),
-                SizedBox(height: 45.w),
+                ).pSymmetric(h: 10.w),
+                VSpace(45.w),
                 BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
                     return state is VerificationInProgress
@@ -123,17 +114,32 @@ class VerificationMainBody extends StatelessWidget {
                             onPressed: _onConfirmButtonPressed);
                   },
                 ),
-                SizedBox(height: 45.w),
+                VSpace(22.w),
                 BlocBuilder<VerificationBloc, VerificationState>(
                   builder: (context, state) {
                     return state is ResendVerificationInProgress
-                        ? BlueButton(
+                        ? BorderTextButton(
                             title: "loading", onPressed: () {}, isLoading: true)
-                        : BlueButton(
+                        : BorderTextButton(
                             title: "Resend Verification Link",
                             onPressed: _onResendButtonPressed);
                   },
                 ),
+                VSpace(40.w),
+                <Widget>[
+                  "Not ${(context.read<AuthenticationBloc>().state as AuthNeedsVerification).user!.email}?"
+                      .text
+                      .size(14.w)
+                      .make(),
+                  TextButton(
+                    onPressed: () => showToast(msg: 'not implemented'),
+                    child: 'Go back'
+                        .text
+                        .size(14.w)
+                        .color(Theme.of(context).primaryColor)
+                        .make(),
+                  ).centered(),
+                ].hStack(),
               ],
             ),
           ),

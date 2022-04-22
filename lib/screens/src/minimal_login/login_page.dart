@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/widgets/blue_button.dart';
+import 'package:givnotes/widgets/custom_buttons.dart';
 
 import 'bloc/authentication/authentication_bloc.dart';
 import 'components/components.dart';
@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onGoogleSignInPressed() {
-      Fluttertoast.showToast(msg: 'Will be added soon');
+      showToast(msg: 'Will be added soon');
       // BlocProvider.of<AuthenticationBloc>(context).add(LoginWithGoogle());
     }
 
@@ -33,17 +33,17 @@ class LoginPage extends StatelessWidget {
         leading: ModalRoute.of(context)!.canPop
             ? InkWell(
                 onTap: () => Navigator.pop(context),
-                child: const Icon(Icons.close, color: Colors.black),
+                child: const Icon(LineIcons.times, color: Colors.black),
               )
             : null,
       ),
       body: BlocListener<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) async {
           if (state is AuthFailure) {
-            Fluttertoast.showToast(msg: state.message!);
+            showToast(msg: state.message!);
           }
           if (state is AuthSuccess) {
-            Fluttertoast.showToast(msg: "Authentication successfull");
+            showToast(msg: "Authentication successfull");
             Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
           }
           if (state is AuthNeedsVerification) {
@@ -54,7 +54,7 @@ class LoginPage extends StatelessWidget {
         },
         child: ListView(
           children: [
-            SizedBox(height: 50.w),
+            VSpace(50.w),
             Container(
               margin: EdgeInsets.symmetric(horizontal: 30.w),
               child: Column(
@@ -62,17 +62,23 @@ class LoginPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  'Welcome'.text.headline1(context).size(38.w).light.make(),
-                  SizedBox(height: 33.w),
+                  'Welcome'.text.size(38.w).extraBlack.make(),
+                  <Widget>[
+                    'New here?'.text.size(18.w).make(),
+                    TextButton(
+                      onPressed: _onSignUpPressed,
+                      child: 'Create a new account.'
+                          .text
+                          .size(14.w)
+                          .color(Theme.of(context).primaryColor)
+                          .make(),
+                    ).centered(),
+                  ].hStack(),
+                  VSpace(25.w),
                   const LoginForm(),
-                  SizedBox(height: 20.w),
-                  'or connect with'
-                      .text
-                      .headline4(context)
-                      .size(13.w)
-                      .make()
-                      .centered(),
-                  SizedBox(height: 10.w),
+                  VSpace(32.w),
+                  'or connect with'.text.size(14.w).make().centered(),
+                  VSpace(16.w),
                   Hero(
                     tag: 'google-button',
                     child: GoogleButton(
@@ -80,17 +86,6 @@ class LoginPage extends StatelessWidget {
                       onPressed: _onGoogleSignInPressed,
                     ),
                   ),
-                  SizedBox(height: 100.w),
-                  TextButton(
-                    onPressed: _onSignUpPressed,
-                    child: 'Create a new account.'
-                        .text
-                        .caption(context)
-                        .size(14.w)
-                        .semiBold
-                        .make(),
-                  ).centered(),
-                  // SizedBox(height: screenHeight * 0.045), //30
                 ],
               ),
             ),
@@ -137,7 +132,7 @@ class _LoginFormState extends State<LoginForm> {
         formKey: _formKey,
         emailController: _emailController,
         onPressed: () {
-          Fluttertoast.showToast(msg: 'TODO: Will be added soon');
+          showToast(msg: 'TODO: Will be added soon');
           // if (!_formKey.currentState.validate()) return;
 
           // BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
@@ -175,9 +170,9 @@ class _LoginFormState extends State<LoginForm> {
             hintText: 'Email',
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
-            prefixIcon: const Icon(Icons.email_outlined),
+            prefixIcon: const Icon(LineIcons.envelope),
           ),
-          SizedBox(height: 22.w),
+          VSpace(22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is LoginObscureState) {
@@ -191,37 +186,34 @@ class _LoginFormState extends State<LoginForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: const Icon(Icons.lock_outline),
+                prefixIcon: const Icon(LineIcons.lock),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure!
                     ? GestureDetector(
                         onTap: _onObscurePressed,
-                        child: const Icon(Icons.visibility_off_outlined))
+                        child: const Icon(LineIcons.eyeSlash))
                     : GestureDetector(
                         onTap: _onObscurePressed,
-                        child: const Icon(Icons.visibility_outlined)),
+                        child: const Icon(LineIcons.eye)),
               );
             },
           ),
-          SizedBox(height: 22.w),
+          VSpace(12.w),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              GestureDetector(
-                onTap: _onForgetPasswordPressed,
+              TextButton(
+                onPressed: _onForgetPasswordPressed,
                 child: Text(
                   "Forgot Password?",
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        fontSize: 10.w,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
+                  style: TextStyle(fontSize: 12.w, color: Colors.black),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 22.w),
+          VSpace(12.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is LoginInProgress

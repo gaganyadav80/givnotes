@@ -72,23 +72,24 @@ class CustomTextFormField extends StatelessWidget {
       maxLengthEnforcement:
           _maxLength != null ? MaxLengthEnforcement.enforced : null,
       controller: _fieldController,
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Colors.black,
       keyboardType: _keyboardType,
       obscureText: _obscureText ?? false,
       validator: _validator,
       textCapitalization: _textCapitalization ?? TextCapitalization.none,
       textAlignVertical: TextAlignVertical.center,
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
+      style: TextStyle(fontSize: 14.w),
       inputFormatters: _inputFormatters,
       decoration: InputDecoration(
+        prefixIcon: _prefixIcon,
         suffixIcon: _suffix,
         border: kInputBorderStyle,
         focusedBorder: kInputBorderStyle,
         enabledBorder: kInputBorderStyle,
-        hintStyle: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
+        // hintStyle:
+        // Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
         contentPadding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 19.w),
         hintText: _hintText,
-        prefixIcon: _prefixIcon,
       ),
     );
   }

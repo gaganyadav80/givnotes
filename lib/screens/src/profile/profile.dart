@@ -12,9 +12,6 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
-import 'package:givnotes/widgets/blue_button.dart';
-import 'package:givnotes/widgets/circular_animation.dart';
-import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
 import 'profile_widgets.dart';

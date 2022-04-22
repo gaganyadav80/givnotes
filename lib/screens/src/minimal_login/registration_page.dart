@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/services/src/validators.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/widgets/blue_button.dart';
+import 'package:givnotes/widgets/custom_buttons.dart';
 
 import 'components/components.dart';
 
@@ -26,7 +26,7 @@ class RegisterPage extends StatelessWidget {
       //   return;
       // }
 
-      Fluttertoast.showToast(msg: 'Will be added soon');
+      showToast(msg: 'Will be added soon');
       // BlocProvider.of<AuthenticationBloc>(context).add(RegisterWithGoogle());
     }
 
@@ -36,21 +36,21 @@ class RegisterPage extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: InkWell(
           onTap: () => Navigator.pop(context),
-          child: const Icon(CupertinoIcons.back, color: Colors.black),
+          child: const Icon(LineIcons.arrowLeft, color: Colors.black),
         ),
       ),
       body: SafeArea(
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state is AuthNeedsVerification) {
-              Fluttertoast.showToast(msg: "Registration succesfull");
+              showToast(msg: "Registration succesfull");
               Navigator.of(context)
                   .pushReplacementNamed(RouterName.verificationRoute);
             }
           },
           child: ListView(
             children: [
-              // SizedBox(height: 50.w),
+              // VSpace(50.w),
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 30.w),
                 child: Column(
@@ -58,17 +58,12 @@ class RegisterPage extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    'Sign Up'.text.headline1(context).size(38.w).light.make(),
-                    SizedBox(height: 33.w),
+                    'Sign Up'.text.size(38.w).extraBlack.make(),
+                    VSpace(36.w),
                     const RegisterForm(),
-                    SizedBox(height: 25.w),
-                    'or register with'
-                        .text
-                        .headline4(context)
-                        .size(12.w)
-                        .make()
-                        .centered(),
-                    SizedBox(height: 10.w),
+                    VSpace(25.w),
+                    'or register with'.text.size(14.w).make().centered(),
+                    VSpace(16.w),
                     Hero(
                       tag: 'google-button',
                       child: GoogleButton(
@@ -76,7 +71,7 @@ class RegisterPage extends StatelessWidget {
                         onPressed: _onGoogleSignUpPressed,
                       ),
                     ),
-                    SizedBox(height: 30.w),
+                    VSpace(30.w),
                   ],
                 ),
               ),
@@ -137,20 +132,6 @@ class _RegisterFormState extends State<RegisterForm> {
       return;
     }
 
-    // if (_passtextController.text != _confirmPassTextController.text) {
-    //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-    //     backgroundColor: Theme.of(context).primaryColor,
-    //     content: Text('Passwords do not match', style: TextStyle(color: Colors.white)),
-    //   ));
-    //   return;
-    // }
-
-    //MAYBE add Terms and privacy policy
-    // if (!acceptTnC) {
-    //   context.showSnackBar("Please accept Terms and Conditions");
-    //   return;
-    // }
-
     BlocProvider.of<AuthenticationBloc>(context).add(
       RegisterButtonClicked(
         name: _nametextController.text,
@@ -186,11 +167,11 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _nametextController,
             hintText: 'Name',
-            prefixIcon: const Icon(Icons.person_outline_outlined),
+            prefixIcon: const Icon(LineIcons.user),
             keyboardType: TextInputType.name,
             validator: _validator.validateName,
           ),
-          SizedBox(height: 22.w),
+          VSpace(22.w),
           CustomTextFormField(
             currentNode: _emailNode,
             nextNode: _passwordNode,
@@ -198,11 +179,11 @@ class _RegisterFormState extends State<RegisterForm> {
             maxLines: 1,
             fieldController: _emailTextController,
             hintText: 'Email',
-            prefixIcon: const Icon(Icons.email_outlined),
+            prefixIcon: const Icon(LineIcons.envelope),
             keyboardType: TextInputType.emailAddress,
             validator: _validator.validateEmail,
           ),
-          SizedBox(height: 22.w),
+          VSpace(22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
@@ -219,21 +200,21 @@ class _RegisterFormState extends State<RegisterForm> {
                 maxLength: 32,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: const Icon(Icons.lock_outline),
+                prefixIcon: const Icon(LineIcons.lock),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure!
                     ? GestureDetector(
                         onTap: _onObscurePressed,
-                        child: const Icon(Icons.visibility_off_outlined))
+                        child: const Icon(LineIcons.eyeSlash))
                     : GestureDetector(
                         onTap: _onObscurePressed,
-                        child: const Icon(Icons.visibility_outlined)),
+                        child: const Icon(LineIcons.eye)),
               );
             },
           ),
-          SizedBox(height: 22.w),
+          VSpace(22.w),
           BlocConsumer<AuthenticationBloc, AuthenticationState>(
             listener: (context, state) {
               if (state is RegisterObscureState) {
@@ -271,34 +252,31 @@ class _RegisterFormState extends State<RegisterForm> {
                     maxLength: 32,
                     maxLengthEnforcement: MaxLengthEnforcement.enforced,
                     controller: _confirmPassTextController,
-                    cursorColor: Theme.of(context).primaryColor,
+                    cursorColor: Colors.black,
                     keyboardType: TextInputType.text,
                     obscureText: _isConfirmObscure!,
                     textCapitalization: TextCapitalization.none,
                     textAlignVertical: TextAlignVertical.center,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption!
-                        .copyWith(fontSize: 14.w),
+                    style: TextStyle(fontSize: 14.w),
                     decoration: InputDecoration(
                       suffixIcon: _isConfirmObscure!
                           ? GestureDetector(
                               onTap: _onConfirmObscurePressed,
-                              child: const Icon(Icons.visibility_off_outlined))
+                              child: const Icon(LineIcons.eyeSlash))
                           : GestureDetector(
                               onTap: _onConfirmObscurePressed,
-                              child: const Icon(Icons.visibility_outlined)),
+                              child: const Icon(LineIcons.eye)),
                       border: kInputBorderStyle,
                       focusedBorder: kInputBorderStyle,
                       enabledBorder: kInputBorderStyle,
-                      hintStyle: Theme.of(context)
-                          .textTheme
-                          .caption!
-                          .copyWith(fontSize: 14.w),
+                      // hintStyle: Theme.of(context)
+                      //     .textTheme
+                      //     .caption!
+                      //     .copyWith(fontSize: 14.w),
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: 15.w, vertical: 20.w),
                       hintText: 'Confirm Password',
-                      prefixIcon: const Icon(Icons.lock_outline),
+                      prefixIcon: const Icon(LineIcons.lock),
                       errorText: _passwordMatch.value,
                     ),
                   );
@@ -306,39 +284,7 @@ class _RegisterFormState extends State<RegisterForm> {
               );
             },
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     Checkbox(
-          //       value: acceptTnC,
-          //       onChanged: (newVal) {
-          //         setState(() {
-          //           acceptTnC = newVal;
-          //         });
-          //       },
-          //       visualDensity: VisualDensity.compact,
-          //     ),
-          //     Text(
-          //       "I accept ",
-          //       style: Theme.of(context).textTheme.headline3.copyWith(
-          //             fontSize: screenHeight * 0.01111817, // 10
-          //           ),
-          //     ),
-          //     GestureDetector(
-          //       onTap: () async {
-          //         // launch("https://contri-app.web.app");
-          //       },
-          //       child: Text(
-          //         "Terms and Conditions",
-          //         style: Theme.of(context).textTheme.headline6.copyWith(
-          //               fontSize: screenHeight * 0.01111817, // 10
-          //             ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          SizedBox(height: 22.w),
-
+          VSpace(20.w),
           '* Please store your password safely because it acts as your '
               .richText
               .xs
@@ -348,8 +294,7 @@ class _RegisterFormState extends State<RegisterForm> {
             'MASTER KEY. '.textSpan.medium.italic.make(),
             'We won\'t be able to reset it for you.'.textSpan.light.make(),
           ]).make(),
-          SizedBox(height: 22.w),
-
+          VSpace(20.w),
           BlocBuilder<AuthenticationBloc, AuthenticationState>(
             builder: (context, state) {
               return state is RegisterInProgress
