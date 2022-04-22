@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/widgets.dart';
+import 'package:remixicon/remixicon.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -45,8 +47,8 @@ class HomePage extends StatelessWidget {
                     BlocProvider.of<HomeCubit>(context).update(index),
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.house),
-                    activeIcon: Icon(CupertinoIcons.house_fill),
+                    icon: Icon(FluentIcons.home_24_regular),
+                    activeIcon: Icon(FluentIcons.home_24_filled),
                     label: 'Home',
                   ),
                   BottomNavigationBarItem(
@@ -60,8 +62,8 @@ class HomePage extends StatelessWidget {
                     label: 'Tags',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(CupertinoIcons.settings),
-                    activeIcon: Icon(CupertinoIcons.settings_solid),
+                    icon: Icon(Remix.settings_line),
+                    activeIcon: Icon(Remix.settings_fill),
                     label: 'Settings',
                   ),
                 ],

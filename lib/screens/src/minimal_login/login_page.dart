@@ -191,10 +191,12 @@ class _LoginFormState extends State<LoginForm> {
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
                 suffix: _isObscure!
-                    ? GestureDetector(
+                    ? InkWell(
                         onTap: _onObscurePressed,
-                        child: const Icon(LineIcons.eyeSlash))
-                    : GestureDetector(
+                        child:
+                            const Icon(LineIcons.eyeSlash, color: Colors.grey),
+                      )
+                    : InkWell(
                         onTap: _onObscurePressed,
                         child: const Icon(LineIcons.eye)),
               );

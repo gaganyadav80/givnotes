@@ -1,10 +1,12 @@
 import 'dart:developer';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -116,35 +118,35 @@ class _NotesViewState extends State<NotesView> {
                     elevation: 0.0,
                     backgroundColor: Colors.white,
                     automaticallyImplyLeading: false,
-                    title: 'Notes'
-                        .text
-                        .heightRelaxed
-                        .size(36.w)
-                        .semiBold
-                        .color(const Color(0xff32343D))
-                        .make(),
+                    // title: 'Notes'
+                    //     .text
+                    //     .size(36.w)
+                    //     .extraBlack
+                    //     .color(const Color(0xff32343D))
+                    //     .make(),
+                    leading: SvgPicture.asset('assets/logo/givnotes_logo.svg'),
                     actions: [
-                      Padding(
-                        padding: EdgeInsets.only(right: 8.w),
-                        child: IconButton(
-                          splashRadius: 25.0,
-                          iconSize: 22.0.w,
-                          icon: const Icon(CupertinoIcons.collections,
-                              color: Colors.black),
-                          onPressed: () => showCupertinoModalBottomSheet(
-                            expand: true,
-                            context: context,
-                            backgroundColor: Colors.transparent,
-                            builder: (context) => const NotesOptionModalSheet(),
-                          ),
+                      IconButton(
+                        splashRadius: 25.0,
+                        // iconSize: 22.w,
+                        icon: const Icon(CupertinoIcons.collections,
+                            color: Colors.black),
+                        onPressed: () => showCupertinoModalBottomSheet(
+                          expand: true,
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) => const NotesOptionModalSheet(),
                         ),
                       ),
-                      InkWell(
-                        child: Icon(CupertinoIcons.search,
-                            size: 28.w, color: Colors.black),
-                        // splashRadius: 25.0,
+                      IconButton(
+                        splashRadius: 25.0,
+                        icon: Icon(
+                          FluentIcons.search_32_regular,
+                          size: 30.w,
+                          color: Colors.black,
+                        ),
                         key: widget.key,
-                        onTap: () {
+                        onPressed: () {
                           _showSearch.value = true;
                           _focusNode.requestFocus();
                         },

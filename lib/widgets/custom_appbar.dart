@@ -1,7 +1,11 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/services/services.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
@@ -20,9 +24,9 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  static const List<String> _appBarTitle = ['Todos', 'Tags', 'Settings'];
+  // static const List<String> _appBarTitle = ['Todos', 'Tags', 'Settings'];
 
-  final TodoDateController _dateController = Get.find<TodoDateController>();
+  final TodoDateController _todoController = Get.find<TodoDateController>();
 
   @override
   Widget build(BuildContext context) {
@@ -33,64 +37,58 @@ class _CustomAppBarState extends State<CustomAppBar> {
               elevation: 0.0,
               backgroundColor: Colors.white,
               automaticallyImplyLeading: false,
-              title: _appBarTitle[widget.index - 1]
-                  .text
-                  .heightRelaxed
-                  .size(36.w)
-                  .semiBold
-                  .color(const Color(0xff32343D))
-                  .make(),
-              // title: Text(
-              //   _appBarTitle[widget.index - 1],
-              //   style: TextStyle(
-              //     height: 1.2.w,
-              //     fontSize: 36.w,
-              //     fontWeight: FontWeight.w600,
-              //     letterSpacing: -0.7.w,
-              //     color: const Color(0xff32343D),
-              //   ),
-              // ),
+              // title: _appBarTitle[widget.index - 1]
+              //     .text
+              //     .size(36.w)
+              //     .extraBlack
+              //     .color(const Color(0xff32343D))
+              //     .make(),
+              leading: SvgPicture.asset('assets/logo/givnotes_logo.svg'),
               actions: widget.index == 1
                   ? [
-                      InkWell(
-                        child: Icon(CupertinoIcons.calendar_today,
-                            size: 28.w, color: Colors.black),
-                        // splashRadius: 25.0,
+                      IconButton(
+                        splashRadius: 25.0,
+                        icon: Icon(
+                          FluentIcons.calendar_ltr_24_regular,
+                          size: 34.w,
+                          color: Colors.black,
+                        ),
                         key: widget.key,
-                        onTap: () async {
+                        onPressed: () async {
                           await showDatePicker(
                             context: context,
-                            initialDate: _dateController.date,
+                            initialDate: _todoController.date,
                             currentDate: DateTime.now(),
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2025),
-                            builder: (context, child) {
-                              return Theme(
-                                data: ThemeData.dark(),
-                                child: child!,
-                              );
-                            },
+                            // builder: (context, child) {
+                            //   return Theme(
+                            //     data: ThemeData.light(),
+                            //     child: child!,
+                            //   );
+                            // },
                           ).then((value) {
                             if (value != null) {
                               Future.delayed(const Duration(milliseconds: 300),
                                   () {
-                                _dateController.appBarDate.value = value;
+                                _todoController.appBarDate.value = value;
                               });
                             }
                           });
                         },
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 20.0.w),
-                        child: InkWell(
-                          child: const Icon(CupertinoIcons.create,
-                              color: Colors.black),
-                          onTap: () => Navigator.pushNamed(
-                              context, RouterName.createTodoRoute,
-                              arguments: [false, null, null]),
+                      IconButton(
+                        splashRadius: 25.0,
+                        icon: const Icon(
+                          FluentIcons.task_list_square_add_24_regular,
+                          size: 30,
+                          color: Colors.black,
                         ),
+                        onPressed: () => Navigator.pushNamed(
+                            context, RouterName.createTodoRoute,
+                            arguments: [false, null, null]),
                       ),
-                      SizedBox(width: 20.w),
+                      HSpace(10.w),
                     ]
                   : null,
             ),
