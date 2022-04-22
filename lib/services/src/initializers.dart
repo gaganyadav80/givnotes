@@ -18,6 +18,8 @@ void initGetXControllers() {
   Get.put(TodoDateController());
 
   Database.getStorage = GetStorage(Database.dbName);
+  //TODO find something better
+  VariableService();
 }
 
 Future<void> pluginInitializer(String userID, {String? userKey}) async {

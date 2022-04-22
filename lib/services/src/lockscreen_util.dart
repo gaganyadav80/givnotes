@@ -23,9 +23,11 @@ class ShowLockscreen extends StatelessWidget {
     try {
       authenticated = await auth.authenticate(
         localizedReason: 'Authenticate to unlock givnotes',
-        biometricOnly: true,
-        useErrorDialogs: true,
-        stickyAuth: false,
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          useErrorDialogs: true,
+          stickyAuth: false,
+        ),
       );
     } on PlatformException catch (e) {
       log("Error: $e");

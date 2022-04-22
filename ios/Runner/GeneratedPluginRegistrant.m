@@ -84,10 +84,10 @@
 @import image_picker;
 #endif
 
-#if __has_include(<local_auth/FLTLocalAuthPlugin.h>)
-#import <local_auth/FLTLocalAuthPlugin.h>
+#if __has_include(<local_auth_ios/FLTLocalAuthPlugin.h>)
+#import <local_auth_ios/FLTLocalAuthPlugin.h>
 #else
-@import local_auth;
+@import local_auth_ios;
 #endif
 
 #if __has_include(<move_to_background/MoveToBackgroundPlugin.h>)
@@ -96,10 +96,10 @@
 @import move_to_background;
 #endif
 
-#if __has_include(<package_info/FLTPackageInfoPlugin.h>)
-#import <package_info/FLTPackageInfoPlugin.h>
+#if __has_include(<package_info_plus/FLTPackageInfoPlusPlugin.h>)
+#import <package_info_plus/FLTPackageInfoPlusPlugin.h>
 #else
-@import package_info;
+@import package_info_plus;
 #endif
 
 #if __has_include(<path_provider_ios/FLTPathProviderPlugin.h>)
@@ -150,7 +150,7 @@
   [FLTImagePickerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTImagePickerPlugin"]];
   [FLTLocalAuthPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTLocalAuthPlugin"]];
   [MoveToBackgroundPlugin registerWithRegistrar:[registry registrarForPlugin:@"MoveToBackgroundPlugin"]];
-  [FLTPackageInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlugin"]];
+  [FLTPackageInfoPlusPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlusPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
   [PermissionHandlerPlugin registerWithRegistrar:[registry registrarForPlugin:@"PermissionHandlerPlugin"]];
   [FLTSharedPreferencesPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTSharedPreferencesPlugin"]];
