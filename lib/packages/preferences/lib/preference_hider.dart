@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'preference_service.dart';
-
 class PreferenceHider extends StatelessWidget {
   final List<Widget> preferences;
   final String hidePref;
@@ -13,7 +11,7 @@ class PreferenceHider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (PrefService.getBool(hidePref) ?? defaultVal) return Container();
+    if (defaultVal) return Container();
     return Column(
       children: preferences,
       crossAxisAlignment: CrossAxisAlignment.start,

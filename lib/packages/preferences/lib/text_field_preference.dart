@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'preference_service.dart';
-
 class TextFieldPreference extends StatefulWidget {
   final String label;
   final String localKey;
@@ -50,12 +48,7 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
 
   @override
   void initState() {
-    if (PrefService.getString(widget.localKey) == null &&
-        widget.defaultVal != null) {
-      PrefService.setString(widget.localKey, widget.defaultVal);
-    }
-    controller.text =
-        PrefService.getString(widget.localKey) ?? widget.defaultVal ?? '';
+    controller.text = widget.defaultVal ?? '';
     super.initState();
   }
 
@@ -78,7 +71,7 @@ class _TextFieldPreferenceState extends State<TextFieldPreference> {
           onChanged: (val) {
             if (_formKey.currentState!.validate()) {
               if (widget.onChange != null) val = widget.onChange!(val) ?? val;
-              PrefService.setString(widget.localKey, val);
+              // PrefService.setString(widget.localKey, val);
             }
           },
           autofocus: widget.autofocus,

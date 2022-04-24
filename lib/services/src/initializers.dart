@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/database/database.dart';
 
-import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
@@ -23,7 +22,7 @@ void initGetXControllers() {
 }
 
 Future<void> pluginInitializer(String userID, {String? userKey}) async {
-  PrefService.init(prefix: 'pref_');
+  // PrefService.init(prefix: 'pref_');
 
   final BiometricStorageFile secureStorage =
       await BiometricStorage().getStorage(

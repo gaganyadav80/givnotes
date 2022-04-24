@@ -1,12 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'preference_service.dart';
-
 class DropdownPreference<T> extends StatefulWidget {
   final String title;
   final String? desc;
-  final String localKey;
+  // final String localKey;
   final T defaultVal;
   // final String defaultVal;
   final List<T> values;
@@ -21,8 +19,7 @@ class DropdownPreference<T> extends StatefulWidget {
   final bool showDesc;
 
   const DropdownPreference(
-    this.title,
-    this.localKey, {
+    this.title, {
     Key? key,
     this.desc,
     required this.defaultVal,
@@ -42,29 +39,25 @@ class DropdownPreference<T> extends StatefulWidget {
 }
 
 class _DropdownPreferenceState<T> extends State<DropdownPreference<T>> {
+  late T _value;
   @override
   void initState() {
     super.initState();
-    if (PrefService.get(widget.localKey) == null) {
-      PrefService.setDefaultValues({widget.localKey: widget.defaultVal});
+    // if (PrefService.get(widget.localKey) == null) {
+    //   PrefService.setDefaultValues({widget.localKey: widget.defaultVal});
+    // }
+    try {
+      _value = widget.defaultVal;
+    } on TypeError catch (e) {
+      _value = widget.defaultVal;
+      assert(() {
+        throw FlutterError('$e');
+      }());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    T value;
-    try {
-      value = PrefService.get(widget.localKey) ?? widget.defaultVal;
-    } on TypeError catch (e) {
-      value = widget.defaultVal;
-      assert(() {
-        throw FlutterError('''$e
-The PrefService value for "${widget.localKey}" is not the right type (${PrefService.get(widget.localKey)}).
-In release mode, the default value ($value) will silently be used.
-''');
-      }());
-    }
-
     return Opacity(
       opacity: widget.disabled ? 0.5 : 1.0,
       child: ListTile(
@@ -120,7 +113,7 @@ In release mode, the default value ($value) will silently be used.
               Padding(
                 padding: const EdgeInsets.only(right: 5.0),
                 child: Text(
-                  "$value",
+                  "$_value",
                   style: const TextStyle(
                     color: CupertinoColors.systemGrey,
                     fontSize: 15,
@@ -171,15 +164,7 @@ In release mode, the default value ($value) will silently be used.
   }
 
   onChange(T val) {
-    if (val is String) {
-      setState(() => PrefService.setString(widget.localKey, val));
-    } else if (val is int) {
-      setState(() => PrefService.setInt(widget.localKey, val));
-    } else if (val is double) {
-      setState(() => PrefService.setDouble(widget.localKey, val));
-    } else if (val is bool) {
-      setState(() => PrefService.setBool(widget.localKey, val));
-    }
+    setState(() => _value = val);
     if (widget.onChange != null) widget.onChange!(val);
   }
 }

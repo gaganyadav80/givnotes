@@ -5,7 +5,6 @@ import 'preference_service.dart';
 class CheckboxPreference extends StatefulWidget {
   final String title;
   final String? desc;
-  final String localKey;
   final bool defaultVal;
   final bool ignoreTileTap;
 
@@ -17,29 +16,33 @@ class CheckboxPreference extends StatefulWidget {
   final Function? onDisable;
   final Function? onChange;
 
-  const CheckboxPreference(this.title, this.localKey,
-      {Key? key,
-      this.desc,
-      this.defaultVal = false,
-      this.ignoreTileTap = false,
-      this.resetOnException = true,
-      this.onEnable,
-      this.onDisable,
-      this.onChange,
-      this.disabled = false})
-      : super(key: key);
+  const CheckboxPreference(
+    this.title, {
+    Key? key,
+    this.desc,
+    this.defaultVal = false,
+    this.ignoreTileTap = false,
+    this.resetOnException = true,
+    this.onEnable,
+    this.onDisable,
+    this.onChange,
+    this.disabled = false,
+  }) : super(key: key);
 
   @override
   _CheckboxPreferenceState createState() => _CheckboxPreferenceState();
 }
 
 class _CheckboxPreferenceState extends State<CheckboxPreference> {
+  late bool _value;
+
   @override
   void initState() {
     super.initState();
-    if (PrefService.getBool(widget.localKey) == null) {
-      PrefService.setBool(widget.localKey, widget.defaultVal);
-    }
+    // if (PrefService.getBool(widget.localKey) == null) {
+    //   PrefService.setBool(widget.localKey, widget.defaultVal);
+    // }
+    _value = widget.defaultVal;
   }
 
   @override
@@ -48,27 +51,25 @@ class _CheckboxPreferenceState extends State<CheckboxPreference> {
       title: Text(widget.title),
       subtitle: widget.desc == null ? null : Text(widget.desc!),
       trailing: Checkbox(
-        value: PrefService.getBool(widget.localKey) ?? widget.defaultVal,
+        value: _value,
         onChanged:
             widget.disabled ? null : (val) => val! ? onEnable() : onDisable(),
       ),
       onTap: (widget.ignoreTileTap || widget.disabled)
           ? null
-          : () => (PrefService.getBool(widget.localKey) ?? widget.defaultVal)
-              ? onDisable()
-              : onEnable(),
+          : () => (_value) ? onDisable() : onEnable(),
     );
   }
 
   onEnable() async {
-    setState(() => PrefService.setBool(widget.localKey, true));
+    setState(() => _value = true);
     if (widget.onChange != null) widget.onChange!();
     if (widget.onEnable != null) {
       try {
         await widget.onEnable!();
       } catch (e) {
         if (widget.resetOnException) {
-          PrefService.setBool(widget.localKey, false);
+          _value = false;
           if (mounted) setState(() {});
         }
         if (mounted) PrefService.showError(context, e.toString());
@@ -77,14 +78,14 @@ class _CheckboxPreferenceState extends State<CheckboxPreference> {
   }
 
   onDisable() async {
-    setState(() => PrefService.setBool(widget.localKey, false));
+    setState(() => _value = false);
     if (widget.onChange != null) widget.onChange!();
     if (widget.onDisable != null) {
       try {
         await widget.onDisable!();
       } catch (e) {
         if (widget.resetOnException) {
-          PrefService.setBool(widget.localKey, true);
+          _value = true;
           if (mounted) setState(() {});
         }
         if (mounted) PrefService.showError(context, e.toString());

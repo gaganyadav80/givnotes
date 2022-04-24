@@ -93,7 +93,6 @@ class NotesOptionModalSheet extends StatelessWidget {
                     const TilesDivider(),
                     SwitchPreference(
                       'Compact Tags',
-                      'compact_tags',
                       titleColor: Colors.black,
                       titleGap: 0.0,
                       leading: const Icon(

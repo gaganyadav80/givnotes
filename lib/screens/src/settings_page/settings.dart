@@ -35,7 +35,6 @@ class SettingsPage extends StatelessWidget {
         SortNotesFloatModalSheet(),
         SwitchPreference(
           'Compact tags',
-          'compact_tags',
           // desc: "For the minimalistic.",
           defaultVal: _prefsCubit.state.compactTags,
           titleColor: const Color(0xff32343D),
@@ -49,7 +48,6 @@ class SettingsPage extends StatelessWidget {
         const PreferenceTitle('PERSONALIZATION'),
         SwitchPreference(
           'Dark mode',
-          'dark_mode',
           disabled: true,
           // desc: "So now the fun begins.",
           titleColor: const Color(0xff32343D),
@@ -63,7 +61,6 @@ class SettingsPage extends StatelessWidget {
         ),
         DropdownPreference(
           'Dark theme',
-          'dark_theme',
           disabled: true,
           // desc: "Spice up your theme",
           defaultVal: 'Darkish grey',
@@ -240,7 +237,14 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
   final LocalAuthentication _localAuthentication = LocalAuthentication();
 
   RxBool canUseBiometric = false.obs;
+  late RxBool isAppLockEnabled;
   String reason = '';
+
+  @override
+  void initState() {
+    super.initState();
+    isAppLockEnabled = Database.passcodeEnabled.obs;
+  }
 
   void setBiometricButton() async {
     canUseBiometric.value = (await _localAuthentication.isDeviceSupported());
@@ -268,51 +272,45 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 
     return Column(
       children: [
-        SwitchPreference(
-          'Enable app lock',
-          'app_lock',
-          defaultVal: false,
-          ignoreTileTap: false,
-          leading:
-              Icon(CupertinoIcons.lock, color: Colors.black, size: _kIconSize),
-          // leadingColor: Colors.orangeAccent,
-          titleGap: 0.0,
-          isWaitSwitch: true,
-          onEnable: () {
-            if (Database.passcode == '') {
-              Navigator.pushNamed(context, RouterName.addlockRoute)
-                  .then((value) {
-                if (value as bool) {
-                  setState(() {
-                    PrefService.setBool('app_lock', true);
+        Obx(() => SwitchPreference(
+              'Enable app lock',
+              defaultVal: isAppLockEnabled.value,
+              ignoreTileTap: false,
+              leading: Icon(CupertinoIcons.lock,
+                  color: Colors.black, size: _kIconSize),
+              // leadingColor: Colors.orangeAccent,
+              titleGap: 0.0,
+              isWaitSwitch: true,
+              onEnable: () {
+                if (Database.passcode == '') {
+                  Navigator.pushNamed(context, RouterName.addlockRoute)
+                      .then((value) {
+                    if (value as bool) {
+                      isAppLockEnabled.value = true;
+                    }
                   });
                 }
-              });
-            }
-          },
-          onDisable: () {
-            if (Database.passcode != '') {
-              Navigator.pushNamed(
-                context,
-                RouterName.lockscreenRoute,
-                arguments: () {
-                  AppLock.of(context)!.disable();
-                  Database.updatePasscode('');
-                  Navigator.pop(context, true);
-                },
-              ).then((value) {
-                if (value as bool) {
-                  setState(() {
-                    PrefService.setBool('app_lock', false);
+              },
+              onDisable: () {
+                if (Database.passcode != '') {
+                  Navigator.pushNamed(
+                    context,
+                    RouterName.lockscreenRoute,
+                    arguments: () {
+                      AppLock.of(context)!.disable();
+                      Database.updatePasscode('');
+                      Navigator.pop(context, true);
+                    },
+                  ).then((value) {
+                    if (value as bool) {
+                      isAppLockEnabled.value = false;
+                    }
                   });
                 }
-              });
-            }
-          },
-        ),
+              },
+            )),
         Obx(() => SwitchPreference(
               'Biometric authentication',
-              'biometric',
               defaultVal: false,
               disabled:
                   canUseBiometric.value ? Database.passcode.isEmpty : true,

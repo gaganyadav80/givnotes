@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 
-import 'preference_service.dart';
-
 class PreferenceDialog extends StatefulWidget {
   final String? title;
   final List<Widget> preferences;
   final String? submitText;
   final String? cancelText;
+  final VoidCallback? onSubmit;
 
   final bool onlySaveOnSubmit;
 
-  const PreferenceDialog(this.preferences,
-      {Key? key,
-      this.title,
-      this.submitText,
-      this.onlySaveOnSubmit = false,
-      this.cancelText})
-      : super(key: key);
+  const PreferenceDialog(
+    this.preferences, {
+    Key? key,
+    this.title,
+    this.submitText,
+    this.onlySaveOnSubmit = false,
+    this.cancelText,
+    this.onSubmit,
+  }) : super(key: key);
 
   @override
   PreferenceDialogState createState() => PreferenceDialogState();
@@ -27,16 +28,16 @@ class PreferenceDialogState extends State<PreferenceDialog> {
   void initState() {
     super.initState();
 
-    if (widget.onlySaveOnSubmit) {
-      PrefService.rebuildCache();
-      PrefService.enableCaching();
-    }
+    // if (widget.onlySaveOnSubmit) {
+    //   PrefService.rebuildCache();
+    //   PrefService.enableCaching();
+    // }
   }
 
   @override
   void dispose() {
-    PrefService.disableCaching();
-    PrefService.rebuildCache();
+    // PrefService.disableCaching();
+    // PrefService.rebuildCache();
     super.dispose();
   }
 
@@ -44,18 +45,24 @@ class PreferenceDialogState extends State<PreferenceDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: widget.title == null ? null : Text(widget.title!),
-      content: FutureBuilder(
-        future: PrefService.init(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return Container();
-
-          return SingleChildScrollView(
-            child: Column(
-              children: widget.preferences,
-            ),
-          );
-        },
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: widget.preferences,
+        ),
       ),
+      // content: FutureBuilder(
+      //   future: PrefService.init(),
+      //   builder: (context, snapshot) {
+      //     if (!snapshot.hasData) return Container();
+
+      //     return SingleChildScrollView(
+      //       child: Column(
+      //         children: widget.preferences,
+      //       ),
+      //     );
+      //   },
+      // ),
       actions: <Widget>[
         ...widget.cancelText == null
             ? []
@@ -73,9 +80,10 @@ class PreferenceDialogState extends State<PreferenceDialog> {
                 TextButton(
                   child: Text(widget.submitText!),
                   onPressed: () {
-                    if (widget.onlySaveOnSubmit) {
-                      PrefService.applyCache();
-                    }
+                    // if (widget.onlySaveOnSubmit) {
+                    //   PrefService.applyCache();
+                    // }
+                    widget.onSubmit!();
                     Navigator.of(context).pop();
                   },
                 )
