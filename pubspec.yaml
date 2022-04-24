@@ -51,6 +51,7 @@ dependencies:
   path: ^1.8.0
   path_provider: ^2.0.9
   permission_handler: ^9.2.0
+  remixicon: ^1.0.0
   show_up_animation: ^2.0.0
   timelines: ^0.1.0
   uuid: ^3.0.6

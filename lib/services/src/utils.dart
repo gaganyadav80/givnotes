@@ -27,5 +27,5 @@ Future<bool?> showToast({String? msg}) {
 }
 
 void delayedOnPressed(VoidCallback onPressed) {
-  Future.delayed(const Duration(milliseconds: 200), onPressed);
+  Future.delayed(const Duration(milliseconds: 100), onPressed);
 }

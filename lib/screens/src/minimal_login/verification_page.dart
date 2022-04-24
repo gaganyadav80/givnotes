@@ -126,7 +126,11 @@ class VerificationMainBody extends StatelessWidget {
                     .size(14.w)
                     .make(),
                 TextButton(
-                  onPressed: () => showToast(msg: 'not implemented'),
+                  onPressed: () {
+                    context.read<AuthenticationBloc>().add(LogOutUser(context));
+                    Navigator.of(context)
+                        .pushReplacementNamed(RouterName.loginRoute);
+                  },
                   child: 'Go back'
                       .text
                       .size(14.w)
