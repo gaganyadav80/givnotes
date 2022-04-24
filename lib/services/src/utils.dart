@@ -25,3 +25,7 @@ class HSpace extends StatelessWidget {
 Future<bool?> showToast({String? msg}) {
   return Fluttertoast.showToast(msg: msg!);
 }
+
+void delayedOnPressed(VoidCallback onPressed) {
+  Future.delayed(const Duration(milliseconds: 200), onPressed);
+}

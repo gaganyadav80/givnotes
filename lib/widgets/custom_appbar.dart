@@ -1,12 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/services/services.dart';
-import 'package:line_icons/line_icons.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';

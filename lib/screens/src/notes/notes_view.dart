@@ -151,7 +151,7 @@ class _NotesViewState extends State<NotesView> {
                           _focusNode.requestFocus();
                         },
                       ),
-                      SizedBox(width: 20.w),
+                      SizedBox(width: 10.w),
                     ],
                   )),
           ),

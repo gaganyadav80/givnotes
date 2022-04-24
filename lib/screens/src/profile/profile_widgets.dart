@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:givnotes/screens/src/minimal_login/minimal_login.dart';
-import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

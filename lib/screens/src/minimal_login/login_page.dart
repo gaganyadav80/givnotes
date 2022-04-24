@@ -22,7 +22,9 @@ class LoginPage extends StatelessWidget {
     }
 
     void _onSignUpPressed() {
-      Navigator.of(context).pushNamed(RouterName.signupRouter);
+      delayedOnPressed(() {
+        Navigator.of(context).pushNamed(RouterName.signupRouter);
+      });
     }
 
     return Scaffold(
@@ -126,19 +128,21 @@ class _LoginFormState extends State<LoginForm> {
   void _onForgetPasswordPressed() {
     final _emailController = TextEditingController();
     final _formKey = GlobalKey<FormState>();
-    showDialog(
-      context: context,
-      builder: (context) => PassResetMailDialog(
-        formKey: _formKey,
-        emailController: _emailController,
-        onPressed: () {
-          showToast(msg: 'TODO: Will be added soon');
-          // if (!_formKey.currentState.validate()) return;
+    delayedOnPressed(() {
+      showDialog(
+        context: context,
+        builder: (context) => PassResetMailDialog(
+          formKey: _formKey,
+          emailController: _emailController,
+          onPressed: () {
+            showToast(msg: 'TODO: Will be added soon');
+            // if (!_formKey.currentState.validate()) return;
 
-          // BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
-        },
-      ),
-    );
+            // BlocProvider.of<AuthenticationBloc>(context).add(ForgetPassword(email: _emailController.text));
+          },
+        ),
+      );
+    });
   }
 
   void _onObscurePressed() {
@@ -186,10 +190,10 @@ class _LoginFormState extends State<LoginForm> {
                 maxLines: 1,
                 fieldController: _passtextController,
                 hintText: 'Password',
-                prefixIcon: const Icon(LineIcons.lock),
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
                 obscureText: _isObscure,
+                prefixIcon: const Icon(LineIcons.lock),
                 suffix: _isObscure!
                     ? InkWell(
                         onTap: _onObscurePressed,

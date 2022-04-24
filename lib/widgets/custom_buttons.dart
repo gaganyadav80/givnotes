@@ -20,14 +20,17 @@ class BlueButton extends StatelessWidget {
   /// Default value is 60.
   final double? height;
 
-  const BlueButton(
-      {Key? key,
-      this.title,
-      required this.onPressed,
-      this.isLoading = false,
-      this.child,
-      this.height})
-      : super(key: key);
+  final Color? backgroundColor;
+
+  const BlueButton({
+    Key? key,
+    this.title,
+    required this.onPressed,
+    this.isLoading = false,
+    this.child,
+    this.height,
+    this.backgroundColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,7 @@ class BlueButton extends StatelessWidget {
           onPressed: onPressed,
           style: TextButton.styleFrom(
             elevation: 0.0,
-            backgroundColor: Theme.of(context).primaryColor,
+            backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
             shape: RoundedRectangleBorder(borderRadius: kBorderRadius),
             padding: EdgeInsets.symmetric(vertical: 15.w),
             primary: Colors.lightBlue[900],

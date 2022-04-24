@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/widgets/circular_loading.dart';
 import 'package:givnotes/widgets/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:timelines/timelines.dart';
@@ -218,7 +217,8 @@ class _TodoTimelineBlocState extends State<TodoTimelineBloc> {
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontFamily: "Roboto",
-                                                      decoration: todo.completed!
+                                                      decoration: todo
+                                                              .completed!
                                                           ? TextDecoration
                                                               .lineThrough
                                                           : TextDecoration.none,

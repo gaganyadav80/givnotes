@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
                   BottomNavigationBarItem(
                     icon: Icon(FluentIcons.home_24_regular),
                     activeIcon: Icon(FluentIcons.home_24_filled),
-                    label: 'Home',
+                    label: 'Notes',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(CupertinoIcons.layers),

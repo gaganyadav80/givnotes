@@ -236,29 +236,25 @@ class ProfileTileSettings extends StatelessWidget {
                             : const SizedBox.shrink(),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        "Edit Profile"
-                            .text
-                            .white
-                            .size(16.w)
-                            .make()
-                            .pSymmetric(h: 5.w),
-                        Icon(
-                          CupertinoIcons.forward,
-                          color: Colors.white,
-                          size: 21.w,
+                    SizedBox(
+                      width: 150.w,
+                      height: 45.w,
+                      child: BlueButton(
+                        onPressed: () => Navigator.pushNamed(
+                            context, RouterName.profileRoute),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            "Edit Profile".text.white.make().pSymmetric(h: 5.w),
+                            Icon(
+                              CupertinoIcons.forward,
+                              color: Colors.white,
+                              size: 21.w,
+                            ),
+                          ],
                         ),
-                      ],
-                    )
-                        .capsule(
-                            backgroundColor: const Color(0xff006aff),
-                            width: 150.w,
-                            height: 45.w)
-                        .py12()
-                        .onTap(() => Navigator.pushNamed(
-                            context, RouterName.profileRoute)),
+                      ),
+                    ).py12(),
                   ],
                 )
               : Row(
