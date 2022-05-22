@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/packages/packages.dart';
@@ -36,8 +35,7 @@ class SettingsPage extends StatelessWidget {
               // desc: "For the minimalistic.",
               value: _prefsCubit.compactTags.value,
               titleColor: const Color(0xff32343D),
-              leading: Icon(CupertinoIcons.rectangle,
-                  color: _kIconColor, size: _kIconSize),
+              leading: Icon(CupertinoIcons.rectangle, color: _kIconColor, size: _kIconSize),
               // leadingColor: Colors.blue,
               titleGap: 0.0,
               onEnable: () => _prefsCubit.setCompactTags(true),
@@ -49,8 +47,7 @@ class SettingsPage extends StatelessWidget {
           disabled: true,
           // desc: "So now the fun begins.",
           titleColor: const Color(0xff32343D),
-          leading:
-              Icon(CupertinoIcons.moon, color: _kIconColor, size: _kIconSize),
+          leading: Icon(CupertinoIcons.moon, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.purple,
           titleGap: 0.0,
           onChange: ((value) {
@@ -64,8 +61,7 @@ class SettingsPage extends StatelessWidget {
           defaultVal: 'Darkish grey',
           values: const ['Darkish grey', 'Blueberry black', 'Shades of purple'],
           titleColor: const Color(0xff32343D),
-          leading:
-              Icon(CupertinoIcons.at, color: _kIconColor, size: _kIconSize),
+          leading: Icon(CupertinoIcons.at, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.pink,
           titleGap: 0.0,
           onChange: ((value) {
@@ -76,13 +72,10 @@ class SettingsPage extends StatelessWidget {
           'Extensions',
           // desc: 'Extend your experience.',
           disabled: true,
-          style: const TextStyle(
-              color: Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading:
-              Icon(CupertinoIcons.bolt, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.bolt, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.brown,
-          trailing: const Icon(CupertinoIcons.forward,
-              color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
           widgetScaffold: const AboutUsPage(),
         ),
@@ -90,20 +83,17 @@ class SettingsPage extends StatelessWidget {
         const AppLockSwitchPrefs(),
         PreferenceText(
           'Change Passcode',
-          style: const TextStyle(
-              color: Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.lock_shield,
-              color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.lock_shield, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.lightGreen,
           titleGap: 0.0,
           onTap: () {
-            if (Database.passcode != '') {
+            if (PrefsController.to.passcode.value != '') {
               Navigator.pushNamed(
                 context,
                 RouterName.lockscreenRoute,
                 arguments: () {
-                  Navigator.of(context)
-                      .pushReplacementNamed(RouterName.addlockRoute);
+                  Navigator.of(context).pushReplacementNamed(RouterName.addlockRoute);
                 },
               );
             } else {
@@ -114,37 +104,28 @@ class SettingsPage extends StatelessWidget {
         const PreferenceTitle('DETAILS SECTION'),
         PreferencePageLink(
           'Application',
-          style: const TextStyle(
-              color: Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.app_badge,
-              color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.app_badge, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.grey,
-          trailing: const Icon(CupertinoIcons.forward,
-              color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
           widgetScaffold: AppDetailSection(),
         ),
         PreferencePageLink(
           'About Us',
-          style: const TextStyle(
-              color: Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading:
-              Icon(CupertinoIcons.person, color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.person, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.brown,
-          trailing: const Icon(CupertinoIcons.forward,
-              color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
           widgetScaffold: const AboutUsPage(),
         ),
         PreferencePageLink(
           'Contact Us',
-          style: const TextStyle(
-              color: Color(0xff32343D), fontWeight: FontWeight.w500),
-          leading: Icon(CupertinoIcons.chat_bubble,
-              color: _kIconColor, size: _kIconSize),
+          style: const TextStyle(color: Color(0xff32343D), fontWeight: FontWeight.w500),
+          leading: Icon(CupertinoIcons.chat_bubble, color: _kIconColor, size: _kIconSize),
           // leadingColor: Colors.blueGrey,
-          trailing: const Icon(CupertinoIcons.forward,
-              color: _kTrailingColor, size: 21.0),
+          trailing: const Icon(CupertinoIcons.forward, color: _kTrailingColor, size: 21.0),
           titleGap: 0.0,
           widgetScaffold: const ContactUsPage(),
         ),
@@ -180,8 +161,7 @@ class AppDetailSection extends StatelessWidget {
                     1: Text("Logs"),
                   },
                   groupValue: selectedIndex.value,
-                  onValueChanged: (dynamic value) =>
-                      selectedIndex.value = value,
+                  onValueChanged: (dynamic value) => selectedIndex.value = value,
                 )),
           ),
         ),
@@ -196,22 +176,18 @@ class AppDetailSection extends StatelessWidget {
   final List<Widget> _bodyWidgets = [
     Column(
       children: [
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("App name: "),
-          Text(VariableService().packageInfo.appName)
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("Package: "),
-          Text(VariableService().packageInfo.packageName)
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("Build_no: "),
-          Text(VariableService().packageInfo.buildNumber)
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text("Release version: "),
-          Text("v${VariableService().packageInfo.version}-beta")
-        ]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const Text("App name: "), Text(VariableService().packageInfo.appName)]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const Text("Package: "), Text(VariableService().packageInfo.packageName)]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const Text("Build_no: "), Text(VariableService().packageInfo.buildNumber)]),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [const Text("Release version: "), Text("v${VariableService().packageInfo.version}-beta")]),
         Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: const [Text("Development version: "), Text("v2.0.0")]),
@@ -219,8 +195,7 @@ class AppDetailSection extends StatelessWidget {
     ),
     const Align(
         alignment: Alignment.topCenter,
-        child: Text("Logs",
-            style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
+        child: Text("Logs", style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold))),
   ];
 }
 
@@ -235,17 +210,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
   final LocalAuthentication _localAuthentication = LocalAuthentication();
 
   RxBool canUseBiometric = false.obs;
-  late RxBool isAppLockEnabled;
-  late RxBool isBiometricEnabled;
 
   String reason = '';
-
-  @override
-  void initState() {
-    super.initState();
-    isAppLockEnabled = Database.passcodeEnabled.obs;
-    isBiometricEnabled = Database.biometric.obs;
-  }
 
   void setBiometricButton() async {
     canUseBiometric.value = (await _localAuthentication.isDeviceSupported());
@@ -254,9 +220,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
       return;
     }
 
-    canUseBiometric.value =
-        (await _localAuthentication.getAvailableBiometrics())
-            .contains(BiometricType.fingerprint);
+    canUseBiometric.value = (await _localAuthentication.getAvailableBiometrics()).contains(BiometricType.fingerprint);
 
     if (canUseBiometric.value == false) {
       reason = 'Biometrics are not enrolled';
@@ -275,36 +239,34 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
       children: [
         Obx(() => SwitchPreference(
               'Enable app lock',
-              value: isAppLockEnabled.value,
+              value: PrefsController.to.passcodeEnabled.value,
               ignoreTileTap: false,
-              leading: Icon(CupertinoIcons.lock,
-                  color: Colors.black, size: _kIconSize),
+              leading: Icon(CupertinoIcons.lock, color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.orangeAccent,
               titleGap: 0.0,
               isWaitSwitch: true,
               onEnable: () {
-                if (Database.passcode == '') {
-                  Navigator.pushNamed(context, RouterName.addlockRoute)
-                      .then((value) {
+                if (PrefsController.to.passcode.value == '') {
+                  Navigator.pushNamed(context, RouterName.addlockRoute).then((value) {
                     if (value as bool) {
-                      isAppLockEnabled.value = true;
+                      PrefsController.to.passcodeEnabled.value = true;
                     }
                   });
                 }
               },
               onDisable: () {
-                if (Database.passcode != '') {
+                if (PrefsController.to.passcode.value != '') {
                   Navigator.pushNamed(
                     context,
                     RouterName.lockscreenRoute,
                     arguments: () {
                       AppLock.of(context)!.disable();
-                      Database.updatePasscode('');
+                      PrefsController.to.setPasscode('');
                       Navigator.pop(context, true);
                     },
                   ).then((value) {
                     if (value as bool) {
-                      isAppLockEnabled.value = false;
+                      PrefsController.to.passcodeEnabled.value = false;
                     }
                   });
                 }
@@ -312,23 +274,16 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             )),
         Obx(() => SwitchPreference(
               'Biometric authentication',
-              value: isBiometricEnabled.value,
-              disabled: canUseBiometric.value && !isAppLockEnabled.value,
-              leading: Icon(Icons.fingerprint_outlined,
-                  color: Colors.black, size: _kIconSize),
+              value: PrefsController.to.biometricEnabled.value,
+              disabled: canUseBiometric.value && !PrefsController.to.passcodeEnabled.value,
+              leading: Icon(Icons.fingerprint_outlined, color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.teal,
               titleGap: 0.0,
               ondisableTap: () {
                 if (reason.isNotEmpty) Fluttertoast.showToast(msg: reason);
               },
-              onEnable: () {
-                Database.updateBiometric(true);
-                isBiometricEnabled.value = true;
-              },
-              onDisable: () {
-                Database.updateBiometric(false);
-                isBiometricEnabled.value = false;
-              },
+              onEnable: () => PrefsController.to.setBiometricEnabled(true),
+              onDisable: () => PrefsController.to.setBiometricEnabled(false),
             )),
       ],
     );

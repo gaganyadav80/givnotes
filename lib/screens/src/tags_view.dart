@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
@@ -19,7 +18,7 @@ class TagSearchController extends GetxController {
   void resetSearchList() {
     tagSearchList
       ..clear()
-      ..addAll(Database.tags.keys.toList());
+      ..addAll(PrefsController.to.tags.keys.toList());
 
     update(['tagSearchList']);
   }
@@ -60,7 +59,7 @@ class _TagsViewState extends State<TagsView> {
     super.initState();
     Get.find<TagSearchController>().tagSearchList
       ..clear()
-      ..addAll(Database.tags.keys.toList());
+      ..addAll(PrefsController.to.tags.keys.toList());
   }
 
   @override
@@ -95,12 +94,8 @@ class _TagsViewState extends State<TagsView> {
                       child: Column(
                         children: [
                           SizedBox(height: 50.h),
-                          Image.asset('assets/giv_img/search_light.png',
-                              height: 180.h),
-                          'Search according the tags here'
-                              .text
-                              .size(12.w)
-                              .make(),
+                          Image.asset('assets/giv_img/search_light.png', height: 180.h),
+                          'Search according the tags here'.text.size(12.w).make(),
                         ],
                       ),
                     ),
@@ -138,13 +133,12 @@ class SearchTagsTextField extends StatefulWidget {
 }
 
 class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
-  final Map<String, int>? _allTagsMap = Database.tags;
+  final Map<String, int>? _allTagsMap = PrefsController.to.tags;
 
   final TextEditingController _searchTagController = TextEditingController();
   final FocusNode _searchTagFocus = FocusNode();
 
-  final TagSearchController _tagSearchController =
-      Get.find<TagSearchController>();
+  final TagSearchController _tagSearchController = Get.find<TagSearchController>();
 
   @override
   void initState() {
@@ -154,8 +148,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
       final text = _searchTagController.text;
 
       if (text.isNotEmpty) {
-        final List<String> _filterList =
-            _allTagsMap!.keys.toList().where((element) {
+        final List<String> _filterList = _allTagsMap!.keys.toList().where((element) {
           return element.toLowerCase().contains(text.toLowerCase());
         }).toList();
 
@@ -211,8 +204,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                   letterSpacing: 0.5,
                   color: Colors.white,
                 ),
-                border:
-                    Border.all(color: Color(_allTagsMap![noteTag]!), width: 2),
+                border: Border.all(color: Color(_allTagsMap![noteTag]!), width: 2),
                 textActiveColor: Colors.white,
                 textColor: Color(_allTagsMap![noteTag]!),
                 combine: ItemTagsCombine.withTextBefore,

@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
@@ -74,7 +75,7 @@ class App extends StatelessWidget {
           builder: (context, child) => AppLock(
             builder: (_) => const GivnotesApp(),
             lockScreen: const ShowLockscreen(changePassAuth: null),
-            enabled: Database.passcodeEnabled,
+            enabled: PrefsController.to.passcodeEnabled.value,
             // backgroundLockLatency: Duration(),
           ),
         ),

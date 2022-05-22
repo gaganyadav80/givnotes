@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
@@ -42,9 +41,7 @@ class _SearchPageState extends State<SearchPage> {
         final filterList = Get.find<NotesController>()
             .notes
             .where((element) =>
-                (element.title! + ' ' + element.text!)
-                    .toLowerCase()
-                    .contains(text.toLowerCase()) &&
+                (element.title! + ' ' + element.text!).toLowerCase().contains(text.toLowerCase()) &&
                 element.trash == false)
             .toList();
 
@@ -66,8 +63,7 @@ class _SearchPageState extends State<SearchPage> {
       builder: (context) {
         return Container(
           height: 400.h,
-          padding:
-              EdgeInsets.symmetric(horizontal: 0.035.sw, vertical: 0.025.sh),
+          padding: EdgeInsets.symmetric(horizontal: 0.035.sw, vertical: 0.025.sh),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [],
@@ -84,8 +80,7 @@ class _SearchPageState extends State<SearchPage> {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
     BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.editing);
-    Navigator.pushNamed(context, RouterName.editorRoute,
-        arguments: [NoteMode.editing, item]);
+    Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.editing, item]);
   }
 
   @override
@@ -126,34 +121,21 @@ class _SearchPageState extends State<SearchPage> {
                             child: Column(
                               children: [
                                 SizedBox(height: 50.h),
-                                Image.asset('assets/giv_img/search_light.png',
-                                    height: 180.h),
-                                'Search for your notes'
-                                    .text
-                                    .size(12.w)
-                                    .make()
-                                    .centered(),
+                                Image.asset('assets/giv_img/search_light.png', height: 180.h),
+                                'Search for your notes'.text.size(12.w).make().centered(),
                               ],
                             ),
                           ),
                         )
                       : Padding(
                           padding: EdgeInsets.only(top: 20.h),
-                          child: 'Ops! nothing found'
-                              .text
-                              .center
-                              .italic
-                              .light
-                              .lg
-                              .gray400
-                              .make(),
+                          child: 'Ops! nothing found'.text.center.italic.light.lg.gray400.make(),
                         )
                   : ListView.builder(
                       itemCount: _searchList.length,
                       itemBuilder: (context, index) {
                         final item = _searchList[index];
-                        String _created = DateFormat.yMMMd()
-                            .format(DateTime.parse(item.created!));
+                        String _created = DateFormat.yMMMd().format(DateTime.parse(item.created!));
 
                         return Card(
                           elevation: 0,
@@ -163,81 +145,49 @@ class _SearchPageState extends State<SearchPage> {
                             onLongPress: () => onSearchListItemLongPress(item),
                             child: _textController.text.isNotEmpty
                                 ? Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 10.w),
+                                    padding: EdgeInsets.symmetric(horizontal: 10.w),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: <Widget>[
                                         SizedBox(height: 5.0.w),
                                         item.tags.isEmpty
                                             ? const SizedBox.shrink()
                                             : Container(
-                                                margin:
-                                                    EdgeInsets.only(top: 6.w),
+                                                margin: EdgeInsets.only(top: 6.w),
                                                 color: Colors.transparent,
-                                                height: _prefsCubit
-                                                        .compactTags.value
-                                                    ? 8.h
-                                                    : 18.h,
+                                                height: _prefsCubit.compactTags.value ? 8.h : 18.h,
                                                 child: ListView.builder(
-                                                  scrollDirection:
-                                                      Axis.horizontal,
+                                                  scrollDirection: Axis.horizontal,
                                                   itemCount: item.tags.length,
                                                   itemBuilder: (cntx, index) {
-                                                    String title =
-                                                        item.tags[index];
-                                                    Color color = Color(
-                                                        Database.tags[title]!);
+                                                    String title = item.tags[index];
+                                                    Color color = Color(PrefsController.to.tags[title]!);
 
-                                                    return _prefsCubit
-                                                            .compactTags.value
+                                                    return _prefsCubit.compactTags.value
                                                         ? Container(
                                                             width: 30.w,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    right: 5.w),
-                                                            decoration:
-                                                                BoxDecoration(
+                                                            margin: EdgeInsets.only(right: 5.w),
+                                                            decoration: BoxDecoration(
                                                               color: color,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5.r),
+                                                              borderRadius: BorderRadius.circular(5.r),
                                                             ),
-                                                            child:
-                                                                const SizedBox
-                                                                    .shrink(),
+                                                            child: const SizedBox.shrink(),
                                                           )
                                                         : Container(
                                                             height: 18.h,
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    right: 5.w),
-                                                            padding: EdgeInsets
-                                                                .symmetric(
-                                                                    horizontal:
-                                                                        5.w),
-                                                            decoration:
-                                                                BoxDecoration(
+                                                            margin: EdgeInsets.only(right: 5.w),
+                                                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                                            decoration: BoxDecoration(
                                                               color: color,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5.r),
+                                                              borderRadius: BorderRadius.circular(5.r),
                                                             ),
                                                             child: Center(
                                                               child: Text(
                                                                 title,
-                                                                style:
-                                                                    TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w700,
-                                                                  letterSpacing:
-                                                                      0.5.w,
+                                                                style: TextStyle(
+                                                                  color: Colors.white,
+                                                                  fontWeight: FontWeight.w700,
+                                                                  letterSpacing: 0.5.w,
                                                                   fontSize: 8.w,
                                                                 ),
                                                               ),
@@ -280,8 +230,7 @@ class _SearchPageState extends State<SearchPage> {
                                           ),
                                         ),
                                         SizedBox(height: 10.0.w),
-                                        const Divider(
-                                            height: 0.0, thickness: 1.0),
+                                        const Divider(height: 0.0, thickness: 1.0),
                                       ],
                                     ),
                                   )

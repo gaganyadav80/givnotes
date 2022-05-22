@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:givnotes/database/database.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:local_auth/local_auth.dart';
 
 import 'package:givnotes/packages/packages.dart';
@@ -44,11 +44,11 @@ class ShowLockscreen extends StatelessWidget {
     return SimpleLockScreen(
       title: 'Unlock givnotes',
       simpleTitle: 'Re-enter your \nPIN',
-      correctString: Database.passcode,
+      correctString: PrefsController.to.passcode.value,
       confirmMode: false,
       canCancel: changePassAuth != null ? true : false,
-      canBiometric: changePassAuth != null ? true : Database.biometric,
-      showBiometricFirst: Database.biometric,
+      canBiometric: changePassAuth != null ? true : PrefsController.to.biometricEnabled.value,
+      showBiometricFirst: PrefsController.to.biometricEnabled.value,
       biometricAuthenticate: biometrics,
       onUnlocked: changePassAuth ??
           () {
@@ -81,7 +81,7 @@ class AddLockscreen extends StatelessWidget {
       isAddingLock: true,
       // isSuperSimple: false,
       onCompleted: (ctx, passcode) {
-        Database.updatePasscode(passcode);
+        PrefsController.to.setPasscode(passcode);
         AppLock.of(context)!.enable();
         Navigator.pop(context, true);
       },

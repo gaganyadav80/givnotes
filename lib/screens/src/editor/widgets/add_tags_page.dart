@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/database/database.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import 'package:givnotes/screens/src/tags_view.dart';
@@ -43,7 +43,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
   @override
   void initState() {
     super.initState();
-    allTagsMap = Database.tags;
+    allTagsMap = PrefsController.to.tags;
 
     if (widget.editTagTitle!.isNotEmpty && widget.isEditing!) {
       tagColor.value = allTagsMap[widget.editTagTitle!]!;
@@ -70,7 +70,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
   @override
   void dispose() {
     // _global.prefsBox.save();
-    Database.updateTags(allTagsMap);
+    PrefsController.to.setTagsMap(allTagsMap);
     _focusNode.dispose();
     super.dispose();
   }

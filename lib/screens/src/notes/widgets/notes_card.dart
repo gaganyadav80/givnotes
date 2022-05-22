@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 
@@ -36,7 +35,7 @@ class NotesCard extends StatefulWidget {
 }
 
 class _NotesCardState extends State<NotesCard> {
-  final Map<String, int>? _allTagsMap = Database.tags;
+  final Map<String, int>? _allTagsMap = PrefsController.to.tags;
   final RxString createdAgo = ''.obs;
 
   Timer? timer;
