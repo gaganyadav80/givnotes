@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
@@ -96,8 +97,7 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsState _prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(context).state;
+    final PrefsController _prefsCubit = Get.find<PrefsController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -176,7 +176,8 @@ class _SearchPageState extends State<SearchPage> {
                                                 margin:
                                                     EdgeInsets.only(top: 6.w),
                                                 color: Colors.transparent,
-                                                height: _prefsCubit.compactTags!
+                                                height: _prefsCubit
+                                                        .compactTags.value
                                                     ? 8.h
                                                     : 18.h,
                                                 child: ListView.builder(
@@ -190,7 +191,7 @@ class _SearchPageState extends State<SearchPage> {
                                                         Database.tags[title]!);
 
                                                     return _prefsCubit
-                                                            .compactTags!
+                                                            .compactTags.value
                                                         ? Container(
                                                             width: 30.w,
                                                             margin:

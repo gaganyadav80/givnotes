@@ -2,14 +2,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/src/trash_view.dart';
 import 'package:givnotes/services/services.dart';
@@ -20,9 +19,7 @@ class NotesOptionModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext rootContext) {
-    final HydratedPrefsCubit prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(rootContext);
-    final RxInt sortby = prefsCubit.state.sortby!.obs;
+    final PrefsController prefsCubit = Get.find();
 
     return Material(
       child: Navigator(
@@ -64,7 +61,7 @@ class NotesOptionModalSheet extends StatelessWidget {
                               padding: EdgeInsets.only(right: 5.0.w),
                               child: Obx(
                                 () => VariableService()
-                                    .sortbyNames[sortby.value]
+                                    .sortbyNames[prefsCubit.sortBy.value]
                                     .text
                                     .size(15.w)
                                     .light
@@ -84,15 +81,17 @@ class NotesOptionModalSheet extends StatelessWidget {
                         PageTransition(
                           type: PageTransitionType.rightToLeft,
                           child: SortByModalPage(
-                              rootContext: rootContext, sortby: sortby),
+                            rootContext: rootContext,
+                            sortby: prefsCubit.sortBy,
+                          ),
                         ),
                       ),
                     ),
                     const TilesDivider(),
                     const ListTile(tileColor: Colors.transparent, dense: true),
                     const TilesDivider(),
-                    BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
-                      builder: (context, state) {
+                    Obx(
+                      () {
                         return SwitchPreference(
                           'Compact Tags',
                           titleColor: Colors.black,
@@ -102,9 +101,9 @@ class NotesOptionModalSheet extends StatelessWidget {
                             color: Colors.black,
                           ),
                           desc: 'Enable compact tags in notes view',
-                          value: state.compactTags,
-                          onEnable: () => prefsCubit.updateCompactTags(true),
-                          onDisable: () => prefsCubit.updateCompactTags(false),
+                          value: prefsCubit.compactTags.value,
+                          onEnable: () => prefsCubit.setCompactTags(true),
+                          onDisable: () => prefsCubit.setCompactTags(false),
                         );
                       },
                     ),
@@ -158,8 +157,7 @@ class SortByModalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(rootContext);
+    final PrefsController prefsCubit = Get.find();
 
     return Material(
       child: CupertinoPageScaffold(
@@ -182,7 +180,7 @@ class SortByModalPage extends StatelessWidget {
                   title: const Text('Creation Date'),
                   tileColor: Colors.white,
                   onTap: () {
-                    prefsCubit.updateSortBy(0);
+                    prefsCubit.setSortBy(0);
                     sortby.value = 0;
                   },
                   trailing: sortby.value == 0
@@ -195,7 +193,7 @@ class SortByModalPage extends StatelessWidget {
                   title: const Text('Modification Date'),
                   tileColor: Colors.white,
                   onTap: () {
-                    prefsCubit.updateSortBy(1);
+                    prefsCubit.setSortBy(1);
                     sortby.value = 1;
                   },
                   trailing: sortby.value == 1
@@ -208,7 +206,7 @@ class SortByModalPage extends StatelessWidget {
                   title: const Text('Alphabetical (A-Z)'),
                   tileColor: Colors.white,
                   onTap: () {
-                    prefsCubit.updateSortBy(2);
+                    prefsCubit.setSortBy(2);
                     sortby.value = 2;
                   },
                   trailing: sortby.value == 2
@@ -221,7 +219,7 @@ class SortByModalPage extends StatelessWidget {
                   title: const Text('Alphabetical (Z-A)'),
                   tileColor: Colors.white,
                   onTap: () {
-                    prefsCubit.updateSortBy(3);
+                    prefsCubit.setSortBy(3);
                     sortby.value = 3;
                   },
                   trailing: sortby.value == 3

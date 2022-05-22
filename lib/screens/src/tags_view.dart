@@ -1,13 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 
 import 'notes/src/notes_model.dart';
@@ -167,7 +166,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
     });
 
     _searchTagFocus.addListener(() {
-      if (BlocProvider.of<HomeCubit>(context).state != 2) {
+      if (PrefsController.to.homeSelectedIndex.value != 2) {
         _searchTagFocus.unfocus();
       }
     });

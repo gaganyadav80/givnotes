@@ -12,8 +12,6 @@ import 'package:givnotes/database/database.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
-
 import 'cubit/cubits.dart';
 import 'packages/packages.dart';
 import 'routes.dart' as rt;
@@ -24,7 +22,7 @@ import 'services/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await GetStorage.init();
+  await GetStorage.init(Database.dbName);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -57,8 +55,7 @@ class App extends StatelessWidget {
       value: authenticationRepository,
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<HomeCubit>(create: (_) => HomeCubit()),
-          BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
+          // BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
           BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
           BlocProvider<AuthenticationBloc>(
             create: (_) => AuthenticationBloc(
@@ -120,14 +117,13 @@ class _GivnotesAppState extends State<GivnotesApp> {
 }
 
 class CheckLogin extends StatelessWidget {
-  final User? _currentUser = FirebaseAuth.instance.currentUser;
-
   CheckLogin({Key? key}) : super(key: key);
+
+  final User? _currentUser = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    Get.find<NotesController>().sortby =
-        BlocProvider.of<HydratedPrefsCubit>(context).state.sortby;
+    // Get.find<NotesController>().sortby = PrefsController.to.sortBy.value;
 
     if (_currentUser == null) {
       return const LoginPage();

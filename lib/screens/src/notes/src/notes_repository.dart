@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:path_provider/path_provider.dart';
 import 'notes_model.dart';
 
@@ -11,7 +12,7 @@ class NotesController extends GetxController {
   List<NotesModel> notes = <NotesModel>[];
 
   /// To preserve the sortby choice by the user and sort the note when user adds/updates the note
-  int? _sortby = 0;
+  int _sortby = 0;
 
   /// Store the user specific directory for notes json and only update when user changes.
   Directory? _directory;
@@ -21,6 +22,7 @@ class NotesController extends GetxController {
 
   @override
   void onInit() {
+    sortby = PrefsController.to.sortBy.value;
     _getDirectory(null).then((value) => _directory = value);
     _dirSubscription =
         FirebaseAuth.instance.userChanges().listen((User? event) async {
@@ -51,7 +53,7 @@ class NotesController extends GetxController {
   }
 
   //Sort on init inside CheckLogin build method
-  set sortby(int? value) {
+  set sortby(int value) {
     _sortby = value;
     sort();
   }

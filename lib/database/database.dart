@@ -37,9 +37,14 @@ class Database {
   static void updateTags(Map<String, int> value) async =>
       await getStorage.write(KEY_TAGS_MAP, value);
 
+  static String get prefsJson => getStorage.read(KEY_PREFS) ?? "";
+  static void updatePrefsJson(String value) async =>
+      await getStorage.write(KEY_PREFS, value);
+
   static const String dbName = 'HiveDB.db';
   static const String KEY_BIOMETRIC_ENABLED = 'KEY_BIOMETRIC_ENABLED';
   static const String KEY_PASSCODE = 'KEY_PASSCODE';
   static const String KEY_PASSCODE_ENABLED = 'KEY_PASSCODE_ENABLED';
   static const String KEY_TAGS_MAP = 'KEY_TAGS_MAP';
+  static const String KEY_PREFS = 'KEY_PREFS';
 }

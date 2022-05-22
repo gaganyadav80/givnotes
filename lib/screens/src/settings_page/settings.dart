@@ -2,14 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:local_auth/local_auth.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/screens.dart';
@@ -22,8 +21,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit _prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(context);
+    final PrefsController _prefsCubit = Get.find<PrefsController>();
     final double _kIconSize = 24.w;
     const Color _kIconColor = Color(0xff606060);
     const Color _kTrailingColor = Color(0xFF0A0A0A);
@@ -32,30 +30,19 @@ class SettingsPage extends StatelessWidget {
       child: PreferencePage([
         const ProfileTileSettings(),
         const PreferenceTitle('GENERAL'),
-        BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
-          buildWhen: (previous, current) => previous.sortby != current.sortby,
-          builder: (context, state) {
-            return SortNotesFloatModalSheet();
-          },
-        ),
-        BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
-          buildWhen: (previous, current) =>
-              previous.compactTags != current.compactTags,
-          builder: (context, state) {
-            return SwitchPreference(
+        SortNotesFloatModalSheet(),
+        Obx(() => SwitchPreference(
               'Compact Tags',
               // desc: "For the minimalistic.",
-              value: state.compactTags,
+              value: _prefsCubit.compactTags.value,
               titleColor: const Color(0xff32343D),
               leading: Icon(CupertinoIcons.rectangle,
                   color: _kIconColor, size: _kIconSize),
               // leadingColor: Colors.blue,
               titleGap: 0.0,
-              onEnable: () => _prefsCubit.updateCompactTags(true),
-              onDisable: () => _prefsCubit.updateCompactTags(false),
-            );
-          },
-        ),
+              onEnable: () => _prefsCubit.setCompactTags(true),
+              onDisable: () => _prefsCubit.setCompactTags(false),
+            )),
         const PreferenceTitle('PERSONALIZATION'),
         SwitchPreference(
           'Dark mode',

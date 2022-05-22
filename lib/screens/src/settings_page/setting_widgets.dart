@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/models/models.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
@@ -29,10 +29,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit _prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(context);
-
-    var def = _prefsCubit.state.sortby!.obs;
+    final PrefsController _prefsCubit = Get.find<PrefsController>();
 
     return PreferenceText(
       "Sort Notes",
@@ -50,7 +47,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
               padding: EdgeInsets.only(right: 5.w),
               child: Obx(
                 () => Text(
-                  VariableService().sortbyNames[def.value],
+                  VariableService().sortbyNames[_prefsCubit.sortBy.value],
                   style: TextStyle(
                       color: CupertinoColors.systemGrey,
                       fontSize: 15.w,
@@ -97,11 +94,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                       ListTile(
                         title: Text('Creation Date', style: _kListItemStyle),
                         tileColor: Colors.white,
-                        onTap: () {
-                          def.value = 0;
-                          _prefsCubit.updateSortBy(0);
-                        },
-                        trailing: def.value == 0
+                        onTap: () => _prefsCubit.setSortBy(0),
+                        trailing: _prefsCubit.sortBy.value == 0
                             ? const Icon(CupertinoIcons.checkmark,
                                 color: Color(0xFFDD4C4F))
                             : null,
@@ -111,11 +105,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                         title:
                             Text('Modification Date', style: _kListItemStyle),
                         tileColor: Colors.white,
-                        onTap: () {
-                          _prefsCubit.updateSortBy(1);
-                          def.value = 1;
-                        },
-                        trailing: def.value == 1
+                        onTap: () => _prefsCubit.setSortBy(1),
+                        trailing: _prefsCubit.sortBy.value == 1
                             ? const Icon(CupertinoIcons.checkmark,
                                 color: Color(0xFFDD4C4F))
                             : null,
@@ -125,11 +116,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                         title:
                             Text('Alphabetical (A-Z)', style: _kListItemStyle),
                         tileColor: Colors.white,
-                        onTap: () {
-                          _prefsCubit.updateSortBy(2);
-                          def.value = 2;
-                        },
-                        trailing: def.value == 2
+                        onTap: () => _prefsCubit.setSortBy(2),
+                        trailing: _prefsCubit.sortBy.value == 2
                             ? const Icon(CupertinoIcons.checkmark,
                                 color: Color(0xFFDD4C4F))
                             : null,
@@ -139,11 +127,8 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                         title:
                             Text('Alphabetical (Z-A)', style: _kListItemStyle),
                         tileColor: Colors.white,
-                        onTap: () {
-                          _prefsCubit.updateSortBy(3);
-                          def.value = 3;
-                        },
-                        trailing: def.value == 3
+                        onTap: () => _prefsCubit.setSortBy(3),
+                        trailing: _prefsCubit.sortBy.value == 3
                             ? const Icon(CupertinoIcons.checkmark,
                                 color: Color(0xFFDD4C4F))
                             : null,

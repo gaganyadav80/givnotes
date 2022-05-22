@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
@@ -58,8 +59,7 @@ class _NotesCardState extends State<NotesCard> {
 
   @override
   Widget build(BuildContext context) {
-    final HydratedPrefsCubit prefsCubit =
-        BlocProvider.of<HydratedPrefsCubit>(context);
+    final PrefsController prefsCubit = Get.find<PrefsController>();
 
     return GetX<MultiSelectController>(
       builder: (MultiSelectController controller) {
@@ -111,53 +111,56 @@ class _NotesCardState extends State<NotesCard> {
                         SizedBox(height: 10.w),
                         widget.note.tags.isEmpty || !widget.showTags
                             ? SizedBox(height: 5.w)
-                            : Container(
-                                height:
-                                    prefsCubit.state.compactTags! ? 8.h : 18.h,
-                                color: Colors.transparent,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: widget.note.tags.length,
-                                  itemBuilder: (context, index) {
-                                    String tagsTitle = widget.note.tags[index];
-                                    Color color =
-                                        Color(_allTagsMap![tagsTitle]!);
+                            : Obx(() => Container(
+                                  height:
+                                      prefsCubit.compactTags.value ? 8.h : 18.h,
+                                  color: Colors.transparent,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.note.tags.length,
+                                    itemBuilder: (context, index) {
+                                      String tagsTitle =
+                                          widget.note.tags[index];
+                                      Color color =
+                                          Color(_allTagsMap![tagsTitle]!);
 
-                                    return prefsCubit.state.compactTags!
-                                        ? Container(
-                                            width: 30.w,
-                                            margin: EdgeInsets.only(right: 5.w),
-                                            decoration: BoxDecoration(
-                                              color: color,
-                                              borderRadius:
-                                                  BorderRadius.circular(3.r),
-                                            ),
-                                            child: const SizedBox.shrink(),
-                                          )
-                                        : Container(
-                                            margin: EdgeInsets.only(right: 5.w),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 5.w),
-                                            decoration: BoxDecoration(
-                                              color: color,
-                                              borderRadius:
-                                                  BorderRadius.circular(5.r),
-                                            ),
-                                            child: Center(
-                                              child: Text(
-                                                tagsTitle,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                  letterSpacing: 0.5.w,
-                                                  fontSize: 9.w,
+                                      return prefsCubit.compactTags.value
+                                          ? Container(
+                                              width: 30.w,
+                                              margin:
+                                                  EdgeInsets.only(right: 5.w),
+                                              decoration: BoxDecoration(
+                                                color: color,
+                                                borderRadius:
+                                                    BorderRadius.circular(3.r),
+                                              ),
+                                              child: const SizedBox.shrink(),
+                                            )
+                                          : Container(
+                                              margin:
+                                                  EdgeInsets.only(right: 5.w),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 5.w),
+                                              decoration: BoxDecoration(
+                                                color: color,
+                                                borderRadius:
+                                                    BorderRadius.circular(5.r),
+                                              ),
+                                              child: Center(
+                                                child: Text(
+                                                  tagsTitle,
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.w600,
+                                                    letterSpacing: 0.5.w,
+                                                    fontSize: 9.w,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                  },
-                                ),
-                              ),
+                                            );
+                                    },
+                                  ),
+                                )),
                         SizedBox(height: 5.w),
                         DynamicTextHighlighting(
                           caseSensitive: false,
@@ -191,17 +194,19 @@ class _NotesCardState extends State<NotesCard> {
                           ),
                         ),
                         SizedBox(height: 5.0.w),
-                        prefsCubit.state.compactTags!
-                            ? const SizedBox.shrink()
-                            : Text(
-                                "created  ${DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created!))}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 12.w,
-                                  color: Colors.grey,
-                                  // fontStyle: FontStyle.italic,
+                        Obx(
+                          () => prefsCubit.compactTags.value
+                              ? const SizedBox.shrink()
+                              : Text(
+                                  "created  ${DateFormat.yMMMd().add_jm().format(DateTime.parse(widget.note.created!))}",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w300,
+                                    fontSize: 12.w,
+                                    color: Colors.grey,
+                                    // fontStyle: FontStyle.italic,
+                                  ),
                                 ),
-                              ),
+                        ),
                         SizedBox(height: 10.0.w),
                         const Divider(height: 0.0, thickness: 1.0),
                       ],

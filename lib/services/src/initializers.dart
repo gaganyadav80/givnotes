@@ -4,6 +4,7 @@ import 'package:biometric_storage/biometric_storage.dart';
 import 'package:encrypt/encrypt.dart' as aes;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/database.dart';
 
 import 'package:givnotes/screens/screens.dart';
@@ -11,14 +12,15 @@ import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
 void initGetXControllers() {
+  Database.getStorage = GetStorage(Database.dbName);
+  //TODO find something better
+  VariableService();
+
+  Get.put(PrefsController());
   Get.put(TagSearchController());
   Get.put(MultiSelectController());
   Get.put(NotesController());
   Get.put(TodoDateController());
-
-  Database.getStorage = GetStorage(Database.dbName);
-  //TODO find something better
-  VariableService();
 }
 
 Future<void> pluginInitializer(String userID, {String? userKey}) async {
@@ -26,7 +28,7 @@ Future<void> pluginInitializer(String userID, {String? userKey}) async {
 
   final BiometricStorageFile secureStorage =
       await BiometricStorage().getStorage(
-    'key:iv',
+    '$userID:key:iv',
     options: StorageFileInitOptions(authenticationRequired: false),
   );
 
