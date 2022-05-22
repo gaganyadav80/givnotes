@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:get_storage/get_storage.dart';
+import 'package:givnotes/services/services.dart';
 
 class Database {
   static final Database _database = Database._internal();
@@ -13,14 +14,22 @@ class Database {
   static void updateBiometric(bool value) async =>
       await getStorage.write(KEY_BIOMETRIC_ENABLED, value);
 
-  static String get passcode => getStorage.read(KEY_PASSCODE) ?? "";
-  static void updatePasscode(String value) async =>
-      await getStorage.write(KEY_PASSCODE, value);
+  static String get passcode =>
+      ((getStorage.read(KEY_PASSCODE) ?? "") as String).decrypt;
+
+  static void updatePasscode(String value) async {
+    String encryptedPass = value.encrypt;
+    await getStorage.write(KEY_PASSCODE, encryptedPass);
+
+    if (value.isNotEmpty) {
+      await getStorage.write(KEY_PASSCODE_ENABLED, true);
+    } else {
+      await getStorage.write(KEY_PASSCODE_ENABLED, false);
+    }
+  }
 
   static bool get passcodeEnabled =>
       getStorage.read(KEY_PASSCODE_ENABLED) ?? false;
-  static void updatePasscodeEnabled(bool value) async =>
-      await getStorage.write(KEY_PASSCODE_ENABLED, value);
 
   static Map<String, int> get tags =>
       Map<String, int>.from((getStorage.read(KEY_TAGS_MAP) ?? {}) as Map);

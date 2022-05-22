@@ -79,6 +79,7 @@ class AddLockscreen extends StatelessWidget {
       canCancel: true,
       canBiometric: false,
       isAddingLock: true,
+      // isSuperSimple: false,
       onCompleted: (ctx, passcode) {
         Database.updatePasscode(passcode);
         AppLock.of(context)!.enable();

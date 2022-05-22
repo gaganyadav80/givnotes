@@ -91,18 +91,22 @@ class NotesOptionModalSheet extends StatelessWidget {
                     const TilesDivider(),
                     const ListTile(tileColor: Colors.transparent, dense: true),
                     const TilesDivider(),
-                    SwitchPreference(
-                      'Compact Tags',
-                      titleColor: Colors.black,
-                      titleGap: 0.0,
-                      leading: const Icon(
-                        CupertinoIcons.bars,
-                        color: Colors.black,
-                      ),
-                      desc: 'Enable compact tags in notes view',
-                      defaultVal: prefsCubit.state.compactTags,
-                      onEnable: () => prefsCubit.updateCompactTags(true),
-                      onDisable: () => prefsCubit.updateCompactTags(false),
+                    BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
+                      builder: (context, state) {
+                        return SwitchPreference(
+                          'Compact Tags',
+                          titleColor: Colors.black,
+                          titleGap: 0.0,
+                          leading: const Icon(
+                            CupertinoIcons.bars,
+                            color: Colors.black,
+                          ),
+                          desc: 'Enable compact tags in notes view',
+                          value: state.compactTags,
+                          onEnable: () => prefsCubit.updateCompactTags(true),
+                          onDisable: () => prefsCubit.updateCompactTags(false),
+                        );
+                      },
                     ),
                     const TilesDivider(),
                     const ListTile(tileColor: Colors.transparent, dense: true),

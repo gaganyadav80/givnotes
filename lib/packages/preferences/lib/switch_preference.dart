@@ -6,7 +6,7 @@ import 'preference_service.dart';
 class SwitchPreference extends StatefulWidget {
   final String title;
   final String? desc;
-  final bool? defaultVal;
+  final bool? value;
   final bool ignoreTileTap;
   final bool resetOnException;
   final Function? onEnable;
@@ -28,7 +28,7 @@ class SwitchPreference extends StatefulWidget {
     this.title, {
     Key? key,
     this.desc,
-    this.defaultVal = false,
+    this.value = false,
     this.ignoreTileTap = false,
     this.resetOnException = true,
     this.onEnable,
@@ -50,15 +50,12 @@ class SwitchPreference extends StatefulWidget {
 }
 
 class _SwitchPreferenceState extends State<SwitchPreference> {
-  late bool _value;
-
   @override
   void initState() {
     super.initState();
     // if (PrefService.getBool(widget.localKey) == null) {
     //   PrefService.setBool(widget.localKey, widget.defaultVal);
     // }
-    _value = widget.defaultVal!;
   }
 
   @override
@@ -93,7 +90,7 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
                     fontSize: 12.0),
               ),
         trailing: CupertinoSwitch(
-          value: _value,
+          value: widget.value!,
           activeColor: widget.switchActiveColor ?? const Color(0xFFDD4C4F),
           onChanged: widget.disabled
               ? (_) => widget.ondisableTap
@@ -101,23 +98,23 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
         ),
         onTap: (widget.disabled || widget.ignoreTileTap)
             ? widget.ondisableTap
-            : () => (widget.defaultVal)! ? onDisable() : onEnable(),
+            : () => (widget.value)! ? onDisable() : onEnable(),
       ),
     );
   }
 
   onEnable() async {
-    if (!widget.isWaitSwitch) {
-      setState(() => _value = true);
-    }
+    // if (!widget.isWaitSwitch) {
+    //   setState(() => _value = true);
+    // }
     if (widget.onChange != null) widget.onChange!();
     if (widget.onEnable != null) {
       try {
         await widget.onEnable!();
       } catch (e) {
         if (widget.resetOnException) {
-          _value = false;
-          if (mounted) setState(() {});
+          // _value = false;
+          // if (mounted) setState(() {});
         }
         if (mounted) PrefService.showError(context, e.toString());
       }
@@ -125,17 +122,17 @@ class _SwitchPreferenceState extends State<SwitchPreference> {
   }
 
   onDisable() async {
-    if (!widget.isWaitSwitch) {
-      setState(() => _value = false);
-    }
+    // if (!widget.isWaitSwitch) {
+    //   setState(() => _value = false);
+    // }
     if (widget.onChange != null) widget.onChange!();
     if (widget.onDisable != null) {
       try {
         await widget.onDisable!();
       } catch (e) {
         if (widget.resetOnException) {
-          _value = true;
-          if (mounted) setState(() {});
+          // _value = true;
+          // if (mounted) setState(() {});
         }
         if (mounted) PrefService.showError(context, e.toString());
       }

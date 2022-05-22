@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fluttericon/brandico_icons.dart';
-import 'package:fluttericon/font_awesome5_icons.dart';
 import 'package:getwidget/getwidget.dart';
+import 'package:line_icons/line_icons.dart';
 
 class ContactUsPage extends StatelessWidget {
   const ContactUsPage({Key? key}) : super(key: key);
@@ -76,10 +75,10 @@ class ContactUsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _socialButtons(Brandico.instagram_1, () {}),
-                    _socialButtons(FontAwesome5.twitter, () {}),
-                    _socialButtons(FontAwesome5.basketball_ball, () {}),
-                    _socialButtons(FontAwesome5.github, () {}),
+                    _socialButtons(LineIcons.instagram, () {}),
+                    _socialButtons(LineIcons.twitter, () {}),
+                    _socialButtons(LineIcons.basketballBall, () {}),
+                    _socialButtons(LineIcons.github, () {}),
                   ],
                 ),
                 SizedBox(height: 50.w),

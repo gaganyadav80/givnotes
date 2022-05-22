@@ -8,7 +8,6 @@ import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/widgets/widgets.dart';
-import 'package:remixicon/remixicon.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -62,8 +61,8 @@ class HomePage extends StatelessWidget {
                     label: 'Tags',
                   ),
                   BottomNavigationBarItem(
-                    icon: Icon(Remix.settings_line),
-                    activeIcon: Icon(Remix.settings_fill),
+                    icon: Icon(FluentIcons.settings_24_regular),
+                    activeIcon: Icon(FluentIcons.settings_24_filled),
                     label: 'Settings',
                   ),
                 ],

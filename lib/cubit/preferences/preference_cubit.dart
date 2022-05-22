@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
-part 'hydrated_prefs_state.dart';
+part 'preference_state.dart';
 
 class HydratedPrefsCubit extends HydratedCubit<HydratedPrefsState> {
   HydratedPrefsCubit() : super(const HydratedPrefsState());

@@ -41,19 +41,33 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-
-	<!-- custom entries -->
+	<!-- Custom Entries -->
 	<key>UIBackgroundModes</key>
-	<string>Required for attaching files in user created notes</string>
 	<array>
-   		<string>fetch</string>
-   		<string>remote-notification</string>
+		<string>fetch</string>
+		<string>remote-notification</string>
 	</array>
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<!-- Permission options for the `mediaLibrary` group -->
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Required for attaching audio files inside user created note</string>
+	<key>kTCCServiceMediaLibrary</key>
+    <string>media</string>
+	<!-- Permission options for the `photos` group -->
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Required for attaching images to the user created note</string>
+	<!-- Permission options for the `face id` group -->
 	<key>NSFaceIDUsageDescription</key>
 	<string>Required for biometric applock feature</string>
+	<!-- Permission options for the `camera` group -->
+	<key>NSCameraUsageDescription</key>
+    <string>camera</string>
+	<!-- Permission options for the `microphone` group -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>microphone</string>
+	<!-- Permission options for the `speech` group -->
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>speech</string>
 </dict>
 </plist>

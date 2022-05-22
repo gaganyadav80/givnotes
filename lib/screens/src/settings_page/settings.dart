@@ -32,18 +32,29 @@ class SettingsPage extends StatelessWidget {
       child: PreferencePage([
         const ProfileTileSettings(),
         const PreferenceTitle('GENERAL'),
-        SortNotesFloatModalSheet(),
-        SwitchPreference(
-          'Compact tags',
-          // desc: "For the minimalistic.",
-          defaultVal: _prefsCubit.state.compactTags,
-          titleColor: const Color(0xff32343D),
-          leading: Icon(CupertinoIcons.rectangle,
-              color: _kIconColor, size: _kIconSize),
-          // leadingColor: Colors.blue,
-          titleGap: 0.0,
-          onEnable: () => _prefsCubit.updateCompactTags(true),
-          onDisable: () => _prefsCubit.updateCompactTags(false),
+        BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
+          buildWhen: (previous, current) => previous.sortby != current.sortby,
+          builder: (context, state) {
+            return SortNotesFloatModalSheet();
+          },
+        ),
+        BlocBuilder<HydratedPrefsCubit, HydratedPrefsState>(
+          buildWhen: (previous, current) =>
+              previous.compactTags != current.compactTags,
+          builder: (context, state) {
+            return SwitchPreference(
+              'Compact Tags',
+              // desc: "For the minimalistic.",
+              value: state.compactTags,
+              titleColor: const Color(0xff32343D),
+              leading: Icon(CupertinoIcons.rectangle,
+                  color: _kIconColor, size: _kIconSize),
+              // leadingColor: Colors.blue,
+              titleGap: 0.0,
+              onEnable: () => _prefsCubit.updateCompactTags(true),
+              onDisable: () => _prefsCubit.updateCompactTags(false),
+            );
+          },
         ),
         const PreferenceTitle('PERSONALIZATION'),
         SwitchPreference(
@@ -238,12 +249,15 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
 
   RxBool canUseBiometric = false.obs;
   late RxBool isAppLockEnabled;
+  late RxBool isBiometricEnabled;
+
   String reason = '';
 
   @override
   void initState() {
     super.initState();
     isAppLockEnabled = Database.passcodeEnabled.obs;
+    isBiometricEnabled = Database.biometric.obs;
   }
 
   void setBiometricButton() async {
@@ -274,7 +288,7 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
       children: [
         Obx(() => SwitchPreference(
               'Enable app lock',
-              defaultVal: isAppLockEnabled.value,
+              value: isAppLockEnabled.value,
               ignoreTileTap: false,
               leading: Icon(CupertinoIcons.lock,
                   color: Colors.black, size: _kIconSize),
@@ -311,9 +325,8 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
             )),
         Obx(() => SwitchPreference(
               'Biometric authentication',
-              defaultVal: false,
-              disabled:
-                  canUseBiometric.value ? Database.passcode.isEmpty : true,
+              value: isBiometricEnabled.value,
+              disabled: canUseBiometric.value && !isAppLockEnabled.value,
               leading: Icon(Icons.fingerprint_outlined,
                   color: Colors.black, size: _kIconSize),
               // leadingColor: Colors.teal,
@@ -323,9 +336,11 @@ class _AppLockSwitchPrefsState extends State<AppLockSwitchPrefs> {
               },
               onEnable: () {
                 Database.updateBiometric(true);
+                isBiometricEnabled.value = true;
               },
               onDisable: () {
-                Database.updateBiometric(true);
+                Database.updateBiometric(false);
+                isBiometricEnabled.value = false;
               },
             )),
       ],

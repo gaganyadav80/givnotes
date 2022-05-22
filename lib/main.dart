@@ -72,7 +72,9 @@ class App extends StatelessWidget {
         ],
         child: ScreenUtilInit(
           designSize: const Size(414, 896),
-          builder: () => AppLock(
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (context, child) => AppLock(
             builder: (_) => const GivnotesApp(),
             lockScreen: const ShowLockscreen(changePassAuth: null),
             enabled: Database.passcodeEnabled,

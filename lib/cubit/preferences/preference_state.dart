@@ -1,4 +1,4 @@
-part of 'hydrated_prefs_cubit.dart';
+part of 'preference_cubit.dart';
 
 class HydratedPrefsState extends Equatable {
   const HydratedPrefsState({
