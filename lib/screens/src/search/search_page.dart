@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
@@ -9,7 +8,6 @@ import 'package:givnotes/packages/dynamic_text_highlighting.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
@@ -79,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
   void onSearchListItemSelected(NotesModel item) {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-    BlocProvider.of<NoteStatusCubit>(context).updateNoteMode(NoteMode.editing);
+    NoteStatusController.to.updateNoteMode(NoteMode.editing);
     Navigator.pushNamed(context, RouterName.editorRoute, arguments: [NoteMode.editing, item]);
   }
 

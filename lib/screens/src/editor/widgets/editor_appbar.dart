@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:givnotes/cubit/cubits.dart';
+import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 
 class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
-  final Function saveNote;
+  final VoidCallback saveNote;
   const NoteEditorAppBar({
     required this.saveNote,
     Key? key,
@@ -19,15 +19,13 @@ class NoteEditorAppBar extends StatelessWidget with PreferredSizeWidget {
     // final noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
     return AppBar(
       leadingWidth: 40.w,
-      leading: BlocBuilder<NoteStatusCubit, NoteStatusState>(
-        builder: (context, state) {
+      leading: GetBuilder<NoteStatusController>(
+        builder: (NoteStatusController state) {
           return IconButton(
-            icon: Icon(state.isEditing
-                ? CupertinoIcons.checkmark_alt
-                : CupertinoIcons.back),
+            icon: Icon(state.isEditing ? CupertinoIcons.checkmark_alt : CupertinoIcons.back),
             color: Colors.black,
             iconSize: 28.0,
-            onPressed: saveNote as void Function()?,
+            onPressed: saveNote,
           );
         },
       ),

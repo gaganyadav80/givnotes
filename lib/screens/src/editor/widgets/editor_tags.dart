@@ -1,11 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/cubit/cubits.dart';
 
 import 'add_tags_page.dart';
 
@@ -24,8 +22,7 @@ class _EditorTagsState extends State<EditorTags> {
 
   @override
   Widget build(BuildContext context) {
-    final NoteStatusCubit _noteEditStore =
-        BlocProvider.of<NoteStatusCubit>(context);
+    // final NoteStatusCubit _noteEditStore = BlocProvider.of<NoteStatusCubit>(context);
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w),
@@ -34,12 +31,10 @@ class _EditorTagsState extends State<EditorTags> {
         child: Obx(
           () => Row(
             children: [
-              _buildNoteTags(_noteEditStore),
-              widget.noteTagsList.isEmpty
-                  ? const SizedBox.shrink()
-                  : SizedBox(width: 10.w),
-              BlocBuilder<NoteStatusCubit, NoteStatusState>(
-                builder: (context, state) {
+              _buildNoteTags(),
+              widget.noteTagsList.isEmpty ? const SizedBox.shrink() : SizedBox(width: 10.w),
+              GetBuilder<NoteStatusController>(
+                builder: (NoteStatusController state) {
                   return state.isEditing
                       ? Container(
                           height: 32.w,
@@ -104,7 +99,7 @@ class _EditorTagsState extends State<EditorTags> {
     );
   }
 
-  Widget _buildNoteTags(NoteStatusCubit _noteEditStore) {
+  Widget _buildNoteTags() {
     return Tags(
       key: _tagStateKey,
       itemCount: widget.noteTagsList.length,
@@ -128,7 +123,7 @@ class _EditorTagsState extends State<EditorTags> {
           textColor: Color(borderColor),
           activeColor: Colors.white,
           onPressed: (item) {
-            if (_noteEditStore.state.isEditing) {
+            if (NoteStatusController.to.isEditing) {
               Navigator.push(
                 context,
                 CupertinoPageRoute(

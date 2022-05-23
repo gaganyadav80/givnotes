@@ -13,7 +13,6 @@ import 'package:givnotes/database/database.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'cubit/cubits.dart';
 import 'packages/packages.dart';
 import 'routes.dart' as rt;
 import 'screens/screens.dart';
@@ -33,21 +32,18 @@ void main() async {
   //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build(
-      storageDirectory: await getApplicationDocumentsDirectory());
+  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
   initGetXControllers();
 
-  final AuthenticationRepository authenticationRepository =
-      AuthenticationRepository();
+  final AuthenticationRepository authenticationRepository = AuthenticationRepository();
   await authenticationRepository.user.first;
 
   runApp(App(authenticationRepository: authenticationRepository));
 }
 
 class App extends StatelessWidget {
-  const App({Key? key, required this.authenticationRepository})
-      : super(key: key);
+  const App({Key? key, required this.authenticationRepository}) : super(key: key);
   final AuthenticationRepository authenticationRepository;
 
   @override
@@ -57,10 +53,9 @@ class App extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           // BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
-          BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
+          // BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
           BlocProvider<AuthenticationBloc>(
-            create: (_) => AuthenticationBloc(
-                authenticationRepository: authenticationRepository),
+            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
           ),
           BlocProvider<TodosBloc>(
             create: (context) => TodosBloc(
@@ -100,10 +95,9 @@ class _GivnotesAppState extends State<GivnotesApp> {
       theme: ThemeData(
         fontFamily: 'Poppins',
         primaryColor: const Color(0xff006aff),
-        inputDecorationTheme:
-            const InputDecorationTheme(iconColor: Color(0xff006aff)),
-        pageTransitionsTheme: const PageTransitionsTheme(
-            builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
+        inputDecorationTheme: const InputDecorationTheme(iconColor: Color(0xff006aff)),
+        pageTransitionsTheme:
+            const PageTransitionsTheme(builders: {TargetPlatform.android: ZoomPageTransitionsBuilder()}),
       ),
       builder: (context, child) {
         return ScrollConfiguration(

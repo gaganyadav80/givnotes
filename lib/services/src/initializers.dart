@@ -21,22 +21,20 @@ void initGetXControllers() {
   Get.put(MultiSelectController());
   Get.put(NotesController());
   Get.put(TodoDateController());
+  Get.put(NoteStatusController());
 }
 
 Future<void> pluginInitializer(String userID, {String? userKey}) async {
   // PrefService.init(prefix: 'pref_');
 
-  final BiometricStorageFile secureStorage =
-      await BiometricStorage().getStorage(
+  final BiometricStorageFile secureStorage = await BiometricStorage().getStorage(
     '$userID:key:iv',
     options: StorageFileInitOptions(authenticationRequired: false),
   );
 
   String? storageContent = await secureStorage.read();
 
-  if (storageContent == null ||
-      storageContent.isEmpty ||
-      storageContent.split(':')[0] != userID) {
+  if (storageContent == null || storageContent.isEmpty || storageContent.split(':')[0] != userID) {
     // Not required to make it 32 byte. Was required for hive db.
     if (userKey!.length < 32) {
       userKey += 'X#P%5vu!w2zTPm&1#n0%zz^38^'.substring(0, 32 - userKey.length);
@@ -44,8 +42,7 @@ Future<void> pluginInitializer(String userID, {String? userKey}) async {
 
     // Gives RangeError if length >= 16
     aes.IV tempIV = aes.IV.fromUtf8(userKey.substring(0, 16));
-    await secureStorage
-        .write("$userID:${userKey.stringToBase64}:${tempIV.base64}");
+    await secureStorage.write("$userID:${userKey.stringToBase64}:${tempIV.base64}");
     storageContent = await secureStorage.read();
   }
 

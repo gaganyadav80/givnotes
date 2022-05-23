@@ -3,17 +3,16 @@ import 'dart:developer';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
@@ -56,10 +55,7 @@ class _NotesViewState extends State<NotesView> {
       } else if (text.isEmpty) {
         _searchList
           ..clear()
-          ..addAll(Get.find<NotesController>()
-              .notes
-              .where((element) => element.trash == false)
-              .toList());
+          ..addAll(Get.find<NotesController>().notes.where((element) => element.trash == false).toList());
         // Get.find<NotesController>().update();
       }
     });
@@ -93,18 +89,13 @@ class _NotesViewState extends State<NotesView> {
                       title: CupertinoSearchTextField(
                         controller: _textController,
                         focusNode: _focusNode,
-                        prefixInsets:
-                            const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
+                        prefixInsets: const EdgeInsetsDirectional.fromSTEB(10, 5, 10, 4),
                         placeholder: 'Search notes',
                       ),
                       actions: [
                         CupertinoButton(
                           padding: EdgeInsets.only(right: 15.w),
-                          child: 'Cancel'
-                              .text
-                              .semiBold
-                              .color(CupertinoColors.systemGrey)
-                              .make(),
+                          child: 'Cancel'.text.semiBold.color(CupertinoColors.systemGrey).make(),
                           onPressed: () {
                             _showSearch.value = false;
                             _textController.clear();
@@ -129,8 +120,7 @@ class _NotesViewState extends State<NotesView> {
                       IconButton(
                         splashRadius: 25.0,
                         // iconSize: 22.w,
-                        icon: const Icon(CupertinoIcons.collections,
-                            color: Colors.black),
+                        icon: const Icon(CupertinoIcons.collections, color: Colors.black),
                         onPressed: () => showCupertinoModalBottomSheet(
                           expand: true,
                           context: context,
@@ -159,9 +149,7 @@ class _NotesViewState extends State<NotesView> {
           body: GetBuilder<NotesController>(
             init: NotesController(),
             builder: (NotesController controller) {
-              _searchList.value = controller.notes
-                  .where((element) => element.trash == false)
-                  .toList();
+              _searchList.value = controller.notes.where((element) => element.trash == false).toList();
               log(controller.directory.toString());
 
               if ((controller.notes.isEmpty)) {
@@ -169,21 +157,13 @@ class _NotesViewState extends State<NotesView> {
               } else if (_searchList.isEmpty) {
                 return Padding(
                   padding: EdgeInsets.only(top: 20.h),
-                  child: 'Ops! nothing found'
-                      .text
-                      .center
-                      .italic
-                      .light
-                      .lg
-                      .gray400
-                      .make(),
+                  child: 'Ops! nothing found'.text.center.italic.light.lg.gray400.make(),
                 );
               }
 
               return Obx(() => CupertinoScrollbar(
                     child: ListView.builder(
-                      physics: const BouncingScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
+                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                       itemCount: _searchList.length,
                       itemBuilder: (context, index) {
                         final NotesModel note = _searchList[index];
@@ -195,18 +175,13 @@ class _NotesViewState extends State<NotesView> {
                             motion: const DrawerMotion(),
                             // dismissible: ,
                             children: <Widget>[
-                              iconSlideAction(const Color(0xFFDD4C4F),
-                                  CupertinoIcons.trash, 'TRASH', () {
-                                controller
-                                    .updateNote(note.copyWith(trash: true));
+                              iconSlideAction(const Color(0xFFDD4C4F), CupertinoIcons.trash, 'TRASH', () {
+                                controller.updateNote(note.copyWith(trash: true));
                                 Fluttertoast.showToast(msg: "moved to trash");
                               }),
                             ],
                           ),
-                          child: NotesCard(
-                              note: note,
-                              showTags: true,
-                              searchText: _textController.text),
+                          child: NotesCard(note: note, showTags: true, searchText: _textController.text),
                         );
                       },
                     ),
@@ -216,19 +191,15 @@ class _NotesViewState extends State<NotesView> {
           floatingActionButton: Container(
             height: 65.w,
             width: 65.w,
-            decoration: const BoxDecoration(
-                color: Color(0xFFDD4C4F), shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: Color(0xFFDD4C4F), shape: BoxShape.circle),
             child: FloatingActionButton(
-              child: const Icon(CupertinoIcons.pencil_outline,
-                  color: Colors.white),
+              child: const Icon(CupertinoIcons.pencil_outline, color: Colors.white),
               backgroundColor: const Color(0xFFDD4C4F),
               onPressed: () async {
                 await HandlePermission.requestPermission().then((value) async {
                   if (value) {
-                    BlocProvider.of<NoteStatusCubit>(context)
-                        .updateIsEditing(true);
-                    BlocProvider.of<NoteStatusCubit>(context)
-                        .updateNoteMode(NoteMode.adding);
+                    NoteStatusController.to.updateIsEditing(true);
+                    NoteStatusController.to.updateNoteMode(NoteMode.adding);
                     Navigator.pushNamed(
                       context,
                       RouterName.editorRoute,
@@ -248,8 +219,7 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 
-  CustomSlidableAction iconSlideAction(
-      Color color, IconData icon, String caption, VoidCallback onTap) {
+  CustomSlidableAction iconSlideAction(Color color, IconData icon, String caption, VoidCallback onTap) {
     return CustomSlidableAction(
       backgroundColor: color,
       child: <Widget>[

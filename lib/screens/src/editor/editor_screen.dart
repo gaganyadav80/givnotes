@@ -2,14 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:intl/intl.dart';
 
-import 'package:givnotes/cubit/cubits.dart';
 import 'package:givnotes/screens/src/notes/src/notes_model.dart';
 import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/src/variables.dart';
@@ -27,8 +26,7 @@ class EditorScreen extends StatefulWidget {
 }
 
 class _EditorScreenState extends State<EditorScreen> {
-  final Rx<quill.QuillController?> _quillController =
-      quill.QuillController.basic().obs;
+  final Rx<quill.QuillController?> _quillController = quill.QuillController.basic().obs;
 
   // final HiveDBServices _dbServices = HiveDBServices();
   final TextEditingController _titleController = TextEditingController();
@@ -37,9 +35,8 @@ class _EditorScreenState extends State<EditorScreen> {
   final RxList<String> noteTagsList = <String>[].obs;
 
   // dynamic _noteIndex;
-  NoteStatusCubit? _noteEditStore;
-  final ValueNotifier<NotesModel?> _notesModel =
-      ValueNotifier<NotesModel?>(null);
+  // NoteStatusCubit? _noteEditStore;
+  final ValueNotifier<NotesModel?> _notesModel = ValueNotifier<NotesModel?>(null);
 
   Future<quill.Document> _loadDocument() async {
     final contents = widget.note!.znote!;
@@ -51,8 +48,7 @@ class _EditorScreenState extends State<EditorScreen> {
   void initState() {
     super.initState();
 
-    if (BlocProvider.of<NoteStatusCubit>(context).state.noteMode ==
-        NoteMode.editing) {
+    if (NoteStatusController.to.noteMode == NoteMode.editing) {
       _loadDocument().then((data) {
         // setState(() {
         _quillController.value = quill.QuillController(
@@ -82,8 +78,7 @@ class _EditorScreenState extends State<EditorScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (BlocProvider.of<NoteStatusCubit>(context).state.noteMode ==
-        NoteMode.editing) {
+    if (NoteStatusController.to.noteMode == NoteMode.editing) {
       _titleController.text = widget.note!.title!;
     }
   }
@@ -99,7 +94,7 @@ class _EditorScreenState extends State<EditorScreen> {
 
   @override
   Widget build(BuildContext rootContext) {
-    _noteEditStore = BlocProvider.of<NoteStatusCubit>(rootContext);
+    // _noteEditStore = BlocProvider.of<NoteStatusCubit>(rootContext);
 
     return WillPopScope(
       onWillPop: _onPop,
@@ -116,11 +111,10 @@ class _EditorScreenState extends State<EditorScreen> {
                 child: getTitleTextField(),
               ),
               SizedBox(height: 5.w),
-              _noteEditStore!.state.noteMode == NoteMode.editing
+              NoteStatusController.to.noteMode == NoteMode.editing
                   ? ValueListenableBuilder(
                       valueListenable: _notesModel,
-                      builder: (BuildContext context, NotesModel? value,
-                          Widget? child) {
+                      builder: (BuildContext context, NotesModel? value, Widget? child) {
                         return Padding(
                           padding: EdgeInsets.symmetric(horizontal: 15.w),
                           child: Text(
@@ -143,11 +137,11 @@ class _EditorScreenState extends State<EditorScreen> {
               Expanded(
                 child: _editorBody(),
               ),
-              BlocBuilder<NoteStatusCubit, NoteStatusState>(
-                builder: (context, state) {
+              GetBuilder<NoteStatusController>(
+                builder: (NoteStatusController controller) {
                   return SizedBox(
                     width: double.infinity,
-                    child: state.isEditing
+                    child: controller.isEditing
                         ? quill.QuillToolbar.basic(
                             controller: _quillController.value!,
                             showBackgroundColorButton: false,
@@ -168,10 +162,9 @@ class _EditorScreenState extends State<EditorScreen> {
           saveNote: _saveNote,
           rootCtx: rootContext,
         ),
-        floatingActionButton: BlocBuilder<NoteStatusCubit, NoteStatusState>(
-          bloc: _noteEditStore,
-          builder: (context, state) {
-            return state.noteMode == NoteMode.editing && !state.isEditing
+        floatingActionButton: GetBuilder<NoteStatusController>(
+          builder: (NoteStatusController controller) {
+            return controller.noteMode == NoteMode.editing && !controller.isEditing
                 ? Container(
                     margin: EdgeInsets.only(bottom: 15.h),
                     child: FloatingActionButton(
@@ -179,9 +172,8 @@ class _EditorScreenState extends State<EditorScreen> {
                       tooltip: 'Edit',
                       backgroundColor: Colors.black,
                       elevation: 5,
-                      child: const Icon(CupertinoIcons.pencil,
-                          color: Colors.white),
-                      onPressed: () => _noteEditStore!.updateIsEditing(true),
+                      child: const Icon(CupertinoIcons.pencil, color: Colors.white),
+                      onPressed: () => controller.updateIsEditing(true),
                     ),
                   )
                 : const SizedBox.shrink();
@@ -192,8 +184,8 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget _editorBody() {
-    return BlocBuilder<NoteStatusCubit, NoteStatusState>(
-      builder: (context, state) {
+    return GetBuilder<NoteStatusController>(
+      builder: (NoteStatusController state) {
         return (_quillController.value == null)
             ? const Center(child: CupertinoActivityIndicator())
             : Obx(() => quill.QuillEditor(
@@ -201,14 +193,11 @@ class _EditorScreenState extends State<EditorScreen> {
                   focusNode: _editorfocusNode,
                   scrollController: ScrollController(),
                   scrollable: true,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
+                  padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
                   autoFocus: false,
-                  readOnly:
-                      !(state.isEditing || state.noteMode == NoteMode.adding),
+                  readOnly: !(state.isEditing || state.noteMode == NoteMode.adding),
                   expands: true,
-                  showCursor:
-                      state.isEditing || state.noteMode == NoteMode.adding,
+                  showCursor: state.isEditing || state.noteMode == NoteMode.adding,
                   placeholder: "Your Note here...",
                 ));
       },
@@ -216,8 +205,8 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   Widget getTitleTextField() {
-    return BlocBuilder<NoteStatusCubit, NoteStatusState>(
-      builder: (context, state) {
+    return GetBuilder<NoteStatusController>(
+      builder: (NoteStatusController state) {
         return TextField(
           readOnly: !state.isEditing,
           focusNode: _titleFocus,
@@ -258,8 +247,8 @@ class _EditorScreenState extends State<EditorScreen> {
     if (title.isEmpty && note.isEmpty) {
       showToast("Can't create empty note");
 
-      _noteEditStore!.updateIsEditing(false);
-      _noteEditStore!.updateNoteMode(NoteMode.adding);
+      NoteStatusController.to.updateIsEditing(false);
+      NoteStatusController.to.updateNoteMode(NoteMode.adding);
 
       return true;
     } else if (title.isNotEmpty || note.isNotEmpty) {
@@ -270,12 +259,12 @@ class _EditorScreenState extends State<EditorScreen> {
   }
 
   void _saveNote({bool isDrawerSave = false}) async {
-    if (_noteEditStore!.state.isEditing == false && isDrawerSave == false) {
+    if (NoteStatusController.to.isEditing == false && isDrawerSave == false) {
       //
-      _noteEditStore!.updateNoteMode(NoteMode.adding);
+      NoteStatusController.to.updateNoteMode(NoteMode.adding);
       Navigator.pop(context);
       //
-    } else if (_noteEditStore!.state.isEditing) {
+    } else if (NoteStatusController.to.isEditing) {
       String _title = _titleController.text;
       String _note = _quillController.value!.document.toPlainText().trim();
 
@@ -283,18 +272,17 @@ class _EditorScreenState extends State<EditorScreen> {
         FocusScope.of(context).unfocus();
         Navigator.pop(context);
         showToast("Can't create empty note");
-        _noteEditStore!.updateIsEditing(false);
-        _noteEditStore!.updateNoteMode(NoteMode.adding);
+        NoteStatusController.to.updateIsEditing(false);
+        NoteStatusController.to.updateNoteMode(NoteMode.adding);
       } else {
         FocusScope.of(context).unfocus();
-        _noteEditStore!.updateIsEditing(false);
+        NoteStatusController.to.updateIsEditing(false);
 
-        if (_noteEditStore!.state.noteMode == NoteMode.adding) {
+        if (NoteStatusController.to.noteMode == NoteMode.adding) {
           _notesModel.value = NotesModel(
             title: _title.isNotEmpty ? _title : 'Untitled',
             text: _note,
-            znote:
-                jsonEncode(_quillController.value!.document.toDelta().toJson()),
+            znote: jsonEncode(_quillController.value!.document.toDelta().toJson()),
             created: DateTime.now().toString(),
             modified: DateTime.now().toString(),
             tags: noteTagsList.toList(),
@@ -302,13 +290,12 @@ class _EditorScreenState extends State<EditorScreen> {
 
           Get.find<NotesController>().addNewNote(_notesModel.value!);
           //
-        } else if (_noteEditStore!.state.noteMode == NoteMode.editing) {
+        } else if (NoteStatusController.to.noteMode == NoteMode.editing) {
           _notesModel.value = _notesModel.value!.copyWith(
             id: _notesModel.value!.id,
             title: _title.isNotEmpty ? _title : 'Untitled',
             text: _note,
-            znote:
-                jsonEncode(_quillController.value!.document.toDelta().toJson()),
+            znote: jsonEncode(_quillController.value!.document.toDelta().toJson()),
             trash: _notesModel.value!.trash,
             created: _notesModel.value!.created,
             modified: DateTime.now().toString(),
