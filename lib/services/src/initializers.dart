@@ -5,14 +5,13 @@ import 'package:encrypt/encrypt.dart' as aes;
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
+import 'package:givnotes/database/db_helper.dart';
 
 import 'package:givnotes/screens/screens.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
 void initGetXControllers() {
-  Database.getStorage = GetStorage(Database.dbName);
+  DBHelper.getStorage = GetStorage(DBHelper.dbName);
   //TODO find something better
   VariableService();
 

@@ -2,10 +2,10 @@
 
 import 'package:get_storage/get_storage.dart';
 
-class Database {
-  static final Database _database = Database._internal();
-  factory Database() => _database;
-  Database._internal();
+class DBHelper {
+  static final DBHelper _database = DBHelper._internal();
+  factory DBHelper() => _database;
+  DBHelper._internal();
 
   static late GetStorage getStorage;
 

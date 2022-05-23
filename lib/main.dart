@@ -9,7 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/controllers/controllers.dart';
-import 'package:givnotes/database/database.dart';
+import 'package:givnotes/database/db_helper.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -22,7 +22,7 @@ import 'services/services.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await GetStorage.init(Database.dbName);
+  await GetStorage.init(DBHelper.dbName);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/getwidget.dart';
-import 'package:givnotes/controllers/controllers.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:givnotes/packages/packages.dart';
-import 'package:givnotes/screens/src/notes/src/notes_model.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 

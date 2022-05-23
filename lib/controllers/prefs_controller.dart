@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:givnotes/database/database.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/database/db_helper.dart';
+import 'notes_controller.dart';
 
 class PrefsController extends GetxController {
   static PrefsController get to => Get.find();
 
   @override
   void onInit() {
-    fromJson(Database.prefsJson);
+    fromJson(DBHelper.prefsJson);
     super.onInit();
   }
 
@@ -28,7 +28,7 @@ class PrefsController extends GetxController {
   }
 
   void persist() {
-    Database.updatePrefsJson(toJson());
+    DBHelper.updatePrefsJson(toJson());
   }
 
   void setSortBy(int value) {

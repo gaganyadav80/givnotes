@@ -8,14 +8,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/controllers/controllers.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:show_up_animation/show_up_animation.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/src/notes/src/notes_model.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
 import 'package:givnotes/services/services.dart';
 
 import 'widgets/notes_widgets.dart';

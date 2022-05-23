@@ -6,11 +6,10 @@ import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/controllers/controllers.dart';
 import 'package:intl/intl.dart';
 
-import 'package:givnotes/screens/src/notes/src/notes_model.dart';
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
+import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:givnotes/services/src/variables.dart';
 
 import 'widgets/editor_widgets.dart';

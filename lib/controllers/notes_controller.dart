@@ -5,8 +5,8 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:path_provider/path_provider.dart';
-import 'notes_model.dart';
 
 class NotesController extends GetxController {
   List<NotesModel> notes = <NotesModel>[];
@@ -24,8 +24,7 @@ class NotesController extends GetxController {
   void onInit() {
     sortby = PrefsController.to.sortBy.value;
     _getDirectory(null).then((value) => _directory = value);
-    _dirSubscription =
-        FirebaseAuth.instance.userChanges().listen((User? event) async {
+    _dirSubscription = FirebaseAuth.instance.userChanges().listen((User? event) async {
       _directory = await _getDirectory(event?.uid);
       getAllNotes();
     });
@@ -39,8 +38,7 @@ class NotesController extends GetxController {
   }
 
   Future<Directory> _getDirectory(String? userID) async {
-    return Directory((await getApplicationDocumentsDirectory()).path +
-            "/givnotesdb/${userID ?? "default"}")
+    return Directory((await getApplicationDocumentsDirectory()).path + "/givnotesdb/${userID ?? "default"}")
         .create(recursive: true);
   }
 
@@ -63,8 +61,7 @@ class NotesController extends GetxController {
     notes.clear();
     notes.addAll(_directory!
         .listSync()
-        .map((e) =>
-            NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
+        .map((e) => NotesModel.fromJson(json.decode(File(e.path).readAsStringSync())))
         .where((element) => element.trash == false)
         .toList());
 

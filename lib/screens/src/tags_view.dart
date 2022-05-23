@@ -4,44 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/models/models.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/screens/src/notes/src/notes_repository.dart';
-
-import 'notes/src/notes_model.dart';
 import 'notes/widgets/notes_card.dart';
-
-class TagSearchController extends GetxController {
-  List<String?> tagSearchList = <String?>[];
-  List<String?> selectedTagList = <String?>[];
-
-  void resetSearchList() {
-    tagSearchList
-      ..clear()
-      ..addAll(PrefsController.to.tags.keys.toList());
-
-    update(['tagSearchList']);
-  }
-
-  void clearSearchListNOUP() => tagSearchList.clear();
-
-  void addAllSearchList(List<String> value) {
-    tagSearchList
-      ..clear()
-      ..addAll(value);
-    update(['tagSearchList']);
-  }
-
-  void addSelectedList(String? value) {
-    selectedTagList.add(value);
-    update(['selectedTagList']);
-  }
-
-  void removeSelectedList(String? value) {
-    selectedTagList.remove(value);
-    update(['selectedTagList']);
-  }
-}
 
 class TagsView extends StatefulWidget {
   const TagsView({Key? key}) : super(key: key);
