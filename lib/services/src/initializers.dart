@@ -7,14 +7,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/db_helper.dart';
 
-import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
 
 void initGetXControllers() {
   DBHelper.getStorage = GetStorage(DBHelper.dbName);
-  //TODO find something better
-  VariableService();
+  VariableService(); // maybe use as getxcontroller
 
+  Get.put(AuthController());
   Get.put(PrefsController());
   Get.put(TagSearchController());
   Get.put(MultiSelectController());

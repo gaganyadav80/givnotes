@@ -10,8 +10,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/db_helper.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:givnotes/models/models.dart';
+import 'package:givnotes/widgets/widgets.dart';
 
 import 'packages/packages.dart';
 import 'routes.dart' as rt;
@@ -32,47 +32,43 @@ void main() async {
   //TODO comment when release
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
-  HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
+  // HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory());
 
   initGetXControllers();
 
-  final AuthenticationRepository authenticationRepository = AuthenticationRepository();
-  await authenticationRepository.user.first;
+  // final AuthenticationRepository authenticationRepository = AuthenticationRepository();
+  // await authenticationRepository.user.first;
 
-  runApp(App(authenticationRepository: authenticationRepository));
+  runApp(App());
 }
 
 class App extends StatelessWidget {
-  const App({Key? key, required this.authenticationRepository}) : super(key: key);
-  final AuthenticationRepository authenticationRepository;
+  const App({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: authenticationRepository,
-      child: MultiBlocProvider(
-        providers: [
-          // BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
-          // BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
-          BlocProvider<AuthenticationBloc>(
-            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
-          ),
-          BlocProvider<TodosBloc>(
-            create: (context) => TodosBloc(
-              todosRepository: FirebaseTodosRepository(),
-            )..add(LoadTodos()),
-          ),
-        ],
-        child: ScreenUtilInit(
-          designSize: const Size(414, 896),
-          minTextAdapt: true,
-          splitScreenMode: true,
-          builder: (context, child) => AppLock(
-            builder: (_) => const GivnotesApp(),
-            lockScreen: const ShowLockscreen(changePassAuth: null),
-            enabled: PrefsController.to.passcodeEnabled.value,
-            // backgroundLockLatency: Duration(),
-          ),
+    return MultiBlocProvider(
+      providers: [
+        // BlocProvider<HydratedPrefsCubit>(create: (_) => HydratedPrefsCubit()),
+        // BlocProvider<NoteStatusCubit>(create: (_) => NoteStatusCubit()),
+        // BlocProvider<AuthenticationBloc>(
+        //   create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
+        // ),
+        BlocProvider<TodosBloc>(
+          create: (context) => TodosBloc(
+            todosRepository: FirebaseTodosRepository(),
+          )..add(LoadTodos()),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(414, 896),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => AppLock(
+          builder: (_) => const GivnotesApp(),
+          lockScreen: const ShowLockscreen(changePassAuth: null),
+          enabled: PrefsController.to.passcodeEnabled.value,
+          // backgroundLockLatency: Duration(),
         ),
       ),
     );
@@ -112,18 +108,16 @@ class _GivnotesAppState extends State<GivnotesApp> {
 }
 
 class CheckLogin extends StatelessWidget {
-  CheckLogin({Key? key}) : super(key: key);
-
-  final User? _currentUser = FirebaseAuth.instance.currentUser;
+  const CheckLogin({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     // Get.find<NotesController>().sortby = PrefsController.to.sortBy.value;
 
-    if (_currentUser == null) {
+    if (AuthController.to.currentUser.isEmpty) {
       return const LoginPage();
     } else {
-      pluginInitializer(_currentUser!.uid);
+      pluginInitializer(AuthController.to.currentUser.uid);
 
       return const HomePage();
     }

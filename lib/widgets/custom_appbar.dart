@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/services/services.dart';
 
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/screens.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({Key? key, required this.index}) : super(key: key);
@@ -66,8 +66,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             // },
                           ).then((value) {
                             if (value != null) {
-                              Future.delayed(const Duration(milliseconds: 300),
-                                  () {
+                              Future.delayed(const Duration(milliseconds: 300), () {
                                 _todoController.appBarDate.value = value;
                               });
                             }
@@ -81,9 +80,8 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           size: 30,
                           color: Colors.black,
                         ),
-                        onPressed: () => Navigator.pushNamed(
-                            context, RouterName.createTodoRoute,
-                            arguments: [false, null, null]),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, RouterName.createTodoRoute, arguments: [false, null, null]),
                       ),
                       HSpace(10.w),
                     ]

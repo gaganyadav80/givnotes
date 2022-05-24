@@ -1,17 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:givnotes/controllers/controllers.dart';
 import 'package:lottie/lottie.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import 'package:givnotes/models/models.dart';
+import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/packages/packages.dart';
 import 'package:givnotes/routes.dart';
-import 'package:givnotes/screens/screens.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/widgets.dart';
 
@@ -35,8 +32,7 @@ class SortNotesFloatModalSheet extends StatelessWidget {
       "Sort Notes",
       style: const TextStyle(fontWeight: FontWeight.w500),
       titleGap: 0.0,
-      leading: Icon(CupertinoIcons.text_alignright,
-          size: _kIconSize, color: const Color(0xff606060)),
+      leading: Icon(CupertinoIcons.text_alignright, size: _kIconSize, color: const Color(0xff606060)),
       trailing: SizedBox(
         width: 200.w,
         child: Row(
@@ -48,15 +44,11 @@ class SortNotesFloatModalSheet extends StatelessWidget {
               child: Obx(
                 () => Text(
                   VariableService().sortbyNames[_prefsCubit.sortBy.value],
-                  style: TextStyle(
-                      color: CupertinoColors.systemGrey,
-                      fontSize: 15.w,
-                      fontWeight: FontWeight.w300),
+                  style: TextStyle(color: CupertinoColors.systemGrey, fontSize: 15.w, fontWeight: FontWeight.w300),
                 ),
               ),
             ),
-            Icon(CupertinoIcons.forward,
-                size: 21.w, color: const Color(0xFF0A0A0A)),
+            Icon(CupertinoIcons.forward, size: 21.w, color: const Color(0xFF0A0A0A)),
           ],
         ),
       ),
@@ -75,14 +67,10 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                   backgroundColor: Colors.white,
                   middle: Text(
                     "SORT NOTES",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        color: const Color(0xFF222222),
-                        fontSize: 18.w),
+                    style: TextStyle(fontWeight: FontWeight.w500, color: const Color(0xFF222222), fontSize: 18.w),
                   ),
                   trailing: IconButton(
-                    icon: const Icon(CupertinoIcons.clear,
-                        color: Color(0xFFA0A0A0)),
+                    icon: const Icon(CupertinoIcons.clear, color: Color(0xFFA0A0A0)),
                     onPressed: () => Navigator.pop(context),
                   ),
                 ),
@@ -96,41 +84,34 @@ class SortNotesFloatModalSheet extends StatelessWidget {
                         tileColor: Colors.white,
                         onTap: () => _prefsCubit.setSortBy(0),
                         trailing: _prefsCubit.sortBy.value == 0
-                            ? const Icon(CupertinoIcons.checkmark,
-                                color: Color(0xFFDD4C4F))
+                            ? const Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
                             : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title:
-                            Text('Modification Date', style: _kListItemStyle),
+                        title: Text('Modification Date', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () => _prefsCubit.setSortBy(1),
                         trailing: _prefsCubit.sortBy.value == 1
-                            ? const Icon(CupertinoIcons.checkmark,
-                                color: Color(0xFFDD4C4F))
+                            ? const Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
                             : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title:
-                            Text('Alphabetical (A-Z)', style: _kListItemStyle),
+                        title: Text('Alphabetical (A-Z)', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () => _prefsCubit.setSortBy(2),
                         trailing: _prefsCubit.sortBy.value == 2
-                            ? const Icon(CupertinoIcons.checkmark,
-                                color: Color(0xFFDD4C4F))
+                            ? const Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
                             : null,
                       ),
                       tilesDivider(),
                       ListTile(
-                        title:
-                            Text('Alphabetical (Z-A)', style: _kListItemStyle),
+                        title: Text('Alphabetical (Z-A)', style: _kListItemStyle),
                         tileColor: Colors.white,
                         onTap: () => _prefsCubit.setSortBy(3),
                         trailing: _prefsCubit.sortBy.value == 3
-                            ? const Icon(CupertinoIcons.checkmark,
-                                color: Color(0xFFDD4C4F))
+                            ? const Icon(CupertinoIcons.checkmark, color: Color(0xFFDD4C4F))
                             : null,
                       ),
                       tilesDivider(),
@@ -159,27 +140,13 @@ class ProfileTileSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final UserModel user = BlocProvider.of<AuthenticationBloc>(context).user;
-    UserModel? user = UserModel.empty;
-    String? photo;
-
-    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
-      buildWhen: (previous, current) => previous != current,
-      builder: (context, state) {
-        if (state is AuthSuccess) {
-          user = state.user;
-        } else if (state is AuthNeedsVerification) {
-          user = state.user;
-        } else if (state is LogoutSuccess) {
-          user = state.user;
-        }
-
-        if (user!.email.isNotEmpty) photo = user!.photo;
-
+    return GetBuilder<AuthController>(
+      id: 'settings-profile-tile',
+      builder: (controller) {
         return Container(
           padding: EdgeInsets.symmetric(vertical: 10.w),
           margin: EdgeInsets.symmetric(horizontal: 20.w),
-          child: user!.email.isNotEmpty
+          child: controller.currentUser.email.isNotEmpty
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -189,30 +156,19 @@ class ProfileTileSettings extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 55.w,
                         backgroundColor: Colors.transparent,
-                        child: photo != null
-                            ? NetworkImage(photo!) as Widget?
-                            : SvgPicture.asset(
-                                'assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
+                        child: controller.currentUser.photo != null
+                            ? NetworkImage(controller.currentUser.photo!) as Widget?
+                            : SvgPicture.asset('assets/user-imgs/user${VariableService().randomUserProfile}.svg'),
                       ).pOnly(bottom: 5.w),
                     ),
-                    Text(user!.name!)
-                        .text
-                        .medium
-                        .color(const Color(0xff32343d))
-                        .size(22.w)
-                        .make(),
+                    Text(controller.currentUser.name!).text.medium.color(const Color(0xff32343d)).size(22.w).make(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(" ${user!.email}")
-                            .text
-                            .size(14.w)
-                            .light
-                            .gray400
-                            .make(),
+                        Text(" ${controller.currentUser.email}").text.size(14.w).light.gray400.make(),
                         SizedBox(width: 5.w),
-                        !user!.verified
+                        !controller.currentUser.verified
                             ? Icon(
                                 CupertinoIcons.exclamationmark_circle,
                                 color: Colors.red,
@@ -225,8 +181,7 @@ class ProfileTileSettings extends StatelessWidget {
                       width: 150.w,
                       height: 45.w,
                       child: BlueButton(
-                        onPressed: () => Navigator.pushNamed(
-                            context, RouterName.profileRoute),
+                        onPressed: () => Navigator.pushNamed(context, RouterName.profileRoute),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -252,8 +207,7 @@ class ProfileTileSettings extends StatelessWidget {
                           backgroundColor: Colors.white,
                           child: Padding(
                             padding: EdgeInsets.only(bottom: 10.w),
-                            child: Lottie.asset(
-                                'assets/animations/people-portrait.json'),
+                            child: Lottie.asset('assets/animations/people-portrait.json'),
                           ),
                         ),
                         // SizedBox(width: 10.0),
@@ -263,8 +217,7 @@ class ProfileTileSettings extends StatelessWidget {
                             Text(
                               "You are not logged in!",
                               style: TextStyle(
-                                color:
-                                    const Color(0xff32343D).withOpacity(0.85),
+                                color: const Color(0xff32343D).withOpacity(0.85),
                                 fontSize: 18.w,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -281,11 +234,9 @@ class ProfileTileSettings extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Icon(CupertinoIcons.forward,
-                        color: Color(0xFF0A0A0A)),
+                    const Icon(CupertinoIcons.forward, color: Color(0xFF0A0A0A)),
                   ],
-                ).onTap(
-                  () => Navigator.pushNamed(context, RouterName.profileRoute)),
+                ).onTap(() => Navigator.pushNamed(context, RouterName.profileRoute)),
         );
       },
     );

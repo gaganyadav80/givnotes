@@ -10,10 +10,15 @@ class DBHelper {
   static late GetStorage getStorage;
 
   static String get prefsJson => getStorage.read(KEY_PREFS) ?? "";
-  static void updatePrefsJson(String value) async => await getStorage.write(KEY_PREFS, value);
+  //TODO: use await wherever this method is used
+  static Future<void> updatePrefsJson(String value) async => await getStorage.write(KEY_PREFS, value);
+
+  static String get userModelJson => getStorage.read(KEY_USERMODEL) ?? "";
+  static Future<void> updateUserModelJson(String value) async => await getStorage.write(KEY_USERMODEL, value);
 
   static const String dbName = 'HiveDB.db';
   static const String KEY_PREFS = 'KEY_PREFS';
+  static const String KEY_USERMODEL = 'KEY_USERMODEL';
 
   // static bool get biometric => getStorage.read(KEY_BIOMETRIC_ENABLED) ?? false;
   // static void updateBiometric(bool value) async =>

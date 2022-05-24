@@ -72,7 +72,8 @@ class PrefsController extends GetxController {
       'compactTags': compactTags.value,
       'biometricEnabled': biometricEnabled.value,
       'passcode': passcode
-          .value, //TODO can encrypt but can't decrypt because the init of this controller will be called before authentication
+          .value, //TODO should encrypt but can't decrypt because the init of this controller will be called before authentication
+      //password can only be set if user if logged in which means encryption key will be available. Can be possible to encrypt.
       'passcodeEnabled': passcodeEnabled.value,
       'tags': tags,
     };

@@ -28,48 +28,34 @@ abstract class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case RouterName.root:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => CheckLogin());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const CheckLogin());
       case RouterName.homeRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const HomePage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const HomePage());
       case RouterName.loginRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const LoginPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const LoginPage());
       case RouterName.signupRouter:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const RegisterPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const RegisterPage());
       case RouterName.verificationRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const VerificationPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const VerificationPage());
       case RouterName.searchRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const SearchPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const SearchPage());
       case RouterName.editorRoute:
         List<dynamic>? data = settings.arguments as List<dynamic>?;
         return MaterialWithModalsPageRoute(
-            settings: settings,
-            builder: (_) => EditorScreen(noteMode: data![0], note: data[1]));
+            settings: settings, builder: (_) => EditorScreen(noteMode: data![0], note: data[1]));
       case RouterName.aboutRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const AboutUsPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const AboutUsPage());
       case RouterName.contactRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const ContactUsPage());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const ContactUsPage());
       case RouterName.profileRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => MyProfile());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => MyProfile());
       case RouterName.lockscreenRoute:
         VoidCallback? data = settings.arguments as VoidCallback?;
-        return MaterialWithModalsPageRoute(
-            settings: settings,
-            builder: (_) => ShowLockscreen(changePassAuth: data));
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => ShowLockscreen(changePassAuth: data));
       case RouterName.addlockRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const AddLockscreen());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const AddLockscreen());
       case RouterName.notesviewRoute:
-        return MaterialWithModalsPageRoute(
-            settings: settings, builder: (_) => const NotesView());
+        return MaterialWithModalsPageRoute(settings: settings, builder: (_) => const NotesView());
       case RouterName.createTodoRoute:
         List<dynamic>? data = settings.arguments as List<dynamic>?;
         return MaterialWithModalsPageRoute(

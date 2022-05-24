@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:givnotes/screens/screens.dart';
+import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:velocity_x/velocity_x.dart';
 
+import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/database/database.dart';
 import 'package:givnotes/routes.dart';
 import 'package:givnotes/services/services.dart';
 import 'package:givnotes/widgets/custom_buttons.dart';
 
+import '../todo_timeline/todo_timeline.dart';
 import 'bloc/verification_bloc/verification_bloc.dart';
 
 class VerificationPage extends StatelessWidget {
@@ -19,8 +22,7 @@ class VerificationPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: BlocProvider<VerificationBloc>(
-          create: (context) => VerificationBloc()
-            ..add(const VerificationInitiated(isFirstTime: true)),
+          create: (context) => VerificationBloc()..add(const VerificationInitiated(isFirstTime: true)),
           child: const VerificationMainBody(),
         ),
       ),
@@ -34,8 +36,7 @@ class VerificationMainBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _onConfirmButtonPressed() {
-      BlocProvider.of<VerificationBloc>(context)
-          .add(const VerificationInitiated());
+      BlocProvider.of<VerificationBloc>(context).add(const VerificationInitiated());
     }
 
     void _onResendButtonPressed() {
@@ -43,14 +44,19 @@ class VerificationMainBody extends StatelessWidget {
     }
 
     return BlocListener<VerificationBloc, VerificationState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is VerificationFailed) {
-          showToast(msg: state.message!);
+          showToast(state.message!);
         } else if (state is VerificationSuccess) {
-          showToast(msg: 'verification successful');
-          Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
+          showToast('verification successful');
+
+          AuthController.to.userModel.value.copyWith(verified: true);
+          await DBHelper.updateUserModelJson(AuthController.to.currentUser.toJson());
+          await FireDBHelper.updateUser(AuthController.to.currentUser);
+
+          Get.offAllNamed(RouterName.homeRoute);
         } else if (state is ResendVerification) {
-          showToast(msg: 'verification mail sent');
+          showToast('verification mail sent');
         }
       },
       child: Padding(
@@ -65,8 +71,7 @@ class VerificationMainBody extends StatelessWidget {
                 child: TextButton(
                   onPressed: () {
                     delayedOnPressed(() {
-                      Navigator.of(context)
-                          .pushReplacementNamed(RouterName.homeRoute);
+                      Navigator.of(context).pushReplacementNamed(RouterName.homeRoute);
                     });
                   },
                   child: <Widget>[
@@ -92,50 +97,34 @@ class VerificationMainBody extends StatelessWidget {
               Text(
                 "A verification link has been sent to your email address. Please confirm your signup.",
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .caption!
-                    .copyWith(fontSize: 14.w),
+                style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14.w),
               ).pSymmetric(h: 10.w),
               VSpace(45.w),
               BlocBuilder<VerificationBloc, VerificationState>(
                 builder: (context, state) {
                   return state is VerificationInProgress
-                      ? const BlueButton(
-                          title: "loading", onPressed: null, isLoading: true)
-                      : BlueButton(
-                          title: "Confirm Verification",
-                          onPressed: _onConfirmButtonPressed);
+                      ? const BlueButton(title: "loading", onPressed: null, isLoading: true)
+                      : BlueButton(title: "Confirm Verification", onPressed: _onConfirmButtonPressed);
                 },
               ),
               VSpace(22.w),
               BlocBuilder<VerificationBloc, VerificationState>(
                 builder: (context, state) {
                   return state is ResendVerificationInProgress
-                      ? BorderTextButton(
-                          title: "loading", onPressed: () {}, isLoading: true)
-                      : BorderTextButton(
-                          title: "Resend Verification Link",
-                          onPressed: _onResendButtonPressed);
+                      ? BorderTextButton(title: "loading", onPressed: () {}, isLoading: true)
+                      : BorderTextButton(title: "Resend Verification Link", onPressed: _onResendButtonPressed);
                 },
               ),
               VSpace(40.w),
               <Widget>[
-                "Not ${(context.read<AuthenticationBloc>().state as AuthNeedsVerification).user!.email}?"
-                    .text
-                    .size(14.w)
-                    .make(),
+                "Not ${(AuthController.to.currentUser.email)}?".text.size(14.w).make(),
                 TextButton(
                   onPressed: () {
-                    context.read<AuthenticationBloc>().add(LogOutUser(context));
-                    Navigator.of(context)
-                        .pushReplacementNamed(RouterName.loginRoute);
+                    AuthController.to.logOut();
+                    BlocProvider.of<TodosBloc>(context).add(LoadTodos());
+                    Get.offAllNamed(RouterName.loginRoute);
                   },
-                  child: 'Go back'
-                      .text
-                      .size(14.w)
-                      .color(Theme.of(context).primaryColor)
-                      .make(),
+                  child: 'Go back'.text.size(14.w).color(Theme.of(context).primaryColor).make(),
                 ).centered(),
               ].hStack(),
             ],
