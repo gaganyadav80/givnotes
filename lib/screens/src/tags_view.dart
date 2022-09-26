@@ -177,7 +177,7 @@ class _SearchTagsTextFieldState extends State<SearchTagsTextField> {
                 activeColor: Color(_allTagsMap![noteTag]!),
                 onPressed: (item) {
                   if (item.active!) {
-                    controller.addSelectedList(item.title);
+                    controller.addSelectedList(item.title ?? 'NA');
                   } else {
                     controller.removeSelectedList(item.title);
                   }

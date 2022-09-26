@@ -41,17 +41,17 @@ class AuthController extends GetxController {
     //   _userModel.value = UserModel.empty;
     // }
 
-    ever(userModel, (_) async {
+    ever(userModel, (value) async {
       await DBHelper.updateUserModelJson(userModel.value.toJson());
       update(['settings-profile-tile']);
     });
 
     ever(authStatus, (status) {
       if (status == AuthStatus.authFailure) {
-        showGetSnackBar(
-          "Authentication Failure. Please try after some time.",
-          icon: const Icon(FluentIcons.people_error_24_regular),
-        );
+        // showGetSnackBar(
+        //   "Authentication Failure. Please try after some time.",
+        //   icon: const Icon(FluentIcons.people_error_24_regular),
+        // );
       } else if (status == AuthStatus.authSuccess) {
         showToast("Authentication successfull");
         Get.offAllNamed(RouterName.homeRoute);

@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'prefs_controller.dart';
 
 class TagSearchController extends GetxController {
-  List<String?> tagSearchList = <String?>[];
-  List<String?> selectedTagList = <String?>[];
+  List<String> tagSearchList = <String>[];
+  List<String> selectedTagList = <String>[];
 
   void resetSearchList() {
     tagSearchList
@@ -23,7 +23,7 @@ class TagSearchController extends GetxController {
     update(['tagSearchList']);
   }
 
-  void addSelectedList(String? value) {
+  void addSelectedList(String value) {
     selectedTagList.add(value);
     update(['selectedTagList']);
   }

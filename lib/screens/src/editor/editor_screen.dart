@@ -148,6 +148,7 @@ class _EditorScreenState extends State<EditorScreen> {
                             // showHorizontalRule: false,
                             showListCheck: false,
                             toolbarIconSize: 22.0.w,
+                            multiRowsDisplay: false,
                           )
                         : const SizedBox.shrink(),
                   );
@@ -304,6 +305,7 @@ class _EditorScreenState extends State<EditorScreen> {
         }
 
         showToast('Note saved succesfully');
+        PrefsController.to.persist();
       }
     }
   }

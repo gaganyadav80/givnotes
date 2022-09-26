@@ -9,6 +9,10 @@ class DBHelper {
 
   static late GetStorage getStorage;
 
+  static Future<void> updateUserKey(String id, String key) async => await getStorage.write('$id:key:iv', key);
+
+  static Future<String> userKey(String id) async => await getStorage.read('$id:key:iv') ?? '';
+
   static String get prefsJson => getStorage.read(KEY_PREFS) ?? "";
   //TODO: use await wherever this method is used
   static Future<void> updatePrefsJson(String value) async => await getStorage.write(KEY_PREFS, value);

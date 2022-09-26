@@ -32,42 +32,40 @@ class LoginPage extends StatelessWidget {
               )
             : null,
       ),
-      body: ListView(
-        children: [
-          VSpace(50.w),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 30.w),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                'Welcome'.text.size(38.w).extraBlack.make(),
-                <Widget>[
-                  'New here?'.text.size(18.w).make(),
-                  TextButton(
-                    onPressed: () => delayedOnPressed(() {
-                      Navigator.of(context).pushNamed(RouterName.signupRouter);
-                    }),
-                    child: 'Create a new account.'.text.size(14.w).color(Theme.of(context).primaryColor).make(),
-                  ).centered(),
-                ].hStack(),
-                VSpace(25.w),
-                const LoginForm(),
-                VSpace(32.w),
-                'or connect with'.text.size(14.w).make().centered(),
-                VSpace(16.w),
-                Hero(
-                  tag: 'google-button',
-                  child: GoogleButton(
-                    title: "Continue with Google",
-                    onPressed: _onGoogleSignInPressed,
-                  ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // VSpace(50.w),
+              'Welcome'.text.size(38.w).extraBlack.make(),
+              <Widget>[
+                'New here?'.text.size(18.w).make(),
+                TextButton(
+                  onPressed: () => delayedOnPressed(() {
+                    Get.toNamed(RouterName.signupRouter);
+                  }),
+                  child: 'Create a new account.'.text.size(14.w).color(Theme.of(context).primaryColor).make(),
+                ).centered(),
+              ].hStack(),
+              VSpace(25.w),
+              const LoginForm(),
+              VSpace(32.w),
+              'or connect with'.text.size(14.w).make().centered(),
+              VSpace(16.w),
+              Hero(
+                tag: 'google-button',
+                child: GoogleButton(
+                  title: "Continue with Google",
+                  onPressed: _onGoogleSignInPressed,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -146,9 +144,9 @@ class _LoginFormState extends State<LoginForm> {
                 hintText: 'Password',
                 keyboardType: TextInputType.text,
                 validator: _validator.validatePassword,
-                obscureText: AuthController.to.isLoginObscure.value,
+                obscureText: !AuthController.to.isLoginObscure.value,
                 prefixIcon: const Icon(LineIcons.lock),
-                suffix: AuthController.to.isLoginObscure.value
+                suffix: !AuthController.to.isLoginObscure.value
                     ? InkWell(
                         onTap: _onLoginObscurePressed,
                         child: const Icon(LineIcons.eyeSlash, color: Colors.grey),

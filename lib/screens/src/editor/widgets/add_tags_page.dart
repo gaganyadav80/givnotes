@@ -36,12 +36,13 @@ class _AddTagScreenState extends State<AddTagScreen> {
   final RxInt tagColor = 0.obs;
   // final VariableService _global = VariableService();
   final MaterialColors _colors = MaterialColors();
-  Map<String, int> allTagsMap = <String, int>{};
+  final RxMap<String, int> allTagsMap = RxMap<String, int>(PrefsController.to.tags);
 
   @override
   void initState() {
     super.initState();
-    allTagsMap = PrefsController.to.tags;
+    // allTagsMap = PrefsController.to.tags;
+    // allTagsMap.addAll(PrefsController.to.tags);
 
     if (widget.editTagTitle!.isNotEmpty && widget.isEditing!) {
       tagColor.value = allTagsMap[widget.editTagTitle!]!;
@@ -53,7 +54,7 @@ class _AddTagScreenState extends State<AddTagScreen> {
     widget.controller!.addListener(() {
       final text = widget.controller!.text.trim();
 
-      if (text.isNotEmpty) {
+      if (text.isNotEmpty && allTagsMap.isNotEmpty) {
         final String? filterTagName = allTagsMap.keys.firstWhere(
           (element) => element == text,
         );
@@ -269,7 +270,8 @@ class _AddTagScreenState extends State<AddTagScreen> {
             ..clear()
             ..addAll(allTagsMap.keys.toList());
         }
-        allTagsMap[tagName] = tagColor.value;
+        // allTagsMap[tagName] = tagColor.value;
+        allTagsMap.putIfAbsent(tagName, () => tagColor.value);
 
         if (!widget.noteTagsList.contains(tagName)) {
           widget.noteTagsList.add(tagName);
@@ -278,9 +280,9 @@ class _AddTagScreenState extends State<AddTagScreen> {
           Fluttertoast.showToast(msg: "Tag already added");
         }
       }
-      widget.controller!.clear();
     }
     Navigator.pop(context);
+    widget.controller!.clear();
 
     return false;
   }

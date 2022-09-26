@@ -33,34 +33,32 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          children: [
-            // VSpace(50.w),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 30.w),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  'Sign Up'.text.size(38.w).extraBlack.make(),
-                  VSpace(36.w),
-                  const RegisterForm(),
-                  VSpace(25.w),
-                  'or register with'.text.size(14.w).make().centered(),
-                  VSpace(16.w),
-                  Hero(
-                    tag: 'google-button',
-                    child: GoogleButton(
-                      title: "Continue with Google",
-                      onPressed: _onGoogleSignUpPressed,
-                    ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // VSpace(50.w),
+                'Sign Up'.text.size(38.w).extraBlack.make(),
+                VSpace(36.w),
+                const RegisterForm(),
+                VSpace(25.w),
+                'or register with'.text.size(14.w).make().centered(),
+                VSpace(16.w),
+                Hero(
+                  tag: 'google-button',
+                  child: GoogleButton(
+                    title: "Continue with Google",
+                    onPressed: _onGoogleSignUpPressed,
                   ),
-                  VSpace(30.w),
-                ],
-              ),
+                ),
+                VSpace(30.w),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -84,7 +82,6 @@ class _RegisterFormState extends State<RegisterForm> {
 
   final ValueNotifier<String?> _passwordMatch = ValueNotifier<String?>(null);
 
-  //TODO: move to auth controller - business logic
   void _onRegisterButtonPressed() {
     _passwordMatch.value = _validator.validateConfirmPassword(
       confirmPassword: AuthController.to.confirmPassTextController.text,
@@ -94,8 +91,7 @@ class _RegisterFormState extends State<RegisterForm> {
     if (!_formKey.currentState!.validate()) {
       log('not validated');
       return;
-    }
-    if (_passwordMatch.value != null) {
+    } else if (_passwordMatch.value != null) {
       log('password do not match');
       return;
     }

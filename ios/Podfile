@@ -46,5 +46,7 @@ post_install do |installer|
         'PERMISSION_SPEECH_RECOGNIZER=1',
         'PERMISSION_PHOTOS=1',
         'PERMISSION_MEDIA_LIBRARY=1',
+      ]
+    end
   end
 end

@@ -10,8 +10,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:givnotes/controllers/controllers.dart';
 import 'package:givnotes/database/db_helper.dart';
-import 'package:givnotes/models/models.dart';
-import 'package:givnotes/widgets/widgets.dart';
 
 import 'packages/packages.dart';
 import 'routes.dart' as rt;
@@ -39,7 +37,7 @@ void main() async {
   // final AuthenticationRepository authenticationRepository = AuthenticationRepository();
   // await authenticationRepository.user.first;
 
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
@@ -114,12 +112,45 @@ class CheckLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     // Get.find<NotesController>().sortby = PrefsController.to.sortBy.value;
 
-    if (AuthController.to.currentUser.isEmpty) {
-      return const LoginPage();
-    } else {
-      pluginInitializer(AuthController.to.currentUser.uid);
+    // if (AuthController.to.currentUser.isEmpty) {
+    //   return const LoginPage();
+    // } else {
+    //   pluginInitializer(AuthController.to.currentUser.uid);
 
-      return const HomePage();
-    }
+    //   return const HomePage();
+    // }
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (_, snapshot) {
+        final user = snapshot.data;
+
+        if (user == null) {
+          return const LoginPage();
+        } else {
+          return FutureBuilder<bool>(
+            future: pluginInitializer(user.uid),
+            initialData: false,
+            builder: (_, AsyncSnapshot<bool> snapshot) {
+              if (snapshot.hasData && snapshot.data == true) {
+                return const HomePage();
+              } else {
+                return Scaffold(
+                  body: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 20),
+                        Text('Decrypting data...'),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            },
+          );
+        }
+      },
+    );
   }
 }

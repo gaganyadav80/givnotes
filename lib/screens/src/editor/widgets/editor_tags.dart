@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tags_x/flutter_tags_x.dart';
 import 'package:get/get.dart';
 import 'package:givnotes/controllers/controllers.dart';
+import 'package:givnotes/services/services.dart';
 
 import 'add_tags_page.dart';
 
@@ -100,46 +101,49 @@ class _EditorTagsState extends State<EditorTags> {
   }
 
   Widget _buildNoteTags() {
-    return Tags(
-      key: _tagStateKey,
-      itemCount: widget.noteTagsList.length,
-      itemBuilder: (int index) {
-        int borderColor = PrefsController.to.tags[widget.noteTagsList[index]]!;
+    return Obx(() {
+      return Tags(
+        key: _tagStateKey,
+        itemCount: widget.noteTagsList.length,
+        itemBuilder: (int index) {
+          int borderColor =
+              PrefsController.to.tags[widget.noteTagsList[index]] ?? MaterialColors().materialColorValues[0];
 
-        return ItemTags(
-          key: Key(index.toString()),
-          elevation: 0,
-          index: index,
-          title: widget.noteTagsList[index],
-          active: false,
-          combine: ItemTagsCombine.withTextBefore,
-          textStyle: TextStyle(
-            fontSize: 14.w,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5.w,
-          ),
-          border: Border.all(color: Color(borderColor), width: 2),
-          textActiveColor: Color(borderColor),
-          textColor: Color(borderColor),
-          activeColor: Colors.white,
-          onPressed: (item) {
-            if (NoteStatusController.to.isEditing) {
-              Navigator.push(
-                context,
-                CupertinoPageRoute(
-                  builder: (context) => AddTagScreen(
-                    controller: _tagController,
-                    isEditing: true,
-                    editTagTitle: item.title,
-                    noteTagsList: widget.noteTagsList,
+          return ItemTags(
+            key: Key(index.toString()),
+            elevation: 0,
+            index: index,
+            title: widget.noteTagsList[index],
+            active: false,
+            combine: ItemTagsCombine.withTextBefore,
+            textStyle: TextStyle(
+              fontSize: 14.w,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5.w,
+            ),
+            border: Border.all(color: Color(borderColor), width: 2),
+            textActiveColor: Color(borderColor),
+            textColor: Color(borderColor),
+            activeColor: Colors.white,
+            onPressed: (item) {
+              if (NoteStatusController.to.isEditing) {
+                Navigator.push(
+                  context,
+                  CupertinoPageRoute(
+                    builder: (context) => AddTagScreen(
+                      controller: _tagController,
+                      isEditing: true,
+                      editTagTitle: item.title,
+                      noteTagsList: widget.noteTagsList,
+                    ),
+                    fullscreenDialog: true,
                   ),
-                  fullscreenDialog: true,
-                ),
-              );
-            }
-          },
-        );
-      },
-    );
+                );
+              }
+            },
+          );
+        },
+      );
+    });
   }
 }

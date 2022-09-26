@@ -9,19 +9,23 @@ class PrefsController extends GetxController {
 
   @override
   void onInit() {
-    fromJson(DBHelper.prefsJson);
+    String prefsJson = DBHelper.prefsJson;
+    if (prefsJson.isNotEmpty) {
+      fromJson(DBHelper.prefsJson);
+    }
+
     super.onInit();
   }
 
-  final RxInt homeSelectedIndex = RxInt(0);
+  final RxInt homeSelectedIndex = 0.obs;
 
   /// 0: created, 1: modified, 2: a-z, 3: z-a
-  final RxInt sortBy = RxInt(0);
-  final RxBool compactTags = RxBool(false);
-  final RxBool biometricEnabled = RxBool(false);
-  final RxString passcode = RxString("");
-  final RxBool passcodeEnabled = RxBool(false);
-  final RxMap<String, int> tags = RxMap<String, int>({});
+  final RxInt sortBy = 0.obs;
+  final RxBool compactTags = false.obs;
+  final RxBool biometricEnabled = false.obs;
+  final RxString passcode = "".obs;
+  final RxBool passcodeEnabled = false.obs;
+  final RxMap<String, int> tags = <String, int>{}.obs;
 
   void setHomeIndex(int index) {
     homeSelectedIndex.value = index;
@@ -63,7 +67,6 @@ class PrefsController extends GetxController {
 
   void setTagsMap(Map<String, int> value) {
     tags.value = value;
-    persist();
   }
 
   Map<String, dynamic> toMap() {
@@ -85,10 +88,10 @@ class PrefsController extends GetxController {
     biometricEnabled.value = map['biometricEnabled'] as bool;
     passcode.value = map['passcode'] as String;
     passcodeEnabled.value = map['passcodeEnabled'] as bool;
-    tags.value = map['tags'] as Map<String, int>;
+    tags.value = Map<String, int>.from(map['tags']);
   }
 
   String toJson() => json.encode(toMap());
 
-  void fromJson(String source) => fromMap(json.decode(source));
+  void fromJson(String source) => fromMap(json.decode(source) as Map<String, dynamic>);
 }
